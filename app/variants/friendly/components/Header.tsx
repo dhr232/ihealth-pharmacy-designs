@@ -1,60 +1,119 @@
 "use client";
 
-import { useState } from "react";
-import Icon from "./Icon";
+import { useState, useRef, useEffect } from "react";
+import { ChevronDown, Menu, X, Phone } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+
+const SERVICES = [
+  { label: "Online Prescriptions", href: "#refill" },
+  { label: "Transfer to iHealth", href: "#transfer" },
+  { label: "Minor Ailment Appointment", href: "#minor-ailments" },
+  { label: "Med Review / Injection", href: "#med-review" },
+  { label: "Virtual Doctor", href: "#virtual-doctor" },
+  { label: "Contact", href: "#contact" },
+  { label: "Vaccinations", href: "#services" },
+  { label: "MyHealthPack", href: "#myhealthpack" },
+  { label: "Download our App", href: "#app" },
+  { label: "Flu Shots", href: "#services" },
+  { label: "Prescription Delivery", href: "#services" },
+];
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const nav = [
-    { label: "Services", href: "#services" },
-    { label: "Refill", href: "#refill" },
-    { label: "Transfer", href: "#transfer" },
-    { label: "Our Pharmacist", href: "#pharmacist" },
-    { label: "Visit Us", href: "#visit" },
-  ];
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  function openServices() {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setServicesOpen(true);
+  }
+
+  function closeServicesSoon() {
+    timeoutRef.current = setTimeout(() => setServicesOpen(false), 150);
+  }
 
   return (
-    <header className="sticky top-0 z-50 border-b-2 border-[#ffedd5] bg-[#fffdf8]/95 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
-        <a
-          href="#top"
-          className="flex items-center gap-2 rounded-lg px-1 py-1 transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16a34a] focus-visible:ring-offset-2"
-        >
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#16a34a] text-white shadow-[0_4px_0_#15803d]">
-            <Icon name="pill" size={22} />
-          </span>
-          <span className="text-xl font-bold text-[#14532d]" style={{ fontFamily: "Quicksand, 'Atkinson Hyperlegible', sans-serif", fontWeight: 700 }}>
-            iHealth<span className="text-[#16a34a]"> Pharmacy</span>
+    <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-white/95 backdrop-blur">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 lg:px-8">
+        <a href="#top" className="flex items-center gap-2 rounded-lg px-1 py-1 transition hover:opacity-90">
+          <span className="text-xl font-bold tracking-tight text-[var(--foreground)]">
+            iHealth<span className="text-[var(--brand)]">.</span>
           </span>
         </a>
 
         <nav className="hidden items-center gap-6 lg:flex" aria-label="Main">
-          {nav.map((n) => (
-            <a
-              key={n.href}
-              href={n.href}
-              className="rounded-lg px-2 py-1 text-sm font-semibold text-[#3f6212]/80 transition hover:-translate-y-0.5 hover:text-[#16a34a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16a34a] focus-visible:ring-offset-2"
+          <div
+            className="relative"
+            onMouseEnter={openServices}
+            onMouseLeave={closeServicesSoon}
+          >
+            <button
+              onClick={() => setServicesOpen((v) => !v)}
+              aria-expanded={servicesOpen}
+              aria-haspopup="menu"
+              className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-sm font-medium text-[var(--foreground)] transition hover:text-[var(--brand)]"
             >
-              {n.label}
-            </a>
-          ))}
+              Services
+              <ChevronDown size={16} className={`transition ${servicesOpen ? "rotate-180" : ""}`} />
+            </button>
+
+            <AnimatePresence>
+              {servicesOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute left-0 top-full z-50 w-[560px] rounded-xl border border-[var(--border)] bg-white p-4 shadow-lg"
+                  role="menu"
+                >
+                  <div className="grid grid-cols-2 gap-1">
+                    {SERVICES.map((s) => (
+                      <a
+                        key={s.label}
+                        href={s.href}
+                        role="menuitem"
+                        className="rounded-lg px-3 py-2 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)] hover:text-[var(--brand)]"
+                      >
+                        {s.label}
+                      </a>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <a href="#about" className="rounded-lg px-2 py-1.5 text-sm font-medium text-[var(--foreground)] transition hover:text-[var(--brand)]">
+            About Us
+          </a>
+          <a href="#blog" className="rounded-lg px-2 py-1.5 text-sm font-medium text-[var(--foreground)] transition hover:text-[var(--brand)]">
+            Blog
+          </a>
+          <a href="#contact" className="rounded-lg px-2 py-1.5 text-sm font-medium text-[var(--foreground)] transition hover:text-[var(--brand)]">
+            Contact
+          </a>
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
           <a
-            href="tel:+16045550199"
-            className="inline-flex items-center gap-1.5 rounded-full bg-[#d1fae5] px-4 py-2 text-sm font-bold text-[#166534] transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16a34a] focus-visible:ring-offset-2"
+            href="tel:+160****0199"
+            className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-[var(--muted)] transition hover:text-[var(--brand)]"
           >
-            <Icon name="phone" size={16} />
+            <Phone size={16} />
             (604) 555-0199
           </a>
           <a
             href="#refill"
-            className="inline-flex items-center gap-1.5 rounded-full bg-[#16a34a] px-5 py-2.5 text-sm font-bold text-white shadow-[0_4px_0_#15803d] transition duration-150 hover:-translate-y-0.5 hover:shadow-[0_6px_0_#15803d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16a34a] focus-visible:ring-offset-2 active:translate-y-0 active:shadow-[0_2px_0_#15803d]"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--brand-hover)]"
           >
-            Refill RX
-            <Icon name="sparkle" size={16} />
+            Request Refill
           </a>
         </div>
 
@@ -63,47 +122,63 @@ export default function Header() {
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           aria-controls="mobile-nav"
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-[#d1fae5] text-[#14532d] transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16a34a] focus-visible:ring-offset-2 lg:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-lg text-[var(--foreground)] transition hover:bg-[var(--surface)] lg:hidden"
         >
-          <Icon name={open ? "x" : "menu"} size={24} ariaHidden={false} ariaLabel={open ? "Close menu" : "Open menu"} />
+          {open ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
-      {open && (
-        <nav
-          id="mobile-nav"
-          className="border-t-2 border-[#ffedd5] bg-[#fffdf8] px-5 pb-5 pt-3 lg:hidden"
-          aria-label="Mobile"
-        >
-          <div className="flex flex-col gap-1">
-            {nav.map((n) => (
-              <a
-                key={n.href}
-                href={n.href}
-                onClick={() => setOpen(false)}
-                className="rounded-2xl px-4 py-3 font-semibold text-[#14532d] transition hover:bg-[#d1fae5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16a34a] focus-visible:ring-offset-2"
-              >
-                {n.label}
+      <AnimatePresence>
+        {open && (
+          <motion.nav
+            id="mobile-nav"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden border-t border-[var(--border)] bg-white px-5 lg:hidden"
+            aria-label="Mobile"
+          >
+            <div className="flex flex-col gap-1 py-4">
+              <p className="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">Services</p>
+              {SERVICES.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  onClick={() => setOpen(false)}
+                  className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)] hover:text-[var(--brand)]"
+                >
+                  {s.label}
+                </a>
+              ))}
+              <div className="my-2 border-t border-[var(--border)]" />
+              <a href="#about" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">
+                About Us
               </a>
-            ))}
-            <a
-              href="tel:+16045550199"
-              className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-[#d1fae5] px-4 py-3 text-center font-bold text-[#166534] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16a34a] focus-visible:ring-offset-2"
-            >
-              <Icon name="phone" size={18} />
-              (604) 555-0199
-            </a>
-            <a
-              href="#refill"
-              onClick={() => setOpen(false)}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#16a34a] px-4 py-3 text-center font-bold text-white shadow-[0_4px_0_#15803d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16a34a] focus-visible:ring-offset-2"
-            >
-              Refill RX
-              <Icon name="sparkle" size={18} />
-            </a>
-          </div>
-        </nav>
-      )}
+              <a href="#blog" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">
+                Blog
+              </a>
+              <a href="#contact" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">
+                Contact
+              </a>
+              <a
+                href="tel:+160****0199"
+                className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--border)] px-4 py-3 text-center text-sm font-medium text-[var(--foreground)]"
+              >
+                <Phone size={18} />
+                (604) 555-0199
+              </a>
+              <a
+                href="#refill"
+                onClick={() => setOpen(false)}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--brand)] px-4 py-3 text-center text-sm font-semibold text-white"
+              >
+                Request Refill
+              </a>
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
