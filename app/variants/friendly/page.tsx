@@ -6,9 +6,10 @@ import Footer from "./components/Footer";
 import RefillForm from "./components/RefillForm";
 import NewsletterForm from "./components/NewsletterForm";
 import Hero3DBackground from "./components/Hero3DBackground";
-import PharmacyIcon3D from "./components/PharmacyIcon3D";
+import FloatingPills3D from "./components/FloatingPills3D";
+import HappyCustomerCard from "./components/HappyCustomerCard";
 import CarouselDispenser3D from "./components/CarouselDispenser3D";
-import { SectionReveal, StaggerContainer, StaggerItem, ImagePlaceholder } from "./components/MotionKit";
+import { SectionReveal, StaggerContainer, StaggerItem } from "./components/MotionKit";
 import {
   Pill,
   ArrowLeftRight,
@@ -27,16 +28,17 @@ import {
   Clock,
   MapPin,
   CheckCircle,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
 
-const QUICK_ACTIONS = [
-  { icon: Pill, label: "Fill a Prescription", href: "#refill", desc: "Request a refill" },
-  { icon: ArrowLeftRight, label: "Transfer to iHealth", href: "#transfer", desc: "Switch today" },
-  { icon: Stethoscope, label: "Minor Ailment", href: "/variants/friendly/services/minor-ailments", desc: "Book a walk-in" },
-  { icon: ClipboardList, label: "Med Review / Injection", href: "/variants/friendly/services/med-review", desc: "Book clinical time" },
-  { icon: Video, label: "Virtual Doctor", href: "#virtual-doctor", desc: "See a doctor online" },
-  { icon: Mail, label: "Contact Us", href: "#contact", desc: "Send a message" },
+const NUMBERED_SERVICES = [
+  { number: "01", title: "Easy Prescription Refills", body: "Request refills online, by phone, or in person — we check every detail and have it ready fast.", href: "#refill" },
+  { number: "02", title: "Transfer to iHealth", body: "Give us your pharmacy name and we move your prescriptions over, often the same day.", href: "#transfer" },
+  { number: "03", title: "Med & Refill Reminders", body: "Automatic texts and calls so you never miss a dose or run out unexpectedly.", href: "/variants/friendly/services/myhealthpack" },
+  { number: "04", title: "Minor Ailment Clinic", body: "Walk in and see a pharmacist who can assess and prescribe for common minor ailments.", href: "/variants/friendly/services/minor-ailments" },
+  { number: "05", title: "24/7 Pharmacist Advice", body: "Ask questions by phone, text, or email — a real pharmacist answers, real fast.", href: "#contact" },
 ];
 
 const CORE_SERVICES = [
@@ -57,17 +59,17 @@ const ALL_SERVICE_LINKS = [
   { title: "Prescription Delivery", href: "/variants/friendly/services/delivery", desc: "Same-day local delivery" },
 ];
 
-const TRUST_STATS = [
-  { icon: Star, label: "4.9 / 5", sub: "from 300+ patients" },
-  { icon: Activity, label: "15+ years", sub: "serving Abbotsford" },
-  { icon: HeartPulse, label: "500K+", sub: "prescriptions filled" },
-  { icon: Truck, label: "Same-day", sub: "local delivery" },
+const STATS = [
+  { value: "15+", label: "Years Experience" },
+  { value: "5k+", label: "Happy Customers" },
+  { value: "50k+", label: "Prescriptions Filled" },
+  { value: "800+", label: "Health Care Products" },
 ];
 
 const TESTIMONIALS = [
-  { quote: "They texted me before I even got home — my refill was ready for pickup.", name: "Jasmin P." },
-  { quote: "The pharmacist remembered my son's allergy without looking it up. That kind of care is rare.", name: "Daniel O." },
-  { quote: "Transferring took one phone call. They did everything else for me.", name: "Margaret L." },
+  { quote: "They texted me before I even got home — my refill was ready for pickup.", name: "Jasmin P.", location: "Abbotsford, BC" },
+  { quote: "The pharmacist remembered my son's allergy without looking it up. That kind of care is rare.", name: "Daniel O.", location: "Abbotsford, BC" },
+  { quote: "Transferring took one phone call. They did everything else for me.", name: "Margaret L.", location: "Aldergrove, BC" },
 ];
 
 export default function FriendlyPage() {
@@ -76,18 +78,20 @@ export default function FriendlyPage() {
       <Header />
 
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-[var(--border)] bg-[var(--surface)]" aria-labelledby="hero-heading">
+      <section className="relative overflow-hidden border-b border-[var(--border)] bg-white" aria-labelledby="hero-heading">
         <Hero3DBackground />
-        <div className="relative z-10 mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-2 md:items-center md:py-24 lg:px-8">
-          <SectionReveal>
-            <span className="inline-block rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-[var(--brand)] shadow-sm">
-              Independent pharmacy in Abbotsford, BC
+        <div className="relative z-10 mx-auto grid max-w-7xl gap-10 px-5 pt-28 pb-16 md:grid-cols-2 md:items-center md:pt-32 md:pb-20 lg:px-8">
+          <SectionReveal className="flex flex-col items-start">
+            <span className="inline-block rounded-full bg-[var(--brand-subtle)] px-4 py-1.5 text-sm font-semibold text-[var(--brand)]">
+              Your health, simplified
             </span>
-            <h1 id="hero-heading" className="mt-6 text-4xl font-semibold leading-[1.1] tracking-tight md:text-5xl lg:text-6xl">
-              Care that knows your name.
+            <h1 id="hero-heading" className="mt-6 text-4xl font-bold leading-[1.05] tracking-tight md:text-5xl lg:text-6xl">
+              Care that knows your name,
+              <br />
+              today and tomorrow.
             </h1>
-            <p className="mt-5 max-w-lg text-lg text-[var(--muted)]">
-              You&apos;re not a number here. Get real conversations, honest advice, and pharmacy services that follow you home.
+            <p className="mt-5 max-w-md text-lg text-[var(--muted)]">
+              Personalized pharmacy care for every member of your family — prescriptions, reminders, and trusted advice.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <a
@@ -100,74 +104,90 @@ export default function FriendlyPage() {
                 href="#transfer"
                 className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-6 py-3.5 text-base font-semibold text-[var(--foreground)] transition hover:border-[var(--brand)] hover:text-[var(--brand)]"
               >
-                Transfer Now
+                Transfer to iHealth
               </a>
+            </div>
+
+            <div className="mt-10">
+              <HappyCustomerCard />
             </div>
           </SectionReveal>
 
-          <SectionReveal className="mx-auto w-full max-w-md md:mx-0">
-            <div className="relative">
-              <PharmacyIcon3D />
-              <div className="absolute -bottom-5 -left-5 rounded-xl border border-[var(--border)] bg-white px-4 py-3 shadow-sm">
-                <p className="text-sm font-semibold text-[var(--foreground)]">Trusted by 300+ neighbours</p>
-                <div className="mt-1 flex items-center gap-1 text-amber-500">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} size={14} fill="currentColor" />
-                  ))}
-                  <span className="ml-1 text-xs font-medium text-[var(--muted)]">4.9 / 5</span>
-                </div>
-              </div>
-            </div>
+          <SectionReveal className="relative mx-auto w-full max-w-lg md:mx-0">
+            <FloatingPills3D />
           </SectionReveal>
         </div>
       </section>
 
-      {/* Quick Actions */}
-      <section className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
-        <StaggerContainer className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {QUICK_ACTIONS.map((a) => (
-            <StaggerItem key={a.label}>
-              <a
-                href={a.href}
-                className="group flex items-center gap-4 rounded-xl border border-[var(--border)] bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-[var(--brand)] hover:shadow-md"
+      {/* Numbered Services */}
+      <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+        <SectionReveal className="text-center">
+          <span className="inline-block rounded-full bg-[var(--brand-subtle)] px-4 py-1.5 text-sm font-semibold text-[var(--brand)]">Our Services</span>
+          <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-4xl">All the services you will get</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--muted)]">
+            Everything a modern pharmacy should do — prescriptions, clinical care, and everyday health support.
+          </p>
+        </SectionReveal>
+
+        <StaggerContainer className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+          {NUMBERED_SERVICES.map((s) => (
+            <StaggerItem key={s.number}>
+              <Link
+                href={s.href}
+                className="group flex h-full flex-col rounded-2xl border border-[var(--border)] bg-white p-6 transition hover:-translate-y-1 hover:border-[var(--brand)] hover:shadow-lg"
               >
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[var(--brand-subtle)] text-[var(--brand)]">
-                  <a.icon size={24} />
+                <span className="text-3xl font-bold text-[var(--brand)]/30 transition group-hover:text-[var(--brand)]">{s.number}</span>
+                <h3 className="mt-4 text-lg font-semibold">{s.title}</h3>
+                <p className="mt-2 flex-1 text-sm text-[var(--muted)]">{s.body}</p>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[var(--brand)]">
+                  Learn More
+                  <span className="transition group-hover:translate-x-0.5">→</span>
                 </span>
-                <div>
-                  <p className="font-semibold text-[var(--foreground)]">{a.label}</p>
-                  <p className="text-sm text-[var(--muted)]">{a.desc}</p>
-                </div>
-                <span className="ml-auto text-[var(--muted)] transition group-hover:text-[var(--brand)]">
-                  →
-                </span>
-              </a>
+              </Link>
             </StaggerItem>
           ))}
         </StaggerContainer>
       </section>
 
-      {/* Trust bar */}
-      <section className="border-y border-[var(--border)] bg-white">
-        <div className="mx-auto grid max-w-7xl gap-6 px-5 py-8 sm:grid-cols-2 lg:grid-cols-4 lg:px-8">
-          {TRUST_STATS.map((stat) => (
-            <div key={stat.label} className="flex items-center gap-4">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[var(--surface)] text-[var(--muted)]">
-                <stat.icon size={22} />
-              </span>
-              <div>
-                <p className="text-lg font-semibold leading-none text-[var(--foreground)]">{stat.label}</p>
-                <p className="mt-1 text-sm text-[var(--muted)]">{stat.sub}</p>
-              </div>
+      {/* Why We Are Better / Stats */}
+      <section className="bg-[var(--surface)]">
+        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 md:grid-cols-2 md:items-center lg:px-8">
+          <SectionReveal className="mx-auto w-full max-w-md md:mx-0">
+            <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-sm">
+              <Image
+                src="/ihealth-logo-new.jpeg"
+                alt="iHealth Pharmacy logo"
+                width={520}
+                height={520}
+                className="w-full object-cover"
+              />
             </div>
-          ))}
+          </SectionReveal>
+
+          <SectionReveal>
+            <span className="inline-block rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-[var(--brand)] shadow-sm">Why iHealth</span>
+            <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-4xl">Why we are better</h2>
+            <p className="mt-4 text-lg text-[var(--muted)]">
+              We combine modern pharmacy tools with old-fashioned attention. You get convenience, accuracy, and a pharmacist who actually knows your name.
+            </p>
+
+            <div className="mt-8 grid grid-cols-2 gap-6">
+              {STATS.map((stat) => (
+                <div key={stat.label} className="rounded-xl border border-[var(--border)] bg-white p-5 text-center">
+                  <p className="text-3xl font-bold text-[var(--brand)]">{stat.value}</p>
+                  <p className="mt-1 text-sm text-[var(--muted)]">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </SectionReveal>
         </div>
       </section>
 
       {/* Core Services */}
       <section id="services" className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
         <SectionReveal className="text-center">
-          <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Main pharmacy services</h2>
+          <span className="inline-block rounded-full bg-[var(--brand-subtle)] px-4 py-1.5 text-sm font-semibold text-[var(--brand)]">What We Do</span>
+          <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-4xl">Main pharmacy services</h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--muted)]">
             The everyday services your neighbourhood pharmacy should make effortless.
           </p>
@@ -176,7 +196,7 @@ export default function FriendlyPage() {
         <StaggerContainer className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {CORE_SERVICES.map((s) => (
             <StaggerItem key={s.title}>
-              <article className="h-full rounded-xl border border-[var(--border)] bg-white p-6 transition hover:border-[var(--brand)] hover:shadow-sm">
+              <article className="h-full rounded-2xl border border-[var(--border)] bg-white p-6 transition hover:-translate-y-1 hover:border-[var(--brand)] hover:shadow-lg">
                 <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--brand-subtle)] text-[var(--brand)]">
                   <s.icon size={22} />
                 </span>
@@ -198,11 +218,11 @@ export default function FriendlyPage() {
         </SectionReveal>
       </section>
 
-      {/* All services overview */}
+      {/* Full service menu */}
       <section className="bg-[var(--surface)]">
         <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
           <SectionReveal className="text-center">
-            <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Full service menu</h2>
+            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Full service menu</h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--muted)]">
               Click through for details on clinical services, compounding, compliance packaging, and more.
             </p>
@@ -218,7 +238,8 @@ export default function FriendlyPage() {
                   <h3 className="text-lg font-semibold text-[var(--foreground)] group-hover:text-[var(--brand)]">{s.title}</h3>
                   <p className="mt-1 text-sm text-[var(--muted)]">{s.desc}</p>
                   <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-[var(--brand)]">
-                    Learn more <span className="transition group-hover:translate-x-0.5">→</span>
+                    Learn more
+                    <span className="transition group-hover:translate-x-0.5">→</span>
                   </span>
                 </Link>
               </StaggerItem>
@@ -228,13 +249,13 @@ export default function FriendlyPage() {
       </section>
 
       {/* Carousel Automatic Pill Dispenser */}
-      <section className="bg-[var(--surface)]">
+      <section className="bg-white">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 md:grid-cols-2 md:items-center lg:px-8">
           <SectionReveal className="order-2 md:order-1">
-            <span className="inline-block rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-[var(--brand)] shadow-sm">
+            <span className="inline-block rounded-full bg-[var(--brand-subtle)] px-4 py-1.5 text-sm font-semibold text-[var(--brand)]">
               Medication Management
             </span>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Carousel Automatic Pill Dispenser</h2>
+            <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-4xl">Carousel Automatic Pill Dispenser</h2>
             <p className="mt-4 text-lg text-[var(--muted)]">
               Remembering every dose at the right moment is hard. The Carousel dispenser sorts your medications by day and time in a secure, rotating unit that helps you take the right pills at the right time — every time.
             </p>
@@ -260,7 +281,7 @@ export default function FriendlyPage() {
           </SectionReveal>
 
           <SectionReveal className="order-1 md:order-2">
-            <div className="rounded-2xl border border-[var(--border)] bg-white p-4 shadow-sm">
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-sm">
               <CarouselDispenser3D />
               <p className="mt-2 text-center text-xs text-[var(--muted)]">Interactive 3D model — drag or hover to rotate</p>
             </div>
@@ -268,76 +289,42 @@ export default function FriendlyPage() {
         </div>
       </section>
 
-      {/* About */}
-      <section id="about" className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-        <div className="grid gap-10 md:grid-cols-2 md:items-center">
-          <SectionReveal className="mx-auto w-full max-w-sm md:mx-0">
-            <div className="rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm">
-              <Image
-                src="/ihealth-logo.png"
-                alt="iHealth Pharmacy logo"
-                width={160}
-                height={160}
-                className="mx-auto rounded-full"
-              />
-              <p className="mt-4 text-center text-sm font-medium text-[var(--muted)]">Client logo placeholder</p>
-            </div>
+      {/* Testimonials slider */}
+      <section className="bg-[var(--surface)]">
+        <div className="mx-auto max-w-5xl px-5 py-20 lg:px-8">
+          <SectionReveal className="text-center">
+            <span className="inline-block rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-[var(--brand)] shadow-sm">Happy Customer</span>
+            <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-4xl">What patients say</h2>
           </SectionReveal>
 
-          <SectionReveal>
-            <span className="inline-block rounded-full bg-[var(--brand-subtle)] px-4 py-1.5 text-sm font-semibold text-[var(--brand)]">About Us</span>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Your neighbourhood pharmacist.</h2>
-            <p className="mt-4 text-lg text-[var(--muted)]">
-              At iHealth Pharmacy, you get a pharmacist who sits down with you — someone who knows your medications, your history, and how to keep your care simple.
-            </p>
-            <ul className="mt-6 space-y-3">
-              {[
-                "One-on-one care, every visit",
-                "Free medication reviews",
-                "A familiar face in Abbotsford",
-              ].map((item) => (
-                <li key={item} className="flex items-center gap-3 text-[var(--foreground)]">
-                  <CheckCircle size={18} className="shrink-0 text-[var(--brand)]" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </SectionReveal>
+          <StaggerContainer className="mt-12 grid gap-6 md:grid-cols-3">
+            {TESTIMONIALS.map((t) => (
+              <StaggerItem key={t.name}>
+                <figure className="relative rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm">
+                  <div className="mb-4 text-5xl font-bold text-[var(--brand)]/20">“</div>
+                  <blockquote className="text-[var(--foreground)]">{t.quote}</blockquote>
+                  <figcaption className="mt-6 flex items-center gap-3">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--brand-subtle)] text-sm font-bold text-[var(--brand)]">
+                      {t.name.split(" ").map((n) => n[0]).join("")}
+                    </span>
+                    <div>
+                      <p className="text-sm font-semibold">{t.name}</p>
+                      <p className="text-xs text-[var(--muted)]">{t.location}</p>
+                    </div>
+                  </figcaption>
+                </figure>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-        <SectionReveal className="text-center">
-          <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">What patients say</h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-[var(--muted)]">
-            Real Abbotsford families trust iHealth with their everyday health.
-          </p>
-        </SectionReveal>
-
-        <StaggerContainer className="mt-12 grid gap-6 md:grid-cols-3">
-          {TESTIMONIALS.map((t) => (
-            <StaggerItem key={t.name}>
-              <figure className="rounded-xl border border-[var(--border)] bg-white p-6">
-                <div className="flex gap-1 text-amber-500" aria-label="5 out of 5 stars">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} size={16} fill="currentColor" />
-                  ))}
-                </div>
-                <blockquote className="mt-3 text-[var(--foreground)]">&ldquo;{t.quote}&rdquo;</blockquote>
-                <figcaption className="mt-4 text-sm font-semibold text-[var(--foreground)]">— {t.name}</figcaption>
-              </figure>
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
-      </section>
-
       {/* Newsletter */}
-      <section id="blog" className="bg-[var(--brand-subtle)]">
+      <section id="blog" className="bg-white">
         <div className="mx-auto max-w-3xl px-5 py-16 text-center lg:px-8">
           <SectionReveal>
             <Mail className="mx-auto h-8 w-8 text-[var(--brand)]" />
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight">Stay in the loop</h2>
+            <h2 className="mt-4 text-3xl font-bold tracking-tight">Stay in the loop</h2>
             <p className="mt-3 text-lg text-[var(--muted)]">
               Get service updates, health tips, and special promotions from iHealth Pharmacy.
             </p>
@@ -355,7 +342,7 @@ export default function FriendlyPage() {
             <span className="inline-block rounded-full bg-[var(--brand-subtle)] px-4 py-1.5 text-sm font-semibold text-[var(--brand)]">
               Prescription Refills
             </span>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Refills in 3 easy steps</h2>
+            <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-4xl">Refills in 3 easy steps</h2>
             <ol className="mt-8 space-y-6">
               {[
                 { title: "Send it in", body: "Use the form, call, or walk in. 30 seconds, promise." },
@@ -392,7 +379,7 @@ export default function FriendlyPage() {
             <span className="inline-block rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-[var(--brand)] shadow-sm">
               Switching Pharmacies
             </span>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Transfer to iHealth today.</h2>
+            <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-4xl">Transfer to iHealth today.</h2>
             <p className="mt-4 text-lg text-[var(--muted)]">
               Give us your current pharmacy&apos;s name and we&apos;ll move your prescriptions over — often the same day. You&apos;ll never sit on hold again.
             </p>
@@ -412,6 +399,32 @@ export default function FriendlyPage() {
         </div>
       </section>
 
+      {/* Bottom CTA */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-4xl px-5 py-20 text-center lg:px-8">
+          <SectionReveal>
+            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Ready for easier prescriptions?</h2>
+            <p className="mx-auto mt-4 max-w-xl text-lg text-[var(--muted)]">
+              Join the Abbotsford families who trust iHealth with their medications, reminders, and everyday health.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              <a
+                href="#refill"
+                className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-3.5 text-base font-semibold text-white transition hover:bg-[var(--brand-hover)]"
+              >
+                Make an Order
+              </a>
+              <a
+                href="#contact"
+                className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-6 py-3.5 text-base font-semibold text-[var(--foreground)] transition hover:border-[var(--brand)] hover:text-[var(--brand)]"
+              >
+                Contact Us
+              </a>
+            </div>
+          </SectionReveal>
+        </div>
+      </section>
+
       {/* Contact */}
       <section id="contact" className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-2">
@@ -419,7 +432,7 @@ export default function FriendlyPage() {
             <span className="inline-block rounded-full bg-[var(--brand-subtle)] px-4 py-1.5 text-sm font-semibold text-[var(--brand)]">
               Visit Us
             </span>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Come say hello.</h2>
+            <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-4xl">Come say hello.</h2>
             <p className="mt-4 text-lg text-[var(--muted)]">
               Drop by, call, or send a note. A real person answers, real fast.
             </p>
