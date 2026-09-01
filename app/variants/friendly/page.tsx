@@ -7,7 +7,6 @@ import RefillForm from "./components/RefillForm";
 import NewsletterForm from "./components/NewsletterForm";
 import Hero3DBackground from "./components/Hero3DBackground";
 import FloatingPills3D from "./components/FloatingPills3D";
-import HappyCustomerCard from "./components/HappyCustomerCard";
 import CarouselDispenser3D from "./components/CarouselDispenser3D";
 import { SectionReveal, StaggerContainer, StaggerItem } from "./components/MotionKit";
 import {
@@ -108,13 +107,10 @@ export default function FriendlyPage() {
               </a>
             </div>
 
-            <div className="mt-10">
-              <HappyCustomerCard />
-            </div>
           </SectionReveal>
 
           <SectionReveal className="relative mx-auto w-full max-w-lg md:mx-0">
-            <FloatingPills3D />
+            <FloatingPills3D showHappyCustomerCard />
           </SectionReveal>
         </div>
       </section>

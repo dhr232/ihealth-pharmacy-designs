@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import HappyCustomerCard from "./HappyCustomerCard";
 
 const PILL_BASE = "/ihealth-pharmacy-designs/";
 
@@ -18,7 +19,7 @@ const rings = [
   { color: "#6366f1", top: "76%", left: "62%", size: 40, delay: "4s", duration: "7.5s" },
 ];
 
-export default function FloatingPills3D() {
+export default function FloatingPills3D({ showHappyCustomerCard = false }: { showHappyCustomerCard?: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -160,6 +161,20 @@ export default function FloatingPills3D() {
           </div>
         );
       })}
+
+      {showHappyCustomerCard && (
+        <div
+          data-parallax
+          className="float-item absolute z-10"
+          style={{
+            bottom: "4%",
+            left: "2%",
+            ["--base-rotate" as string]: "0deg",
+          }}
+        >
+          <HappyCustomerCard />
+        </div>
+      )}
     </div>
   );
 }
