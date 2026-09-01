@@ -5,17 +5,17 @@ import { useEffect, useRef } from "react";
 const PILL_BASE = "/ihealth-pharmacy-designs/";
 
 const pills = [
-  { src: "pills-purple.png", alt: "Purple capsule", className: "pill-purple", top: "6%", left: "48%", width: 220, delay: 0, rotate: -25, floatY: -12 },
-  { src: "pills-blue.png", alt: "Blue capsule", className: "pill-blue", top: "32%", left: "10%", width: 200, delay: 0.8, rotate: 15, floatY: 10 },
-  { src: "pills-yellow.png", alt: "Yellow capsule", className: "pill-yellow", top: "46%", left: "62%", width: 180, delay: 1.4, rotate: 25, floatY: -14 },
-  { src: "pills-red.png", alt: "Red capsule", className: "pill-red", top: "68%", left: "20%", width: 195, delay: 2.2, rotate: -12, floatY: 12 },
+  { src: "pills-purple.png", alt: "Purple capsule", className: "pill-purple", top: "10%", left: "55%", width: 210, delay: 0, rotate: -20, floatY: -10 },
+  { src: "pills-blue.png", alt: "Blue capsule", className: "pill-blue", top: "28%", left: "18%", width: 195, delay: 0.8, rotate: 12, floatY: 10 },
+  { src: "pills-yellow.png", alt: "Yellow capsule", className: "pill-yellow", top: "44%", left: "58%", width: 175, delay: 1.4, rotate: 22, floatY: -12 },
+  { src: "pills-red.png", alt: "Red capsule", className: "pill-red", top: "62%", left: "28%", width: 190, delay: 2.2, rotate: -10, floatY: 10 },
 ];
 
 const rings = [
-  { color: "#6366f1", top: "2%", left: "72%", size: 48, delay: 0.3 },
-  { color: "#3b82f6", top: "38%", left: "78%", size: 34, delay: 1.1 },
-  { color: "#fbbf24", top: "58%", left: "82%", size: 26, delay: 1.8 },
-  { color: "#6366f1", top: "78%", left: "58%", size: 42, delay: 2.5 },
+  { color: "#6366f1", top: "8%", left: "78%", size: 44, delay: 0.3 },
+  { color: "#3b82f6", top: "34%", left: "8%", size: 32, delay: 1.1 },
+  { color: "#fbbf24", top: "50%", left: "80%", size: 24, delay: 1.8 },
+  { color: "#6366f1", top: "76%", left: "62%", size: 40, delay: 2.5 },
 ];
 
 export default function FloatingPills3D() {
