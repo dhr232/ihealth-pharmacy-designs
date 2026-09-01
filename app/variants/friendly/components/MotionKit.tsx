@@ -4,16 +4,26 @@ import { useReducedMotion } from "motion/react";
 import { motion } from "motion/react";
 import { ReactNode } from "react";
 
-// Webflow-style easing tokens
-const EASE_OUT: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
-const EASE_IN_OUT: [number, number, number, number] = [0.65, 0, 0.35, 1];
+// Brand24 / Webflow agency-style easing — smooth expo-out
+const EASE_OUT_EXPO: [number, number, number, number] = [0.16, 1, 0.3, 1];
+const EASE_IN_OUT_QUART: [number, number, number, number] = [0.77, 0, 0.175, 1];
 
-const fadeUpVariants = {
-  hidden: { opacity: 0, y: 32 },
+const blurRevealVariants = {
+  hidden: { opacity: 0, y: 40, filter: "blur(8px)" },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.75, ease: EASE_OUT },
+    filter: "blur(0px)",
+    transition: { duration: 0.9, ease: EASE_OUT_EXPO },
+  },
+};
+
+const fadeUpVariants = {
+  hidden: { opacity: 0, y: 60 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.85, ease: EASE_OUT_EXPO },
   },
 };
 
@@ -21,18 +31,40 @@ const staggerContainerVariants = {
   hidden: { opacity: 1 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.05 },
+    transition: { staggerChildren: 0.1, delayChildren: 0.08 },
   },
 };
 
 const staggerItemVariants = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0, y: 40, scale: 0.96 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: EASE_OUT },
+    scale: 1,
+    transition: { duration: 0.7, ease: EASE_OUT_EXPO },
   },
 };
+
+export function BlurReveal({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const shouldReduceMotion = useReducedMotion();
+  return (
+    <motion.div
+      className={className}
+      initial={shouldReduceMotion ? false : "hidden"}
+      whileInView={shouldReduceMotion ? undefined : "visible"}
+      viewport={{ once: true, amount: 0.3 }}
+      variants={blurRevealVariants}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export function SectionReveal({
   children,
@@ -107,9 +139,32 @@ export function HoverCard({
       whileHover={
         shouldReduceMotion
           ? undefined
-          : { y: -6, transition: { duration: 0.3, ease: EASE_IN_OUT } }
+          : { y: -8, transition: { duration: 0.35, ease: EASE_IN_OUT_QUART } }
       }
-      whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
+      whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export function MagneticButton({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const shouldReduceMotion = useReducedMotion();
+  return (
+    <motion.div
+      className={className}
+      whileHover={
+        shouldReduceMotion
+          ? undefined
+          : { scale: 1.03, transition: { duration: 0.25, ease: EASE_OUT_EXPO } }
+      }
+      whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
     >
       {children}
     </motion.div>

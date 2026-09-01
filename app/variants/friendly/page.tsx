@@ -7,8 +7,7 @@ import RefillForm from "./components/RefillForm";
 import NewsletterForm from "./components/NewsletterForm";
 import Hero3DBackground from "./components/Hero3DBackground";
 import FloatingPills3D from "./components/FloatingPills3D";
-import CarouselDispenser3D from "./components/CarouselDispenser3D";
-import { SectionReveal, StaggerContainer, StaggerItem, HoverCard } from "./components/MotionKit";
+import { BlurReveal, SectionReveal, StaggerContainer, StaggerItem, HoverCard, MagneticButton } from "./components/MotionKit";
 import CountUp from "./components/CountUp";
 import {
   Pill,
@@ -81,7 +80,7 @@ export default function FriendlyPage() {
       <section className="relative overflow-hidden border-b border-[var(--border)] bg-white" aria-labelledby="hero-heading">
         <Hero3DBackground />
         <div className="relative z-10 mx-auto grid max-w-7xl gap-10 px-5 pt-28 pb-16 md:grid-cols-2 md:items-center md:pt-32 md:pb-20 lg:px-8">
-          <SectionReveal className="flex flex-col items-start">
+          <BlurReveal className="flex flex-col items-start">
             <span className="inline-block rounded-full bg-[var(--brand-subtle)] px-4 py-1.5 text-sm font-semibold text-[var(--brand)]">
               Your health, simplified
             </span>
@@ -94,21 +93,24 @@ export default function FriendlyPage() {
               Personalized pharmacy care for every member of your family — prescriptions, reminders, and trusted advice.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <a
-                href="#refill"
-                className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-3.5 text-base font-semibold text-white transition hover:bg-[var(--brand-hover)]"
-              >
-                Request Refill
-              </a>
-              <a
-                href="#transfer"
-                className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-6 py-3.5 text-base font-semibold text-[var(--foreground)] transition hover:border-[var(--brand)] hover:text-[var(--brand)]"
-              >
-                Transfer to iHealth
-              </a>
+              <MagneticButton>
+                <a
+                  href="#refill"
+                  className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-3.5 text-base font-semibold text-white transition hover:bg-[var(--brand-hover)]"
+                >
+                  Request Refill
+                </a>
+              </MagneticButton>
+              <MagneticButton>
+                <a
+                  href="#transfer"
+                  className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-6 py-3.5 text-base font-semibold text-[var(--foreground)] transition hover:border-[var(--brand)] hover:text-[var(--brand)]"
+                >
+                  Transfer to iHealth
+                </a>
+              </MagneticButton>
             </div>
-
-          </SectionReveal>
+          </BlurReveal>
 
           <SectionReveal className="relative mx-auto w-full max-w-lg md:mx-0">
             <FloatingPills3D showHappyCustomerCard />
@@ -172,7 +174,7 @@ export default function FriendlyPage() {
               {STATS.map((stat) => (
                 <div key={stat.label} className="rounded-xl border border-[var(--border)] bg-white p-5 text-center">
                   <p className="text-3xl font-bold text-[var(--brand)]">
-                    <CountUp value={stat.value} suffix={stat.suffix} duration={2} />
+                    <CountUp value={stat.value} suffix={stat.suffix} duration={1.5} />
                   </p>
                   <p className="mt-1 text-sm text-[var(--muted)]">{stat.label}</p>
                 </div>
@@ -284,9 +286,15 @@ export default function FriendlyPage() {
           </SectionReveal>
 
           <SectionReveal className="order-1 md:order-2">
-            <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-sm">
-              <CarouselDispenser3D />
-              <p className="mt-2 text-center text-xs text-[var(--muted)]">Interactive 3D model — drag or hover to rotate</p>
+            <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-sm">
+              <Image
+                src="/ihealth-pharmacy-designs/carousel-dispenser.png"
+                alt="Carousel automatic pill dispenser with 28 compartments and digital display"
+                width={600}
+                height={600}
+                className="h-auto w-full object-contain"
+                unoptimized
+              />
             </div>
           </SectionReveal>
         </div>
