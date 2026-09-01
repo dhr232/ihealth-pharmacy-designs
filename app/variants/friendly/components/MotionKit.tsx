@@ -58,7 +58,7 @@ export function StaggerItem({ children, className = "", id }: StaggerItemProps) 
   );
 }
 
-export function ImagePlaceholder({ label, icon: Icon, className = "" }: { label: string; icon?: React.ElementType; className?: string }) {
+export function ImagePlaceholder({ label, icon: Icon, className = "" }: { label: string; icon?: React.ComponentType<{ size?: number; className?: string }>; className?: string }) {
   return (
     <div className={`img-placeholder overflow-hidden ${className}`}>
       <div className="text-center">

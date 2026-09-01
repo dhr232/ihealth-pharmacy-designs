@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: "Prescription refills, transfers, vaccinations, minor ailment consultations, and compliance packaging. Trusted neighbourhood pharmacy care in Abbotsford, BC.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
