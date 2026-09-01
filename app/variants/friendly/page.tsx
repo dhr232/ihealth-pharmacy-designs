@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import RefillForm from "./components/RefillForm";
 import NewsletterForm from "./components/NewsletterForm";
 import Hero3DBackground from "./components/Hero3DBackground";
 import PharmacyIcon3D from "./components/PharmacyIcon3D";
-import TiltCard from "./components/TiltCard";
-import { SectionReveal, StaggerContainer, StaggerItem, ImagePlaceholder } from "./components/MotionKit";
+import { SectionReveal, StaggerContainer, StaggerItem } from "./components/MotionKit";
 import {
   Pill,
   ArrowLeftRight,
@@ -26,29 +26,34 @@ import {
   Clock,
   MapPin,
   CheckCircle,
-  User,
 } from "lucide-react";
+import Link from "next/link";
 
 const QUICK_ACTIONS = [
   { icon: Pill, label: "Fill a Prescription", href: "#refill", desc: "Request a refill" },
   { icon: ArrowLeftRight, label: "Transfer to iHealth", href: "#transfer", desc: "Switch today" },
-  { icon: Stethoscope, label: "Minor Ailment", href: "#minor-ailments", desc: "Book a walk-in" },
-  { icon: ClipboardList, label: "Med Review / Injection", href: "#med-review", desc: "Book clinical time" },
+  { icon: Stethoscope, label: "Minor Ailment", href: "/variants/friendly/services/minor-ailments", desc: "Book a walk-in" },
+  { icon: ClipboardList, label: "Med Review / Injection", href: "/variants/friendly/services/med-review", desc: "Book clinical time" },
   { icon: Video, label: "Virtual Doctor", href: "#virtual-doctor", desc: "See a doctor online" },
   { icon: Mail, label: "Contact Us", href: "#contact", desc: "Send a message" },
 ];
 
-const SERVICES = [
-  { icon: Pill, title: "Online Prescriptions", body: "Refill existing prescriptions or send new ones through our secure patient portal." },
+const CORE_SERVICES = [
+  { icon: Pill, title: "Prescription Refills", body: "Refill existing prescriptions or send new ones through our secure patient portal." },
   { icon: ArrowLeftRight, title: "Transfer to iHealth", body: "Switching is seamless. Give us your current pharmacy name and we handle the rest." },
-  { icon: Stethoscope, title: "Minor Ailment Clinic", body: "Our pharmacists can assess and prescribe for common minor ailments, women’s health, and skin conditions." },
-  { icon: ClipboardList, title: "Med Review / Injection", body: "One-on-one medication reviews plus professional injections administered in a private room." },
-  { icon: Video, title: "Virtual Doctor", body: "Connect with a licensed physician online for non-urgent consultations and prescriptions." },
-  { icon: Mail, title: "Contact & Advice", body: "Ask a pharmacist by phone, text, email, or in person. We respond the same business day." },
-  { icon: Syringe, title: "Vaccinations", body: "Flu shots, travel vaccines, shingles, and routine immunizations — no appointment needed." },
+  { icon: Syringe, title: "Vaccinations", body: "Flu shots, travel vaccines, shingles, and routine immunizations." },
   { icon: Package, title: "MyHealthPack", body: "Blister packs and compliance packaging sorted by day and time, with automatic refills." },
   { icon: Thermometer, title: "Flu Shots", body: "Walk-in seasonal influenza immunizations for adults and children." },
   { icon: Truck, title: "Prescription Delivery", body: "Free same-day delivery across Abbotsford for qualifying prescriptions." },
+];
+
+const ALL_SERVICE_LINKS = [
+  { title: "Minor Ailments Clinic", href: "/variants/friendly/services/minor-ailments", desc: "Walk-in care for common conditions" },
+  { title: "Compounding", href: "/variants/friendly/services/compounding", desc: "Custom medications made for you" },
+  { title: "Vaccinations", href: "/variants/friendly/services/vaccinations", desc: "Flu shots, travel vaccines, and more" },
+  { title: "MyHealthPack", href: "/variants/friendly/services/myhealthpack", desc: "Compliance packaging by day and time" },
+  { title: "Medication Review", href: "/variants/friendly/services/med-review", desc: "One-on-one pharmacist consultation" },
+  { title: "Prescription Delivery", href: "/variants/friendly/services/delivery", desc: "Same-day local delivery" },
 ];
 
 const TRUST_STATS = [
@@ -158,154 +163,72 @@ export default function FriendlyPage() {
         </div>
       </section>
 
-      {/* Services */}
+      {/* Core Services */}
       <section id="services" className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
         <SectionReveal className="text-center">
-          <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">How can we help you today?</h2>
+          <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Main pharmacy services</h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--muted)]">
-            Everything a modern pharmacy should do — prescriptions, clinical services, and everyday health support.
+            The everyday services your neighbourhood pharmacy should make effortless.
           </p>
         </SectionReveal>
 
         <StaggerContainer className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {SERVICES.map((s) => (
+          {CORE_SERVICES.map((s) => (
             <StaggerItem key={s.title}>
-              <TiltCard className="h-full">
-                <article className="h-full rounded-xl border border-[var(--border)] bg-white p-6 transition hover:border-[var(--brand)] hover:shadow-sm">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--brand-subtle)] text-[var(--brand)]">
-                    <s.icon size={22} />
-                  </span>
-                  <h3 className="mt-4 text-lg font-semibold">{s.title}</h3>
-                  <p className="mt-2 text-[var(--muted)]">{s.body}</p>
-                </article>
-              </TiltCard>
+              <article className="h-full rounded-xl border border-[var(--border)] bg-white p-6 transition hover:border-[var(--brand)] hover:shadow-sm">
+                <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--brand-subtle)] text-[var(--brand)]">
+                  <s.icon size={22} />
+                </span>
+                <h3 className="mt-4 text-lg font-semibold">{s.title}</h3>
+                <p className="mt-2 text-[var(--muted)]">{s.body}</p>
+              </article>
             </StaggerItem>
           ))}
         </StaggerContainer>
-      </section>
 
-      {/* Minor Ailments */}
-      <section id="minor-ailments" className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-        <div className="rounded-2xl border border-[var(--border)] bg-white p-8 md:p-12">
-          <div className="grid gap-10 md:grid-cols-2 md:items-center">
-            <SectionReveal>
-              <span className="inline-block rounded-full bg-[var(--brand-subtle)] px-4 py-1.5 text-sm font-semibold text-[var(--brand)]">
-                Walk-in Clinic
-              </span>
-              <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Minor Ailments Clinic</h2>
-              <p className="mt-4 text-lg text-[var(--muted)]">
-                Our licensed pharmacists can now assess and prescribe for common minor ailments, women&apos;s health concerns, and certain skin conditions — no doctor&apos;s appointment needed.
-              </p>
-              <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-                {[
-                  "Urinary tract infections",
-                  "Cold sores & allergies",
-                  "Pink eye & skin rashes",
-                  "Emergency contraception",
-                ].map((item) => (
-                  <li key={item} className="flex items-center gap-2 text-[var(--foreground)]">
-                    <CheckCircle size={16} className="shrink-0 text-[var(--brand)]" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <a
-                href="#contact"
-                className="mt-8 inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--brand-hover)]"
-              >
-                Book an Appointment
-              </a>
-            </SectionReveal>
-
-            <SectionReveal className="mx-auto w-full max-w-xs">
-              <ImagePlaceholder label="Consultation room" icon={Stethoscope} className="aspect-square w-full" />
-            </SectionReveal>
-          </div>
-        </div>
-      </section>
-
-      {/* MyHealthPack */}
-      <section id="myhealthpack" className="bg-[var(--surface)]">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 md:grid-cols-2 md:items-center lg:px-8">
-          <SectionReveal className="order-2 md:order-1 mx-auto w-full max-w-sm md:mx-0">
-            <ImagePlaceholder label="Compliance packaging" icon={Package} className="aspect-square w-full" />
-          </SectionReveal>
-
-          <SectionReveal className="order-1 md:order-2">
-            <span className="inline-block rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-[var(--brand)] shadow-sm">
-              Compliance Packaging
-            </span>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">MyHealthPack</h2>
-            <p className="mt-4 text-lg text-[var(--muted)]">
-              We package your medications and vitamins by date and time, then automatically refill them so you never miss a dose or run out.
-            </p>
-            <ul className="mt-6 space-y-3">
-              {[
-                "Pills sorted by day & time",
-                "Automatic refill coordination",
-                "Ideal for seniors, caregivers, and complex regimens",
-              ].map((item) => (
-                <li key={item} className="flex items-center gap-3 text-[var(--foreground)]">
-                  <CheckCircle size={18} className="shrink-0 text-[var(--brand)]" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </SectionReveal>
-        </div>
-      </section>
-
-      {/* Clinical services: Med Review / Injection / Virtual Doctor */}
-      <section id="med-review" className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-        <SectionReveal className="text-center">
-          <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Personalized clinical services</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--muted)]">
-            Book one-on-one time with a pharmacist or physician for reviews, injections, and virtual care.
-          </p>
+        <SectionReveal className="mt-12 text-center">
+          <Link
+            href="/variants/friendly/services/minor-ailments"
+            className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-6 py-3 text-base font-semibold text-[var(--foreground)] transition hover:border-[var(--brand)] hover:text-[var(--brand)]"
+          >
+            View all services
+            <span>→</span>
+          </Link>
         </SectionReveal>
-
-        <StaggerContainer className="mt-12 grid gap-6 md:grid-cols-3">
-          <StaggerItem>
-            <div className="rounded-xl border border-[var(--border)] bg-white p-6">
-              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--brand-subtle)] text-[var(--brand)]">
-                <ClipboardList size={22} />
-              </span>
-              <h3 className="mt-4 text-lg font-semibold">Medication Review</h3>
-              <p className="mt-2 text-[var(--muted)]">
-                A 20–30 minute private review of all your medications, interactions, and dosing schedule.
-              </p>
-            </div>
-          </StaggerItem>
-
-          <StaggerItem>
-            <div className="rounded-xl border border-[var(--border)] bg-white p-6">
-              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--brand-subtle)] text-[var(--brand)]">
-                <Syringe size={22} />
-              </span>
-              <h3 className="mt-4 text-lg font-semibold">Injections</h3>
-              <p className="mt-2 text-[var(--muted)]">
-                Vaccines, vitamin B12, and other injections administered by a trained pharmacist in a private room.
-              </p>
-            </div>
-          </StaggerItem>
-
-          <StaggerItem id="virtual-doctor">
-            <div className="rounded-xl border border-[var(--border)] bg-white p-6">
-              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--brand-subtle)] text-[var(--brand)]">
-                <Video size={22} />
-              </span>
-              <h3 className="mt-4 text-lg font-semibold">Virtual Doctor</h3>
-              <p className="mt-2 text-[var(--muted)]">
-                Speak with a licensed physician by video for non-urgent issues and new prescriptions.
-              </p>
-            </div>
-          </StaggerItem>
-        </StaggerContainer>
       </section>
 
-      {/* About / Pharmacist */}
-      <section id="about" className="bg-[var(--surface)]">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 md:grid-cols-2 md:items-center lg:px-8">
+      {/* All services overview */}
+      <section className="bg-[var(--surface)]">
+        <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+          <SectionReveal className="text-center">
+            <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Full service menu</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--muted)]">
+              Click through for details on clinical services, compounding, compliance packaging, and more.
+            </p>
+          </SectionReveal>
+
+          <StaggerContainer className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {ALL_SERVICE_LINKS.map((s) => (
+              <StaggerItem key={s.title}>
+                <Link
+                  href={s.href}
+                  className="group block rounded-xl border border-[var(--border)] bg-white p-5 transition hover:-translate-y-0.5 hover:border-[var(--brand)] hover:shadow-sm"
+                >
+                  <h3 className="text-lg font-semibold text-[var(--foreground)] group-hover:text-[var(--brand)]">{s.title}</h3>
+                  <p className="mt-1 text-sm text-[var(--muted)]">{s.desc}</p>
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-[var(--brand)]">
+                    Learn more <span className="transition group-hover:translate-x-0.5">→</span>
+                  </span>
+                </Link>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </div>
+      </section>
+
+      {/* About */}
+      <section id="about" className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+        <div className="grid gap-10 md:grid-cols-2 md:items-center">
           <SectionReveal className="mx-auto w-full max-w-sm md:mx-0">
             <div className="rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm">
               <Image
@@ -320,9 +243,7 @@ export default function FriendlyPage() {
           </SectionReveal>
 
           <SectionReveal>
-            <span className="inline-block rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-[var(--brand)] shadow-sm">
-              About Us
-            </span>
+            <span className="inline-block rounded-full bg-[var(--brand-subtle)] px-4 py-1.5 text-sm font-semibold text-[var(--brand)]">About Us</span>
             <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Your neighbourhood pharmacist.</h2>
             <p className="mt-4 text-lg text-[var(--muted)]">
               At iHealth Pharmacy, you get a pharmacist who sits down with you — someone who knows your medications, your history, and how to keep your care simple.
@@ -367,18 +288,6 @@ export default function FriendlyPage() {
             </StaggerItem>
           ))}
         </StaggerContainer>
-
-        <SectionReveal className="mt-10 text-center">
-          <a
-            href="https://www.google.com/search?q=ihealth+pharmacy+abbotsford+reviews"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-5 py-3 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--brand)]"
-          >
-            <Star size={18} className="text-amber-500" fill="currentColor" />
-            View latest Google Reviews
-          </a>
-        </SectionReveal>
       </section>
 
       {/* Newsletter */}
@@ -461,7 +370,7 @@ export default function FriendlyPage() {
         </div>
       </section>
 
-      {/* Contact / Location */}
+      {/* Contact */}
       <section id="contact" className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-2">
           <SectionReveal>
@@ -480,7 +389,7 @@ export default function FriendlyPage() {
               </li>
               <li className="flex items-center gap-3">
                 <Phone size={20} className="shrink-0 text-[var(--brand)]" />
-                <a href="tel:+160****0199" className="text-[var(--foreground)] underline underline-offset-4 transition hover:text-[var(--brand)]">
+                <a href="tel:+16045550199" className="text-[var(--foreground)] underline underline-offset-4 transition hover:text-[var(--brand)]">
                   (604) 555-0199
                 </a>
               </li>
@@ -519,62 +428,7 @@ export default function FriendlyPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-[var(--border)] bg-[var(--surface)]">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:grid-cols-2 lg:grid-cols-4 lg:px-8">
-          <div>
-            <div className="flex items-center gap-2">
-              <Image src="/ihealth-logo.png" alt="" width={40} height={40} className="rounded-full bg-white" />
-              <span className="text-lg font-semibold">iHealth Pharmacy</span>
-            </div>
-            <p className="mt-3 text-sm text-[var(--muted)]">Your neighbourhood pharmacist, right around the corner in Abbotsford.</p>
-          </div>
-
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider">Quick links</h4>
-            <ul className="mt-3 space-y-2 text-sm">
-              {[
-                ["Services", "#services"],
-                ["Refill", "#refill"],
-                ["Transfer", "#transfer"],
-                ["About", "#about"],
-                ["Contact", "#contact"],
-              ].map(([l, h]) => (
-                <li key={h}>
-                  <a href={h} className="text-[var(--muted)] transition hover:text-[var(--brand)]">{l}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider">Services</h4>
-            <ul className="mt-3 space-y-2 text-sm text-[var(--muted)]">
-              <li>Refills</li>
-              <li>Vaccinations</li>
-              <li>Minor Ailments</li>
-              <li>MyHealthPack</li>
-              <li>Delivery</li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider">Visit us</h4>
-            <ul className="mt-3 space-y-2 text-sm text-[var(--muted)]">
-              <li>123 Main Street, Abbotsford, BC</li>
-              <li>(604) 555-0199</li>
-              <li>hello@ihealthpharmacy.ca</li>
-              <li>Mon–Fri 9–7 · Sat 9–5</li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="border-t border-[var(--border)]">
-          <p className="mx-auto max-w-7xl px-5 py-5 text-center text-xs text-[var(--muted)]">
-            © 2026 iHealth Pharmacy. All rights reserved. Licensed pharmacy operating in British Columbia, Canada.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
