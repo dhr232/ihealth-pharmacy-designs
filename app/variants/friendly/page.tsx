@@ -16,9 +16,7 @@ import {
   Video,
   Mail,
   Syringe,
-  ShieldCheck,
   Package,
-  Smartphone,
   Thermometer,
   Truck,
   HeartPulse,
@@ -27,8 +25,6 @@ import {
   Phone,
   Clock,
   MapPin,
-  Download,
-  PlayCircle,
   CheckCircle,
   User,
 } from "lucide-react";
@@ -51,7 +47,6 @@ const SERVICES = [
   { icon: Mail, title: "Contact & Advice", body: "Ask a pharmacist by phone, text, email, or in person. We respond the same business day." },
   { icon: Syringe, title: "Vaccinations", body: "Flu shots, travel vaccines, shingles, and routine immunizations — no appointment needed." },
   { icon: Package, title: "MyHealthPack", body: "Blister packs and compliance packaging sorted by day and time, with automatic refills." },
-  { icon: Smartphone, title: "Download our App", body: "Manage refills, reminders, and family profiles from your smartphone." },
   { icon: Thermometer, title: "Flu Shots", body: "Walk-in seasonal influenza immunizations for adults and children." },
   { icon: Truck, title: "Prescription Delivery", body: "Free same-day delivery across Abbotsford for qualifying prescriptions." },
 ];
@@ -187,53 +182,6 @@ export default function FriendlyPage() {
             </StaggerItem>
           ))}
         </StaggerContainer>
-      </section>
-
-      {/* App / Direct refill portal */}
-      <section id="app" className="bg-[var(--surface)]">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 md:grid-cols-2 md:items-center lg:px-8">
-          <SectionReveal>
-            <span className="inline-block rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-[var(--brand)] shadow-sm">
-              iHealth Direct
-            </span>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Manage your meds from your phone.</h2>
-            <p className="mt-4 text-lg text-[var(--muted)]">
-              Request refills, track orders, set reminders, and manage family profiles in one secure app.
-            </p>
-            <ul className="mt-6 space-y-3">
-              {[
-                "Refill in two taps",
-                "Real-time order status",
-                "Automatic pickup and delivery reminders",
-              ].map((item) => (
-                <li key={item} className="flex items-center gap-3 text-[var(--foreground)]">
-                  <CheckCircle size={18} className="shrink-0 text-[var(--brand)]" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <a
-                href="#refill"
-                className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--brand-hover)]"
-              >
-                <Download size={18} />
-                Use on Browser
-              </a>
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-5 py-3 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--brand)]"
-              >
-                <PlayCircle size={18} />
-                Download the App
-              </a>
-            </div>
-          </SectionReveal>
-
-          <SectionReveal className="mx-auto w-full max-w-sm md:mx-0">
-            <ImagePlaceholder label="iHealth Direct app" icon={Smartphone} className="aspect-[3/4] w-full" />
-          </SectionReveal>
-        </div>
       </section>
 
       {/* Minor Ailments */}
