@@ -5,17 +5,17 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 const PILL_CONFIG = [
-  { cap: "#4f46e5", body: "#f8fafc", pos: [1.25, 1.1, 0.2], rot: [0.3, 0.4, -0.25], scale: 1.05 }, // purple top-right
-  { cap: "#3b82f6", body: "#f8fafc", pos: [-0.2, 1.6, 0.5], rot: [-0.2, -0.3, 0.15], scale: 1.0 }, // blue upper-left
-  { cap: "#eab308", body: "#f8fafc", pos: [1.45, -0.55, 0.4], rot: [0.35, 0.2, 0.45], scale: 0.95 }, // yellow right
-  { cap: "#ef4444", body: "#f8fafc", pos: [-0.65, -0.2, 0.6], rot: [-0.15, 0.55, -0.1], scale: 1.0 }, // red lower-left
+  { cap: "#4f46e5", body: "#f8fafc", pos: [0.9, 1.35, 0.2], rot: [0.25, 0.35, -0.2], scale: 0.9 }, // purple top-right
+  { cap: "#3b82f6", body: "#f8fafc", pos: [-0.45, 1.55, 0.5], rot: [-0.15, -0.25, 0.1], scale: 0.85 }, // blue upper-left
+  { cap: "#eab308", body: "#f8fafc", pos: [1.1, -0.2, 0.4], rot: [0.3, 0.15, 0.4], scale: 0.82 }, // yellow right
+  { cap: "#ef4444", body: "#f8fafc", pos: [-0.25, -0.6, 0.6], rot: [-0.1, 0.45, -0.05], scale: 0.85 }, // red lower-left
 ];
 
 const RING_CONFIG = [
-  { color: "#6366f1", pos: [-0.1, 2.25, -0.5], size: 0.32 },
-  { color: "#60a5fa", pos: [0.55, 0.75, -0.6], size: 0.26 },
-  { color: "#fbbf24", pos: [0.85, 0.95, -0.4], size: 0.2 },
-  { color: "#6366f1", pos: [1.85, -0.9, -0.5], size: 0.28 },
+  { color: "#6366f1", pos: [-0.15, 2.0, -0.5], size: 0.28 },
+  { color: "#60a5fa", pos: [0.35, 0.85, -0.6], size: 0.22 },
+  { color: "#fbbf24", pos: [0.65, 0.55, -0.4], size: 0.18 },
+  { color: "#6366f1", pos: [1.45, -0.65, -0.5], size: 0.24 },
 ];
 
 function createGradientTexture(colorA: string, colorB: string) {
@@ -98,8 +98,8 @@ function Pill({
 
   return (
     <group position={position} scale={scale}>
-      <sprite ref={glowRef} scale={[2.6, 2.6, 1]} position={[0, 0, -0.4]}>
-        <spriteMaterial map={glowTex} transparent opacity={0.55} depthWrite={false} />
+      <sprite ref={glowRef} scale={[2.2, 2.2, 1]} position={[0, 0, -0.4]}>
+        <spriteMaterial map={glowTex} transparent opacity={0.5} depthWrite={false} />
       </sprite>
 
       <group ref={group}>
