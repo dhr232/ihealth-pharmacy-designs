@@ -25,3 +25,22 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Friendly variant: respect reduced motion and keep hover-lifts playful */
+@media (prefers-reduced-motion: reduce) {
+  .friendly-variant *,
+  .friendly-variant *::before,
+  .friendly-variant *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .friendly-variant .transition,
+  .friendly-variant a,
+  .friendly-variant button {
+    transform: none !important;
+  }
+}
+
