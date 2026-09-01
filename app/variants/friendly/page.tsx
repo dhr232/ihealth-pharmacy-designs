@@ -8,7 +8,7 @@ import NewsletterForm from "./components/NewsletterForm";
 import Hero3DBackground from "./components/Hero3DBackground";
 import FloatingPills3D from "./components/FloatingPills3D";
 import CarouselDispenser3D from "./components/CarouselDispenser3D";
-import { SectionReveal, StaggerContainer, StaggerItem } from "./components/MotionKit";
+import { SectionReveal, StaggerContainer, StaggerItem, HoverCard } from "./components/MotionKit";
 import {
   Pill,
   ArrowLeftRight,
@@ -125,21 +125,23 @@ export default function FriendlyPage() {
           </p>
         </SectionReveal>
 
-        <StaggerContainer className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+          <StaggerContainer className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
           {NUMBERED_SERVICES.map((s) => (
             <StaggerItem key={s.number}>
-              <Link
-                href={s.href}
-                className="group flex h-full flex-col rounded-2xl border border-[var(--border)] bg-white p-6 transition hover:-translate-y-1 hover:border-[var(--brand)] hover:shadow-lg"
-              >
-                <span className="text-3xl font-bold text-[var(--brand)]/30 transition group-hover:text-[var(--brand)]">{s.number}</span>
-                <h3 className="mt-4 text-lg font-semibold">{s.title}</h3>
-                <p className="mt-2 flex-1 text-sm text-[var(--muted)]">{s.body}</p>
-                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[var(--brand)]">
-                  Learn More
-                  <span className="transition group-hover:translate-x-0.5">→</span>
-                </span>
-              </Link>
+              <HoverCard>
+                <Link
+                  href={s.href}
+                  className="group flex h-full flex-col rounded-2xl border border-[var(--border)] bg-white p-6 transition hover:border-[var(--brand)] hover:shadow-lg"
+                >
+                  <span className="text-3xl font-bold text-[var(--brand)]/30 transition group-hover:text-[var(--brand)]">{s.number}</span>
+                  <h3 className="mt-4 text-lg font-semibold">{s.title}</h3>
+                  <p className="mt-2 flex-1 text-sm text-[var(--muted)]">{s.body}</p>
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[var(--brand)]">
+                    Learn More
+                    <span className="transition group-hover:translate-x-0.5">→</span>
+                  </span>
+                </Link>
+              </HoverCard>
             </StaggerItem>
           ))}
         </StaggerContainer>
@@ -190,13 +192,15 @@ export default function FriendlyPage() {
         <StaggerContainer className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {CORE_SERVICES.map((s) => (
             <StaggerItem key={s.title}>
-              <article className="h-full rounded-2xl border border-[var(--border)] bg-white p-6 transition hover:-translate-y-1 hover:border-[var(--brand)] hover:shadow-lg">
-                <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--brand-subtle)] text-[var(--brand)]">
-                  <s.icon size={22} />
-                </span>
-                <h3 className="mt-4 text-lg font-semibold">{s.title}</h3>
-                <p className="mt-2 text-[var(--muted)]">{s.body}</p>
-              </article>
+              <HoverCard>
+                <article className="h-full rounded-2xl border border-[var(--border)] bg-white p-6 transition hover:border-[var(--brand)] hover:shadow-lg">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--brand-subtle)] text-[var(--brand)]">
+                    <s.icon size={22} />
+                  </span>
+                  <h3 className="mt-4 text-lg font-semibold">{s.title}</h3>
+                  <p className="mt-2 text-[var(--muted)]">{s.body}</p>
+                </article>
+              </HoverCard>
             </StaggerItem>
           ))}
         </StaggerContainer>
@@ -225,17 +229,19 @@ export default function FriendlyPage() {
           <StaggerContainer className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {ALL_SERVICE_LINKS.map((s) => (
               <StaggerItem key={s.title}>
-                <Link
-                  href={s.href}
-                  className="group block rounded-xl border border-[var(--border)] bg-white p-5 transition hover:-translate-y-0.5 hover:border-[var(--brand)] hover:shadow-sm"
-                >
-                  <h3 className="text-lg font-semibold text-[var(--foreground)] group-hover:text-[var(--brand)]">{s.title}</h3>
-                  <p className="mt-1 text-sm text-[var(--muted)]">{s.desc}</p>
-                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-[var(--brand)]">
-                    Learn more
-                    <span className="transition group-hover:translate-x-0.5">→</span>
-                  </span>
-                </Link>
+                <HoverCard>
+                  <Link
+                    href={s.href}
+                    className="group block rounded-xl border border-[var(--border)] bg-white p-5 transition hover:border-[var(--brand)] hover:shadow-sm"
+                  >
+                    <h3 className="text-lg font-semibold text-[var(--foreground)] group-hover:text-[var(--brand)]">{s.title}</h3>
+                    <p className="mt-1 text-sm text-[var(--muted)]">{s.desc}</p>
+                    <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-[var(--brand)]">
+                      Learn more
+                      <span className="transition group-hover:translate-x-0.5">→</span>
+                    </span>
+                  </Link>
+                </HoverCard>
               </StaggerItem>
             ))}
           </StaggerContainer>
@@ -294,19 +300,21 @@ export default function FriendlyPage() {
           <StaggerContainer className="mt-12 grid gap-6 md:grid-cols-3">
             {TESTIMONIALS.map((t) => (
               <StaggerItem key={t.name}>
-                <figure className="relative rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm">
-                  <div className="mb-4 text-5xl font-bold text-[var(--brand)]/20">“</div>
-                  <blockquote className="text-[var(--foreground)]">{t.quote}</blockquote>
-                  <figcaption className="mt-6 flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--brand-subtle)] text-sm font-bold text-[var(--brand)]">
-                      {t.name.split(" ").map((n) => n[0]).join("")}
-                    </span>
-                    <div>
-                      <p className="text-sm font-semibold">{t.name}</p>
-                      <p className="text-xs text-[var(--muted)]">{t.location}</p>
-                    </div>
-                  </figcaption>
-                </figure>
+                <HoverCard>
+                  <figure className="relative rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm">
+                    <div className="mb-4 text-5xl font-bold text-[var(--brand)]/20">“</div>
+                    <blockquote className="text-[var(--foreground)]">{t.quote}</blockquote>
+                    <figcaption className="mt-6 flex items-center gap-3">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--brand-subtle)] text-sm font-bold text-[var(--brand)]">
+                        {t.name.split(" ").map((n) => n[0]).join("")}
+                      </span>
+                      <div>
+                        <p className="text-sm font-semibold">{t.name}</p>
+                        <p className="text-xs text-[var(--muted)]">{t.location}</p>
+                      </div>
+                    </figcaption>
+                  </figure>
+                </HoverCard>
               </StaggerItem>
             ))}
           </StaggerContainer>
