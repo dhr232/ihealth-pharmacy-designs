@@ -153,13 +153,13 @@ export default function FriendlyPage() {
       <section className="bg-[var(--surface)]">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 md:grid-cols-2 md:items-center lg:px-8">
           <SectionReveal className="mx-auto w-full max-w-md md:mx-0">
-            <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-sm">
+            <div className="flex aspect-square items-center justify-center rounded-2xl border border-[var(--border)] bg-white p-8 shadow-sm">
               <Image
                 src="/ihealth-logo-new.jpeg"
                 alt="iHealth Pharmacy logo"
-                width={520}
-                height={520}
-                className="w-full object-cover"
+                width={320}
+                height={320}
+                className="max-h-full max-w-full object-contain"
               />
             </div>
           </SectionReveal>

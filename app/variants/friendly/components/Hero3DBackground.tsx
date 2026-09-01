@@ -71,19 +71,5 @@ function Scene() {
 }
 
 export default function Hero3DBackground() {
-  return (
-    <div
-      className="pointer-events-none absolute inset-0 z-0 hidden md:block"
-      aria-hidden="true"
-    >
-      <Canvas
-        camera={{ position: [0, 0, 8], fov: 55 }}
-        dpr={[1, 1.5]}
-        gl={{ antialias: true, alpha: true }}
-        style={{ background: "transparent" }}
-      >
-        <Scene />
-      </Canvas>
-    </div>
-  );
+  return null;
 }
