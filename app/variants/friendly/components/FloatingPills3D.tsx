@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
+
+const PILL_BASE = "/ihealth-pharmacy-designs/";
 
 const pills = [
-  { src: "/pills-purple.png", alt: "Purple capsule", className: "pill-purple", top: "6%", left: "48%", width: 220, delay: 0, rotate: -25, floatY: -12 },
-  { src: "/pills-blue.png", alt: "Blue capsule", className: "pill-blue", top: "32%", left: "10%", width: 200, delay: 0.8, rotate: 15, floatY: 10 },
-  { src: "/pills-yellow.png", alt: "Yellow capsule", className: "pill-yellow", top: "46%", left: "62%", width: 180, delay: 1.4, rotate: 25, floatY: -14 },
-  { src: "/pills-red.png", alt: "Red capsule", className: "pill-red", top: "68%", left: "20%", width: 195, delay: 2.2, rotate: -12, floatY: 12 },
+  { src: "pills-purple.png", alt: "Purple capsule", className: "pill-purple", top: "6%", left: "48%", width: 220, delay: 0, rotate: -25, floatY: -12 },
+  { src: "pills-blue.png", alt: "Blue capsule", className: "pill-blue", top: "32%", left: "10%", width: 200, delay: 0.8, rotate: 15, floatY: 10 },
+  { src: "pills-yellow.png", alt: "Yellow capsule", className: "pill-yellow", top: "46%", left: "62%", width: 180, delay: 1.4, rotate: 25, floatY: -14 },
+  { src: "pills-red.png", alt: "Red capsule", className: "pill-red", top: "68%", left: "20%", width: 195, delay: 2.2, rotate: -12, floatY: 12 },
 ];
 
 const rings = [
@@ -86,13 +87,11 @@ export default function FloatingPills3D() {
           data-delay={pill.delay}
           data-floaty={pill.floatY}
         >
-          <Image
-            src={pill.src}
+        <img
+            src={`${PILL_BASE}${pill.src}`}
             alt={pill.alt}
-            fill
-            className="object-contain"
-            sizes="(max-width: 768px) 160px, (max-width: 1024px) 190px, 220px"
-            priority={i < 2}
+            className="h-full w-full object-contain"
+            loading={i < 2 ? "eager" : "lazy"}
           />
         </div>
       ))}
