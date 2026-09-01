@@ -154,13 +154,11 @@ export default function FriendlyPage() {
         <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 md:grid-cols-2 md:items-center lg:px-8">
           <SectionReveal className="mx-auto w-full max-w-md md:mx-0">
             <div className="flex aspect-square items-center justify-center rounded-2xl border border-[var(--border)] bg-white p-8 shadow-sm">
-              <Image
-                src="/ihealth-logo-new.jpeg"
-                alt="iHealth Pharmacy logo"
-                width={320}
-                height={320}
-                className="max-h-full max-w-full object-contain"
-              />
+              <div className="text-center">
+                <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-[var(--brand-subtle)] text-4xl font-bold text-[var(--brand)]">iH</div>
+                <p className="mt-4 text-sm font-medium text-[var(--muted)]">iHealth Pharmacy</p>
+                <p className="text-xs text-[var(--muted)]">Logo placeholder</p>
+              </div>
             </div>
           </SectionReveal>
 
