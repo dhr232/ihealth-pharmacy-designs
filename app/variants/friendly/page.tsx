@@ -9,6 +9,7 @@ import Hero3DBackground from "./components/Hero3DBackground";
 import FloatingPills3D from "./components/FloatingPills3D";
 import CarouselDispenser3D from "./components/CarouselDispenser3D";
 import { SectionReveal, StaggerContainer, StaggerItem, HoverCard } from "./components/MotionKit";
+import CountUp from "./components/CountUp";
 import {
   Pill,
   ArrowLeftRight,
@@ -59,10 +60,10 @@ const ALL_SERVICE_LINKS = [
 ];
 
 const STATS = [
-  { value: "15+", label: "Years Experience" },
-  { value: "5k+", label: "Happy Customers" },
-  { value: "50k+", label: "Prescriptions Filled" },
-  { value: "800+", label: "Health Care Products" },
+  { value: 15, suffix: "+", label: "Years Experience" },
+  { value: 5, suffix: "k+", label: "Happy Customers" },
+  { value: 50, suffix: "k+", label: "Prescriptions Filled" },
+  { value: 800, suffix: "+", label: "Health Care Products" },
 ];
 
 const TESTIMONIALS = [
@@ -170,7 +171,9 @@ export default function FriendlyPage() {
             <div className="mt-8 grid grid-cols-2 gap-6">
               {STATS.map((stat) => (
                 <div key={stat.label} className="rounded-xl border border-[var(--border)] bg-white p-5 text-center">
-                  <p className="text-3xl font-bold text-[var(--brand)]">{stat.value}</p>
+                  <p className="text-3xl font-bold text-[var(--brand)]">
+                    <CountUp value={stat.value} suffix={stat.suffix} duration={2} />
+                  </p>
                   <p className="mt-1 text-sm text-[var(--muted)]">{stat.label}</p>
                 </div>
               ))}
