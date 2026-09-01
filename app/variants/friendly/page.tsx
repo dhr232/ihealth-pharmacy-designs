@@ -7,7 +7,8 @@ import RefillForm from "./components/RefillForm";
 import NewsletterForm from "./components/NewsletterForm";
 import Hero3DBackground from "./components/Hero3DBackground";
 import PharmacyIcon3D from "./components/PharmacyIcon3D";
-import { SectionReveal, StaggerContainer, StaggerItem } from "./components/MotionKit";
+import CarouselDispenser3D from "./components/CarouselDispenser3D";
+import { SectionReveal, StaggerContainer, StaggerItem, ImagePlaceholder } from "./components/MotionKit";
 import {
   Pill,
   ArrowLeftRight,
@@ -223,6 +224,47 @@ export default function FriendlyPage() {
               </StaggerItem>
             ))}
           </StaggerContainer>
+        </div>
+      </section>
+
+      {/* Carousel Automatic Pill Dispenser */}
+      <section className="bg-[var(--surface)]">
+        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 md:grid-cols-2 md:items-center lg:px-8">
+          <SectionReveal className="order-2 md:order-1">
+            <span className="inline-block rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-[var(--brand)] shadow-sm">
+              Medication Management
+            </span>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">Carousel Automatic Pill Dispenser</h2>
+            <p className="mt-4 text-lg text-[var(--muted)]">
+              Remembering every dose at the right moment is hard. The Carousel dispenser sorts your medications by day and time in a secure, rotating unit that helps you take the right pills at the right time — every time.
+            </p>
+            <ul className="mt-6 space-y-3">
+              {[
+                "28 locked compartments for a full 4-week schedule",
+                "Built-in reminder alerts and digital display",
+                "Tamper-safe design for households with children",
+                "Pre-loaded by our pharmacy team for easy home use",
+              ].map((item) => (
+                <li key={item} className="flex items-center gap-3 text-[var(--foreground)]">
+                  <CheckCircle size={18} className="shrink-0 text-[var(--brand)]" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/variants/friendly/services/myhealthpack"
+              className="mt-8 inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--brand-hover)]"
+            >
+              Learn about medication packaging
+            </Link>
+          </SectionReveal>
+
+          <SectionReveal className="order-1 md:order-2">
+            <div className="rounded-2xl border border-[var(--border)] bg-white p-4 shadow-sm">
+              <CarouselDispenser3D />
+              <p className="mt-2 text-center text-xs text-[var(--muted)]">Interactive 3D model — drag or hover to rotate</p>
+            </div>
+          </SectionReveal>
         </div>
       </section>
 
