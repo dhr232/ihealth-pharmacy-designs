@@ -51,8 +51,15 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 lg:px-8">
         <Link href="/variants/friendly" className="flex items-center gap-2 rounded-lg px-1 py-1 transition hover:opacity-90">
+          <img
+            src="/ihealth-pharmacy-designs/ihealth-logo-main.jpeg"
+            alt="iHealth Pharmacy logo"
+            width={36}
+            height={36}
+            className="h-9 w-9 rounded-full object-contain"
+          />
           <span className="text-xl font-bold tracking-tight text-[var(--foreground)]">
-            iHealth<span className="text-[var(--brand)]">.</span>
+            iHealth
           </span>
         </Link>
 
