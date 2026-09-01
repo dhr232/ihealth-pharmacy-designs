@@ -5,17 +5,17 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 const PILL_CONFIG = [
-  { cap: "#4f46e5", body: "#f8fafc", pos: [0.9, 1.35, 0.2], rot: [0.25, 0.35, -0.2], scale: 0.9 }, // purple top-right
-  { cap: "#3b82f6", body: "#f8fafc", pos: [-0.45, 1.55, 0.5], rot: [-0.15, -0.25, 0.1], scale: 0.85 }, // blue upper-left
-  { cap: "#eab308", body: "#f8fafc", pos: [1.1, -0.2, 0.4], rot: [0.3, 0.15, 0.4], scale: 0.82 }, // yellow right
-  { cap: "#ef4444", body: "#f8fafc", pos: [-0.25, -0.6, 0.6], rot: [-0.1, 0.45, -0.05], scale: 0.85 }, // red lower-left
+  { cap: "#5b4cdb", body: "#f8fafc", pos: [0.85, 0.95, 0.2], rot: [0.25, 0.35, -0.2], scale: 0.9 }, // purple top-right
+  { cap: "#3b82f6", body: "#f8fafc", pos: [-0.55, 1.15, 0.5], rot: [-0.15, -0.25, 0.1], scale: 0.85 }, // blue upper-left
+  { cap: "#f5b800", body: "#f8fafc", pos: [1.15, -0.55, 0.4], rot: [0.3, 0.15, 0.4], scale: 0.82 }, // yellow right
+  { cap: "#ef4444", body: "#f8fafc", pos: [-0.35, -0.95, 0.6], rot: [-0.1, 0.45, -0.05], scale: 0.85 }, // red lower-left
 ];
 
 const RING_CONFIG = [
-  { color: "#6366f1", pos: [-0.15, 2.0, -0.5], size: 0.28 },
-  { color: "#60a5fa", pos: [0.35, 0.85, -0.6], size: 0.22 },
-  { color: "#fbbf24", pos: [0.65, 0.55, -0.4], size: 0.18 },
-  { color: "#6366f1", pos: [1.45, -0.65, -0.5], size: 0.24 },
+  { color: "#6366f1", pos: [-0.25, 1.65, -0.5], size: 0.26 },
+  { color: "#60a5fa", pos: [0.35, 0.35, -0.6], size: 0.2 },
+  { color: "#fbbf24", pos: [0.55, 0.05, -0.4], size: 0.16 },
+  { color: "#6366f1", pos: [1.55, -1.05, -0.5], size: 0.22 },
 ];
 
 function createGradientTexture(colorA: string, colorB: string) {
@@ -195,7 +195,7 @@ export default function FloatingPills3D() {
         mouse.current.y = -((e.clientY - rect.top) / rect.height - 0.5) * 2;
       }}
     >
-      <Canvas camera={{ position: [0.3, 0.2, 6.2], fov: 40 }} shadows dpr={[1, 2]}>
+      <Canvas camera={{ position: [0.2, -0.1, 6.8], fov: 36 }} shadows dpr={[1, 2]}>
         <Scene mouse={mouse} />
       </Canvas>
     </div>
