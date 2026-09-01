@@ -4,6 +4,9 @@ import Image from "next/image";
 import Header from "./components/Header";
 import RefillForm from "./components/RefillForm";
 import NewsletterForm from "./components/NewsletterForm";
+import Hero3DBackground from "./components/Hero3DBackground";
+import PharmacyIcon3D from "./components/PharmacyIcon3D";
+import TiltCard from "./components/TiltCard";
 import { SectionReveal, StaggerContainer, StaggerItem, ImagePlaceholder } from "./components/MotionKit";
 import {
   Pill,
@@ -73,7 +76,8 @@ export default function FriendlyPage() {
 
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-[var(--border)] bg-[var(--surface)]" aria-labelledby="hero-heading">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-2 md:items-center md:py-24 lg:px-8">
+        <Hero3DBackground />
+        <div className="relative z-10 mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-2 md:items-center md:py-24 lg:px-8">
           <SectionReveal>
             <span className="inline-block rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-[var(--brand)] shadow-sm">
               Independent pharmacy in Abbotsford, BC
@@ -102,7 +106,7 @@ export default function FriendlyPage() {
 
           <SectionReveal className="mx-auto w-full max-w-md md:mx-0">
             <div className="relative">
-              <ImagePlaceholder label="Pharmacy team photo" icon={User} className="aspect-[4/3] w-full" />
+              <PharmacyIcon3D />
               <div className="absolute -bottom-5 -left-5 rounded-xl border border-[var(--border)] bg-white px-4 py-3 shadow-sm">
                 <p className="text-sm font-semibold text-[var(--foreground)]">Trusted by 300+ neighbours</p>
                 <div className="mt-1 flex items-center gap-1 text-amber-500">
@@ -171,13 +175,15 @@ export default function FriendlyPage() {
         <StaggerContainer className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((s) => (
             <StaggerItem key={s.title}>
-              <article className="h-full rounded-xl border border-[var(--border)] bg-white p-6 transition hover:-translate-y-0.5 hover:border-[var(--brand)] hover:shadow-sm">
-                <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--brand-subtle)] text-[var(--brand)]">
-                  <s.icon size={22} />
-                </span>
-                <h3 className="mt-4 text-lg font-semibold">{s.title}</h3>
-                <p className="mt-2 text-[var(--muted)]">{s.body}</p>
-              </article>
+              <TiltCard className="h-full">
+                <article className="h-full rounded-xl border border-[var(--border)] bg-white p-6 transition hover:border-[var(--brand)] hover:shadow-sm">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--brand-subtle)] text-[var(--brand)]">
+                    <s.icon size={22} />
+                  </span>
+                  <h3 className="mt-4 text-lg font-semibold">{s.title}</h3>
+                  <p className="mt-2 text-[var(--muted)]">{s.body}</p>
+                </article>
+              </TiltCard>
             </StaggerItem>
           ))}
         </StaggerContainer>
