@@ -55,7 +55,7 @@ jobs:
           npx http-server out -p 8080 -s &
           SERVER_PID=$!
           sleep 3
-          for path in "" "variants/friendly" "variants/friendly/services/minor-ailments"; do
+          for path in "" "about/" "contact/" "subscribe/" "services/minor-ailments/"; do
             code=$(curl -s -o /dev/null -w "%{http_code}" "http://127.0.0.1:8080/$path")
             echo "GET /$path -> $code"
             if [ "$code" != "200" ]; then
