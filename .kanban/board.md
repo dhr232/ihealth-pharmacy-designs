@@ -1,26 +1,26 @@
 # Kanban Board — iHealth Pharmacy Website
 
 ## Today (Sprint: Production Launch)
-- [ ] **FE-15** Add rolling top announcement bar (Flu shots, COVID boosters, holiday hours)
-- [ ] **FE-16** Add cookie consent banner with granular controls (necessary/analytics/marketing)
-- [ ] **FE-17** Build About page (`/variants/friendly/about`)
-- [ ] **FE-18** Build Contact page with map + Web3Forms integration
-- [ ] **FE-19** Build Health Tips / Blog index (`/variants/friendly/health-tips`)
-- [ ] **FE-20** Build Privacy + Terms + Cookies pages
-- [ ] **FE-21** Refill form → Web3Forms (env: `NEXT_PUBLIC_WEB3FORMS_KEY`)
-- [ ] **FE-22** Newsletter form → Web3Forms
-- [ ] **FE-23** WhatsApp floating button (placeholder until number provided)
+- [x] **FE-15** Rolling top announcement bar (Flu shots, delivery, hours, vaccines)
+- [x] **FE-16** Cookie consent banner with granular controls (necessary/analytics/marketing)
+- [x] **FE-17** About page (`/about`)
+- [x] **FE-18** Contact page with map + Web3Forms integration
+- [x] **FE-19** Health Tips / Blog index (`/health-tips`)
+- [x] **FE-20** Privacy + Terms + Cookies pages
+- [x] **FE-21** Refill form → Web3Forms (env: `NEXT_PUBLIC_WEB3FORMS_KEY`)
+- [x] **FE-22** Newsletter form → Web3Forms
+- [x] **FE-23** WhatsApp floating button (placeholder until number provided)
 - [ ] **QA-02** E2E test all new pages + cookie banner + announcement bar
+- [ ] **ADMIN-01** Admin panel (PIN login, Pharmacist CRUD, Blog CRUD)
+- [ ] **ADMIN-02** 10 theme presets + 10 font pairings for admin
+- [ ] **ADMIN-03** Image upload in blog post editor
+- [ ] **MKT-01** 10 blog posts via marketing agent
 
 ## Tomorrow (Pending Decisions)
 - [ ] **FE-24** Wire real Web3Forms access key (need user)
 - [ ] **FE-25** Wire real WhatsApp number (need user)
-- [ ] **HOST-01** Deploy to Hostinger (FTP/SFTP after user provides credentials)
 - [ ] **DOM-01** Point ihealthpharmacy.ca to Hostinger (DNS decision)
-- [ ] **ADMIN-01** Admin panel for pharmacist list + blog updates (login + CRUD)
-- [ ] **ADMIN-02** 10 theme presets + 10 font pairings for admin to choose
-- [ ] **ADMIN-03** Image upload in blog post editor
-- [ ] **MKT-01** Marketing agent writes 10 initial blog posts (after E2E passes)
+- [ ] **HOST-01** ✅ DONE — Hostinger deployed via Git integration
 
 ## Backlog
 - WhatsApp live-chat integration (own Kanban board — see `ihealth-messaging`)

@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+/* ===========================================================
+   iHealth Pharmacy — Tokens, Themes & Fonts
+   ===========================================================
+   Backward-compatible legacy palette (used by existing pages):
+     --brand, --brand-hover, --brand-subtle, --background, --foreground, --muted, --surface, --border
+
+   New theming layer (used by future components / admin):
+     --color-accent, --color-accent-fg, --color-bg, --color-surface,
+     --color-ink, --color-ink-muted, --color-border, --color-accent-soft
+
+   Themes are applied via [data-theme="..."] on <html>. Font pairings
+   are applied via .font-* classes on <body>. ThemeApplier.tsx wires
+   the user's choice from localStorage on mount + via storage events.
+   =========================================================== */
+
 :root {
   /* iHealth Pharmacy 2026 professional palette */
   --background: #ffffff;
@@ -11,6 +26,24 @@
   --brand-hover: #a31812;
   --brand-subtle: #fdf2f2;
   --focus: #c01d16;
+
+  /* New theming layer — defaults mirror the legacy brand-red palette
+     so any consumer of --color-accent etc. sees the original look
+     until a [data-theme] block overrides them. */
+  --color-accent: #c01d16;
+  --color-accent-fg: #ffffff;
+  --color-bg: #ffffff;
+  --color-surface: #f6f7f9;
+  --color-ink: #1f2328;
+  --color-ink-muted: #5a6270;
+  --color-border: #d8dce2;
+  --color-accent-soft: #fdf2f2;
+
+  /* Font pairing — defaults to Inter / Inter */
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 @theme inline {
@@ -22,7 +55,221 @@
   --color-brand: var(--brand);
   --color-brand-hover: var(--brand-hover);
   --color-brand-subtle: var(--brand-subtle);
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-body);
+}
+
+/* ===========================================================
+   Theme presets (10)
+   Applied via [data-theme="..."] on <html>. Each theme overrides
+   the new theming layer; the legacy --brand-* vars stay at their
+   :root defaults so existing pages still render in brand-red.
+   =========================================================== */
+
+/* 1. Pharmacy Red — default */
+[data-theme="pharmacy-red"] {
+  --color-accent: #c01d16;
+  --color-accent-fg: #ffffff;
+  --color-bg: #fafafa;
+  --color-surface: #f6f7f9;
+  --color-ink: #1f2328;
+  --color-ink-muted: #5a6270;
+  --color-border: #d8dce2;
+  --color-accent-soft: #fdf2f2;
+}
+
+/* 2. Sage Care */
+[data-theme="sage-care"] {
+  --color-accent: #3f8554;
+  --color-accent-fg: #ffffff;
+  --color-bg: #f5f7f4;
+  --color-surface: #eef2ec;
+  --color-ink: #1f2a24;
+  --color-ink-muted: #58685b;
+  --color-border: #d6dfd3;
+  --color-accent-soft: #e3ede2;
+}
+
+/* 3. Ocean Calm */
+[data-theme="ocean-calm"] {
+  --color-accent: #2563eb;
+  --color-accent-fg: #ffffff;
+  --color-bg: #f0f7ff;
+  --color-surface: #e6f0fb;
+  --color-ink: #0f1f35;
+  --color-ink-muted: #4a5d75;
+  --color-border: #cfdcec;
+  --color-accent-soft: #dbe8fb;
+}
+
+/* 4. Sunset Wellness */
+[data-theme="sunset-wellness"] {
+  --color-accent: #ea580c;
+  --color-accent-fg: #ffffff;
+  --color-bg: #fff8f1;
+  --color-surface: #fcefde;
+  --color-ink: #2a1a0f;
+  --color-ink-muted: #6b5642;
+  --color-border: #ecdcc6;
+  --color-accent-soft: #fde2cb;
+}
+
+/* 5. Forest Pharmacy */
+[data-theme="forest-pharmacy"] {
+  --color-accent: #15803d;
+  --color-accent-fg: #ffffff;
+  --color-bg: #f0fdf4;
+  --color-surface: #e0f4e6;
+  --color-ink: #14291f;
+  --color-ink-muted: #4d6253;
+  --color-border: #cae3d2;
+  --color-accent-soft: #d4ebda;
+}
+
+/* 6. Lavender Trust */
+[data-theme="lavender-trust"] {
+  --color-accent: #7c3aed;
+  --color-accent-fg: #ffffff;
+  --color-bg: #faf7ff;
+  --color-surface: #f1ecfd;
+  --color-ink: #1f1635;
+  --color-ink-muted: #5e537a;
+  --color-border: #e1d8f4;
+  --color-accent-soft: #ece1fb;
+}
+
+/* 7. Citrus Vitality */
+[data-theme="citrus-vitality"] {
+  --color-accent: #ca8a04;
+  --color-accent-fg: #ffffff;
+  --color-bg: #fffef0;
+  --color-surface: #faf6da;
+  --color-ink: #2a2410;
+  --color-ink-muted: #6a6147;
+  --color-border: #ece2b7;
+  --color-accent-soft: #faecc2;
+}
+
+/* 8. Slate Professional */
+[data-theme="slate-professional"] {
+  --color-accent: #475569;
+  --color-accent-fg: #ffffff;
+  --color-bg: #f8fafc;
+  --color-surface: #eef2f6;
+  --color-ink: #0f172a;
+  --color-ink-muted: #475569;
+  --color-border: #d3dce5;
+  --color-accent-soft: #e1e7ee;
+}
+
+/* 9. Berry Warmth */
+[data-theme="berry-warmth"] {
+  --color-accent: #be185d;
+  --color-accent-fg: #ffffff;
+  --color-bg: #fff1f7;
+  --color-surface: #fce3ed;
+  --color-ink: #2a0f1f;
+  --color-ink-muted: #6b4458;
+  --color-border: #f0cfdf;
+  --color-accent-soft: #fbd8e6;
+}
+
+/* 10. Midnight Modern — flips to dark mode */
+[data-theme="midnight-modern"] {
+  --color-accent: #06b6d4;
+  --color-accent-fg: #0f172a;
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+  --color-ink: #f1f5f9;
+  --color-ink-muted: #94a3b8;
+  --color-border: #334155;
+  --color-accent-soft: #164e63;
+}
+
+/* ===========================================================
+   Font pairings (10)
+   Applied via .font-* classes on <body>. The actual font files
+   are loaded via next/font/google in app/layout.tsx and exposed
+   as --font-* CSS variables; we just remap --font-display /
+   --font-body here.
+   =========================================================== */
+
+/* 1. Inter Tight — current default */
+.font-inter-tight {
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* 2. Editorial Serif — Playfair Display (display) + Inter (body) */
+.font-editorial-serif {
+  --font-display: var(--font-playfair), ui-serif, Georgia, "Times New Roman",
+    serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* 3. Geometric Humanist — Outfit */
+.font-geometric-humanist {
+  --font-display: var(--font-outfit), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: var(--font-outfit), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* 4. Medical Mono — IBM Plex Sans (body) + JetBrains Mono (accents) */
+.font-medical-mono {
+  --font-display: var(--font-jetbrains-mono), ui-monospace, "SFMono-Regular",
+    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-body: var(--font-ibm-plex-sans), ui-sans-serif, system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* 5. Friendly Sans — Quicksand */
+.font-friendly-sans {
+  --font-display: var(--font-quicksand), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: var(--font-quicksand), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* 6. Bold Display — Plus Jakarta Sans */
+.font-bold-display {
+  --font-display: var(--font-plus-jakarta), ui-sans-serif, system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: var(--font-plus-jakarta), ui-sans-serif, system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* 7. Clean Roboto — Roboto */
+.font-clean-roboto {
+  --font-display: var(--font-roboto), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: var(--font-roboto), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* 8. Charcoal Grotesk — Space Grotesk */
+.font-charcoal-grotesk {
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: var(--font-space-grotesk), ui-sans-serif, system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* 9. Warm Manrope — Manrope */
+.font-warm-manrope {
+  --font-display: var(--font-manrope), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: var(--font-manrope), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* 10. Classic Plus Jakarta — Plus Jakarta (display) + Lora (serif accents) */
+.font-classic-plus-jakarta {
+  --font-display: var(--font-plus-jakarta), ui-sans-serif, system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: var(--font-lora), ui-serif, Georgia, "Times New Roman", serif;
 }
 
 * {
@@ -36,9 +283,14 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings pick up the display face */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
 }
 
 /* Accessible focus rings */
@@ -79,6 +331,47 @@ select:focus-visible,
   border-radius: 12px;
 }
 
+/* Primary button — uses the new accent vars so themes recolor it
+   automatically. Existing legacy pages that hardcode `bg-[var(--brand)]`
+   keep rendering in brand-red; this class is for new components. */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  background: var(--color-accent);
+  color: var(--color-accent-fg);
+  padding: 0.875rem 1.5rem;
+  font-weight: 600;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.btn-primary:hover {
+  filter: brightness(0.92);
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Secondary button (used in card surfaces) */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  padding: 0.625rem 1rem;
+  font-weight: 600;
+  transition: filter 0.15s ease;
+}
+
+.btn-secondary:hover {
+  filter: brightness(0.96);
+}
+
 /* ---------------------------------------------------------------
    Google Translate — hide the default top banner, tooltip balloon,
    and "show original" toolbar so only our custom dropdown is visible.
@@ -100,7 +393,7 @@ body {
 
 .goog-te-banner-frame,
 .goog-te-balloon-frame,
-#goog-gt-tt,
+#goog-te-tt,
 .goog-tooltip,
 .goog-tooltip:hover,
 .goog-text-highlight {

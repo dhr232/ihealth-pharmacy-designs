@@ -12,3 +12,5 @@ playwright-report
 .vercel/
 scripts/
 next-env.d.ts
+*.tsbuildinfo
+.DS_Store

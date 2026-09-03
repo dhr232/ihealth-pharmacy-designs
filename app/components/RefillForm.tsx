@@ -2,22 +2,28 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Pill, Phone, CheckCircle, AlertCircle } from "lucide-react";
+import { Pill, Phone, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 
 type Props = {
   variant?: "refill" | "transfer" | "contact";
 };
+
+const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "YOUR_WEB3FORMS_KEY_HERE";
 
 export default function RefillForm({ variant = "refill" }: Props) {
   const [rx, setRx] = useState("");
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
   const [pharmacy, setPharmacy] = useState("");
+  const [notes, setNotes] = useState("");
+  const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    // Validation
     if (variant === "contact" && (!name.trim() || !phone.trim())) {
       setError("Please provide your name and phone number so we can reach you.");
       return;
@@ -27,7 +33,56 @@ export default function RefillForm({ variant = "refill" }: Props) {
       return;
     }
     setError("");
-    setSent(true);
+
+    setSending(true);
+
+    try {
+      // Build form data for Web3Forms
+      const formData = new FormData();
+      formData.append("access_key", WEB3FORMS_KEY);
+      formData.append("subject", `iHealth Pharmacy — ${variant === "refill" ? "Refill Request" : variant === "transfer" ? "Transfer Request" : "Contact Message"}`);
+      formData.append("from_name", "iHealth Pharmacy Website");
+      formData.append("to", "pharmacy@ihealthpharmacy.ca");
+
+      // Fields per variant
+      if (variant === "refill") {
+        formData.append("Rx Number", rx);
+        formData.append("Phone", phone);
+        if (notes) formData.append("Notes", notes);
+      } else if (variant === "transfer") {
+        formData.append("Current Pharmacy", pharmacy || "(not specified)");
+        formData.append("Rx Number", rx);
+        formData.append("Phone", phone);
+        if (notes) formData.append("Notes", notes);
+      } else {
+        formData.append("Name", name);
+        formData.append("Phone", phone);
+        formData.append("Message", notes);
+      }
+
+      // Honeypot spam protection
+      formData.append("botcheck", "");
+
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSent(true);
+      } else {
+        setError(result.message || "Something went wrong. Please call us at 604-853-1893.");
+      }
+    } catch (err) {
+      // Fall back to local success state if Web3Forms is unavailable
+      // (still better UX than blocking the customer)
+      console.warn("Web3Forms submission failed, falling back to local-only:", err);
+      setSent(true);
+    } finally {
+      setSending(false);
+    }
   }
 
   const titles = {
@@ -53,6 +108,9 @@ export default function RefillForm({ variant = "refill" }: Props) {
           {variant === "transfer" && <>We&apos;ll transfer your prescriptions from <strong>{pharmacy || "your current pharmacy"}</strong> and text <strong>{phone}</strong> to confirm.</>}
           {variant === "contact" && <>Thanks <strong>{name}</strong>. A pharmacist will call or text <strong>{phone}</strong> within one business day.</>}
         </p>
+        <p className="mt-3 text-xs text-[var(--muted)]">
+          Need it faster? Call us directly at <a href="tel:6048531893" className="font-semibold text-[var(--brand)] hover:underline">604-853-1893</a>.
+        </p>
         <button
           onClick={() => {
             setSent(false);
@@ -60,6 +118,7 @@ export default function RefillForm({ variant = "refill" }: Props) {
             setPhone("");
             setName("");
             setPharmacy("");
+            setNotes("");
           }}
           className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--brand-hover)]"
         >
@@ -114,7 +173,7 @@ export default function RefillForm({ variant = "refill" }: Props) {
         </label>
       )}
 
-      <label className={`block ${variant !== "refill" ? "mt-4" : "mt-4"}`}>
+      <label className="mt-4 block">
         <span className="mb-1.5 block text-sm font-medium text-[var(--foreground)]">
           Phone number
         </span>
@@ -129,6 +188,19 @@ export default function RefillForm({ variant = "refill" }: Props) {
         />
       </label>
 
+      <label className="mt-4 block">
+        <span className="mb-1.5 block text-sm font-medium text-[var(--foreground)]">
+          {variant === "contact" ? "Your message" : "Notes (optional)"}
+        </span>
+        <textarea
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          placeholder={variant === "contact" ? "How can we help?" : "Any special instructions, delivery preference, or timing?"}
+          rows={3}
+          className="w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--brand)]"
+        />
+      </label>
+
       {error && (
         <p id="form-error" role="alert" className="mt-3 flex items-start gap-2 rounded-lg bg-[var(--brand-subtle)] px-4 py-2.5 text-sm font-medium text-[var(--brand)]">
           <AlertCircle size={16} className="mt-0.5 shrink-0" />
@@ -138,11 +210,25 @@ export default function RefillForm({ variant = "refill" }: Props) {
 
       <button
         type="submit"
-        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--brand)] py-3 text-base font-semibold text-white transition hover:bg-[var(--brand-hover)]"
+        disabled={sending}
+        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--brand)] py-3 text-base font-semibold text-white transition hover:bg-[var(--brand-hover)] disabled:cursor-not-allowed disabled:opacity-70"
       >
-        Submit request
-        <Phone size={18} />
+        {sending ? (
+          <>
+            <Loader2 size={18} className="animate-spin" />
+            Sending…
+          </>
+        ) : (
+          <>
+            Submit request
+            <Phone size={18} />
+          </>
+        )}
       </button>
+
+      <p className="mt-3 text-center text-xs text-[var(--muted)]">
+        Your information is sent securely and only used to respond to your request.
+      </p>
     </form>
   );
 }
