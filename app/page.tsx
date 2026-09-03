@@ -5,7 +5,6 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import RefillForm from "./components/RefillForm";
 import NewsletterForm from "./components/NewsletterForm";
-import Hero3DBackground from "./components/Hero3DBackground";
 import FloatingPills3D from "./components/FloatingPills3D";
 import { BlurReveal, SectionReveal, StaggerContainer, StaggerItem, HoverCard, MagneticButton } from "./components/MotionKit";
 import CountUp from "./components/CountUp";
@@ -78,7 +77,6 @@ export default function FriendlyPage() {
 
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-[var(--border)] bg-white" aria-labelledby="hero-heading">
-        <Hero3DBackground />
         <div className="relative z-10 mx-auto grid max-w-7xl gap-10 px-5 pt-28 pb-16 md:grid-cols-2 md:items-center md:pt-32 md:pb-20 lg:px-8">
           <BlurReveal className="flex flex-col items-start">
             <span className="inline-block rounded-full bg-[var(--brand-subtle)] px-4 py-1.5 text-sm font-semibold text-[var(--brand)]">

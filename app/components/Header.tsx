@@ -125,9 +125,9 @@ export default function Header() {
             </AnimatePresence>
           </div>
 
-          <a href="/#about" className={navLinkClass}>About Us</a>
-          <a href="/#blog" className={navLinkClass}>Blog</a>
-          <a href="/#contact" className={navLinkClass}>Contact</a>
+          <Link href="/#about" className={navLinkClass}>About Us</Link>
+          <Link href="/#blog" className={navLinkClass}>Blog</Link>
+          <Link href="/#contact" className={navLinkClass}>Contact</Link>
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
@@ -139,12 +139,12 @@ export default function Header() {
             <Phone size={16} />
             (604) 555-0199
           </a>
-          <a
+          <Link
             href="/#refill"
             className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--brand-hover)]"
           >
             Request Refill
-          </a>
+          </Link>
         </div>
 
         <button
@@ -191,9 +191,9 @@ export default function Header() {
                 </p>
                 <LanguageSwitcher />
               </div>
-              <a href="/#about" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">About Us</a>
-              <a href="/#blog" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">Blog</a>
-              <a href="/#contact" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">Contact</a>
+              <Link href="/#about" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">About Us</Link>
+              <Link href="/#blog" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">Blog</Link>
+              <Link href="/#contact" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">Contact</Link>
               <a
                 href="tel:+16045550199"
                 className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--border)] px-4 py-3 text-center text-sm font-medium text-[var(--foreground)]"
@@ -201,13 +201,13 @@ export default function Header() {
                 <Phone size={18} />
                 (604) 555-0199
               </a>
-              <a
+              <Link
                 href="/#refill"
                 onClick={() => setOpen(false)}
                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--brand)] px-4 py-3 text-center text-sm font-semibold text-white"
               >
                 Request Refill
-              </a>
+              </Link>
             </div>
           </motion.nav>
         )}

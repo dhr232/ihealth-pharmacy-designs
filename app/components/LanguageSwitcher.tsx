@@ -50,7 +50,14 @@ declare global {
 export default function LanguageSwitcher() {
   const shouldReduceMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState<LangCode>("en");
+  const [active, setActive] = useState<LangCode>(() => {
+    if (typeof window === "undefined") return "en";
+    try {
+      const stored = window.localStorage.getItem(STORAGE_KEY) as LangCode | null;
+      if (stored && LANGUAGES.some((l) => l.code === stored)) return stored;
+    } catch {}
+    return "en";
+  });
   const [scriptReady, setScriptReady] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -59,10 +66,7 @@ export default function LanguageSwitcher() {
   // Inject the Google Translate script exactly once.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.__iHealthGTEInitialized) {
-      setScriptReady(true);
-      return;
-    }
+    if (window.__iHealthGTEInitialized) return;
 
     window.googleTranslateElementInit = () => {
       if (!window.google?.translate?.TranslateElement) return;
@@ -98,16 +102,18 @@ export default function LanguageSwitcher() {
     };
   }, []);
 
-  // Restore last-selected language from storage on mount.
+  // Listen for storage changes from other tabs/windows to keep active language in sync.
   useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem(STORAGE_KEY) as LangCode | null;
-      if (stored && LANGUAGES.some((l) => l.code === stored)) {
-        setActive(stored);
+    if (typeof window === "undefined") return;
+    function onStorage(e: StorageEvent) {
+      if (e.key !== STORAGE_KEY || !e.newValue) return;
+      const next = e.newValue as LangCode;
+      if (LANGUAGES.some((l) => l.code === next)) {
+        setActive(next);
       }
-    } catch {
-      /* ignore — storage may be blocked */
     }
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, []);
 
   // Close on outside click / Escape.

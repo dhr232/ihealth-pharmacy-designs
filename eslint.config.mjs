@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Project-local ignores — scripts are standalone Node CLI, not app code.
+    "scripts/**",
+    // Generated artifacts.
+    "tsconfig.tsbuildinfo",
+    "package-lock.json",
   ]),
 ]);
 
