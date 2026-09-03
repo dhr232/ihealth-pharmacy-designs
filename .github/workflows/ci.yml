@@ -65,3 +65,34 @@ jobs:
             fi
           done
           kill $SERVER_PID || true
+
+  deploy-hostinger:
+    name: Deploy to Hostinger (push gh-pages)
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.pull_request == ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+
+    steps:
+      - name: Setup git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Prepare gh-pages tree
+        run: |
+          rm -rf gh-pages
+          mkdir gh-pages
+          cp -r out/. gh-pages/
+          cd gh-pages
+          touch .nojekyll
+          git init -b gh-pages
+          git add -A
+          git commit -m "ci: deploy ${{ github.sha }}" --allow-empty
+
+      - name: Force-push to gh-pages (Hostinger auto-deploys)
+        run: |
+          cd gh-pages
+          git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:gh-pages --force
