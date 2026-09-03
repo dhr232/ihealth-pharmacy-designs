@@ -143,7 +143,7 @@ export default async function ServicePage({ params }: { params: Params }) {
       <main className="mx-auto max-w-4xl px-5 py-16 lg:px-8">
         <SectionReveal>
           <Link
-            href="/variants/friendly#services"
+            href="/ihealth-pharmacy-designs/#services"
             className="inline-flex items-center gap-2 text-sm font-medium text-[var(--muted)] transition hover:text-[var(--brand)]"
           >
             <ArrowLeft size={16} />

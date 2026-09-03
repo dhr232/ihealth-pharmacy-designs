@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
         <div className="grid gap-12 md:grid-cols-3">
           <div>
-            <Link href="/variants/friendly" className="flex items-center gap-3">
+            <Link href="/ihealth-pharmacy-designs/" className="flex items-center gap-3">
               <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--brand)] text-lg font-bold text-white">iH</span>
               <span className="text-lg font-semibold">iHealth Pharmacy</span>
             </Link>
@@ -42,16 +42,16 @@ export default function Footer() {
             <h3 className="text-sm font-semibold uppercase tracking-wide text-white/50">Quick links</h3>
             <ul className="mt-4 space-y-2 text-sm">
               <li>
-                <Link href="/variants/friendly/services/minor-ailments" className="text-white/80 transition hover:text-white">Minor Ailments</Link>
+                <Link href="/ihealth-pharmacy-designs/services/minor-ailments" className="text-white/80 transition hover:text-white">Minor Ailments</Link>
               </li>
               <li>
-                <Link href="/variants/friendly/services/compounding" className="text-white/80 transition hover:text-white">Compounding</Link>
+                <Link href="/ihealth-pharmacy-designs/services/compounding" className="text-white/80 transition hover:text-white">Compounding</Link>
               </li>
               <li>
-                <Link href="/variants/friendly/services/myhealthpack" className="text-white/80 transition hover:text-white">MyHealthPack</Link>
+                <Link href="/ihealth-pharmacy-designs/services/myhealthpack" className="text-white/80 transition hover:text-white">MyHealthPack</Link>
               </li>
               <li>
-                <Link href="/variants/friendly/services/vaccinations" className="text-white/80 transition hover:text-white">Vaccinations</Link>
+                <Link href="/ihealth-pharmacy-designs/services/vaccinations" className="text-white/80 transition hover:text-white">Vaccinations</Link>
               </li>
             </ul>
           </div>

@@ -5,26 +5,27 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronDown, Menu, X, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const SERVICE_PAGES = [
-  { label: "Minor Ailments Clinic", href: "/variants/friendly/services/minor-ailments" },
-  { label: "Compounding", href: "/variants/friendly/services/compounding" },
-  { label: "Vaccinations", href: "/variants/friendly/services/vaccinations" },
-  { label: "MyHealthPack", href: "/variants/friendly/services/myhealthpack" },
-  { label: "Medication Review & Injections", href: "/variants/friendly/services/med-review" },
-  { label: "Prescription Delivery", href: "/variants/friendly/services/delivery" },
+  { label: "Minor Ailments Clinic", href: "/services/minor-ailments" },
+  { label: "Compounding", href: "/services/compounding" },
+  { label: "Vaccinations", href: "/services/vaccinations" },
+  { label: "MyHealthPack", href: "/services/myhealthpack" },
+  { label: "Medication Review & Injections", href: "/services/med-review" },
+  { label: "Prescription Delivery", href: "/services/delivery" },
 ];
 
 const HOME_ANCHORS = [
-  { label: "Prescription Refills", href: "/variants/friendly#refill" },
-  { label: "Transfer to iHealth", href: "/variants/friendly#transfer" },
-  { label: "Virtual Doctor", href: "/variants/friendly#virtual-doctor" },
-  { label: "Contact", href: "/variants/friendly#contact" },
+  { label: "Prescription Refills", href: "/ihealth-pharmacy-designs/#refill" },
+  { label: "Transfer to iHealth", href: "/ihealth-pharmacy-designs/#transfer" },
+  { label: "Virtual Doctor", href: "/ihealth-pharmacy-designs/#virtual-doctor" },
+  { label: "Contact", href: "/ihealth-pharmacy-designs/#contact" },
 ];
 
 export default function Header() {
   const pathname = usePathname();
-  const isHome = pathname === "/variants/friendly" || pathname === "/variants/friendly/";
+  const isHome = pathname === "/ihealth-pharmacy-designs/" || pathname === "/" || pathname === "/ihealth-pharmacy-designs";
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -50,7 +51,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 lg:px-8">
-        <Link href="/variants/friendly" className="flex items-center gap-2 rounded-lg px-1 py-1 transition hover:opacity-90">
+        <Link href="/ihealth-pharmacy-designs/" className="flex items-center gap-2 rounded-lg px-1 py-1 transition hover:opacity-90">
           <img
             src="/ihealth-pharmacy-designs/ihealth-logo-main.jpeg"
             alt="iHealth Pharmacy logo"
@@ -64,7 +65,7 @@ export default function Header() {
         </Link>
 
         <nav className="hidden items-center gap-6 lg:flex" aria-label="Main">
-          <Link href="/variants/friendly" className={navLinkClass}>
+          <Link href="/ihealth-pharmacy-designs/" className={navLinkClass}>
             Home
           </Link>
 
@@ -124,12 +125,13 @@ export default function Header() {
             </AnimatePresence>
           </div>
 
-          <a href="/variants/friendly#about" className={navLinkClass}>About Us</a>
-          <a href="/variants/friendly#blog" className={navLinkClass}>Blog</a>
-          <a href="/variants/friendly#contact" className={navLinkClass}>Contact</a>
+          <a href="/#about" className={navLinkClass}>About Us</a>
+          <a href="/#blog" className={navLinkClass}>Blog</a>
+          <a href="/#contact" className={navLinkClass}>Contact</a>
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
+          <LanguageSwitcher />
           <a
             href="tel:+16045550199"
             className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-[var(--muted)] transition hover:text-[var(--brand)]"
@@ -138,7 +140,7 @@ export default function Header() {
             (604) 555-0199
           </a>
           <a
-            href="/variants/friendly#refill"
+            href="/#refill"
             className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--brand-hover)]"
           >
             Request Refill
@@ -168,7 +170,7 @@ export default function Header() {
             aria-label="Mobile"
           >
             <div className="flex flex-col gap-1 py-4">
-              <Link href="/variants/friendly" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">
+              <Link href="/ihealth-pharmacy-designs/" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">
                 Home
               </Link>
               <p className="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">Services</p>
@@ -183,9 +185,15 @@ export default function Header() {
                 </Link>
               ))}
               <div className="my-2 border-t border-[var(--border)]" />
-              <a href="/variants/friendly#about" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">About Us</a>
-              <a href="/variants/friendly#blog" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">Blog</a>
-              <a href="/variants/friendly#contact" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">Contact</a>
+              <div className="px-4 py-2 notranslate" translate="no">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+                  Language
+                </p>
+                <LanguageSwitcher />
+              </div>
+              <a href="/#about" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">About Us</a>
+              <a href="/#blog" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">Blog</a>
+              <a href="/#contact" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">Contact</a>
               <a
                 href="tel:+16045550199"
                 className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--border)] px-4 py-3 text-center text-sm font-medium text-[var(--foreground)]"
@@ -194,7 +202,7 @@ export default function Header() {
                 (604) 555-0199
               </a>
               <a
-                href="/variants/friendly#refill"
+                href="/#refill"
                 onClick={() => setOpen(false)}
                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--brand)] px-4 py-3 text-center text-sm font-semibold text-white"
               >

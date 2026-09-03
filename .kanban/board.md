@@ -1,66 +1,75 @@
-# iHealth Pharmacy Website — Kanban Board
+# Kanban Board — iHealth Pharmacy Website
 
-## Project goal
-Transform the selected Friendly variant into a polished, professional agency-grade pharmacy website for iHealth Pharmacy (Abbotsford, BC), modeled after pro-health.ca but modernized for 2026.
+## Today (Sprint: Production Launch)
+- [ ] **FE-15** Add rolling top announcement bar (Flu shots, COVID boosters, holiday hours)
+- [ ] **FE-16** Add cookie consent banner with granular controls (necessary/analytics/marketing)
+- [ ] **FE-17** Build About page (`/variants/friendly/about`)
+- [ ] **FE-18** Build Contact page with map + Web3Forms integration
+- [ ] **FE-19** Build Health Tips / Blog index (`/variants/friendly/health-tips`)
+- [ ] **FE-20** Build Privacy + Terms + Cookies pages
+- [ ] **FE-21** Refill form → Web3Forms (env: `NEXT_PUBLIC_WEB3FORMS_KEY`)
+- [ ] **FE-22** Newsletter form → Web3Forms
+- [ ] **FE-23** WhatsApp floating button (placeholder until number provided)
+- [ ] **QA-02** E2E test all new pages + cookie banner + announcement bar
 
-## Rules
-Move **one task** from **To Do** → **In Progress**, complete it, move to **Review**, get PM/QA sign-off, then move to **Done**. Repeat.
+## Tomorrow (Pending Decisions)
+- [ ] **FE-24** Wire real Web3Forms access key (need user)
+- [ ] **FE-25** Wire real WhatsApp number (need user)
+- [ ] **HOST-01** Deploy to Hostinger (FTP/SFTP after user provides credentials)
+- [ ] **DOM-01** Point ihealthpharmacy.ca to Hostinger (DNS decision)
+- [ ] **ADMIN-01** Admin panel for pharmacist list + blog updates (login + CRUD)
+- [ ] **ADMIN-02** 10 theme presets + 10 font pairings for admin to choose
+- [ ] **ADMIN-03** Image upload in blog post editor
+- [ ] **MKT-01** Marketing agent writes 10 initial blog posts (after E2E passes)
 
-## Columns
+## Backlog
+- WhatsApp live-chat integration (own Kanban board — see `ihealth-messaging`)
+- Service area map with delivery zones
+- Multilingual support (EN + Punjabi for Abbotsford)
+- Online booking for medication reviews
 
-### In Progress
-- _empty_
+## Kanban Boards
+- `ihealth-pharmacy-website` — main build (this)
+- `ihealth-messaging` — WhatsApp / live chat integration (TBD)
+- `ihealth-admin` — admin panel for content management (NEW 2026-09-01)
 
-### To Do
-- [x] PM-01: Define professional design direction and acceptance criteria (PM agent)
-- [x] CEO-01: Gather business priorities and client approval workflow from owner
-- [x] UI-01: Redesign hero + trust section for professional credibility (UI engineer)
-- [x] CC-01: Write final professional copy for all sections (content creator)
-- [x] REV-01: Incorporate Pro-Health reference site services and 2026 modern structure
-- [x] FE-01: Install dependencies (lucide-react, motion) and set up Inter font / base CSS tokens
-- [x] FE-02: Build professional Header with Services mega-menu and sticky behavior
-- [x] FE-03: Build Hero section with headline, CTAs, and image placeholder
-- [x] FE-04: Build Quick Action cards row (6 patient actions)
-- [x] FE-05: Build Services section with all 11 Pro-Health services in 3-col grid
-- [x] FE-06: Build App / Direct Refill portal section with placeholder
-- [x] FE-07: Build Minor Ailments Walk-in Clinic section
-- [x] FE-08: Build MyHealthPack / Compliance Packaging section
-- [x] FE-09: Build Testimonials + Google Reviews placeholder
-- [x] FE-10: Build Newsletter signup form
-- [x] FE-11: Build Contact / Location with Google Maps embed and Footer
-- [x] FE-12: Add Motion.dev scroll reveal animations (respect reduced motion)
-- [x] FE-13: Add accessibility pass — focus rings, labels, semantic HTML, contrast check
-- [x] FE-14: Add responsive QA (mobile, tablet, desktop)
-- [x] QA-01: Final build check and GitHub Pages republish
-- [x] 3D-01: Add Three.js subtle hero background (floating organic shapes)
-- [x] 3D-02: Add interactive 3D pharmacy icon (pill/capsule with mouse tilt)
-- [x] 3D-03: Add 3D tilt hover effect to service cards
-- [x] 3D-04: Build, verify, and republish live demo with 3D elements
-- [x] CEO-02: Final client delivery summary and publish report
+## Hostinger Deploy Notes
+- hPanel URL: https://hpanel.hostinger.com/websites (user shared 2026-09-01)
+- Need from user: hPanel login (or FTP password) to upload `out/` to public_html/
+- Domain: TBD (ihealthpharmacy.ca vs hstgr.cloud subdomain)
+- Once deployed: verify with `curl -s -o /dev/null -w "%{http_code}" https://<domain>/`
 
-### Review
-- _empty_
+## Form Submission Plan (added 2026-09-01)
+**Decision: Web3Forms**
 
-### Done
-- [x] Select winning design variant from 5 options
-- [x] Initial cleanup pass (SVG icons, accessibility, palette)
-- [x] Publish live demo to GitHub Pages
-- [x] FE-01 → FE-14 + QA-01: Complete professional 2026 redesign and republish
-- [x] 3D-01 → 3D-04: Complete Three.js 3D features and republish
-- [x] CEO-02: Final client delivery summary and publish report
+Rationale:
+- Static export (`output: "export"`) means no Next.js Server Actions available.
+- Web3Forms: 250 free submissions/mo, no signup friction, single access-key env var.
+- Formspree as fallback (50/mo free, requires form ID setup).
 
-## Current active task
-None — board is clear.
+Implementation:
+1. User signs up at https://web3forms.com and copies access key.
+2. Key goes in `NEXT_PUBLIC_WEB3FORMS_KEY` (GitHub Actions secret).
+3. Forms POST to `https://api.web3forms.com/submit` directly from the browser.
+4. Honeypot field `botcheck` for spam filtering.
+5. Success: redirect to `/thanks` page or show inline success state.
+6. All forms share a `<Web3FormsForm>` wrapper component for consistency.
 
-## Done definition
-- Code passes `npx next build` with exit code 0
-- Visual passes agency-quality bar (no emojis, no toy-like colors, clean typography)
-- Motion animations respect `prefers-reduced-motion`
-- Client can view at https://dhr232.github.io/ihealth-pharmacy-designs/variants/friendly
-- All tasks in Review approved by PM + CEO agent before Done
+## Hostinger CI/CD Plan
+**Per user decision 2026-09-01: GitHub Actions handles CI/testing only; Hostinger deployment is manual.**
 
-## Notes
-- Real Hermes kanban board `ihealth-pharmacy-website` is active and tracking tasks.
-- Image placeholders used everywhere real photography is pending.
-- Live demo verified HTTP 200 after latest republish.
-- Three.js added via @react-three/fiber.
+- `.github/workflows/ci.yml` runs on every push and PR to `main`:
+  - `npm ci`
+  - `npm run lint`
+  - `npx tsc --noEmit`
+  - `npx next build` (produces `out/`)
+  - Verifies `out/index.html`, `out/.nojekyll`, `out/_next/static/`
+  - Installs Playwright Chromium
+  - Smoke test: serves `out/` and curls `/`, `/variants/friendly`, `/variants/friendly/services/minor-ailments`
+- Required status check: `ci / build-and-test`
+- Deployment to Hostinger stays manual (user will use Hostinger's Git integration or FTP).
+
+## Out of Scope (this iteration)
+- Booking system backend
+- Patient portal / auth
+- Stripe / payment processing
