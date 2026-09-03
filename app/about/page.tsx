@@ -224,14 +224,14 @@ export default function AboutPage() {
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
-              href="/ihealth-pharmacy-designs/contact"
+              href="/contact"
               className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-3.5 text-base font-semibold text-white transition hover:bg-[var(--brand-hover)]"
             >
               Visit us
               <ArrowRight size={18} />
             </Link>
             <Link
-              href="/ihealth-pharmacy-designs/services/med-review"
+              href="/services/med-review"
               className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-6 py-3.5 text-base font-semibold text-[var(--foreground)] transition hover:border-[var(--brand)] hover:text-[var(--brand)]"
             >
               <CalendarCheck size={18} />

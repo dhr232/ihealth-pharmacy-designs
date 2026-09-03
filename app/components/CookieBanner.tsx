@@ -72,7 +72,7 @@ export default function CookieBanner() {
                 cookies to understand how you use it. You can choose what to
                 allow.{" "}
                 <a
-                  href="/ihealth-pharmacy-designs/cookies"
+                  href="/cookies"
                   className="font-medium text-[var(--brand)] underline-offset-2 hover:underline"
                 >
                   Read our cookie policy

@@ -376,7 +376,7 @@ export default function ContactPage() {
                     <p className="text-xs text-[var(--muted)]">
                       By submitting, you agree to our{" "}
                       <Link
-                        href="/ihealth-pharmacy-designs/privacy"
+                        href="/privacy"
                         className="underline-offset-2 hover:underline"
                       >
                         privacy policy

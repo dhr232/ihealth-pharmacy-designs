@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import HappyCustomerCard from "./HappyCustomerCard";
 
-const PILL_BASE = "/ihealth-pharmacy-designs/";
+const PILL_BASE = "/";
 
 const pills = [
   { src: "pills-purple.png", alt: "Purple capsule", top: "10%", left: "55%", width: 210, delay: "0s", duration: "5.5s", rotate: -20 },

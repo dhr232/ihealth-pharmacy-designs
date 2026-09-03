@@ -75,7 +75,7 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
         <p>
           For full details, see our{" "}
           <a
-            href="/ihealth-pharmacy-designs/cookies"
+            href="/cookies"
             className="font-medium text-[var(--brand)] underline-offset-2 hover:underline"
           >
             cookies policy

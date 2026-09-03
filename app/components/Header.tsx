@@ -17,15 +17,15 @@ const SERVICE_PAGES = [
 ];
 
 const HOME_ANCHORS = [
-  { label: "Prescription Refills", href: "/ihealth-pharmacy-designs/#refill" },
-  { label: "Transfer to iHealth", href: "/ihealth-pharmacy-designs/#transfer" },
-  { label: "Virtual Doctor", href: "/ihealth-pharmacy-designs/#virtual-doctor" },
-  { label: "Contact", href: "/ihealth-pharmacy-designs/#contact" },
+  { label: "Prescription Refills", href: "/#refill" },
+  { label: "Transfer to iHealth", href: "/#transfer" },
+  { label: "Virtual Doctor", href: "/#virtual-doctor" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export default function Header() {
   const pathname = usePathname();
-  const isHome = pathname === "/ihealth-pharmacy-designs/" || pathname === "/" || pathname === "/ihealth-pharmacy-designs";
+  const isHome = pathname === "/" || pathname === "/" || pathname === "/";
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -51,9 +51,9 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 lg:px-8">
-        <Link href="/ihealth-pharmacy-designs/" className="flex items-center gap-2 rounded-lg px-1 py-1 transition hover:opacity-90">
+        <Link href="/" className="flex items-center gap-2 rounded-lg px-1 py-1 transition hover:opacity-90">
           <img
-            src="/ihealth-pharmacy-designs/ihealth-logo-main.jpeg"
+            src="/ihealth-logo-main.jpeg"
             alt="iHealth Pharmacy logo"
             width={36}
             height={36}
@@ -65,7 +65,7 @@ export default function Header() {
         </Link>
 
         <nav className="hidden items-center gap-6 lg:flex" aria-label="Main">
-          <Link href="/ihealth-pharmacy-designs/" className={navLinkClass}>
+          <Link href="/" className={navLinkClass}>
             Home
           </Link>
 
@@ -170,7 +170,7 @@ export default function Header() {
             aria-label="Mobile"
           >
             <div className="flex flex-col gap-1 py-4">
-              <Link href="/ihealth-pharmacy-designs/" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">
+              <Link href="/" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">
                 Home
               </Link>
               <p className="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">Services</p>

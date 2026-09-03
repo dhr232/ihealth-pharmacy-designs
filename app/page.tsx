@@ -34,8 +34,8 @@ import Link from "next/link";
 const NUMBERED_SERVICES = [
   { number: "01", title: "Easy Prescription Refills", body: "Request refills online, by phone, or in person — we check every detail and have it ready fast.", href: "#refill" },
   { number: "02", title: "Transfer to iHealth", body: "Give us your pharmacy name and we move your prescriptions over, often the same day.", href: "#transfer" },
-  { number: "03", title: "Med & Refill Reminders", body: "Automatic texts and calls so you never miss a dose or run out unexpectedly.", href: "/ihealth-pharmacy-designs/services/myhealthpack" },
-  { number: "04", title: "Minor Ailment Clinic", body: "Walk in and see a pharmacist who can assess and prescribe for common minor ailments.", href: "/ihealth-pharmacy-designs/services/minor-ailments" },
+  { number: "03", title: "Med & Refill Reminders", body: "Automatic texts and calls so you never miss a dose or run out unexpectedly.", href: "/services/myhealthpack" },
+  { number: "04", title: "Minor Ailment Clinic", body: "Walk in and see a pharmacist who can assess and prescribe for common minor ailments.", href: "/services/minor-ailments" },
   { number: "05", title: "24/7 Pharmacist Advice", body: "Ask questions by phone, text, or email — a real pharmacist answers, real fast.", href: "#contact" },
 ];
 
@@ -49,12 +49,12 @@ const CORE_SERVICES = [
 ];
 
 const ALL_SERVICE_LINKS = [
-  { title: "Minor Ailments Clinic", href: "/ihealth-pharmacy-designs/services/minor-ailments", desc: "Walk-in care for common conditions" },
-  { title: "Compounding", href: "/ihealth-pharmacy-designs/services/compounding", desc: "Custom medications made for you" },
-  { title: "Vaccinations", href: "/ihealth-pharmacy-designs/services/vaccinations", desc: "Flu shots, travel vaccines, and more" },
-  { title: "MyHealthPack", href: "/ihealth-pharmacy-designs/services/myhealthpack", desc: "Compliance packaging by day and time" },
-  { title: "Medication Review", href: "/ihealth-pharmacy-designs/services/med-review", desc: "One-on-one pharmacist consultation" },
-  { title: "Prescription Delivery", href: "/ihealth-pharmacy-designs/services/delivery", desc: "Same-day local delivery" },
+  { title: "Minor Ailments Clinic", href: "/services/minor-ailments", desc: "Walk-in care for common conditions" },
+  { title: "Compounding", href: "/services/compounding", desc: "Custom medications made for you" },
+  { title: "Vaccinations", href: "/services/vaccinations", desc: "Flu shots, travel vaccines, and more" },
+  { title: "MyHealthPack", href: "/services/myhealthpack", desc: "Compliance packaging by day and time" },
+  { title: "Medication Review", href: "/services/med-review", desc: "One-on-one pharmacist consultation" },
+  { title: "Prescription Delivery", href: "/services/delivery", desc: "Same-day local delivery" },
 ];
 
 const STATS = [
@@ -210,7 +210,7 @@ export default function FriendlyPage() {
 
         <SectionReveal className="mt-12 text-center">
           <Link
-            href="/ihealth-pharmacy-designs/services/minor-ailments"
+            href="/services/minor-ailments"
             className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-6 py-3 text-base font-semibold text-[var(--foreground)] transition hover:border-[var(--brand)] hover:text-[var(--brand)]"
           >
             View all services
@@ -276,7 +276,7 @@ export default function FriendlyPage() {
               ))}
             </ul>
             <Link
-              href="/ihealth-pharmacy-designs/services/myhealthpack"
+              href="/services/myhealthpack"
               className="mt-8 inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--brand-hover)]"
             >
               Learn about medication packaging
@@ -286,7 +286,7 @@ export default function FriendlyPage() {
           <SectionReveal className="order-1 md:order-2">
             <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-sm">
               <Image
-                src="/ihealth-pharmacy-designs/carousel-dispenser.png"
+                src="/carousel-dispenser.png"
                 alt="Carousel automatic pill dispenser with 28 compartments and digital display"
                 width={600}
                 height={600}

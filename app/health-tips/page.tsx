@@ -157,7 +157,7 @@ export default function HealthTipsPage() {
               We publish a short, useful email once a month. No spam, ever.
             </p>
             <Link
-              href="/ihealth-pharmacy-designs/subscribe"
+              href="/subscribe"
               className="mt-8 inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-3.5 text-base font-semibold text-white transition hover:bg-[var(--brand-hover)]"
             >
               Subscribe to the newsletter

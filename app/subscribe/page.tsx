@@ -276,7 +276,7 @@ export default function SubscribePage() {
                     <p className="text-xs text-[var(--muted)]">
                       We never sell your data. Unsubscribe in 1 click. See our{" "}
                       <Link
-                        href="/ihealth-pharmacy-designs/privacy"
+                        href="/privacy"
                         className="underline-offset-2 hover:underline"
                       >
                         privacy policy

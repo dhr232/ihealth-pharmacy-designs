@@ -1,10 +1,10 @@
 import { Star } from "lucide-react";
 
 const AVATARS = [
-  { src: "/ihealth-pharmacy-designs/avatar1.webp", alt: "Customer portrait 1" },
-  { src: "/ihealth-pharmacy-designs/avatar2.webp", alt: "Customer portrait 2" },
-  { src: "/ihealth-pharmacy-designs/avatar3.webp", alt: "Customer portrait 3" },
-  { src: "/ihealth-pharmacy-designs/avatar4.webp", alt: "Customer portrait 4" },
+  { src: "/avatar1.webp", alt: "Customer portrait 1" },
+  { src: "/avatar2.webp", alt: "Customer portrait 2" },
+  { src: "/avatar3.webp", alt: "Customer portrait 3" },
+  { src: "/avatar4.webp", alt: "Customer portrait 4" },
 ];
 
 export default function HappyCustomerCard() {
