@@ -38,6 +38,9 @@ jobs:
       - name: Build static export
         run: npx next build
 
+      - name: Ensure .nojekyll (avoid Jekyll stripping _next/)
+        run: touch out/.nojekyll
+
       - name: Verify static export
         run: |
           test -f out/index.html || (echo "out/index.html missing" && exit 1)
