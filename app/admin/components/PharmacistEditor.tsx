@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ImageIcon, X, Upload } from "lucide-react";
 import type { Pharmacist } from "../lib/types";
@@ -27,6 +27,24 @@ function toTextList(arr: string[]): string {
   return arr.join(", ");
 }
 
+function buildDraft(initial: Pharmacist | null, nextOrder: number): Pharmacist {
+  return initial ?? emptyPharmacist(nextOrder);
+}
+
+function sameDraft(a: Pharmacist, b: Pharmacist): boolean {
+  return (
+    a.id === b.id &&
+    a.name === b.name &&
+    a.role === b.role &&
+    a.bio === b.bio &&
+    a.photoUrl === b.photoUrl &&
+    a.yearsExperience === b.yearsExperience &&
+    a.displayOrder === b.displayOrder &&
+    a.credentials.join(",") === b.credentials.join(",") &&
+    a.languages.join(",") === b.languages.join(",")
+  );
+}
+
 function parseList(value: string): string[] {
   return value
     .split(",")
@@ -49,24 +67,24 @@ export function PharmacistEditor({
   onSave: (next: Pharmacist) => void;
   onError: (message: string) => void;
 }) {
-  const [draft, setDraft] = useState<Pharmacist>(
-    initial ?? emptyPharmacist(nextOrder),
+  const [draft, setDraft] = useState<Pharmacist>(() => buildDraft(initial, nextOrder));
+  const [credentialsText, setCredentialsText] = useState(() =>
+    toTextList(buildDraft(initial, nextOrder).credentials)
   );
-  const [credentialsText, setCredentialsText] = useState(
-    toTextList(initial?.credentials ?? []),
-  );
-  const [languagesText, setLanguagesText] = useState(
-    toTextList(initial?.languages ?? []),
+  const [languagesText, setLanguagesText] = useState(() =>
+    toTextList(buildDraft(initial, nextOrder).languages)
   );
 
-  useEffect(() => {
-    if (open) {
-      const seed = initial ?? emptyPharmacist(nextOrder);
-      setDraft(seed);
-      setCredentialsText(toTextList(seed.credentials));
-      setLanguagesText(toTextList(seed.languages));
-    }
-  }, [open, initial, nextOrder]);
+  // When opening with a different record, re-seed draft from latest props.
+  // We derive seed and only call setState if the seed actually changed —
+  // this avoids the cascading-render warning that comes from setting state
+  // inside useEffect.
+  const seed = open ? buildDraft(initial, nextOrder) : null;
+  if (seed && !sameDraft(seed, draft)) {
+    setDraft(seed);
+    setCredentialsText(toTextList(seed.credentials));
+    setLanguagesText(toTextList(seed.languages));
+  }
 
   function update<K extends keyof Pharmacist>(key: K, value: Pharmacist[K]) {
     setDraft((d) => ({ ...d, [key]: value }));

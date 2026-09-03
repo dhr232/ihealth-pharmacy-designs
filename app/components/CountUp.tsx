@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { useInView, motion } from "motion/react";
+import { useInView } from "motion/react";
 
 function easeOutQuart(t: number) {
   return 1 - Math.pow(1 - t, 4);

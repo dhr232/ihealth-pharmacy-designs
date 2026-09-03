@@ -54,6 +54,8 @@ export interface BlogPost {
   imageUrl: string;
   status: PostStatus;
   themeUsed: ThemeName;
+  readTimeMinutes: number;
+  category: string;
 }
 
 export interface AuthSession {

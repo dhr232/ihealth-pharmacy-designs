@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import {
@@ -50,13 +50,11 @@ type Tab = "pharmacists" | "posts";
 type PostFilter = "all" | PostStatus;
 
 export default function AdminPage() {
-  const [authed, setAuthed] = useState<boolean | null>(null);
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    setAuthed(getAuth() !== null);
-    setHydrated(true);
-  }, []);
+  const [authed, setAuthed] = useState<boolean | null>(() => {
+    if (typeof window === "undefined") return null;
+    return getAuth() !== null;
+  });
+  const hydrated = typeof window !== "undefined";
 
   if (!hydrated) {
     return (
@@ -179,17 +177,25 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
 function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [tab, setTab] = useState<Tab>("pharmacists");
   const [toasts, setToasts] = useState<ToastItem[]>([]);
-  const [theme, setThemeState] = useState<ThemeName>("pharmacy-red");
-  const [font, setFontState] = useState<FontPairingName>("inter-tight");
+  const [theme, setThemeState] = useState<ThemeName>(() =>
+    typeof window === "undefined" ? "pharmacy-red" : getTheme()
+  );
+  const [font, setFontState] = useState<FontPairingName>(() =>
+    typeof window === "undefined" ? "inter-tight" : getFont()
+  );
 
-  // Pharmacist state
-  const [pharmacists, setPharmacists] = useState<Pharmacist[]>([]);
+    // Pharmacist state — hydrate from localStorage on first client render
+  const [pharmacists, setPharmacists] = useState<Pharmacist[]>(() =>
+    typeof window === "undefined" ? [] : getPharmacists()
+  );
   const [editingPharmacist, setEditingPharmacist] = useState<Pharmacist | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
-  // Post state
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+  // Post state — hydrate from localStorage on first client render
+  const [posts, setPosts] = useState<BlogPost[]>(() =>
+    typeof window === "undefined" ? [] : getPosts()
+  );
   const [postFilter, setPostFilter] = useState<PostFilter>("all");
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
   const [postEditorOpen, setPostEditorOpen] = useState(false);
@@ -204,13 +210,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     setToasts((current) => current.filter((t) => t.id !== id));
   }, []);
 
-  // Hydrate from localStorage on mount
-  useEffect(() => {
-    setPharmacists(getPharmacists());
-    setPosts(getPosts());
-    setThemeState(getTheme());
-    setFontState(getFont());
-  }, []);
+  // (state already hydrated via lazy initializers above)
 
   /* ----- Pharmacist handlers ----- */
 

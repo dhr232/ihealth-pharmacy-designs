@@ -90,7 +90,7 @@ function CarouselModel({ mouse }: { mouse: React.MutableRefObject<{ x: number; y
     return [discGeo, pockets, tex, dTex];
   }, []);
 
-  useFrame((state) => {
+  useFrame(() => {
     if (!group.current) return;
     // Gentle idle rotation
     group.current.rotation.z += 0.0015;

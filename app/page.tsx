@@ -11,23 +11,15 @@ import CountUp from "./components/CountUp";
 import {
   Pill,
   ArrowLeftRight,
-  Stethoscope,
-  ClipboardList,
-  Video,
   Mail,
   Syringe,
   Package,
   Thermometer,
   Truck,
-  HeartPulse,
-  Activity,
-  Star,
   Phone,
   Clock,
   MapPin,
   CheckCircle,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
 

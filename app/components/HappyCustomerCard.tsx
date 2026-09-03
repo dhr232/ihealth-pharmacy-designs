@@ -36,6 +36,7 @@ export default function HappyCustomerCard() {
 
       <div className="mt-4 flex -space-x-2.5">
         {AVATARS.map((a, i) => (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             key={i}
             src={a.src}

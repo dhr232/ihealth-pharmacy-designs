@@ -52,6 +52,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 lg:px-8">
         <Link href="/" className="flex items-center gap-2 rounded-lg px-1 py-1 transition hover:opacity-90">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/ihealth-logo-main.jpeg"
             alt="iHealth Pharmacy logo"

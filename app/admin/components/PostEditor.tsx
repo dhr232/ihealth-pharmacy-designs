@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Eye, Pencil, Upload, X } from "lucide-react";
 import type { BlogPost, PostStatus, ThemeName } from "../lib/types";
@@ -23,11 +23,33 @@ function emptyPost(): BlogPost {
     imageUrl: "",
     status: "draft",
     themeUsed: "pharmacy-red",
+    readTimeMinutes: 1,
+    category: "General",
   };
 }
 
 function toTextList(arr: string[]): string {
   return arr.join(", ");
+}
+
+function buildPostDraft(initial: BlogPost | null): BlogPost {
+  return initial ?? emptyPost();
+}
+
+function samePost(a: BlogPost, b: BlogPost): boolean {
+  return (
+    a.id === b.id &&
+    a.title === b.title &&
+    a.slug === b.slug &&
+    a.excerpt === b.excerpt &&
+    a.content === b.content &&
+    a.author === b.author &&
+    a.publishedAt === b.publishedAt &&
+    a.imageUrl === b.imageUrl &&
+    a.status === b.status &&
+    a.themeUsed === b.themeUsed &&
+    a.tags.join(",") === b.tags.join(",")
+  );
 }
 
 function parseList(value: string): string[] {
@@ -120,20 +142,24 @@ export function PostEditor({
   onSave: (next: BlogPost) => void;
   onError: (message: string) => void;
 }) {
-  const [draft, setDraft] = useState<BlogPost>(initial ?? emptyPost());
-  const [tagsText, setTagsText] = useState(toTextList(initial?.tags ?? []));
+  const [draft, setDraft] = useState<BlogPost>(() => buildPostDraft(initial));
+  const [tagsText, setTagsText] = useState(() =>
+    toTextList(buildPostDraft(initial).tags)
+  );
   const [mode, setMode] = useState<"edit" | "preview">("edit");
   const [autoSlug, setAutoSlug] = useState<boolean>(true);
 
-  useEffect(() => {
-    if (open) {
-      const seed = initial ?? emptyPost();
+  // Re-seed draft when opening with a different record. Derived during
+  // render rather than inside useEffect to avoid cascading-render warnings.
+  if (open) {
+    const seed = buildPostDraft(initial);
+    if (!samePost(seed, draft)) {
       setDraft(seed);
       setTagsText(toTextList(seed.tags));
       setMode("edit");
       setAutoSlug(!initial);
     }
-  }, [open, initial]);
+  }
 
   function update<K extends keyof BlogPost>(key: K, value: BlogPost[K]) {
     setDraft((d) => {

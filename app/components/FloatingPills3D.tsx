@@ -149,6 +149,7 @@ export default function FloatingPills3D({ showHappyCustomerCard = false }: { sho
               transition: "filter 0.3s ease",
             }}
           >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${PILL_BASE}${pill.src}`}
               alt={pill.alt}
