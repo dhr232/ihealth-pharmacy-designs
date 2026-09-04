@@ -10,17 +10,28 @@
 - [x] **FE-21** Refill form → Web3Forms (env: `NEXT_PUBLIC_WEB3FORMS_KEY`)
 - [x] **FE-22** Newsletter form → Web3Forms
 - [x] **FE-23** WhatsApp floating button (placeholder until number provided)
-- [ ] **QA-02** E2E test all new pages + cookie banner + announcement bar
-- [ ] **ADMIN-01** Admin panel (PIN login, Pharmacist CRUD, Blog CRUD)
-- [ ] **ADMIN-02** 10 theme presets + 10 font pairings for admin
-- [ ] **ADMIN-03** Image upload in blog post editor
-- [ ] **MKT-01** 10 blog posts via marketing agent
+- [x] **QA-02** E2E test all new pages + cookie banner + announcement bar
+- [x] **ADMIN-01** Admin panel (PIN login, Pharmacist CRUD, Blog CRUD)
+- [x] **ADMIN-02** 10 theme presets + 10 font pairings for admin
+- [x] **ADMIN-03** Image upload in blog post editor
+- [x] **MKT-01** 10 blog posts via marketing agent
 
 ## Tomorrow (Pending Decisions)
 - [ ] **FE-24** Wire real Web3Forms access key (need user)
 - [ ] **FE-25** Wire real WhatsApp number (need user)
 - [ ] **DOM-01** Point ihealthpharmacy.ca to Hostinger (DNS decision)
 - [ ] **HOST-01** ✅ DONE — Hostinger deployed via Git integration
+
+## Next Sprint — Booking Subdomain
+- [ ] **BOOK-01** Scope: standalone booking subdomain (booking.ihealthpharmacy.ca or similar) with calendar + appointment type selection
+- [ ] **BOOK-02** Modern calendar UI (date + time grid like Pro-Health Direct example) branded with iHealth red + Inter
+- [ ] **BOOK-03** Appointment types (general counseling, med review, vaccination, minor ailment, etc.) with durations + descriptions
+- [ ] **BOOK-04** Patient details form (name, DOB, phone, email, reason for visit, BC Services Card #)
+- [ ] **BOOK-05** Email/SMS confirmation flow (Web3Forms or dedicated booking provider)
+- [ ] **BOOK-06** Admin panel integration: view/manage bookings (extend ADMIN-01)
+- [ ] **BOOK-07** Wire "Book an appointment" buttons across the main site (homepage CTA, /services/[slug] pages, /admin) to deep-link to subdomain with pre-selected appointment type
+- [ ] **BOOK-08** Decide build: same Next.js stack as marketing site, OR WordPress + booking plugin, OR external service (Calendly, Acuity, etc.)
+- [ ] **BOOK-09** Decide hosting: separate Hostinger subdomain, or new repo, or path on existing site
 
 ## Backlog
 - WhatsApp live-chat integration (own Kanban board — see `ihealth-messaging`)

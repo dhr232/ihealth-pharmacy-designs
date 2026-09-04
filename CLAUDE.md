@@ -1,110 +1,88 @@
 @AGENTS.md
 
-# iHealth Pharmacy Website — Context for Other Agents
+# iHealth Pharmacy Website — Agent Runbook
+
+Full project state lives in [MEMORY.md](./MEMORY.md). This file is the operational quick-reference.
 
 ## Project
-Multi-page, agency-grade marketing website for **iHealth Pharmacy** (Abbotsford, BC, Canada). Owned by Dhruvil; client demo deployed via GitHub Pages. Live demo: https://dhr232.github.io/ihealth-pharmacy-designs/variants/friendly
+
+Multi-page marketing website for **iHealth Pharmacy** (Abbotsford, BC). Production host is **Hostinger**; GitHub is source-of-truth + CI. Live: https://honeydew-coyote-883999.hostingersite.com/ — repo `dhr232/ihealth-pharmacy-designs` at `C:\Users\Dhruvil\pharmacy-website`.
 
 ## Stack
-- **Next.js 15 (App Router)** + TypeScript + Tailwind CSS v4 + Turbopack
-- Static export (`output: "export"`, `basePath: "/ihealth-pharmacy-designs"`, `images: { unoptimized: true }`)
-- **Motion.dev** for reveals (`motion/react`) with `prefers-reduced-motion` safety
-- **Three.js** (`@react-three/fiber`) for hero background / interactive pharmacy icon (most 3D replaced with reference PNG assets for visual fidelity)
-- **lucide-react** icons (NO emojis anywhere)
-- **Inter** font via `next/font/google`
 
-## Brand Tokens (DO NOT change)
-- Brand red: `#C01D16` (CSS var `--brand`); hover `#9e1912` (`--brand-hover`)
-- Foreground `#1f2328`, muted `#5a6270`, surface `#f6f7f9`, border `#d8dce2`
-- Body: Inter; headings: Inter (bold)
-- Voice: professional, warm, healthcare-confident
+- Next.js 15 App Router + TypeScript + Tailwind CSS v4 + Turbopack
+- Static export: `output: "export"`, `trailingSlash: true`, `images: { unoptimized: true }`, **NO basePath** (Hostinger serves at `/`)
+- `motion/react` (NOT framer-motion), easing `[0.16, 1, 0.3, 1]`, all motion gated on `useReducedMotion`
+- `lucide-react` icons — emojis are banned everywhere
+- Forms POST to Web3Forms (`https://api.web3forms.com/submit`), key from `NEXT_PUBLIC_WEB3FORMS_KEY` (placeholder until user provides)
 
-## Repo Structure
-```
-app/
-  layout.tsx               # root layout, Inter font, viewport metadata
-  globals.css              # Tailwind v4 theme tokens
-  page.tsx                 # design-chooser home
-  variants/
-    friendly/
-      page.tsx             # MAIN page (≈500 lines, primary demo)
-      services/[slug]/     # 6 service pages (static params)
-      components/
-        Header.tsx         # sticky, services dropdown, mobile drawer
-        Footer.tsx         # shared footer
-        RefillForm.tsx     # refill / transfer form
-        NewsletterForm.tsx
-        MotionKit.tsx      # BlurReveal / SectionReveal / Stagger / HoverCard / MagneticButton
-        CountUp.tsx        # stats count-up
-        Hero3DBackground.tsx     # disabled (returns null)
-        PharmacyIcon3D.tsx       # unused
-        TiltCard.tsx             # unused
-        FloatingPills3D.tsx      # hero pill cluster (CSS image-based)
-        HappyCustomerCard.tsx    # rating + avatar stack
-public/
-  ihealth-logo-main.jpeg   # header logo
-  ihealth-logo.png         # alt logo
-  pills-purple.png, pills-blue.png, pills-red.png, pills-yellow.png
-  avatar1-5.webp
-  carousel-dispenser.png
+## Brand Tokens (do not change)
+
+- Brand red `#C01D16` (`--brand`), hover `#a31812`; foreground `#1f2328`; muted `#5a6270`; surface `#f6f7f9`; border `#d8dce2`
+- Inter font (default). 9 alternate pairings selectable via admin.
+- Voice: warm, professional, Abbotsford-community, Canadian English
+
+## Routes (14)
+
+`/` (friendly-variant homepage) · `/about` `/contact` `/cookies` `/health-tips` `/privacy` `/subscribe` `/terms` · `/services/[slug]` ×6 (minor-ailments, compounding, vaccinations, myhealthpack, med-review, delivery) · `/admin`
+
+## Layout
+
+`app/layout.tsx` loads 10 Google Fonts (Inter + 9 alternates) and mounts `ThemeApplier`, `AnnouncementBar`, `CookieBanner` on every page. ThemeApplier reads `ihealth_admin_theme` / `ihealth_admin_font` from localStorage → applies `data-theme` on `<html>` + `font-*` class on `<body>`.
+
+## Admin (`/admin`)
+
+- PIN `2026` (override: `NEXT_PUBLIC_ADMIN_PIN`), 24h localStorage session
+- Tabs: Pharmacists (4 seeded) + Blog Posts (seeded from `public/blog/seed-posts.json` on first load) + theme/font pickers
+- Files: `app/admin/page.tsx`, `app/admin/components/*`, `app/admin/lib/{storage,types,seed-posts}.ts`
+- Data in localStorage (`ihealth_admin_*` keys); JSON export buttons for both lists
+
+## Deploy Flow (Hostinger via Git integration)
+
+Hostinger pulls `gh-pages` → `public_html`. Publish:
+
+```bash
+npx next build && \
+rm -rf out/.git out/.nojekyll && \
+touch out/.nojekyll && \
+cd out && git init -b gh-pages 2>/dev/null && \
+git add . && git commit -m "Deploy: <msg>" && \
+git push "https://x-access-token:$(gh auth token)@github.com/dhr232/ihealth-pharmacy-designs.git" HEAD:gh-pages --force
 ```
 
-## Conventions
-- All emojis banned. Use `lucide-react` icons.
-- All motion components must gate on `useReducedMotion()`.
-- Forms must use `Web3Forms` (env var `NEXT_PUBLIC_WEB3FORMS_KEY`); no server actions (static export).
-- Cookie banner is a client component using `localStorage`.
-- Top "rolling" announcement bar uses CSS `@keyframes marquee` with `prefers-reduced-motion` fallback to a static strip.
+`gh-pages` is the only branch ever force-pushed. Push `main` for CI first.
 
-## Scripts
-```
-npm run lint       # ESLint
-npm run build      # production build (also runs tsc)
-npx tsc --noEmit   # type check only
-node scripts/mobile-screenshot.js   # Playwright mobile audit (390x844)
-node scripts/mobile-scroll.js        # Playwright scroll capture
-node scripts/mobile-menu.js          # Playwright mobile menu + overflow check
-node scripts/mobile-service.js       # Playwright service page check
-```
+## CI
 
-## Deployment
-- **Source repo**: `dhr232/ihealth-pharmacy-designs` (GitHub)
-- **Live**: `gh-pages` branch, force-pushed from `out/` after each build
-- **Publish command** (run from `C:/Users/Dhruvil/pharmacy-website`):
-  ```bash
-  npx next build && \
-  rm -rf out/.git out/.nojekyll && \
-  touch out/.nojekyll && \
-  cd out && git init -b gh-pages && git add . && \
-  git commit -m "<message>" && \
-  git push "https://x-access-token:$(gh auth token)@github.com/dhr232/ihealth-pharmacy-designs.git" HEAD:gh-pages --force
-  ```
+`.github/workflows/ci.yml` on push/PR to `main`: lint → tsc → build → artifact → `deploy-hostinger` job (force-pushes `out/` to gh-pages).
 
-## CI/CD
-- GitHub Actions at `.github/workflows/ci.yml` runs lint + type-check + build + Playwright E2E on every push and PR.
-- Deployment to Hostinger is **manual** via Hostinger's Git integration or FTP (not part of CI per user decision 2026-09-01).
-- Required CI status check on `main`: `ci / build-and-test`.
+## Lint House Rules
+
+**`npm run lint` and `npx tsc --noEmit` must BOTH exit 0 before any deploy.**
+- No `setState` synchronously in `useEffect` — use lazy `useState` initializers (with `typeof window` guard) or derived-state-during-render pattern
+- No impure functions in render (`Math.random()`)
+- `<img>` needs `eslint-disable-next-line @next/next/no-img-element` (intentional: static export + basePath history)
+- `scripts/**` eslint-ignored; `picomatch: ^4.0.7` override in package.json
+
+## File Map
+
+- `app/page.tsx` — homepage (~500 lines)
+- `app/globals.css` — brand tokens + 10 `[data-theme]` blocks + 10 `.font-*` classes + Google-Translate CSS overrides
+- `app/components/` — Header, Footer, RefillForm, NewsletterForm, MotionKit, CountUp, FloatingPills3D, HappyCustomerCard, LanguageSwitcher (Google Translate, 10 BC languages), CookieBanner, AnnouncementBar, WhatsAppButton, ThemeApplier
+- `data/blog-posts.ts` — 10 production posts (~25K words); `app/health-tips/page.tsx` renders them
+- `public/blog/seed-posts.json` — admin seed data
+
+## Pending User Input
+
+- Web3Forms access key (placeholder `YOUR_WEB3FORMS_KEY_HERE`)
+- WhatsApp number (placeholder `16045550199`)
+- `ihealthpharmacy.ca` domain transfer to Hostinger ("later")
+- Booking subdomain sprint (BOOK-01…09 in `.kanban/board.md`) — stack + hosting decisions needed
 
 ## Do NOT
-- Touch AGENTS.md block (auto-managed)
-- Introduce emojis
-- Replace Inter or brand red
-- Add a server / runtime dependency (static export only)
-- Force-push `main` (only `gh-pages` is force-pushed)
 
-## Active User Requests (2026-09-01)
-- [x] Add count-up effect to stats section (done)
-- [x] Brand24-style motion (done — BlurReveal, expo-out easing)
-- [x] Mobile-friendly audit (done — viewport meta added, count-up reduced to 1.5s)
-- [x] Static carousel-dispenser image (done — no caption, full-width)
-- [ ] Add About / Contact / Health Tips / Privacy / Terms / Cookies pages
-- [ ] Cookie consent banner
-- [ ] Rolling top menu (Flu shots / availability / alerts)
-- [ ] WhatsApp floating button
-- [ ] CI/CD workflow file
-- [ ] Plan form submission (added to Kanban)
-
-## Pending Questions for User
-- Hostinger account: pending credentials for production deployment
-- Web3Forms access key: pending (env var `NEXT_PUBLIC_WEB3FORMS_KEY`)
-- WhatsApp number: pending
+- Re-add `basePath` to next.config.ts (root cause of 0-byte CSS on Hostinger)
+- Deploy with lint errors
+- Add server/runtime dependencies (static export only)
+- Replace Inter or brand red; add emojis; use `next/image` for static assets
+- Force-push `main`; touch the AGENTS.md block

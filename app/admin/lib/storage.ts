@@ -10,6 +10,7 @@ import type {
   ThemeName,
 } from "./types";
 import { SEED_PHARMACISTS } from "./types";
+import { SEED_POSTS } from "./seed-posts";
 
 const KEY_AUTH = "ihealth_admin_auth";
 const KEY_PHARMACISTS = "ihealth_admin_pharmacists";
@@ -134,13 +135,100 @@ export function reorderPharmacist(id: string, direction: "up" | "down"): Pharmac
 
 /* ---------------- Blog Posts ---------------- */
 
+// Valid theme names used to coerce legacy/unknown values from the seed JSON.
+const VALID_THEMES: ReadonlySet<ThemeName> = new Set<ThemeName>([
+  "pharmacy-red",
+  "sage-care",
+  "ocean-calm",
+  "sunset-wellness",
+  "forest-pharmacy",
+  "lavender-trust",
+  "citrus-vitality",
+  "slate-professional",
+  "berry-warmth",
+  "midnight-modern",
+]);
+
+// Normalise a raw seed-post object coming from JSON into a strict BlogPost.
+// The seed JSON uses "default" as a theme placeholder and may be older than
+// the current schema; this keeps getPosts() resilient without throwing.
+function normaliseSeedPost(raw: Partial<BlogPost> & { id?: string }): BlogPost {
+  const status: BlogPost["status"] = raw.status === "draft" ? "draft" : "published";
+  const theme: ThemeName = VALID_THEMES.has(raw.themeUsed as ThemeName)
+    ? (raw.themeUsed as ThemeName)
+    : "pharmacy-red";
+  return {
+    id: typeof raw.id === "string" && raw.id.length > 0 ? raw.id : uuid(),
+    title: raw.title ?? "",
+    slug: raw.slug ?? "",
+    excerpt: raw.excerpt ?? "",
+    content: raw.content ?? "",
+    author: raw.author ?? "",
+    publishedAt: raw.publishedAt ?? new Date().toISOString().slice(0, 10),
+    tags: Array.isArray(raw.tags) ? raw.tags.filter((t): t is string => typeof t === "string") : [],
+    imageUrl: raw.imageUrl ?? "",
+    status,
+    themeUsed: theme,
+    readTimeMinutes: typeof raw.readTimeMinutes === "number" ? raw.readTimeMinutes : 5,
+    category: raw.category ?? "General",
+  };
+}
+
 export function getPosts(): BlogPost[] {
   const stored = readJSON<BlogPost[] | null>(KEY_POSTS, null);
   if (stored === null) {
-    writeJSON(KEY_POSTS, []);
-    return [];
+    // First-run: seed from the bundled SEED_POSTS (mirrors /public/blog/seed-posts.json)
+    // so the admin panel renders the 10 canonical posts immediately. Persist
+    // to localStorage so subsequent edits/deletions take over and the seed
+    // does not re-run.
+    writeJSON(KEY_POSTS, SEED_POSTS);
+    return [...SEED_POSTS];
   }
   return Array.isArray(stored) ? stored : [];
+}
+
+/**
+ * Async refresh of the post list from the static JSON at /blog/seed-posts.json.
+ * Only acts when localStorage is empty (first run); afterwards localStorage is
+ * the source of truth and edits persist across reloads. Returns the resulting
+ * post list (seeded fresh or the existing localStorage list). Returns [] if
+ * the fetch fails AND no localStorage value exists.
+ */
+export async function seedPostsFromRemote(): Promise<BlogPost[]> {
+  const stored = readJSON<BlogPost[] | null>(KEY_POSTS, null);
+  if (stored !== null) {
+    return Array.isArray(stored) ? stored : [];
+  }
+  if (typeof fetch === "undefined") {
+    // No fetch available (SSR or sandbox) — fall back to bundled seed.
+    writeJSON(KEY_POSTS, SEED_POSTS);
+    return [...SEED_POSTS];
+  }
+  try {
+    const res = await fetch("/blog/seed-posts.json", { cache: "no-store" });
+    if (!res.ok) {
+      writeJSON(KEY_POSTS, SEED_POSTS);
+      return [...SEED_POSTS];
+    }
+    const raw = (await res.json()) as unknown;
+    if (!Array.isArray(raw)) {
+      writeJSON(KEY_POSTS, SEED_POSTS);
+      return [...SEED_POSTS];
+    }
+    const normalised = raw
+      .map((entry) => normaliseSeedPost((entry ?? {}) as Partial<BlogPost>))
+      .filter((p): p is BlogPost => typeof p.id === "string" && p.id.length > 0);
+    if (normalised.length === 0) {
+      writeJSON(KEY_POSTS, SEED_POSTS);
+      return [...SEED_POSTS];
+    }
+    writeJSON(KEY_POSTS, normalised);
+    return normalised;
+  } catch {
+    // Offline / file missing — keep the bundled seed rather than failing open.
+    writeJSON(KEY_POSTS, SEED_POSTS);
+    return [...SEED_POSTS];
+  }
 }
 
 export function savePosts(list: BlogPost[]): void {

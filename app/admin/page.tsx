@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import {
@@ -25,6 +25,7 @@ import {
   getPosts,
   getTheme,
   reorderPharmacist,
+  seedPostsFromRemote,
   setAuth,
   setFont,
   setTheme,
@@ -211,6 +212,31 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   }, []);
 
   // (state already hydrated via lazy initializers above)
+
+  // On first mount, asynchronously reconcile the post list with the canonical
+  // JSON at /blog/seed-posts.json. The sync lazy initializer above already
+  // seeded from the bundled SEED_POSTS, so this is a no-op when localStorage
+  // is already populated. If the static JSON was updated separately, this
+  // lets the admin panel pick up the latest canonical content on first load.
+  const seededRef = useRef(false);
+  useEffect(() => {
+    if (seededRef.current) return;
+    seededRef.current = true;
+    let cancelled = false;
+    seedPostsFromRemote()
+      .then((list) => {
+        if (cancelled) return;
+        if (list.length > 0) {
+          setPosts(list);
+        }
+      })
+      .catch(() => {
+        // Best-effort: sync seed already populated state.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   /* ----- Pharmacist handlers ----- */
 

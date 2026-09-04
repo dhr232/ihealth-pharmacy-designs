@@ -1,0 +1,194 @@
+// Synchronous seed data for blog posts.
+// Mirrors the static JSON at /public/blog/seed-posts.json so the admin
+// panel can hydrate the post list on first load without awaiting a fetch
+// (useState lazy initializers must be synchronous). The static JSON file is
+// kept as the canonical source for export/import; if you change one, update
+// the other.
+
+import type { BlogPost } from "./types";
+
+// themeUsed values in the seed JSON use legacy names ("default") that are not
+// part of the current ThemeName union. Map anything unrecognised to
+// "pharmacy-red" so the seed conforms to the strict interface.
+function normaliseTheme(theme: unknown): BlogPost["themeUsed"] {
+  const valid: BlogPost["themeUsed"][] = [
+    "pharmacy-red",
+    "sage-care",
+    "ocean-calm",
+    "sunset-wellness",
+    "forest-pharmacy",
+    "lavender-trust",
+    "citrus-vitality",
+    "slate-professional",
+    "berry-warmth",
+    "midnight-modern",
+  ];
+  return valid.includes(theme as BlogPost["themeUsed"])
+    ? (theme as BlogPost["themeUsed"])
+    : "pharmacy-red";
+}
+
+export const SEED_POSTS: BlogPost[] = [
+  {
+    id: "post-001",
+    title: "How to Transfer Your Prescription to iHealth Pharmacy in 3 Easy Steps",
+    slug: "how-to-transfer-your-prescription",
+    excerpt:
+      "Switching pharmacies is simpler than most people think. Here's exactly what to expect when you transfer your prescriptions to iHealth Pharmacy in Abbotsford.",
+    content: "",
+    author: "The iHealth Pharmacy Team",
+    publishedAt: "2026-09-04",
+    tags: ["prescriptions", "transfer", "Abbotsford"],
+    imageUrl: "/blog/post-1.jpg",
+    status: "published",
+    themeUsed: normaliseTheme("default"),
+    readTimeMinutes: 4,
+    category: "New Patients",
+  },
+  {
+    id: "post-002",
+    title: "Flu Season 2026: What Abbotsford Residents Need to Know",
+    slug: "flu-season-2026-abbotsford",
+    excerpt:
+      "When does flu season peak in BC, who should get vaccinated, and what's new this year. A practical guide for Fraser Valley families.",
+    content: "",
+    author: "The iHealth Pharmacy Team",
+    publishedAt: "2026-09-18",
+    tags: ["flu shot", "vaccination", "Abbotsford", "seasonal"],
+    imageUrl: "/blog/post-2.jpg",
+    status: "published",
+    themeUsed: normaliseTheme("default"),
+    readTimeMinutes: 4,
+    category: "Vaccinations",
+  },
+  {
+    id: "post-003",
+    title: "Understanding Your BC Pharmacare Coverage in 2026",
+    slug: "bc-pharmacare-coverage-2026",
+    excerpt:
+      "Fair PharmaCare, Plan D, and private insurance can work together. Here's how Abbotsford residents can lower their out-of-pocket medication costs.",
+    content: "",
+    author: "The iHealth Pharmacy Team",
+    publishedAt: "2026-10-02",
+    tags: ["Pharmacare", "BC", "coverage", "savings"],
+    imageUrl: "/blog/post-3.jpg",
+    status: "published",
+    themeUsed: normaliseTheme("default"),
+    readTimeMinutes: 6,
+    category: "Coverage",
+  },
+  {
+    id: "post-004",
+    title: "Compounding Pharmacy: When Custom Medication Makes Sense",
+    slug: "compounding-pharmacy-custom-medication",
+    excerpt:
+      "Compounded medications let pharmacists prepare custom strengths, dosage forms, and combinations. Here's how it works and when it matters.",
+    content: "",
+    author: "The iHealth Pharmacy Team",
+    publishedAt: "2026-10-16",
+    tags: ["compounding", "custom medication", "pediatric", "seniors"],
+    imageUrl: "/blog/post-4.jpg",
+    status: "published",
+    themeUsed: normaliseTheme("default"),
+    readTimeMinutes: 5,
+    category: "Services",
+  },
+  {
+    id: "post-005",
+    title: "Managing Multiple Medications: A Guide for Seniors in Abbotsford",
+    slug: "managing-multiple-medications-seniors",
+    excerpt:
+      "If you take five or more daily medications, organization is everything. Here's how to stay on track and avoid common pitfalls.",
+    content: "",
+    author: "The iHealth Pharmacy Team",
+    publishedAt: "2026-10-30",
+    tags: ["seniors", "medication management", "compliance packaging"],
+    imageUrl: "/blog/post-5.jpg",
+    status: "published",
+    themeUsed: normaliseTheme("default"),
+    readTimeMinutes: 6,
+    category: "Seniors",
+  },
+  {
+    id: "post-006",
+    title: "Travel Vaccinations: What You Need Before Flying from Abbotsford",
+    slug: "travel-vaccinations-abbotsford",
+    excerpt:
+      "Planning a trip abroad? Some countries require specific vaccines before you enter. Here's how to prepare for travel from YVR or YXX.",
+    content: "",
+    author: "The iHealth Pharmacy Team",
+    publishedAt: "2026-11-06",
+    tags: ["travel", "vaccinations", "international travel"],
+    imageUrl: "/blog/post-6.jpg",
+    status: "published",
+    themeUsed: normaliseTheme("default"),
+    readTimeMinutes: 6,
+    category: "Vaccinations",
+  },
+  {
+    id: "post-007",
+    title:
+      "MyHealthPack: Simplifying Daily Medications for Busy Abbotsford Families",
+    slug: "myhealthpack-compliance-packaging",
+    excerpt:
+      "If you're juggling prescriptions for multiple family members, compliance packaging takes the mental load off. Here's how it works.",
+    content: "",
+    author: "The iHealth Pharmacy Team",
+    publishedAt: "2026-11-20",
+    tags: ["MyHealthPack", "compliance packaging", "medication management"],
+    imageUrl: "/blog/post-7.jpg",
+    status: "published",
+    themeUsed: normaliseTheme("default"),
+    readTimeMinutes: 5,
+    category: "Services",
+  },
+  {
+    id: "post-008",
+    title:
+      "Minor Ailments: 7 Conditions Your Abbotsford Pharmacist Can Now Prescribe For",
+    slug: "minor-ailments-pharmacist-prescribing",
+    excerpt:
+      "Since 2023, BC pharmacists can assess and prescribe for many common conditions. Skip the doctor's wait for these everyday issues.",
+    content: "",
+    author: "The iHealth Pharmacy Team",
+    publishedAt: "2026-12-04",
+    tags: ["minor ailments", "pharmacist prescribing", "BC healthcare"],
+    imageUrl: "/blog/post-8.jpg",
+    status: "published",
+    themeUsed: normaliseTheme("default"),
+    readTimeMinutes: 5,
+    category: "Services",
+  },
+  {
+    id: "post-009",
+    title: "Free Prescription Delivery in Abbotsford: How It Works",
+    slug: "free-prescription-delivery-abbotsford",
+    excerpt:
+      "If getting to the pharmacy is a barrier, we bring your prescriptions to you. Here's how our free Abbotsford delivery service works.",
+    content: "",
+    author: "The iHealth Pharmacy Team",
+    publishedAt: "2026-12-12",
+    tags: ["delivery", "Abbotsford", "convenience"],
+    imageUrl: "/blog/post-9.jpg",
+    status: "published",
+    themeUsed: normaliseTheme("default"),
+    readTimeMinutes: 5,
+    category: "Services",
+  },
+  {
+    id: "post-010",
+    title: "COVID-19 Boosters Fall 2026: Updated Guidance for Fraser Valley Residents",
+    slug: "covid-boosters-fall-2026",
+    excerpt:
+      "Updated COVID-19 vaccines target new variants. Here's who should get boosted this fall and what to expect.",
+    content: "",
+    author: "The iHealth Pharmacy Team",
+    publishedAt: "2026-09-25",
+    tags: ["COVID-19", "booster", "vaccination", "fall 2026"],
+    imageUrl: "/blog/post-10.jpg",
+    status: "published",
+    themeUsed: normaliseTheme("default"),
+    readTimeMinutes: 5,
+    category: "Vaccinations",
+  },
+];

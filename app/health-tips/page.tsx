@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import type { LucideIcon } from "lucide-react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { SectionReveal, BlurReveal } from "../components/MotionKit";
@@ -10,8 +11,10 @@ import {
   BookOpen,
   Stethoscope,
   FlaskConical,
+  Package,
   ArrowRight,
 } from "lucide-react";
+import { MKT_01_POSTS, type BlogPost } from "../../data/blog-posts";
 
 export const metadata: Metadata = {
   title: "Health Tips — iHealth Pharmacy Abbotsford",
@@ -22,61 +25,42 @@ export const metadata: Metadata = {
 type Article = {
   title: string;
   category: string;
-  icon: React.ComponentType<{ size?: number; className?: string }>;
+  icon: LucideIcon;
   snippet: string;
   href: string;
+  imageUrl: string;
+  readTimeMinutes: number;
 };
 
-const ARTICLES: Article[] = [
-  {
-    title: "5 questions to ask your pharmacist on your first visit",
-    category: "New Patients",
-    icon: BookOpen,
-    snippet:
-      "Your pharmacist is one of the most accessible healthcare professionals you'll ever meet. Here are five questions worth bringing to your first visit.",
-    href: "#",
-  },
-  {
-    title: "Flu shot season: what you need to know for BC 2026",
-    category: "Vaccinations",
-    icon: Syringe,
-    snippet:
-      "When does flu season peak in BC, who should get vaccinated, and what's new this year. A practical guide for Abbotsford families.",
-    href: "#",
-  },
-  {
-    title: "How compliance packaging helps seniors stay independent",
-    category: "Seniors",
-    icon: Heart,
-    snippet:
-      "Managing multiple medications is hard. Compliance packaging like MyHealthPack sorts your pills by day and time so you never miss a dose.",
-    href: "#",
-  },
-  {
-    title: "Understanding your BC Pharmacare coverage",
-    category: "Coverage",
-    icon: ShieldCheck,
-    snippet:
-      "BC Pharmacare, Fair PharmaCare, and private insurance can all work together. Here's how to maximize your coverage and lower your out-of-pocket costs.",
-    href: "#",
-  },
-  {
-    title: "When to use the minor ailments clinic vs. a doctor",
-    category: "Minor Ailments",
-    icon: Stethoscope,
-    snippet:
-      "BC pharmacists can now assess and prescribe for many common conditions. Here's when the minor ailments clinic is the right call — and when to see your doctor.",
-    href: "#",
-  },
-  {
-    title: "Compounding 101: when a custom medication makes sense",
-    category: "Compounding",
-    icon: FlaskConical,
-    snippet:
-      "If a standard prescription isn't working for you or your child, a custom-compounded medication might. Here's what compounding can — and can't — do.",
-    href: "#",
-  },
-];
+// Map each blog-post category to a Lucide icon. Anything unrecognized
+// falls back to BookOpen so the page never renders a missing icon.
+const CATEGORY_ICON_MAP: Record<string, LucideIcon> = {
+  Vaccinations: Syringe,
+  "New Patients": BookOpen,
+  Seniors: Heart,
+  Coverage: ShieldCheck,
+  "Minor Ailments": Stethoscope,
+  Services: Package,
+  Compounding: FlaskConical,
+};
+
+function iconForCategory(category: string): LucideIcon {
+  return CATEGORY_ICON_MAP[category] ?? BookOpen;
+}
+
+function toArticle(post: BlogPost): Article {
+  return {
+    title: post.title,
+    category: post.category,
+    icon: iconForCategory(post.category),
+    snippet: post.excerpt,
+    href: `/blog/${post.slug}`,
+    imageUrl: post.imageUrl,
+    readTimeMinutes: post.readTimeMinutes,
+  };
+}
+
+const ARTICLES: Article[] = MKT_01_POSTS.map(toArticle);
 
 export default function HealthTipsPage() {
   return (
@@ -108,12 +92,12 @@ export default function HealthTipsPage() {
 
         {/* Article grid */}
         <SectionReveal className="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-20">
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-2 gap-6 lg:grid-cols-6">
             {ARTICLES.map((article) => {
               const Icon = article.icon;
               return (
                 <article
-                  key={article.title}
+                  key={article.href}
                   className="group flex h-full flex-col rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm transition hover:border-[var(--brand)]/40 hover:shadow-md"
                 >
                   <div className="flex items-center gap-2">
@@ -130,6 +114,9 @@ export default function HealthTipsPage() {
                   <p className="mt-3 flex-1 text-sm leading-relaxed text-[var(--muted)]">
                     {article.snippet}
                   </p>
+                  <div className="mt-3 flex items-center gap-2 text-xs font-medium text-[var(--muted)]">
+                    <span>{article.readTimeMinutes} min read</span>
+                  </div>
                   <Link
                     href={article.href}
                     className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--brand)]"
