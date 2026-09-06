@@ -16,10 +16,13 @@ const SERVICE_PAGES = [
   { label: "Prescription Delivery", href: "/services/delivery" },
 ];
 
+const PATIENT_ACTIONS = [
+  { label: "Prescription Refills", href: "/prescription-refills", desc: "Ready in 3 easy steps" },
+  { label: "Transfer to iHealth", href: "/transfer", desc: "Switch in one request" },
+  { label: "Vaccinations", href: "/vaccinations", desc: "Walk in or book ahead" },
+];
+
 const HOME_ANCHORS = [
-  { label: "Prescription Refills", href: "/#refill" },
-  { label: "Transfer to iHealth", href: "/#transfer" },
-  { label: "Virtual Doctor", href: "/#virtual-doctor" },
   { label: "Contact", href: "/#contact" },
 ];
 
@@ -28,11 +31,14 @@ export default function Header() {
   const isHome = pathname === "/" || pathname === "/" || pathname === "/";
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [actionsOpen, setActionsOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const actionsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (actionsTimeoutRef.current) clearTimeout(actionsTimeoutRef.current);
     };
   }, []);
 
@@ -43,6 +49,15 @@ export default function Header() {
 
   function closeServicesSoon() {
     timeoutRef.current = setTimeout(() => setServicesOpen(false), 150);
+  }
+
+  function openActions() {
+    if (actionsTimeoutRef.current) clearTimeout(actionsTimeoutRef.current);
+    setActionsOpen(true);
+  }
+
+  function closeActionsSoon() {
+    actionsTimeoutRef.current = setTimeout(() => setActionsOpen(false), 150);
   }
 
   const navLinkClass =
@@ -69,6 +84,44 @@ export default function Header() {
           <Link href="/" className={navLinkClass}>
             Home
           </Link>
+
+          <div className="relative" onMouseEnter={openActions} onMouseLeave={closeActionsSoon}>
+            <button
+              onClick={() => setActionsOpen((v) => !v)}
+              aria-expanded={actionsOpen}
+              aria-haspopup="menu"
+              className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-sm font-medium text-[var(--foreground)] transition hover:text-[var(--brand)]"
+            >
+              Refills & Booking
+              <ChevronDown size={16} className={`transition ${actionsOpen ? "rotate-180" : ""}`} />
+            </button>
+
+            <AnimatePresence>
+              {actionsOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute left-0 top-full z-50 w-72 rounded-xl border border-[var(--border)] bg-white p-2 shadow-lg"
+                  role="menu"
+                >
+                  {PATIENT_ACTIONS.map((s) => (
+                    <Link
+                      key={s.label}
+                      href={s.href}
+                      role="menuitem"
+                      className="block rounded-lg px-3 py-2.5 transition hover:bg-[var(--surface)]"
+                      onClick={() => setActionsOpen(false)}
+                    >
+                      <span className="block text-sm font-medium text-[var(--foreground)]">{s.label}</span>
+                      <span className="block text-xs text-[var(--muted)]">{s.desc}</span>
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           <div className="relative" onMouseEnter={openServices} onMouseLeave={closeServicesSoon}>
             <button
@@ -141,7 +194,7 @@ export default function Header() {
             (604) 555-0199
           </a>
           <Link
-            href="/#refill"
+            href="/prescription-refills"
             className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--brand-hover)]"
           >
             Request Refill
@@ -174,6 +227,18 @@ export default function Header() {
               <Link href="/" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">
                 Home
               </Link>
+              <p className="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">Refills & Booking</p>
+              {PATIENT_ACTIONS.map((s) => (
+                <Link
+                  key={s.label}
+                  href={s.href}
+                  onClick={() => setOpen(false)}
+                  className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)] hover:text-[var(--brand)]"
+                >
+                  {s.label}
+                </Link>
+              ))}
+              <div className="my-2 border-t border-[var(--border)]" />
               <p className="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">Services</p>
               {SERVICE_PAGES.map((s) => (
                 <Link
@@ -203,7 +268,7 @@ export default function Header() {
                 (604) 555-0199
               </a>
               <Link
-                href="/#refill"
+                href="/prescription-refills"
                 onClick={() => setOpen(false)}
                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--brand)] px-4 py-3 text-center text-sm font-semibold text-white"
               >

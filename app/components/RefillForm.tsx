@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import { Pill, Phone, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 
 type Props = {
-  variant?: "refill" | "transfer" | "contact";
+  variant?: "refill" | "transfer" | "contact" | "vaccination";
 };
 
 const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "YOUR_WEB3FORMS_KEY_HERE";
@@ -16,6 +16,9 @@ export default function RefillForm({ variant = "refill" }: Props) {
   const [name, setName] = useState("");
   const [pharmacy, setPharmacy] = useState("");
   const [notes, setNotes] = useState("");
+  const [vaccineType, setVaccineType] = useState("");
+  const [email, setEmail] = useState("");
+  const [preferredDate, setPreferredDate] = useState("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
@@ -26,6 +29,10 @@ export default function RefillForm({ variant = "refill" }: Props) {
     // Validation
     if (variant === "contact" && (!name.trim() || !phone.trim())) {
       setError("Please provide your name and phone number so we can reach you.");
+      return;
+    }
+    if (variant === "vaccination" && (!name.trim() || !phone.trim() || !vaccineType)) {
+      setError("Please provide your name, phone number, and the vaccine you're interested in.");
       return;
     }
     if ((variant === "refill" || variant === "transfer") && (!rx.trim() || !phone.trim())) {
@@ -40,7 +47,7 @@ export default function RefillForm({ variant = "refill" }: Props) {
       // Build form data for Web3Forms
       const formData = new FormData();
       formData.append("access_key", WEB3FORMS_KEY);
-      formData.append("subject", `iHealth Pharmacy — ${variant === "refill" ? "Refill Request" : variant === "transfer" ? "Transfer Request" : "Contact Message"}`);
+      formData.append("subject", `iHealth Pharmacy — ${variant === "refill" ? "Refill Request" : variant === "transfer" ? "Transfer Request" : variant === "vaccination" ? "Vaccination Request" : "Contact Message"}`);
       formData.append("from_name", "iHealth Pharmacy Website");
       formData.append("to", "pharmacy@ihealthpharmacy.ca");
 
@@ -53,6 +60,13 @@ export default function RefillForm({ variant = "refill" }: Props) {
         formData.append("Current Pharmacy", pharmacy || "(not specified)");
         formData.append("Rx Number", rx);
         formData.append("Phone", phone);
+        if (notes) formData.append("Notes", notes);
+      } else if (variant === "vaccination") {
+        formData.append("Name", name);
+        formData.append("Phone", phone);
+        if (email) formData.append("Email", email);
+        formData.append("Vaccine", vaccineType);
+        if (preferredDate) formData.append("Preferred Date", preferredDate);
         if (notes) formData.append("Notes", notes);
       } else {
         formData.append("Name", name);
@@ -88,6 +102,7 @@ export default function RefillForm({ variant = "refill" }: Props) {
   const titles = {
     refill: { heading: "Quick refill request", sub: "30 seconds. No account needed." },
     transfer: { heading: "Transfer to iHealth", sub: "We handle the paperwork — usually the same day." },
+    vaccination: { heading: "Book your vaccination", sub: "Tell us which vaccine and when — we'll confirm within one business day." },
     contact: { heading: "Send us a message", sub: "A pharmacist will respond within one business day." },
   };
   const t = titles[variant];
@@ -106,6 +121,7 @@ export default function RefillForm({ variant = "refill" }: Props) {
         <p className="mt-2 text-[var(--muted)]">
           {variant === "refill" && <>We&apos;ve got refill <strong>#{rx}</strong> in the queue. We&apos;ll text <strong>{phone}</strong> when it&apos;s ready.</>}
           {variant === "transfer" && <>We&apos;ll transfer your prescriptions from <strong>{pharmacy || "your current pharmacy"}</strong> and text <strong>{phone}</strong> to confirm.</>}
+          {variant === "vaccination" && <>Thanks <strong>{name}</strong>. We&apos;ll call or text <strong>{phone}</strong> shortly to confirm your <strong>{vaccineType}</strong> appointment{preferredDate ? ` around ${preferredDate}` : ""}.</>}
           {variant === "contact" && <>Thanks <strong>{name}</strong>. A pharmacist will call or text <strong>{phone}</strong> within one business day.</>}
         </p>
         <p className="mt-3 text-xs text-[var(--muted)]">
@@ -140,7 +156,23 @@ export default function RefillForm({ variant = "refill" }: Props) {
         </div>
       </div>
 
-      {(variant === "transfer" || variant === "contact") && (
+      {variant === "vaccination" && (
+        <label className="block">
+          <span className="mb-1.5 block text-sm font-medium text-[var(--foreground)]">
+            Your name
+          </span>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Full name"
+            aria-invalid={!!error}
+            className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--brand)]"
+          />
+        </label>
+      )}
+
+      {variant !== "contact" && variant !== "vaccination" && (
         <label className="block">
           <span className="mb-1.5 block text-sm font-medium text-[var(--foreground)]">
             {variant === "transfer" ? "Current pharmacy" : "Your name"}
@@ -156,7 +188,7 @@ export default function RefillForm({ variant = "refill" }: Props) {
         </label>
       )}
 
-      {variant !== "contact" && (
+      {variant !== "contact" && variant !== "vaccination" && (
         <label className={`block ${variant === "transfer" ? "mt-4" : ""}`}>
           <span className="mb-1.5 block text-sm font-medium text-[var(--foreground)]">
             Rx number
@@ -169,6 +201,43 @@ export default function RefillForm({ variant = "refill" }: Props) {
             placeholder="e.g. 7042318"
             aria-invalid={!!error}
             className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--brand)]"
+          />
+        </label>
+      )}
+
+      {variant === "vaccination" && (
+        <label className="mt-4 block">
+          <span className="mb-1.5 block text-sm font-medium text-[var(--foreground)]">
+            Which vaccine?
+          </span>
+          <select
+            value={vaccineType}
+            onChange={(e) => setVaccineType(e.target.value)}
+            aria-invalid={!!error}
+            className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--brand)]"
+          >
+            <option value="">Select a vaccine…</option>
+            <option value="Flu shot">Flu shot (seasonal)</option>
+            <option value="COVID-19 booster">COVID-19 booster</option>
+            <option value="Shingles (Shingrix)">Shingles (Shingrix)</option>
+            <option value="Pneumococcal">Pneumococcal / pneumonia</option>
+            <option value="Tetanus (Td/Tdap)">Tetanus (Td/Tdap)</option>
+            <option value="Travel vaccines">Travel vaccines (consultation first)</option>
+            <option value="Other">Other / not sure</option>
+          </select>
+        </label>
+      )}
+
+      {variant === "vaccination" && (
+        <label className="mt-4 block">
+          <span className="mb-1.5 block text-sm font-medium text-[var(--foreground)]">
+            Preferred date (optional)
+          </span>
+          <input
+            type="date"
+            value={preferredDate}
+            onChange={(e) => setPreferredDate(e.target.value)}
+            className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--brand)]"
           />
         </label>
       )}
@@ -187,6 +256,21 @@ export default function RefillForm({ variant = "refill" }: Props) {
           className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--brand)]"
         />
       </label>
+
+      {variant === "vaccination" && (
+        <label className="mt-4 block">
+          <span className="mb-1.5 block text-sm font-medium text-[var(--foreground)]">
+            Email (optional)
+          </span>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--brand)]"
+          />
+        </label>
+      )}
 
       <label className="mt-4 block">
         <span className="mb-1.5 block text-sm font-medium text-[var(--foreground)]">

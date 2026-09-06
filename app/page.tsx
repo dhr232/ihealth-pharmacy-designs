@@ -24,11 +24,11 @@ import {
 import Link from "next/link";
 
 const NUMBERED_SERVICES = [
-  { number: "01", title: "Easy Prescription Refills", body: "Request refills online, by phone, or in person — we check every detail and have it ready fast.", href: "#refill" },
-  { number: "02", title: "Transfer to iHealth", body: "Give us your pharmacy name and we move your prescriptions over, often the same day.", href: "#transfer" },
+  { number: "01", title: "Easy Prescription Refills", body: "Request refills online, by phone, or in person — we check every detail and have it ready fast.", href: "/prescription-refills" },
+  { number: "02", title: "Transfer to iHealth", body: "Give us your pharmacy name and we move your prescriptions over, often the same day.", href: "/transfer" },
   { number: "03", title: "Med & Refill Reminders", body: "Automatic texts and calls so you never miss a dose or run out unexpectedly.", href: "/services/myhealthpack" },
   { number: "04", title: "Minor Ailment Clinic", body: "Walk in and see a pharmacist who can assess and prescribe for common minor ailments.", href: "/services/minor-ailments" },
-  { number: "05", title: "24/7 Pharmacist Advice", body: "Ask questions by phone, text, or email — a real pharmacist answers, real fast.", href: "#contact" },
+  { number: "05", title: "Vaccinations", body: "Flu shots, COVID-19 boosters, travel vaccines, and more — walk in or book ahead.", href: "/vaccinations" },
 ];
 
 const CORE_SERVICES = [
@@ -84,20 +84,20 @@ export default function FriendlyPage() {
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <MagneticButton>
-                <a
-                  href="#refill"
+                <Link
+                  href="/prescription-refills"
                   className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-3.5 text-base font-semibold text-white transition hover:bg-[var(--brand-hover)]"
                 >
                   Request Refill
-                </a>
+                </Link>
               </MagneticButton>
               <MagneticButton>
-                <a
-                  href="#transfer"
+                <Link
+                  href="/transfer"
                   className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-6 py-3.5 text-base font-semibold text-[var(--foreground)] transition hover:border-[var(--brand)] hover:text-[var(--brand)]"
                 >
                   Transfer to iHealth
-                </a>
+                </Link>
               </MagneticButton>
             </div>
           </BlurReveal>
@@ -338,69 +338,7 @@ export default function FriendlyPage() {
         </div>
       </section>
 
-      {/* Refill */}
-      <section id="refill" className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-2">
-          <SectionReveal>
-            <span className="inline-block rounded-full bg-[var(--brand-subtle)] px-4 py-1.5 text-sm font-semibold text-[var(--brand)]">
-              Prescription Refills
-            </span>
-            <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-4xl">Refills in 3 easy steps</h2>
-            <ol className="mt-8 space-y-6">
-              {[
-                { title: "Send it in", body: "Use the form, call, or walk in. 30 seconds, promise." },
-                { title: "We fill it fast", body: "A pharmacist checks every detail — usually ready within the hour." },
-                { title: "Pick up or we deliver", body: "We text you the moment it’s ready. Delivery available across Abbotsford." },
-              ].map((step, idx) => (
-                <li key={step.title} className="flex gap-4">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--border)] bg-white text-sm font-semibold text-[var(--brand)]">
-                    {idx + 1}
-                  </span>
-                  <div>
-                    <h3 className="font-semibold">{step.title}</h3>
-                    <p className="text-[var(--muted)]">{step.body}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </SectionReveal>
-
-          <SectionReveal className="flex items-start">
-            <RefillForm variant="refill" />
-          </SectionReveal>
-        </div>
-      </section>
-
-      {/* Transfer */}
-      <section id="transfer" className="bg-[var(--surface)]">
-        <div className="mx-auto grid max-w-7xl gap-12 px-5 py-20 lg:grid-cols-2 lg:px-8">
-          <SectionReveal className="flex items-start">
-            <RefillForm variant="transfer" />
-          </SectionReveal>
-
-          <SectionReveal className="order-first lg:order-last">
-            <span className="inline-block rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-[var(--brand)] shadow-sm">
-              Switching Pharmacies
-            </span>
-            <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-4xl">Transfer to iHealth today.</h2>
-            <p className="mt-4 text-lg text-[var(--muted)]">
-              Give us your current pharmacy&apos;s name and we&apos;ll move your prescriptions over — often the same day. You&apos;ll never sit on hold again.
-            </p>
-            <ul className="mt-6 space-y-3">
-              {[
-                "We request your files directly",
-                "Same-day transfers when possible",
-                "All insurance and dosing history preserved",
-              ].map((item) => (
-                <li key={item} className="flex items-center gap-3 text-[var(--foreground)]">
-                  <CheckCircle size={18} className="shrink-0 text-[var(--brand)]" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </SectionReveal>
-        </div>
-      </section>
+      {/* Refill + Transfer now live on dedicated pages: /prescription-refills and /transfer */}
 
       {/* Bottom CTA */}
       <section className="bg-white">
@@ -411,12 +349,12 @@ export default function FriendlyPage() {
               Join the Abbotsford families who trust iHealth with their medications, reminders, and everyday health.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <a
-                href="#refill"
+              <Link
+                href="/prescription-refills"
                 className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-3.5 text-base font-semibold text-white transition hover:bg-[var(--brand-hover)]"
               >
                 Make an Order
-              </a>
+              </Link>
               <a
                 href="#contact"
                 className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-6 py-3.5 text-base font-semibold text-[var(--foreground)] transition hover:border-[var(--brand)] hover:text-[var(--brand)]"
