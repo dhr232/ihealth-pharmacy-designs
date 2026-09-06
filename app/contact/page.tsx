@@ -19,7 +19,9 @@ import {
   FlaskConical,
   Car,
   Building2,
+  MessageCircle,
 } from "lucide-react";
+import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
 
 // Note: metadata on a client component is supported via the route segment, but
 // because this file is "use client" we expose title via a sibling-friendly
@@ -159,11 +161,35 @@ export default function ContactPage() {
                   <div>
                     <p className="text-sm font-medium text-[var(--muted)]">Phone</p>
                     <a
-                      href="tel:+160****0199"
+                      href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
                       className="text-lg font-semibold text-[var(--foreground)] transition hover:text-[var(--brand)]"
                     >
-                      (604) 555-0199
+                      {PHARMACY_INFO.phoneDisplay}
                     </a>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-green-100 text-[#128C7E]">
+                    <MessageCircle size={18} className="text-[#25D366]" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium text-[var(--muted)]">WhatsApp</p>
+                      <span className="rounded bg-green-100 px-1.5 py-0.5 text-[10px] font-semibold text-green-800">
+                        Senior Friendly
+                      </span>
+                    </div>
+                    <a
+                      href={getWhatsAppUrl()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-lg font-semibold text-[#128C7E] transition hover:underline"
+                    >
+                      {PHARMACY_INFO.whatsapp.displayNumber}
+                    </a>
+                    <p className="text-xs text-[var(--muted)]">
+                      Chat with a pharmacist, request refills, or send pill bottle photos.
+                    </p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
@@ -173,10 +199,10 @@ export default function ContactPage() {
                   <div>
                     <p className="text-sm font-medium text-[var(--muted)]">Email</p>
                     <a
-                      href="mailto:hello@ihealthpharmacy.ca"
+                      href={`mailto:${PHARMACY_INFO.email}`}
                       className="text-lg font-semibold text-[var(--foreground)] transition hover:text-[var(--brand)]"
                     >
-                      hello@ihealthpharmacy.ca
+                      {PHARMACY_INFO.email}
                     </a>
                   </div>
                 </li>
@@ -186,10 +212,15 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-[var(--muted)]">Address</p>
-                    <p className="text-lg font-semibold text-[var(--foreground)]">
-                      101 - 45619 Yale Road
-                    </p>
-                    <p className="text-[var(--muted)]">Abbotsford, BC V2P 2N1</p>
+                    <a
+                      href={PHARMACY_INFO.address.mapUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-lg font-semibold text-[var(--foreground)] transition hover:text-[var(--brand)]"
+                    >
+                      {PHARMACY_INFO.address.full}
+                    </a>
+                    <p className="text-xs text-[var(--muted)]">{PHARMACY_INFO.address.parkingNotes}</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">

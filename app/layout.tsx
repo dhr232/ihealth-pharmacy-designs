@@ -16,6 +16,7 @@ import "./globals.css";
 import ThemeApplier from "./components/ThemeApplier";
 import AnnouncementBar from "./components/AnnouncementBar";
 import CookieBanner from "./components/CookieBanner";
+import WhatsAppButton from "./components/WhatsAppButton";
 
 /* All 10 font families loaded once at build time so the admin's theme/font
    picker can switch between them on the live site via a CSS class.
@@ -139,6 +140,7 @@ export default function RootLayout({
         <AnnouncementBar />
         {children}
         <CookieBanner />
+        <WhatsAppButton />
       </body>
     </html>
   );

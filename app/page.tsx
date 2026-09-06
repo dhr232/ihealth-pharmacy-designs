@@ -23,8 +23,10 @@ import {
   FlaskConical,
   ClipboardCheck,
   ArrowUpRight,
+  MessageCircle,
 } from "lucide-react";
 import Link from "next/link";
+import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
 
 const NUMBERED_SERVICES = [
   { number: "01", title: "Easy Prescription Refills", body: "Request refills online, by phone, or in person — we check every detail and have it ready fast.", href: "/prescription-refills" },
@@ -143,6 +145,19 @@ export default function FriendlyPage() {
                   Transfer to iHealth
                 </Link>
               </MagneticButton>
+            </div>
+            <div className="mt-4 flex items-center gap-2 text-sm text-[var(--muted)]">
+              <span className="flex h-2 w-2 rounded-full bg-[#25D366] animate-pulse" />
+              <span>Prefer WhatsApp?</span>
+              <a
+                href={getWhatsAppUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 font-semibold text-[#128C7E] transition hover:text-green-700 hover:underline"
+              >
+                <MessageCircle size={15} className="text-[#25D366]" />
+                Chat with a pharmacist
+              </a>
             </div>
           </BlurReveal>
 
@@ -415,26 +430,48 @@ export default function FriendlyPage() {
             <ul className="mt-8 space-y-4">
               <li className="flex items-start gap-3">
                 <MapPin size={20} className="mt-0.5 shrink-0 text-[var(--brand)]" />
-                <span className="text-[var(--foreground)]">123 Main Street, Abbotsford, BC V2S 8K1</span>
+                <a
+                  href={PHARMACY_INFO.address.mapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[var(--foreground)] underline underline-offset-4 transition hover:text-[var(--brand)]"
+                >
+                  {PHARMACY_INFO.address.full}
+                </a>
               </li>
               <li className="flex items-center gap-3">
                 <Phone size={20} className="shrink-0 text-[var(--brand)]" />
-                <a href="tel:+16045550199" className="text-[var(--foreground)] underline underline-offset-4 transition hover:text-[var(--brand)]">
-                  (604) 555-0199
+                <a
+                  href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
+                  className="text-[var(--foreground)] underline underline-offset-4 transition hover:text-[var(--brand)]"
+                >
+                  {PHARMACY_INFO.phoneDisplay}
+                </a>
+              </li>
+              <li className="flex items-center gap-3">
+                <MessageCircle size={20} className="shrink-0 text-[#25D366]" />
+                <a
+                  href={getWhatsAppUrl()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-[#128C7E] underline underline-offset-4 transition hover:text-green-700"
+                >
+                  WhatsApp: {PHARMACY_INFO.whatsapp.displayNumber} (Chat with Pharmacist)
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={20} className="shrink-0 text-[var(--brand)]" />
-                <a href="mailto:hello@ihealthpharmacy.ca" className="text-[var(--foreground)] underline underline-offset-4 transition hover:text-[var(--brand)]">
-                  hello@ihealthpharmacy.ca
+                <a
+                  href={`mailto:${PHARMACY_INFO.email}`}
+                  className="text-[var(--foreground)] underline underline-offset-4 transition hover:text-[var(--brand)]"
+                >
+                  {PHARMACY_INFO.email}
                 </a>
               </li>
               <li className="flex items-start gap-3">
                 <Clock size={20} className="mt-0.5 shrink-0 text-[var(--brand)]" />
                 <span className="text-[var(--foreground)]">
-                  Mon–Fri 9am–7pm
-                  <br />
-                  Sat 9am–5pm · Sun closed
+                  {PHARMACY_INFO.hoursSummary}
                 </span>
               </li>
             </ul>

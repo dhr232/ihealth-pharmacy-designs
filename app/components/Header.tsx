@@ -3,9 +3,10 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Menu, X, Phone } from "lucide-react";
+import { ChevronDown, Menu, X, Phone, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
 
 const SERVICE_PAGES = [
   { label: "Minor Ailments Clinic", href: "/services/minor-ailments" },
@@ -185,18 +186,28 @@ export default function Header() {
           <Link href="/#contact" className={navLinkClass}>Contact</Link>
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-2.5 lg:flex">
           <LanguageSwitcher />
           <a
-            href="tel:+16045550199"
+            href={getWhatsAppUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Chat with pharmacist on WhatsApp"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-green-200 bg-green-50/70 px-3 py-2 text-sm font-semibold text-[#128C7E] transition hover:bg-green-100 hover:border-green-300"
+          >
+            <MessageCircle size={16} className="text-[#25D366]" />
+            <span>WhatsApp</span>
+          </a>
+          <a
+            href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
             className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-[var(--muted)] transition hover:text-[var(--brand)]"
           >
             <Phone size={16} />
-            (604) 555-0199
+            {PHARMACY_INFO.phoneDisplay}
           </a>
           <Link
             href="/prescription-refills"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--brand-hover)]"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--brand-hover)]"
           >
             Request Refill
           </Link>
@@ -262,11 +273,21 @@ export default function Header() {
               <Link href="/#blog" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">Blog</Link>
               <Link href="/#contact" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">Contact</Link>
               <a
-                href="tel:+16045550199"
-                className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--border)] px-4 py-3 text-center text-sm font-medium text-[var(--foreground)]"
+                href={getWhatsAppUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+                className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-[#25D366] px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#1ea952]"
+              >
+                <MessageCircle size={18} />
+                Chat on WhatsApp
+              </a>
+              <a
+                href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--border)] px-4 py-3 text-center text-sm font-medium text-[var(--foreground)]"
               >
                 <Phone size={18} />
-                (604) 555-0199
+                Call {PHARMACY_INFO.phoneDisplay}
               </a>
               <Link
                 href="/prescription-refills"

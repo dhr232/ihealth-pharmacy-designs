@@ -3,7 +3,8 @@ import Link from "next/link";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { SectionReveal } from "../../components/MotionKit";
-import { CheckCircle, ArrowLeft } from "lucide-react";
+import { CheckCircle, ArrowLeft, MessageCircle } from "lucide-react";
+import { getWhatsAppUrl } from "@/data/pharmacy-info";
 
 const SERVICES: Record<
   string,
@@ -172,12 +173,21 @@ export default async function ServicePage({ params }: { params: Params }) {
           </div>
         </SectionReveal>
 
-        <SectionReveal className="mt-10">
-          <a
-            href={service.cta.href}
+        <SectionReveal className="mt-10 flex flex-wrap items-center gap-4">
+          <Link
+            href="/contact"
             className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-3.5 text-base font-semibold text-white transition hover:bg-[var(--brand-hover)]"
           >
             {service.cta.label}
+          </Link>
+          <a
+            href={getWhatsAppUrl(`Hi iHealth Pharmacy, I would like to inquire about your ${service.title} service.`)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-lg border border-green-300 bg-green-50 px-6 py-3.5 text-base font-semibold text-[#128C7E] transition hover:bg-green-100"
+          >
+            <MessageCircle size={18} className="text-[#25D366]" />
+            Ask on WhatsApp
           </a>
         </SectionReveal>
       </main>
