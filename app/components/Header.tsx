@@ -25,6 +25,7 @@ const PATIENT_ACTIONS = [
 const HOME_ANCHORS = [
   { label: "Contact", href: "/#contact" },
 ];
+void HOME_ANCHORS;
 
 export default function Header() {
   const pathname = usePathname();

@@ -20,6 +20,9 @@ import {
   Clock,
   MapPin,
   CheckCircle,
+  FlaskConical,
+  ClipboardCheck,
+  ArrowUpRight,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -31,22 +34,63 @@ const NUMBERED_SERVICES = [
   { number: "05", title: "Vaccinations", body: "Flu shots, COVID-19 boosters, travel vaccines, and more — walk in or book ahead.", href: "/vaccinations" },
 ];
 
-const CORE_SERVICES = [
-  { icon: Pill, title: "Prescription Refills", body: "Refill existing prescriptions or send new ones through our secure patient portal." },
-  { icon: ArrowLeftRight, title: "Transfer to iHealth", body: "Switching is seamless. Give us your current pharmacy name and we handle the rest." },
-  { icon: Syringe, title: "Vaccinations", body: "Flu shots, travel vaccines, shingles, and routine immunizations." },
-  { icon: Package, title: "MyHealthPack", body: "Blister packs and compliance packaging sorted by day and time, with automatic refills." },
-  { icon: Thermometer, title: "Flu Shots", body: "Walk-in seasonal influenza immunizations for adults and children." },
-  { icon: Truck, title: "Prescription Delivery", body: "Free same-day delivery across Abbotsford for qualifying prescriptions." },
-];
-
-const ALL_SERVICE_LINKS = [
-  { title: "Minor Ailments Clinic", href: "/services/minor-ailments", desc: "Walk-in care for common conditions" },
-  { title: "Compounding", href: "/services/compounding", desc: "Custom medications made for you" },
-  { title: "Vaccinations", href: "/services/vaccinations", desc: "Flu shots, travel vaccines, and more" },
-  { title: "MyHealthPack", href: "/services/myhealthpack", desc: "Compliance packaging by day and time" },
-  { title: "Medication Review", href: "/services/med-review", desc: "One-on-one pharmacist consultation" },
-  { title: "Prescription Delivery", href: "/services/delivery", desc: "Same-day local delivery" },
+const SERVICES = [
+  {
+    title: "Prescription Refills",
+    desc: "Ready within the hour, or delivered free to your door.",
+    href: "/prescription-refills",
+    icon: Pill,
+    gradient: "from-red-500/70 to-red-700/70",
+  },
+  {
+    title: "Transfer to iHealth",
+    desc: "Switch pharmacies in one request — we handle the paperwork.",
+    href: "/transfer",
+    icon: ArrowLeftRight,
+    gradient: "from-slate-500/70 to-slate-700/70",
+  },
+  {
+    title: "Vaccinations",
+    desc: "Flu shots, COVID-19 boosters, shingles, and travel vaccines.",
+    href: "/vaccinations",
+    icon: Syringe,
+    gradient: "from-teal-500/70 to-teal-700/70",
+  },
+  {
+    title: "Minor Ailments Clinic",
+    desc: "Walk-in prescribing for everyday conditions. No doctor visit.",
+    href: "/services/minor-ailments",
+    icon: Thermometer,
+    gradient: "from-rose-500/70 to-rose-700/70",
+  },
+  {
+    title: "MyHealthPack",
+    desc: "Blister packs sorted by day and time, with automatic refills.",
+    href: "/services/myhealthpack",
+    icon: Package,
+    gradient: "from-amber-500/70 to-amber-700/70",
+  },
+  {
+    title: "Compounding",
+    desc: "Custom dosages, flavours, and dosage forms made for you.",
+    href: "/services/compounding",
+    icon: FlaskConical,
+    gradient: "from-indigo-500/70 to-indigo-700/70",
+  },
+  {
+    title: "Medication Review",
+    desc: "One-on-one pharmacist consultation, free with Pharmacare.",
+    href: "/services/med-review",
+    icon: ClipboardCheck,
+    gradient: "from-emerald-500/70 to-emerald-700/70",
+  },
+  {
+    title: "Prescription Delivery",
+    desc: "Free same-day delivery across Abbotsford.",
+    href: "/services/delivery",
+    icon: Truck,
+    gradient: "from-sky-500/70 to-sky-700/70",
+  },
 ];
 
 const STATS = [
@@ -174,67 +218,57 @@ export default function FriendlyPage() {
         </div>
       </section>
 
-      {/* Core Services */}
-      <section id="services" className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-        <SectionReveal className="text-center">
-          <span className="inline-block rounded-full bg-[var(--brand-subtle)] px-4 py-1.5 text-sm font-semibold text-[var(--brand)]">What We Do</span>
-          <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-4xl">Main pharmacy services</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--muted)]">
-            The everyday services your neighbourhood pharmacy should make effortless.
-          </p>
-        </SectionReveal>
-
-        <StaggerContainer className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {CORE_SERVICES.map((s) => (
-            <StaggerItem key={s.title}>
-              <HoverCard>
-                <article className="h-full rounded-2xl border border-[var(--border)] bg-white p-6 transition hover:border-[var(--brand)] hover:shadow-lg">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--brand-subtle)] text-[var(--brand)]">
-                    <s.icon size={22} />
-                  </span>
-                  <h3 className="mt-4 text-lg font-semibold">{s.title}</h3>
-                  <p className="mt-2 text-[var(--muted)]">{s.body}</p>
-                </article>
-              </HoverCard>
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
-
-        <SectionReveal className="mt-12 text-center">
-          <Link
-            href="/services/minor-ailments"
-            className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-6 py-3 text-base font-semibold text-[var(--foreground)] transition hover:border-[var(--brand)] hover:text-[var(--brand)]"
-          >
-            View all services
-            <span>→</span>
-          </Link>
-        </SectionReveal>
-      </section>
-
-      {/* Full service menu */}
-      <section className="bg-[var(--surface)]">
+      {/* Services — interactive grid with photo placeholders */}
+      <section id="services" className="bg-[var(--surface)]">
         <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
           <SectionReveal className="text-center">
-            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Full service menu</h2>
+            <span className="inline-block rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-[var(--brand)] shadow-sm">What We Do</span>
+            <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-4xl">Everything your pharmacy should do</h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--muted)]">
-              Click through for details on clinical services, compounding, compliance packaging, and more.
+              Clinical care, everyday refills, and free delivery — click any service to learn more or start a request.
             </p>
           </SectionReveal>
 
-          <StaggerContainer className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {ALL_SERVICE_LINKS.map((s) => (
+          <StaggerContainer className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {SERVICES.map((s) => (
               <StaggerItem key={s.title}>
                 <HoverCard>
                   <Link
                     href={s.href}
-                    className="group block rounded-xl border border-[var(--border)] bg-white p-5 transition hover:border-[var(--brand)] hover:shadow-sm"
+                    className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
                   >
-                    <h3 className="text-lg font-semibold text-[var(--foreground)] group-hover:text-[var(--brand)]">{s.title}</h3>
-                    <p className="mt-1 text-sm text-[var(--muted)]">{s.desc}</p>
-                    <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-[var(--brand)]">
-                      Learn more
-                      <span className="transition group-hover:translate-x-0.5">→</span>
-                    </span>
+                    {/* Photo placeholder: gradient + icon + subtle pattern */}
+                    <div className={`relative flex h-36 items-center justify-center bg-gradient-to-br ${s.gradient}`}>
+                      {/* dot pattern overlay */}
+                      <div
+                        className="absolute inset-0 opacity-20"
+                        style={{
+                          backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)",
+                          backgroundSize: "14px 14px",
+                        }}
+                      />
+                      <span className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm transition duration-300 group-hover:scale-110">
+                        <s.icon size={32} className="text-white" />
+                      </span>
+                      {/* hover arrow chip */}
+                      <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/25 opacity-0 backdrop-blur-sm transition duration-300 group-hover:opacity-100">
+                        <ArrowUpRight size={16} className="text-white" />
+                      </span>
+                    </div>
+
+                    {/* Body */}
+                    <div className="flex flex-1 flex-col p-5">
+                      <h3 className="text-lg font-semibold text-[var(--foreground)] transition group-hover:text-[var(--brand)]">
+                        {s.title}
+                      </h3>
+                      <p className="mt-1.5 flex-1 text-sm leading-relaxed text-[var(--muted)]">
+                        {s.desc}
+                      </p>
+                      <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[var(--brand)]">
+                        Learn more
+                        <span className="transition group-hover:translate-x-0.5">→</span>
+                      </span>
+                    </div>
                   </Link>
                 </HoverCard>
               </StaggerItem>
@@ -243,7 +277,7 @@ export default function FriendlyPage() {
         </div>
       </section>
 
-      {/* Carousel Automatic Pill Dispenser */}
+{/* Carousel Automatic Pill Dispenser */}
       <section className="bg-white">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 md:grid-cols-2 md:items-center lg:px-8">
           <SectionReveal className="order-2 md:order-1">
