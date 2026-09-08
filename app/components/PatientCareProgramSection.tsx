@@ -85,10 +85,7 @@ export default function PatientCareProgramSection() {
     <section id="care-program" className="bg-slate-100/80 pt-12 pb-16 lg:pt-16 lg:pb-20">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <SectionReveal className="text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/95 border border-slate-200 px-3 py-1 mb-4 shadow-2xs">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-[11px] font-mono font-bold text-white">
-              03
-            </span>
+          <div className="inline-flex items-center rounded-full bg-white/95 border border-slate-200 px-3.5 py-1 mb-4 shadow-2xs">
             <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
               Patient Care Program
             </span>

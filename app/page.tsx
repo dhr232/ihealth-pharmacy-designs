@@ -221,10 +221,7 @@ export default function HomePage() {
         <section id="services" className="bg-slate-100/80 pt-20 pb-12 lg:pt-28 lg:pb-16">
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
             <SectionReveal className="text-center max-w-3xl mx-auto">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/95 border border-slate-200 px-3 py-1 mb-4 shadow-2xs">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-[11px] font-mono font-bold text-white">
-                  01
-                </span>
+              <div className="inline-flex items-center rounded-full bg-white/95 border border-slate-200 px-3.5 py-1 mb-4 shadow-2xs">
                 <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
                   What We Offer
                 </span>
@@ -312,10 +309,7 @@ export default function HomePage() {
               {/* Left Column Text */}
               <div className="lg:col-span-6">
                 <SectionReveal>
-                  <div className="inline-flex items-center gap-2 rounded-full bg-red-50 border border-red-200/80 px-3 py-1 mb-4 shadow-2xs">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--brand)] text-[11px] font-mono font-bold text-white">
-                      02
-                    </span>
+                  <div className="inline-flex items-center rounded-full bg-red-50 border border-red-200/80 px-3.5 py-1 mb-4 shadow-2xs">
                     <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
                       About Our Community Practice
                     </span>
@@ -436,10 +430,7 @@ export default function HomePage() {
         <section id="why-us" className="bg-slate-100/80 pt-10 pb-16 lg:pt-14 lg:pb-20">
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
             <SectionReveal className="text-center max-w-3xl mx-auto">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/95 border border-slate-200 px-3 py-1 mb-4 shadow-2xs">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-[11px] font-mono font-bold text-white">
-                  05
-                </span>
+              <div className="inline-flex items-center rounded-full bg-white/95 border border-slate-200 px-3.5 py-1 mb-4 shadow-2xs">
                 <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
                   Why Choose Us
                 </span>
@@ -518,10 +509,7 @@ export default function HomePage() {
         <section id="testimonials" className="bg-slate-100/80 pt-10 pb-16 lg:pt-14 lg:pb-20">
           <div className="mx-auto max-w-5xl px-5 lg:px-8">
             <SectionReveal className="text-center">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/95 border border-slate-200 px-3 py-1 mb-4 shadow-2xs">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-[11px] font-mono font-bold text-white">
-                  07
-                </span>
+              <div className="inline-flex items-center rounded-full bg-white/95 border border-slate-200 px-3.5 py-1 mb-4 shadow-2xs">
                 <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
                   Patient Testimonials
                 </span>
@@ -589,10 +577,7 @@ export default function HomePage() {
         <section id="newsletter" className="bg-slate-100/80 pt-12 pb-16 lg:pt-16 lg:pb-20">
           <div className="mx-auto max-w-3xl px-5 text-center lg:px-8">
             <SectionReveal>
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/95 border border-slate-200 px-3 py-1 mb-4 shadow-2xs">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-[11px] font-mono font-bold text-white">
-                  09
-                </span>
+              <div className="inline-flex items-center rounded-full bg-white/95 border border-slate-200 px-3.5 py-1 mb-4 shadow-2xs">
                 <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
                   Wellness Newsletter
                 </span>
@@ -623,10 +608,7 @@ export default function HomePage() {
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
             <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
               <SectionReveal>
-                <div className="inline-flex items-center gap-2 rounded-full bg-red-50 border border-red-200/80 px-3 py-1 mb-4 shadow-2xs">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--brand)] text-[11px] font-mono font-bold text-white shadow-2xs">
-                    10
-                  </span>
+                <div className="inline-flex items-center rounded-full bg-red-50 border border-red-200/80 px-3.5 py-1 mb-4 shadow-2xs">
                   <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
                     Get in Touch
                   </span>
