@@ -379,10 +379,6 @@ export default function HomePage() {
                         className="h-auto w-full object-cover"
                       />
                     </div>
-
-                    <p className="mt-4 text-xs text-slate-600 leading-relaxed">
-                      28 secure compartments, audio/visual alerts, and pre-sorted by our pharmacy team. Eliminates medication confusion for independent seniors and caregivers.
-                    </p>
                   </div>
                 </SectionReveal>
               </div>
