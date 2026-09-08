@@ -45,14 +45,19 @@ export default function PharmacistTeamSection() {
   }, []);
 
   return (
-    <section id="team" className="bg-slate-50/60 py-20 lg:py-28 border-y border-slate-200/60">
+    <section id="team" className="bg-white pt-10 pb-16 lg:pt-14 lg:pb-20">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <SectionReveal className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
-            <span className="inline-block text-xs font-bold uppercase tracking-widest text-[var(--brand)]">
-              Our Clinical Team
-            </span>
-            <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl lg:text-5xl">
+            <div className="inline-flex items-center gap-2 rounded-full bg-red-50 border border-red-200/80 px-3 py-1 mb-4 shadow-2xs">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--brand)] text-[11px] font-mono font-bold text-white shadow-2xs">
+                04
+              </span>
+              <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
+                Our Clinical Team
+              </span>
+            </div>
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl lg:text-5xl">
               Meet Our Caring Experts
             </h2>
             <p className="mt-3 max-w-2xl text-base text-slate-600 sm:text-lg">

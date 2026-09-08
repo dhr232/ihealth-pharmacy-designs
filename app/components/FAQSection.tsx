@@ -58,13 +58,18 @@ export default function FAQSection() {
   }
 
   return (
-    <section id="faq" className="bg-white py-20 lg:py-28 border-b border-slate-200/60">
+    <section id="faq" className="bg-white pt-10 pb-16 lg:pt-14 lg:pb-20">
       <div className="mx-auto max-w-5xl px-5 lg:px-8">
         <SectionReveal className="text-center">
-          <span className="inline-block text-xs font-bold uppercase tracking-widest text-[var(--brand)]">
-            Frequently Asked Questions
-          </span>
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl lg:text-5xl">
+          <div className="inline-flex items-center gap-2 rounded-full bg-red-50 border border-red-200/80 px-3 py-1 mb-4 shadow-2xs">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--brand)] text-[11px] font-mono font-bold text-white shadow-2xs">
+              08
+            </span>
+            <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
+              Frequently Asked Questions
+            </span>
+          </div>
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl lg:text-5xl">
             Get Clarity, Feel Confident
           </h2>
           <p className="mt-3 text-base text-slate-600 sm:text-lg max-w-2xl mx-auto">

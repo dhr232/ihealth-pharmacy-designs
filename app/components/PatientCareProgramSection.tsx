@@ -82,13 +82,18 @@ export default function PatientCareProgramSection() {
   }
 
   return (
-    <section id="care-program" className="bg-slate-50/70 py-20 lg:py-28 border-y border-slate-200/60">
+    <section id="care-program" className="bg-slate-100/80 pt-12 pb-16 lg:pt-16 lg:pb-20">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <SectionReveal className="text-center max-w-3xl mx-auto">
-          <span className="inline-block text-xs font-bold uppercase tracking-widest text-[var(--brand)]">
-            Patient Care Program
-          </span>
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl lg:text-5xl">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/95 border border-slate-200 px-3 py-1 mb-4 shadow-2xs">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-[11px] font-mono font-bold text-white">
+              03
+            </span>
+            <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
+              Patient Care Program
+            </span>
+          </div>
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl lg:text-5xl">
             Healthcare That Cares More
           </h2>
           <p className="mt-3 text-base text-slate-600 sm:text-lg">

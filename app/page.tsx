@@ -403,20 +403,48 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Wave 2: Transitioning from About (white) to Patient Care Program (slate-100) */}
+        <SectionWaveDivider
+          fillColor="text-slate-100/80"
+          backgroundColor="bg-white"
+          className="h-10 sm:h-14 lg:h-18"
+          flipX={true}
+        />
+
         {/* 5. Patient Care Program ("Membership That Cares More") */}
         <PatientCareProgramSection />
+
+        {/* Wave 3: Transitioning from Patient Care Program (slate-100) to Team (white) */}
+        <SectionWaveDivider
+          fillColor="text-white"
+          backgroundColor="bg-slate-100/80"
+          className="h-10 sm:h-14 lg:h-18"
+        />
 
         {/* 6. The Pharmacist ("Meet Our Caring Experts") */}
         <PharmacistTeamSection />
 
+        {/* Wave 4: Transitioning from Team (white) to Why Choose Us (slate-100) */}
+        <SectionWaveDivider
+          fillColor="text-slate-100/80"
+          backgroundColor="bg-white"
+          className="h-10 sm:h-14 lg:h-18"
+          flipX={true}
+        />
+
         {/* 7. Why Choose Us / Trust Pillars */}
-        <section id="why-us" className="bg-white py-20 lg:py-24 border-b border-slate-200/60">
+        <section id="why-us" className="bg-slate-100/80 pt-10 pb-16 lg:pt-14 lg:pb-20">
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
             <SectionReveal className="text-center max-w-3xl mx-auto">
-              <span className="inline-block text-xs font-bold uppercase tracking-widest text-[var(--brand)]">
-                Why Choose Us
-              </span>
-              <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/95 border border-slate-200 px-3 py-1 mb-4 shadow-2xs">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-[11px] font-mono font-bold text-white">
+                  05
+                </span>
+                <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
+                  Why Choose Us
+                </span>
+              </div>
+              <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
                 Care That Truly Matters
               </h2>
               <p className="mt-3 text-base text-slate-600">
@@ -468,17 +496,37 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Wave 5: Transitioning from Why Choose Us (slate-100) to Blog (white) */}
+        <SectionWaveDivider
+          fillColor="text-white"
+          backgroundColor="bg-slate-100/80"
+          className="h-10 sm:h-14 lg:h-18"
+        />
+
         {/* 8. Blog / Health Tips ("Stay Informed, Stay Healthy") */}
         <HomeBlogSection />
 
+        {/* Wave 6: Transitioning from Blog (white) to Testimonials (slate-100) */}
+        <SectionWaveDivider
+          fillColor="text-slate-100/80"
+          backgroundColor="bg-white"
+          className="h-10 sm:h-14 lg:h-18"
+          flipX={true}
+        />
+
         {/* 9. Testimonials ("Healing Stories, Shared Honestly") */}
-        <section id="testimonials" className="bg-white py-20 lg:py-28 border-b border-slate-200/60">
+        <section id="testimonials" className="bg-slate-100/80 pt-10 pb-16 lg:pt-14 lg:pb-20">
           <div className="mx-auto max-w-5xl px-5 lg:px-8">
             <SectionReveal className="text-center">
-              <span className="inline-block text-xs font-bold uppercase tracking-widest text-[var(--brand)]">
-                Testimonials
-              </span>
-              <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/95 border border-slate-200 px-3 py-1 mb-4 shadow-2xs">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-[11px] font-mono font-bold text-white">
+                  07
+                </span>
+                <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
+                  Patient Testimonials
+                </span>
+              </div>
+              <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
                 Healing Stories, Shared Honestly
               </h2>
               <p className="mt-3 text-base text-slate-600">
@@ -490,7 +538,7 @@ export default function HomePage() {
               {TESTIMONIALS.map((t) => (
                 <StaggerItem key={t.name}>
                   <HoverCard className="h-full">
-                    <figure className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-slate-50/60 p-6 shadow-2xs">
+                    <figure className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
                       <div>
                         <div className="flex items-center gap-1 text-amber-400 mb-3">
                           {[...Array(t.rating)].map((_, i) => (
@@ -519,13 +567,36 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Wave 7: Transitioning from Testimonials (slate-100) to FAQ (white) */}
+        <SectionWaveDivider
+          fillColor="text-white"
+          backgroundColor="bg-slate-100/80"
+          className="h-10 sm:h-14 lg:h-18"
+        />
+
         {/* 10. FAQ Section */}
         <FAQSection />
 
+        {/* Wave 8: Transitioning from FAQ (white) to Newsletter (slate-100) */}
+        <SectionWaveDivider
+          fillColor="text-slate-100/80"
+          backgroundColor="bg-white"
+          className="h-10 sm:h-14 lg:h-18"
+          flipX={true}
+        />
+
         {/* 11. Newsletter */}
-        <section id="newsletter" className="bg-white py-16 lg:py-20 border-b border-slate-200/60">
+        <section id="newsletter" className="bg-slate-100/80 pt-12 pb-16 lg:pt-16 lg:pb-20">
           <div className="mx-auto max-w-3xl px-5 text-center lg:px-8">
             <SectionReveal>
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/95 border border-slate-200 px-3 py-1 mb-4 shadow-2xs">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-[11px] font-mono font-bold text-white">
+                  09
+                </span>
+                <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
+                  Wellness Newsletter
+                </span>
+              </div>
               <Mail className="mx-auto h-8 w-8 text-[var(--brand)]" />
               <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900">
                 Subscribe for Wellness & Care Insights
@@ -540,16 +611,29 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Wave 9: Transitioning from Newsletter (slate-100) to Contact (white) */}
+        <SectionWaveDivider
+          fillColor="text-white"
+          backgroundColor="bg-slate-100/80"
+          className="h-10 sm:h-14 lg:h-18"
+        />
+
         {/* 12. Contact Hub & Map */}
-        <section id="contact" className="mx-auto max-w-7xl px-5 py-20 lg:py-28 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
-            <SectionReveal>
-              <span className="inline-block text-xs font-bold uppercase tracking-widest text-[var(--brand)]">
-                Get in Touch
-              </span>
-              <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
-                Come Say Hello.
-              </h2>
+        <section id="contact" className="bg-white pt-10 pb-20 lg:pt-14 lg:pb-28">
+          <div className="mx-auto max-w-7xl px-5 lg:px-8">
+            <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
+              <SectionReveal>
+                <div className="inline-flex items-center gap-2 rounded-full bg-red-50 border border-red-200/80 px-3 py-1 mb-4 shadow-2xs">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--brand)] text-[11px] font-mono font-bold text-white shadow-2xs">
+                    10
+                  </span>
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
+                    Get in Touch
+                  </span>
+                </div>
+                <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+                  Come Say Hello.
+                </h2>
               <p className="mt-3 text-base text-slate-600">
                 Drop by our Clearbrook location, call our clinical desk, or message us directly on WhatsApp.
               </p>
@@ -658,7 +742,8 @@ export default function HomePage() {
               </div>
             </SectionReveal>
           </div>
-        </section>
+        </div>
+      </section>
       </main>
 
       <Footer />
