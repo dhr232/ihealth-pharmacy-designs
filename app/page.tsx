@@ -11,6 +11,7 @@ import PatientCareProgramSection from "./components/PatientCareProgramSection";
 import PharmacistTeamSection from "./components/PharmacistTeamSection";
 import FAQSection from "./components/FAQSection";
 import FloatingPills3D from "./components/FloatingPills3D";
+import SectionWaveDivider from "./components/SectionWaveDivider";
 import {
   BlurReveal,
   SectionReveal,
@@ -217,13 +218,18 @@ export default function HomePage() {
         <TrustMetricsBar />
 
         {/* 3. Services Section ("What We Offer") */}
-        <section id="services" className="bg-slate-50/70 py-20 lg:py-28 border-b border-slate-200/60">
+        <section id="services" className="bg-slate-100/80 pt-20 pb-12 lg:pt-28 lg:pb-16">
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
             <SectionReveal className="text-center max-w-3xl mx-auto">
-              <span className="inline-block text-xs font-bold uppercase tracking-widest text-[var(--brand)]">
-                What We Offer
-              </span>
-              <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl lg:text-5xl">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/95 border border-slate-200 px-3 py-1 mb-4 shadow-2xs">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-[11px] font-mono font-bold text-white">
+                  01
+                </span>
+                <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
+                  What We Offer
+                </span>
+              </div>
+              <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl lg:text-5xl">
                 Reliable Medicine, Expert Guidance
               </h2>
               <p className="mt-3 text-base text-slate-600 sm:text-lg">
@@ -292,17 +298,29 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Concept 2 Organic Wave Divider: Transitioning from Services (slate-100) to About (white) */}
+        <SectionWaveDivider
+          fillColor="text-white"
+          backgroundColor="bg-slate-100/80"
+          className="h-10 sm:h-16 lg:h-20"
+        />
+
         {/* 4. About Us — "Committed to Quality Care" */}
-        <section id="about" className="bg-white py-20 lg:py-28 border-b border-slate-200/60">
+        <section id="about" className="bg-white pt-6 pb-20 lg:pt-8 lg:pb-28 border-b border-slate-200/60">
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
             <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
               {/* Left Column Text */}
               <div className="lg:col-span-6">
                 <SectionReveal>
-                  <span className="inline-block text-xs font-bold uppercase tracking-widest text-[var(--brand)]">
-                    About Us
-                  </span>
-                  <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl lg:text-5xl">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-red-50 border border-red-200/80 px-3 py-1 mb-4 shadow-2xs">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--brand)] text-[11px] font-mono font-bold text-white">
+                      02
+                    </span>
+                    <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
+                      About Our Community Practice
+                    </span>
+                  </div>
+                  <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl lg:text-5xl">
                     Committed to Quality Community Care
                   </h2>
                   <p className="mt-4 text-base text-slate-600 sm:text-lg leading-relaxed">
