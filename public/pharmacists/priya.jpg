@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FDF2F2"/>
+      <stop offset="100%" stop-color="#F6F7F9"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg)"/>
+  <!-- soft circle backdrop -->
+  <circle cx="200" cy="180" r="120" fill="#C01D16" opacity="0.08"/>
+  <!-- pharmacist figure: stylized, professional -->
+  <!-- shoulders / coat -->
+  <path d="M110 400 Q112 300 200 292 Q288 300 290 400 Z" fill="#FFFFFF" stroke="#D8DCE2" stroke-width="2"/>
+  <!-- coat lapels -->
+  <path d="M185 296 L200 330 L215 296" fill="none" stroke="#D8DCE2" stroke-width="2"/>
+  <!-- shirt -->
+  <path d="M188 296 L200 322 L212 296 Z" fill="#C01D16" opacity="0.9"/>
+  <!-- stethoscope -->
+  <path d="M178 300 Q178 345 200 350 Q222 345 222 300" fill="none" stroke="#1F2328" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="222" cy="352" r="7" fill="#1F2328"/>
+  <circle cx="178" cy="300" r="5" fill="#1F2328"/>
+  <!-- neck -->
+  <rect x="185" y="258" width="30" height="40" rx="12" fill="#E8B99B"/>
+  <!-- head -->
+  <circle cx="200" cy="215" r="52" fill="#F2C9A4"/>
+  <!-- hair -->
+  <path d="M150 210 Q150 155 200 152 Q250 155 250 210 Q250 185 232 178 Q210 170 188 178 Q155 185 150 210 Z" fill="#3B2F2A"/>
+  <!-- eyes -->
+  <circle cx="182" cy="215" r="4.5" fill="#1F2328"/>
+  <circle cx="218" cy="215" r="4.5" fill="#1F2328"/>
+  <!-- friendly smile -->
+  <path d="M183 238 Q200 252 217 238" fill="none" stroke="#1F2328" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- name badge -->
+  <rect x="235" y="330" width="44" height="26" rx="4" fill="#C01D16"/>
+  <text x="257" y="347" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">iH</text>
+  <!-- caption space -->
+  <text x="200" y="382" font-family="Arial, sans-serif" font-size="13" fill="#5A6270" text-anchor="middle">Your iHealth Pharmacist</text>
+</svg>

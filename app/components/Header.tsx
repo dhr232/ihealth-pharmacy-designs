@@ -2,36 +2,30 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ChevronDown, Menu, X, Phone, MessageCircle } from "lucide-react";
+import { ChevronDown, Menu, X, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import TextSizeAdjuster from "./TextSizeAdjuster";
-import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
+import { PHARMACY_INFO } from "@/data/pharmacy-info";
 
 const SERVICE_PAGES = [
+  { label: "All Services Overview", href: "/services" },
   { label: "Minor Ailments Clinic", href: "/services/minor-ailments" },
-  { label: "Compounding", href: "/services/compounding" },
-  { label: "Vaccinations", href: "/services/vaccinations" },
-  { label: "MyHealthPack", href: "/services/myhealthpack" },
-  { label: "Medication Review & Injections", href: "/services/med-review" },
-  { label: "Prescription Delivery", href: "/services/delivery" },
+  { label: "Custom Compounding", href: "/services/compounding" },
+  { label: "Vaccinations & Injections", href: "/services/vaccinations" },
+  { label: "MyHealthPack Blister Packs", href: "/services/myhealthpack" },
+  { label: "Medication Review", href: "/services/med-review" },
+  { label: "Free Prescription Delivery", href: "/services/delivery" },
 ];
 
 const PATIENT_ACTIONS = [
   { label: "Prescription Refills", href: "/prescription-refills", desc: "Ready in 3 easy steps" },
-  { label: "Transfer to iHealth", href: "/transfer", desc: "Switch in one request" },
-  { label: "Vaccinations", href: "/vaccinations", desc: "Walk in or book ahead" },
+  { label: "Transfer to iHealth", href: "/transfer", desc: "Switch in one simple request" },
+  { label: "Patient Care Program", href: "/care-program", desc: "Free auto-sync & doctor renewals" },
+  { label: "Vaccinations & Flu Shots", href: "/vaccinations", desc: "Walk-in or book ahead" },
 ];
-
-const HOME_ANCHORS = [
-  { label: "Contact", href: "/#contact" },
-];
-void HOME_ANCHORS;
 
 export default function Header() {
-  const pathname = usePathname();
-  const isHome = pathname === "/" || pathname === "/" || pathname === "/";
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [actionsOpen, setActionsOpen] = useState(false);
@@ -88,11 +82,13 @@ export default function Header() {
           </div>
         </Link>
 
+        {/* Desktop Nav */}
         <nav className="hidden items-center gap-1 xl:gap-1.5 lg:flex" aria-label="Main">
           <Link href="/" className={navLinkClass}>
             Home
           </Link>
 
+          {/* Refills & Booking Dropdown */}
           <div className="relative" onMouseEnter={openActions} onMouseLeave={closeActionsSoon}>
             <button
               onClick={() => setActionsOpen((v) => !v)}
@@ -100,7 +96,7 @@ export default function Header() {
               aria-haspopup="menu"
               className="flex items-center gap-1 rounded-md px-2.5 py-1 text-[13px] font-medium text-slate-700 transition hover:bg-slate-100/70 hover:text-[var(--brand)]"
             >
-              Refills & Booking
+              Refills & Care
               <ChevronDown size={14} className={`transition-transform duration-150 ${actionsOpen ? "rotate-180" : ""}`} />
             </button>
 
@@ -111,7 +107,7 @@ export default function Header() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 6 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute left-0 top-full z-50 mt-1.5 w-72 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl ring-1 ring-black/5"
+                  className="absolute left-0 top-full z-50 mt-1.5 w-76 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl ring-1 ring-black/5"
                   role="menu"
                 >
                   {PATIENT_ACTIONS.map((s) => (
@@ -131,6 +127,7 @@ export default function Header() {
             </AnimatePresence>
           </div>
 
+          {/* Services Dropdown */}
           <div className="relative" onMouseEnter={openServices} onMouseLeave={closeServicesSoon}>
             <button
               onClick={() => setServicesOpen((v) => !v)}
@@ -165,33 +162,19 @@ export default function Header() {
                       </Link>
                     ))}
                   </div>
-                  {isHome && (
-                    <>
-                      <div className="my-1.5 border-t border-slate-100" />
-                      <div className="grid grid-cols-2 gap-1">
-                        {HOME_ANCHORS.map((s) => (
-                          <a
-                            key={s.label}
-                            href={s.href}
-                            role="menuitem"
-                            className="rounded-lg px-3 py-1.5 text-xs font-medium text-slate-500 transition hover:bg-slate-50 hover:text-[var(--brand)]"
-                          >
-                            {s.label}
-                          </a>
-                        ))}
-                      </div>
-                    </>
-                  )}
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          <Link href="/#about" className={navLinkClass}>About Us</Link>
+          <Link href="/about" className={navLinkClass}>About Us</Link>
+          <Link href="/team" className={navLinkClass}>Pharmacists</Link>
+          <Link href="/faq" className={navLinkClass}>FAQ</Link>
           <Link href="/#blog" className={navLinkClass}>Blog</Link>
           <Link href="/#contact" className={navLinkClass}>Contact</Link>
         </nav>
 
+        {/* Right Utilities & Refill Button */}
         <div className="hidden items-center gap-2.5 lg:flex">
           <TextSizeAdjuster />
           <LanguageSwitcher />
@@ -212,6 +195,7 @@ export default function Header() {
           </Link>
         </div>
 
+        {/* Mobile menu trigger */}
         <button
           onClick={() => setOpen(!open)}
           aria-label={open ? "Close menu" : "Open menu"}
@@ -223,6 +207,7 @@ export default function Header() {
         </button>
       </div>
 
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {open && (
           <motion.nav
@@ -231,76 +216,75 @@ export default function Header() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="overflow-hidden border-t border-[var(--border)] bg-white px-5 lg:hidden"
+            className="overflow-hidden border-t border-slate-200 bg-white px-5 lg:hidden"
             aria-label="Mobile"
           >
             <div className="flex flex-col gap-1 py-4">
-              <Link href="/" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">
+              <Link href="/" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50">
                 Home
               </Link>
-              <p className="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">Refills & Booking</p>
+              <p className="px-4 pt-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">Refills & Care</p>
               {PATIENT_ACTIONS.map((s) => (
                 <Link
                   key={s.label}
                   href={s.href}
                   onClick={() => setOpen(false)}
-                  className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)] hover:text-[var(--brand)]"
+                  className="rounded-lg px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 hover:text-[var(--brand)]"
                 >
                   {s.label}
                 </Link>
               ))}
-              <div className="my-2 border-t border-[var(--border)]" />
-              <p className="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">Services</p>
+
+              <div className="my-1 border-t border-slate-100" />
+              <p className="px-4 pt-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">Services</p>
               {SERVICE_PAGES.map((s) => (
                 <Link
                   key={s.label}
                   href={s.href}
                   onClick={() => setOpen(false)}
-                  className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)] hover:text-[var(--brand)]"
+                  className="rounded-lg px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 hover:text-[var(--brand)]"
                 >
                   {s.label}
                 </Link>
               ))}
-              <div className="my-2 border-t border-[var(--border)]" />
-              <div className="flex items-center justify-between px-4 py-2">
-                <span className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+
+              <div className="my-1 border-t border-slate-100" />
+              <Link href="/about" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50">About Us</Link>
+              <Link href="/team" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50">Our Pharmacists</Link>
+              <Link href="/faq" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50">FAQ</Link>
+              <Link href="/#blog" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50">Blog</Link>
+              <Link href="/#contact" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50">Contact</Link>
+
+              <div className="my-2 border-t border-slate-100" />
+              <div className="flex items-center justify-between px-4 py-1">
+                <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                   Text Size
                 </span>
                 <TextSizeAdjuster />
               </div>
-              <div className="px-4 py-2 notranslate" translate="no">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+              <div className="px-4 py-1 notranslate" translate="no">
+                <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-slate-500">
                   Language
                 </p>
                 <LanguageSwitcher />
               </div>
-              <Link href="/#about" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">About Us</Link>
-              <Link href="/#blog" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">Blog</Link>
-              <Link href="/#contact" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)]">Contact</Link>
-              <a
-                href={getWhatsAppUrl()}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setOpen(false)}
-                className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-[#25D366] px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#1ea952]"
-              >
-                <MessageCircle size={18} />
-                Chat on WhatsApp
-              </a>
-              <a
-                href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
-                className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--border)] px-4 py-3 text-center text-sm font-medium text-[var(--foreground)]"
-              >
-                <Phone size={18} />
-                Call {PHARMACY_INFO.phoneDisplay}
-              </a>
-              <Link
-                href="/prescription-refills"
-                onClick={() => setOpen(false)}
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--brand)] px-4 py-3 text-center text-sm font-semibold text-white"
-              >
-                Request Refill
-              </Link>
+
+              <div className="mt-3 flex flex-col gap-2">
+                <a
+                  href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 py-2.5 text-center text-sm font-medium text-slate-800"
+                >
+                  <Phone size={16} />
+                  Call {PHARMACY_INFO.phoneDisplay}
+                </a>
+                <Link
+                  href="/prescription-refills"
+                  onClick={() => setOpen(false)}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--brand)] py-2.5 text-center text-sm font-semibold text-white shadow-xs"
+                >
+                  Request Refill
+                </Link>
+              </div>
             </div>
           </motion.nav>
         )}

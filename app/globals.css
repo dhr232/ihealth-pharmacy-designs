@@ -59,8 +59,19 @@
 }
 
 /* ===========================================================
-   Senior Accessibility — Text Size Scaling (A- / A / A+)
+   Smooth Navigation & Senior Accessibility
    =========================================================== */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 html[data-text-scale="large"] {
   font-size: 112.5%;
 }
