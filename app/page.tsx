@@ -370,14 +370,13 @@ export default function HomePage() {
                       </span>
                     </div>
 
-                    <div className="mt-4">
+                    <div className="mt-4 overflow-hidden rounded-xl bg-slate-100 border border-slate-200">
                       <Image
-                        src="/carousel-dispenser.png"
+                        src="/carousel-dispenser.jpg"
                         alt="Carousel automatic pill dispenser for senior medication safety"
                         width={600}
                         height={450}
-                        className="h-auto w-full object-contain rounded-xl"
-                        unoptimized
+                        className="h-auto w-full object-cover"
                       />
                     </div>
 
