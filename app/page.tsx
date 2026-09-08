@@ -145,7 +145,7 @@ export default function HomePage() {
         {/* 1. Hero Section */}
         <section
           id="hero"
-          className="relative overflow-hidden border-b border-slate-200/80 bg-gradient-to-b from-slate-50/80 via-white to-white"
+          className="relative overflow-hidden bg-gradient-to-b from-slate-50/80 via-white to-white"
           aria-labelledby="hero-heading"
         >
           <div className="relative z-10 mx-auto grid max-w-7xl gap-12 px-5 pt-20 pb-16 md:grid-cols-2 md:items-center md:pt-24 md:pb-24 lg:px-8">
@@ -303,7 +303,7 @@ export default function HomePage() {
         />
 
         {/* 4. About Us — "Committed to Quality Care" */}
-        <section id="about" className="bg-white pt-6 pb-20 lg:pt-8 lg:pb-28 border-b border-slate-200/60">
+        <section id="about" className="bg-white pt-6 pb-20 lg:pt-8 lg:pb-28">
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
             <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
               {/* Left Column Text */}
@@ -617,7 +617,7 @@ export default function HomePage() {
                   Come Say Hello.
                 </h2>
               <p className="mt-3 text-base text-slate-600">
-                Drop by our Clearbrook location, call our clinical desk, or message us directly on WhatsApp.
+                Drop by our Clearbrook location or call our clinical desk directly.
               </p>
 
               <ul className="mt-8 space-y-4">
@@ -680,19 +680,19 @@ export default function HomePage() {
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <a
                   href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[var(--brand)] px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[var(--brand-dark)] transition"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[var(--brand)] px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-[var(--brand-dark)] transition"
                 >
                   <Phone size={16} />
                   Call {PHARMACY_INFO.phoneDisplay}
                 </a>
                 <a
-                  href={getWhatsAppUrl("Hi iHealth Pharmacy, I have a question about my medication or services.")}
+                  href={PHARMACY_INFO.address.mapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[#20bd5a] transition"
+                  className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3.5 text-sm font-semibold text-slate-800 shadow-2xs hover:border-[var(--brand)] hover:text-[var(--brand)] transition"
                 >
-                  <MessageCircle size={16} />
-                  Chat on WhatsApp
+                  <MapPin size={16} className="text-[var(--brand)]" />
+                  Get Directions
                 </a>
               </div>
             </SectionReveal>

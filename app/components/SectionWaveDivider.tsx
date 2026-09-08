@@ -22,7 +22,7 @@ export default function SectionWaveDivider({
   return (
     <div
       aria-hidden="true"
-      className={`w-full overflow-hidden leading-none select-none pointer-events-none ${backgroundColor}`}
+      className={`relative w-full overflow-hidden leading-none select-none pointer-events-none -my-px ${backgroundColor}`}
     >
       <svg
         viewBox="0 0 1440 90"
@@ -30,7 +30,7 @@ export default function SectionWaveDivider({
         preserveAspectRatio="none"
         className={`w-full block ${fillColor} ${className} ${flipX ? "-scale-x-100" : ""}`}
       >
-        <path d="M0,32 C240,72 480,12 720,48 C960,84 1200,24 1440,40 L1440,90 L0,90 Z" />
+        <path d="M0,32 C240,72 480,12 720,48 C960,84 1200,24 1440,40 L1440,92 L0,92 Z" />
       </svg>
     </div>
   );
