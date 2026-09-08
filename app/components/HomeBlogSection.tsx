@@ -7,7 +7,6 @@ import {
   ArrowRight,
   Clock,
   Calendar,
-  Sparkles,
   Heart,
   Syringe,
   ShieldCheck,
@@ -97,15 +96,14 @@ export default function HomeBlogSection() {
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <SectionReveal className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--brand-subtle)] px-3.5 py-1 text-xs font-semibold text-[var(--brand)]">
-              <Sparkles size={14} />
-              Health Tips & Pharmacist Advice
+            <span className="inline-block text-xs font-bold uppercase tracking-widest text-[var(--brand)]">
+              Blog
             </span>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
-              Latest from our Abbotsford clinic.
+            <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl lg:text-5xl">
+              Stay Informed, Stay Healthy
             </h2>
-            <p className="mt-2 max-w-2xl text-base text-slate-600 sm:text-lg">
-              Evidence-based health guidance, BC Pharmacare updates, and practical wellness advice written by your community pharmacists.
+            <p className="mt-3 max-w-2xl text-base text-slate-600 sm:text-lg">
+              Evidence-based health guidance, BC Pharmacare updates, and practical wellness advice from your local Abbotsford pharmacists.
             </p>
           </div>
 
