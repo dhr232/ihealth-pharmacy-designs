@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import PharmacistTeamSection from "../components/PharmacistTeamSection";
 import { SectionReveal, BlurReveal } from "../components/MotionKit";
 import {
   HeartHandshake,
@@ -19,33 +20,6 @@ export const metadata: Metadata = {
   description:
     "Independent, family-run pharmacy in Abbotsford, BC. Meet our pharmacists, learn our story, and discover what makes iHealth different.",
 };
-
-const TEAM = [
-  {
-    name: "Dr. Amanpreet Kaur, PharmD",
-    role: "Lead Pharmacist & Owner",
-    years: 12,
-    bio: "Amanpreet founded iHealth Pharmacy to bring a more personal, clinically rigorous approach to community pharmacy care in Abbotsford.",
-  },
-  {
-    name: "Dr. Rohan Mehta, PharmD",
-    role: "Clinical Pharmacist",
-    years: 8,
-    bio: "Rohan leads our minor ailments clinic and chronic disease management programs, with a special interest in diabetes care.",
-  },
-  {
-    name: "Dr. Priya Sharma, PharmD",
-    role: "Compounding Pharmacist",
-    years: 10,
-    bio: "Priya runs our compounding lab and works closely with prescribers to design custom formulations for patients of all ages.",
-  },
-  {
-    name: "Dr. James Chen, PharmD",
-    role: "Pharmacy Manager",
-    years: 6,
-    bio: "James keeps the day-to-day running smoothly and leads our vaccinations, travel health, and injection services.",
-  },
-];
 
 const WHY_US = [
   {
@@ -146,42 +120,8 @@ export default function AboutPage() {
           </div>
         </SectionReveal>
 
-        {/* Team */}
-        <SectionReveal className="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-20">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Meet the team</h2>
-            <p className="mt-4 text-lg text-[var(--muted)]">
-              Licensed pharmacists, real people, and your neighbours in Abbotsford.
-            </p>
-          </div>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {TEAM.map((member) => (
-              <div
-                key={member.name}
-                className="flex flex-col rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm"
-              >
-                <div
-                  className="flex h-20 w-20 items-center justify-center rounded-full bg-[var(--brand-subtle)] text-2xl font-semibold text-[var(--brand)]"
-                  aria-hidden="true"
-                >
-                  {member.name
-                    .replace(/^Dr\.\s+/, "")
-                    .split(" ")
-                    .map((part) => part[0])
-                    .filter(Boolean)
-                    .slice(0, 2)
-                    .join("")}
-                </div>
-                <h3 className="mt-4 text-lg font-semibold">{member.name}</h3>
-                <p className="text-sm font-medium text-[var(--brand)]">{member.role}</p>
-                <p className="mt-1 text-xs uppercase tracking-wide text-[var(--muted)]">
-                  {member.years} years experience
-                </p>
-                <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">{member.bio}</p>
-              </div>
-            ))}
-          </div>
-        </SectionReveal>
+        {/* Team — Live synchronized with admin panel and identical to homepage */}
+        <PharmacistTeamSection />
 
         {/* Why us */}
         <SectionReveal className="bg-[var(--surface)]">
