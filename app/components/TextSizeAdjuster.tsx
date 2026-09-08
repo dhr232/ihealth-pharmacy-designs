@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useCallback, useSyncExternalStore } from "react";
 
 export type TextScale = "normal" | "large" | "xlarge";
 
@@ -22,6 +22,19 @@ function getStoredScale(): TextScale {
   return "normal";
 }
 
+function subscribe(callback: () => void) {
+  window.addEventListener(SCALE_CHANGE_EVENT, callback);
+  window.addEventListener("storage", callback);
+  return () => {
+    window.removeEventListener(SCALE_CHANGE_EVENT, callback);
+    window.removeEventListener("storage", callback);
+  };
+}
+
+function getServerSnapshot(): TextScale {
+  return "normal";
+}
+
 function applyScaleToDOM(scale: TextScale) {
   if (typeof document === "undefined") return;
   const root = document.documentElement;
@@ -33,36 +46,13 @@ function applyScaleToDOM(scale: TextScale) {
 }
 
 export default function TextSizeAdjuster() {
-  const [scale, setScale] = useState<TextScale>(() => getStoredScale());
+  const scale = useSyncExternalStore(subscribe, getStoredScale, getServerSnapshot);
 
   useEffect(() => {
     applyScaleToDOM(scale);
   }, [scale]);
 
-  useEffect(() => {
-    function handleScaleChange(e: Event) {
-      const customEvent = e as CustomEvent<TextScale>;
-      if (customEvent.detail && isValidScale(customEvent.detail)) {
-        setScale(customEvent.detail);
-      }
-    }
-
-    function handleStorage(e: StorageEvent) {
-      if (e.key === STORAGE_KEY && isValidScale(e.newValue)) {
-        setScale(e.newValue);
-      }
-    }
-
-    window.addEventListener(SCALE_CHANGE_EVENT, handleScaleChange);
-    window.addEventListener("storage", handleStorage);
-    return () => {
-      window.removeEventListener(SCALE_CHANGE_EVENT, handleScaleChange);
-      window.removeEventListener("storage", handleStorage);
-    };
-  }, []);
-
   const changeScale = useCallback((newScale: TextScale) => {
-    setScale(newScale);
     applyScaleToDOM(newScale);
     try {
       window.localStorage.setItem(STORAGE_KEY, newScale);
@@ -78,6 +68,7 @@ export default function TextSizeAdjuster() {
     <div
       role="group"
       aria-label="Text size accessibility options"
+      suppressHydrationWarning
       className="inline-flex h-8 items-center rounded-md border border-[var(--border)] bg-slate-50/70 p-0.5 shadow-xs"
     >
       <span className="sr-only">Adjust text size:</span>
@@ -87,6 +78,7 @@ export default function TextSizeAdjuster() {
         aria-pressed={scale === "normal"}
         aria-label="Standard text size"
         title="Standard text size (100%)"
+        suppressHydrationWarning
         className={`h-6.5 rounded px-1.5 text-[11px] font-semibold transition ${
           scale === "normal"
             ? "bg-[var(--brand)] text-white shadow-xs"
@@ -101,6 +93,7 @@ export default function TextSizeAdjuster() {
         aria-pressed={scale === "large"}
         aria-label="Large text size (+15%)"
         title="Large text size (+15%)"
+        suppressHydrationWarning
         className={`h-6.5 rounded px-1.5 text-[11px] font-semibold transition ${
           scale === "large"
             ? "bg-[var(--brand)] text-white shadow-xs"
@@ -115,6 +108,7 @@ export default function TextSizeAdjuster() {
         aria-pressed={scale === "xlarge"}
         aria-label="Extra large text size (+25%)"
         title="Extra large text size (+25%)"
+        suppressHydrationWarning
         className={`h-6.5 rounded px-1.5 text-[11px] font-semibold transition ${
           scale === "xlarge"
             ? "bg-[var(--brand)] text-white shadow-xs"
