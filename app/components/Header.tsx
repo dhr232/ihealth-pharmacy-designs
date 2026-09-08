@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { ChevronDown, Menu, X, Phone, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import LanguageSwitcher from "./LanguageSwitcher";
+import TextSizeAdjuster from "./TextSizeAdjuster";
 import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
 
 const SERVICE_PAGES = [
@@ -187,6 +188,7 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-2.5 lg:flex">
+          <TextSizeAdjuster />
           <LanguageSwitcher />
           <a
             href={getWhatsAppUrl()}
@@ -263,6 +265,12 @@ export default function Header() {
                 </Link>
               ))}
               <div className="my-2 border-t border-[var(--border)]" />
+              <div className="flex items-center justify-between px-4 py-2">
+                <span className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+                  Text Size
+                </span>
+                <TextSizeAdjuster />
+              </div>
               <div className="px-4 py-2 notranslate" translate="no">
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
                   Language

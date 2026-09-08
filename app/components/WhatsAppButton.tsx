@@ -135,8 +135,7 @@ export default function WhatsAppButton() {
               </div>
 
               <p className="mt-3 text-xs leading-relaxed text-white/95">
-                Have a question or prescription? Chat directly with our
-                Abbotsford pharmacy team on WhatsApp.
+                Have a question or prescription? Chat with our Abbotsford pharmacy team on WhatsApp. You can also send a voice message or photo of your pill bottle if typing is difficult.
               </p>
             </div>
 

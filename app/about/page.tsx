@@ -214,6 +214,43 @@ export default function AboutPage() {
           </div>
         </SectionReveal>
 
+        {/* BC Fair PharmaCare & Direct Insurance Billing */}
+        <SectionReveal className="border-y border-[var(--border)] bg-white">
+          <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
+            <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
+              <div>
+                <span className="inline-block rounded-full bg-[var(--brand-subtle)] px-4 py-1.5 text-sm font-semibold text-[var(--brand)]">
+                  Insurance & Coverage
+                </span>
+                <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">
+                  Direct Billing & BC Fair PharmaCare Support
+                </h2>
+                <p className="mt-4 text-base leading-relaxed text-[var(--muted)]">
+                  Navigating prescription coverage shouldn&apos;t be confusing. We bill your insurance directly at the counter so you never have to wait for reimbursement checks.
+                </p>
+                <p className="mt-3 text-base leading-relaxed text-[var(--muted)]">
+                  Our pharmacists also assist Abbotsford seniors and families with registering for <strong>BC Fair PharmaCare</strong> to ensure you receive your full provincial medication deductible subsidies.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 md:p-8">
+                <h3 className="text-lg font-semibold text-[var(--foreground)]">Direct Billing Accepted For:</h3>
+                <div className="mt-4 grid grid-cols-2 gap-3 text-sm font-medium text-[var(--foreground)] sm:grid-cols-3">
+                  {["BC Fair PharmaCare", "Pacific Blue Cross", "Sun Life", "Manulife", "Canada Life", "GreenShield", "ClaimSecure", "Desjardins", "Veterans Affairs (VAC)"].map((plan) => (
+                    <div key={plan} className="flex items-center gap-2 rounded-lg bg-white p-3 shadow-xs border border-[var(--border)]">
+                      <ShieldCheck size={16} className="shrink-0 text-[var(--brand)]" />
+                      <span className="text-xs">{plan}</span>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-4 text-xs text-[var(--muted)]">
+                  Have a question about your coverage or copay? Bring your card in or call us anytime.
+                </p>
+              </div>
+            </div>
+          </div>
+        </SectionReveal>
+
         {/* CTA */}
         <SectionReveal className="mx-auto max-w-4xl px-5 py-16 text-center lg:px-8 lg:py-20">
           <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
