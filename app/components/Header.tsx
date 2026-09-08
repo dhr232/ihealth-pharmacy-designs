@@ -192,22 +192,9 @@ export default function Header() {
           <Link href="/#contact" className={navLinkClass}>Contact</Link>
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden items-center gap-2.5 lg:flex">
           <TextSizeAdjuster />
           <LanguageSwitcher />
-
-          <div className="h-4 w-px bg-slate-200 mx-0.5" aria-hidden="true" />
-
-          <a
-            href={getWhatsAppUrl()}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Chat with pharmacist on WhatsApp"
-            className="inline-flex h-8 items-center gap-1.5 rounded-md border border-emerald-200 bg-emerald-50/80 px-2.5 text-xs font-semibold text-emerald-800 transition hover:bg-emerald-100 hover:border-emerald-300"
-          >
-            <MessageCircle size={14} className="text-emerald-600" />
-            <span>WhatsApp</span>
-          </a>
 
           <a
             href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
