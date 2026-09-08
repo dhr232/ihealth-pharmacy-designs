@@ -9,11 +9,16 @@ export default function Footer() {
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           {/* Col 1: Identity & Multilingual */}
           <div>
-            <Link href="/" className="flex items-center gap-3">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--brand)] text-lg font-bold text-white">
-                iH
-              </span>
-              <span className="text-lg font-semibold">{PHARMACY_INFO.name}</span>
+            <Link href="/" className="flex items-center gap-3 group">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/ihealth-logo-main.jpeg"
+                alt="iHealth Pharmacy logo"
+                width={36}
+                height={36}
+                className="h-9 w-9 rounded-full object-contain bg-white ring-1 ring-white/20 transition group-hover:ring-white/40"
+              />
+              <span className="text-lg font-semibold transition group-hover:text-white/90">{PHARMACY_INFO.name}</span>
             </Link>
             <p className="mt-3 text-sm leading-relaxed text-white/70">
               Independent, community pharmacy in Abbotsford, BC. Personalized
