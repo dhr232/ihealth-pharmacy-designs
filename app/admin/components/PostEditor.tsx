@@ -135,10 +135,12 @@ export function PostEditor({
   const [mode, setMode] = useState<"edit" | "preview">("edit");
   const [autoSlug, setAutoSlug] = useState<boolean>(true);
 
+  const currentId = initial?.id ?? null;
+
   // Only re-seed when dialog transitions open state or when target post ID changes
-  if (open !== prevOpen || (open && initial?.id !== prevId)) {
+  if (open !== prevOpen || (open && currentId !== prevId)) {
     setPrevOpen(open);
-    setPrevId(initial?.id ?? null);
+    setPrevId(currentId);
     const seed = buildPostDraft(initial);
     setDraft(seed);
     setTagsText(toTextList(seed.tags));
