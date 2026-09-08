@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import RefillForm from "./components/RefillForm";
 import NewsletterForm from "./components/NewsletterForm";
 import HomeBlogSection from "./components/HomeBlogSection";
 import TrustMetricsBar from "./components/TrustMetricsBar";
@@ -593,21 +592,51 @@ export default function HomePage() {
                   </div>
                 </li>
               </ul>
+
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <a
+                  href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
+                  className="inline-flex items-center gap-2 rounded-xl bg-[var(--brand)] px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[var(--brand-dark)] transition"
+                >
+                  <Phone size={16} />
+                  Call {PHARMACY_INFO.phoneDisplay}
+                </a>
+                <a
+                  href={getWhatsAppUrl("Hi iHealth Pharmacy, I have a question about my medication or services.")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[#20bd5a] transition"
+                >
+                  <MessageCircle size={16} />
+                  Chat on WhatsApp
+                </a>
+              </div>
             </SectionReveal>
 
-            <SectionReveal className="flex flex-col gap-6">
-              <RefillForm variant="contact" />
-              <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-2xs">
+            <SectionReveal className="h-full">
+              <div className="h-full min-h-[360px] lg:min-h-[440px] flex flex-col overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
                 <iframe
                   title="iHealth Pharmacy Abbotsford location"
                   src="https://maps.google.com/maps?q=2825%20Clearbrook%20Rd%2C%20Abbotsford%2C%20BC%20V2T%206S3&t=&z=15&ie=UTF8&iwloc=&output=embed"
                   width="100%"
-                  height="260"
-                  style={{ border: 0 }}
+                  height="100%"
+                  className="min-h-[300px] flex-1 border-0"
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                 />
+                <div className="bg-slate-50 px-4 py-3 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600">
+                  <span>{PHARMACY_INFO.address.parkingNotes}</span>
+                  <a
+                    href={PHARMACY_INFO.address.mapUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-[var(--brand)] hover:underline inline-flex items-center gap-1"
+                  >
+                    Open in Maps
+                    <ArrowUpRight size={13} />
+                  </a>
+                </div>
               </div>
             </SectionReveal>
           </div>
