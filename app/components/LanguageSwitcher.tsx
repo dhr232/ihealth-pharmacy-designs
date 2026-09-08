@@ -4,8 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Globe, Check, ChevronDown, Loader2 } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 
-// Languages spoken in British Columbia (per most recent census / community data).
-// Order: English first (default), then ranked roughly by speaker population.
+// Languages spoken in British Columbia (per census data).
 const LANGUAGES = [
   { code: "en", label: "English", native: "English" },
   { code: "pa", label: "Punjabi", native: "ਪੰਜਾਬੀ" },
@@ -15,15 +14,15 @@ const LANGUAGES = [
   { code: "fr", label: "French", native: "Français" },
   { code: "tl", label: "Tagalog", native: "Tagalog" },
   { code: "ko", label: "Korean", native: "한국어" },
-  { code: "fa", label: "Persian", native: "فਾਰسی" },
+  { code: "fa", label: "Persian", native: "فارسی" },
   { code: "es", label: "Spanish", native: "Español" },
 ] as const;
 
 type LangCode = (typeof LANGUAGES)[number]["code"];
 
 const STORAGE_KEY = "ihealth_lang";
+const LANG_CHANGE_EVENT = "ihealth_lang_change";
 
-// Augment window with the bits of the Google Translate API we touch.
 declare global {
   interface Window {
     google?: {
@@ -64,9 +63,9 @@ function getStoredLang(): LangCode {
 }
 
 /**
- * Clear all Google Translate cookies across all possible domain and path variations
+ * Remove all Google Translate cookies across all path and domain variations
  */
-function clearGoogleTranslateCookies() {
+function clearAllGoogleTranslateCookies() {
   if (typeof document === "undefined") return;
   const hostname = window.location.hostname;
   const paths = ["/", window.location.pathname];
@@ -90,7 +89,7 @@ function clearGoogleTranslateCookies() {
 }
 
 /**
- * Set Google Translate cookie for the specified language
+ * Set Google Translate cookie for the chosen language
  */
 function setGoogleTranslateCookie(code: LangCode) {
   if (typeof document === "undefined") return;
@@ -117,29 +116,20 @@ export default function LanguageSwitcher() {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   /* ------------------------------------------------------------------ */
-  /* Apply a language to Google Translate                               */
+  /* Direct Google Translate driver                                     */
   /* ------------------------------------------------------------------ */
   const applyGTranslate = useCallback((code: LangCode) => {
     if (typeof window === "undefined") return;
 
     if (code === "en") {
-      clearGoogleTranslateCookies();
+      clearAllGoogleTranslateCookies();
       const select = document.querySelector<HTMLSelectElement>(".goog-te-combo");
       if (select) {
-        const enOption = select.querySelector<HTMLOptionElement>(
-          'option[value="en"]'
-        );
-        const defaultOption = select.querySelector<HTMLOptionElement>(
-          'option[value=""]'
-        );
-        if (enOption) {
-          select.value = "en";
-        } else if (defaultOption) {
-          select.value = "";
-        } else {
-          select.selectedIndex = 0;
-        }
+        select.value = "";
         select.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+      if (document.documentElement) {
+        document.documentElement.classList.remove("translated-ltr", "translated-rtl");
       }
     } else {
       setGoogleTranslateCookie(code);
@@ -152,18 +142,48 @@ export default function LanguageSwitcher() {
   }, []);
 
   /* ------------------------------------------------------------------ */
-  /* Mount: load Google Translate script once, restore persisted lang   */
+  /* Sync state across all instances (desktop & mobile) via events      */
   /* ------------------------------------------------------------------ */
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const stored = getStoredLang();
-    if (stored !== "en") {
+    const initialLang = getStoredLang();
+    if (initialLang !== "en") {
       // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActive(initialLang);
+    } else {
+      clearAllGoogleTranslateCookies();
+    }
+
+    function handleLangChange(e: Event) {
+      const customEvent = e as CustomEvent<LangCode>;
+      if (customEvent.detail && isValidLang(customEvent.detail)) {
+        setActive(customEvent.detail);
+      }
+    }
+
+    function handleStorage() {
+      const stored = getStoredLang();
       setActive(stored);
     }
 
+    window.addEventListener(LANG_CHANGE_EVENT, handleLangChange);
+    window.addEventListener("storage", handleStorage);
+
+    return () => {
+      window.removeEventListener(LANG_CHANGE_EVENT, handleLangChange);
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, []);
+
+  /* ------------------------------------------------------------------ */
+  /* Load Google Translate script once                                  */
+  /* ------------------------------------------------------------------ */
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
     if (window.__iHealthGTEInitialized) {
+      const stored = getStoredLang();
       if (stored !== "en") {
         applyGTranslate(stored);
       }
@@ -183,9 +203,9 @@ export default function LanguageSwitcher() {
       );
       window.__iHealthGTEInitialized = true;
 
-      const currentStored = getStoredLang();
-      if (currentStored !== "en") {
-        applyGTranslate(currentStored);
+      const stored = getStoredLang();
+      if (stored !== "en") {
+        applyGTranslate(stored);
       }
     };
 
@@ -201,18 +221,21 @@ export default function LanguageSwitcher() {
   }, [applyGTranslate]);
 
   /* ------------------------------------------------------------------ */
-  /* User clicks a language in the menu                                 */
+  /* User selects a language from the menu                              */
   /* ------------------------------------------------------------------ */
   const applyLanguage = useCallback(
     (code: LangCode) => {
-      const prev = active;
-      setActive(code);
       setOpen(false);
       setTranslating(true);
+      setActive(code);
+
+      // Notify other LanguageSwitcher instances on the page
+      window.dispatchEvent(
+        new CustomEvent<LangCode>(LANG_CHANGE_EVENT, { detail: code })
+      );
 
       if (code === "en") {
-        // Switching back to English
-        clearGoogleTranslateCookies();
+        clearAllGoogleTranslateCookies();
         try {
           window.localStorage.removeItem(STORAGE_KEY);
           window.localStorage.setItem(STORAGE_KEY, "en");
@@ -222,27 +245,24 @@ export default function LanguageSwitcher() {
 
         applyGTranslate("en");
 
-        // If previously translated, reload to cleanly restore original English DOM nodes
-        if (prev !== "en") {
-          setTimeout(() => {
-            window.location.reload();
-          }, 150);
-          return;
-        }
-      } else {
-        // Switching to a non-English language
-        try {
-          window.localStorage.setItem(STORAGE_KEY, code);
-        } catch {
-          /* ignore */
-        }
-
-        applyGTranslate(code);
+        // Force a clean reload so the browser drops all translated text nodes
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
+        return;
       }
 
+      // Switching to another language
+      try {
+        window.localStorage.setItem(STORAGE_KEY, code);
+      } catch {
+        /* ignore */
+      }
+
+      applyGTranslate(code);
       window.setTimeout(() => setTranslating(false), 1200);
     },
-    [active, applyGTranslate]
+    [applyGTranslate]
   );
 
   /* ------------------------------------------------------------------ */
@@ -275,21 +295,6 @@ export default function LanguageSwitcher() {
 
   return (
     <div ref={containerRef} className="relative notranslate" translate="no">
-      {/* Hidden host element Google Translate replaces with its widget chrome.
-          Off-screen + height 0 so users never see Google's native banner. */}
-      <div
-        id="google_translate_element"
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          left: "-9999px",
-          top: 0,
-          width: "1px",
-          height: "1px",
-          overflow: "hidden",
-        }}
-      />
-
       <button
         ref={buttonRef}
         type="button"

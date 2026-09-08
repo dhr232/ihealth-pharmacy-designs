@@ -141,6 +141,7 @@ export default function RootLayout({
         {children}
         <CookieBanner />
         <WhatsAppButton />
+        <div id="google_translate_element" aria-hidden="true" style={{ display: "none" }} />
       </body>
     </html>
   );
