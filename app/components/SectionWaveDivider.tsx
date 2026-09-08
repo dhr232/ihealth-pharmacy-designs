@@ -25,61 +25,90 @@ export default function SectionWaveDivider({
   return (
     <div
       aria-hidden="true"
-      className={`relative w-full overflow-hidden leading-none select-none pointer-events-none -my-px ${backgroundColor}`}
+      className={`relative w-full overflow-hidden leading-none select-none pointer-events-none -my-px ${backgroundColor} ${className}`}
     >
-      <svg
-        viewBox="0 0 1440 90"
-        fill="currentColor"
-        preserveAspectRatio="none"
-        className={`w-[110%] -ml-[5%] block ${fillColor} ${className} ${flipX ? "-scale-x-100" : ""}`}
-      >
-        {/* Layer 1: Back Crest / Swell Wave (gentle translucent parallax) */}
-        <motion.path
-          d="M0,45 C220,18 440,68 700,24 C940,-8 1180,52 1440,28 L1440,96 L0,96 Z"
-          className="opacity-35"
-          animate={
-            shouldReduceMotion
-              ? undefined
-              : {
-                  x: [0, -32, 0],
-                  y: [0, -4, 0],
-                  scaleY: [1, 1.06, 1],
-                }
-          }
-          transition={
-            shouldReduceMotion
-              ? undefined
-              : {
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }
-          }
-        />
+      <div className={`relative w-full h-full ${flipX ? "-scale-x-100" : ""}`}>
+        {/* Tier 1: Deep Ambient Parallax Crest (Slowest 32s, 20% opacity) */}
+        <div className="absolute inset-0 w-full h-full overflow-hidden">
+          <motion.svg
+            viewBox="0 0 2880 90"
+            fill="currentColor"
+            preserveAspectRatio="none"
+            className={`w-[200%] max-w-none h-full block ${fillColor} opacity-20`}
+            style={{ willChange: "transform" }}
+            animate={
+              shouldReduceMotion
+                ? undefined
+                : { transform: ["translate3d(0%, 0, 0)", "translate3d(-50%, 0, 0)"] }
+            }
+            transition={
+              shouldReduceMotion
+                ? undefined
+                : {
+                    duration: 32,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }
+            }
+          >
+            <path d="M0,45 C360,15 720,65 1080,25 C1260,8 1350,30 1440,45 C1800,15 2160,65 2520,25 C2700,8 2790,30 2880,45 L2880,100 L0,100 Z" />
+          </motion.svg>
+        </div>
 
-        {/* Layer 2: Foreground Solid Transition Wave */}
-        <motion.path
-          d="M0,32 C240,72 480,12 720,48 C960,84 1200,24 1440,40 L1440,96 L0,96 Z"
-          animate={
-            shouldReduceMotion
-              ? undefined
-              : {
-                  x: [0, 24, 0],
-                  y: [0, 2, 0],
-                  scaleY: [1, 0.97, 1],
-                }
-          }
-          transition={
-            shouldReduceMotion
-              ? undefined
-              : {
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }
-          }
-        />
-      </svg>
+        {/* Tier 2: Mid-Ground Harmonic Swell (24s, 40% opacity) */}
+        <div className="absolute inset-0 w-full h-full overflow-hidden">
+          <motion.svg
+            viewBox="0 0 2880 90"
+            fill="currentColor"
+            preserveAspectRatio="none"
+            className={`w-[200%] max-w-none h-full block ${fillColor} opacity-40`}
+            style={{ willChange: "transform" }}
+            animate={
+              shouldReduceMotion
+                ? undefined
+                : { transform: ["translate3d(-25%, 0, 0)", "translate3d(-75%, 0, 0)"] }
+            }
+            transition={
+              shouldReduceMotion
+                ? undefined
+                : {
+                    duration: 24,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }
+            }
+          >
+            <path d="M0,28 C320,62 680,10 1040,48 C1240,68 1340,42 1440,28 C1760,62 2120,10 2480,48 C2680,68 2780,42 2880,28 L2880,100 L0,100 Z" />
+          </motion.svg>
+        </div>
+
+        {/* Tier 3: Foreground Solid Transition Wave (16s, 100% opacity) */}
+        <div className="absolute inset-0 w-full h-full overflow-hidden">
+          <motion.svg
+            viewBox="0 0 2880 90"
+            fill="currentColor"
+            preserveAspectRatio="none"
+            className={`w-[200%] max-w-none h-full block ${fillColor}`}
+            style={{ willChange: "transform" }}
+            animate={
+              shouldReduceMotion
+                ? undefined
+                : { transform: ["translate3d(0%, 0, 0)", "translate3d(-50%, 0, 0)"] }
+            }
+            transition={
+              shouldReduceMotion
+                ? undefined
+                : {
+                    duration: 16,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }
+            }
+          >
+            <path d="M0,38 C340,68 700,16 1060,52 C1260,70 1350,50 1440,38 C1780,68 2140,16 2500,52 C2700,70 2790,50 2880,38 L2880,100 L0,100 Z" />
+          </motion.svg>
+        </div>
+      </div>
     </div>
   );
 }
