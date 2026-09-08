@@ -9,13 +9,49 @@ import TextSizeAdjuster from "./TextSizeAdjuster";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 
 const SERVICE_PAGES = [
-  { label: "All Services Overview", href: "/services" },
-  { label: "Minor Ailments Clinic", href: "/services/minor-ailments" },
-  { label: "Custom Compounding", href: "/services/compounding" },
-  { label: "Vaccinations & Injections", href: "/services/vaccinations" },
-  { label: "MyHealthPack Blister Packs", href: "/services/myhealthpack" },
-  { label: "Medication Review", href: "/services/med-review" },
-  { label: "Free Prescription Delivery", href: "/services/delivery" },
+  {
+    label: "All Services Overview",
+    href: "/services",
+    image: "/services/all-services.jpg",
+    desc: "Browse our complete catalog of clinical pharmacy care",
+    featured: true,
+  },
+  {
+    label: "Minor Ailments Clinic",
+    href: "/services/minor-ailments",
+    image: "/services/minor-ailments.jpg",
+    desc: "Walk-in assessment & prescribing for 21 common conditions",
+  },
+  {
+    label: "Custom Compounding",
+    href: "/services/compounding",
+    image: "/services/compounding.jpg",
+    desc: "Personalized formulations & tailored strengths",
+  },
+  {
+    label: "Vaccinations & Injections",
+    href: "/services/vaccinations",
+    image: "/services/vaccinations.jpg",
+    desc: "Flu shots, COVID-19 boosters & routine immunizations",
+  },
+  {
+    label: "MyHealthPack Blister Packs",
+    href: "/services/myhealthpack",
+    image: "/services/blister-packs.jpg",
+    desc: "Pre-sorted morning, noon, evening & bedtime cards",
+  },
+  {
+    label: "Medication Review",
+    href: "/services/med-review",
+    image: "/services/med-review.jpg",
+    desc: "1-on-1 pharmacist consult & drug therapy check",
+  },
+  {
+    label: "Free Prescription Delivery",
+    href: "/services/delivery",
+    image: "/services/delivery.jpg",
+    desc: "Fast, reliable same-day delivery across Abbotsford",
+  },
 ];
 
 const PATIENT_ACTIONS = [
@@ -146,21 +182,58 @@ export default function Header() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 6 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute left-0 top-full z-50 mt-1.5 w-[480px] rounded-xl border border-slate-200 bg-white p-3 shadow-xl ring-1 ring-black/5"
+                  className="absolute left-0 top-full z-50 mt-1.5 w-[620px] rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl ring-1 ring-black/5"
                   role="menu"
                 >
-                  <div className="grid grid-cols-2 gap-1">
+                  <div className="grid grid-cols-2 gap-2">
                     {SERVICE_PAGES.map((s) => (
                       <Link
                         key={s.label}
                         href={s.href}
                         role="menuitem"
-                        className="rounded-lg px-3 py-2 text-xs font-medium text-slate-700 transition hover:bg-slate-50 hover:text-[var(--brand)]"
+                        className={`group flex items-center gap-3 rounded-xl p-2 transition-all hover:bg-slate-50 hover:shadow-2xs ${
+                          s.featured ? "col-span-2 bg-slate-50/80 border border-slate-100" : ""
+                        }`}
                         onClick={() => setServicesOpen(false)}
                       >
-                        {s.label}
+                        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-slate-100 shadow-2xs">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={s.image}
+                            alt={s.label}
+                            className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                          />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5">
+                            <p className="truncate text-xs font-bold text-slate-900 group-hover:text-[var(--brand)]">
+                              {s.label}
+                            </p>
+                            {s.featured && (
+                              <span className="rounded-full bg-[var(--brand-subtle)] px-2 py-0.5 text-[10px] font-semibold text-[var(--brand)]">
+                                Full Catalog
+                              </span>
+                            )}
+                          </div>
+                          <p className="line-clamp-1 text-[11px] text-slate-500">
+                            {s.desc}
+                          </p>
+                        </div>
                       </Link>
                     ))}
+                  </div>
+
+                  <div className="mt-2.5 flex items-center justify-between border-t border-slate-100 px-2 pt-2 text-[11px] text-slate-500">
+                    <span>
+                      Direct billing to <strong className="font-semibold text-slate-700">BC Fair PharmaCare</strong> & private plans.
+                    </span>
+                    <Link
+                      href="/services"
+                      onClick={() => setServicesOpen(false)}
+                      className="font-bold text-[var(--brand)] hover:underline"
+                    >
+                      View all services &rarr;
+                    </Link>
                   </div>
                 </motion.div>
               )}
@@ -241,9 +314,20 @@ export default function Header() {
                   key={s.label}
                   href={s.href}
                   onClick={() => setOpen(false)}
-                  className="rounded-lg px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 hover:text-[var(--brand)]"
+                  className="flex items-center gap-3 rounded-xl px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 hover:text-[var(--brand)]"
                 >
-                  {s.label}
+                  <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-md border border-slate-200 bg-slate-100 shadow-2xs">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={s.image}
+                      alt={s.label}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-xs font-bold text-slate-900">{s.label}</p>
+                    <p className="truncate text-[10px] text-slate-500">{s.desc}</p>
+                  </div>
                 </Link>
               ))}
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import {
@@ -58,16 +58,17 @@ const ADMIN_PIN = process.env.NEXT_PUBLIC_ADMIN_PIN ?? "2026";
 type Tab = "pharmacists" | "posts";
 type PostFilter = "all" | PostStatus;
 
+const emptySubscribe = () => () => {};
+
 export default function AdminPage() {
-  const [mounted, setMounted] = useState(false);
-  const [authed, setAuthed] = useState(false);
+  const isHydrated = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+  const [authed, setAuthed] = useState<boolean | null>(null);
 
-  useEffect(() => {
-    setMounted(true);
-    setAuthed(getAuth() !== null);
-  }, []);
-
-  if (!mounted) {
+  if (!isHydrated) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50">
         <span className="text-sm text-slate-500">Loading staff control panel...</span>
@@ -75,7 +76,9 @@ export default function AdminPage() {
     );
   }
 
-  if (!authed) {
+  const isAuthenticated = authed ?? (getAuth() !== null);
+
+  if (!isAuthenticated) {
     return <LoginScreen onSuccess={() => setAuthed(true)} />;
   }
 

@@ -138,9 +138,9 @@ export default function PrescriptionRefillsPage() {
               <div className="mt-10 flex items-center gap-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/avatar1.webp"
-                  alt="iHealth Pharmacy pharmacist ready to help with your prescription"
-                  className="h-20 w-20 rounded-xl border border-[var(--border)] object-cover bg-white"
+                  src="/pharmacists/anika.jpg"
+                  alt="Dr. Anika Sharma - Pharmacy Manager & Clinical Specialist"
+                  className="h-20 w-20 rounded-xl border border-[var(--border)] object-cover bg-white shadow-xs"
                 />
                 <div>
                   <p className="font-semibold">Questions about your medication?</p>

@@ -59,9 +59,9 @@ export default function TransferPage() {
               <div className="mt-10 flex items-center gap-5 rounded-2xl border border-[var(--border)] bg-white p-5 shadow-sm">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/avatar2.webp"
-                  alt="iHealth Pharmacy pharmacist who will handle your transfer"
-                  className="h-20 w-20 rounded-xl border border-[var(--border)] object-cover bg-white"
+                  src="/pharmacists/priya.jpg"
+                  alt="Priya Patel, PharmD - Pharmacist"
+                  className="h-20 w-20 rounded-xl border border-[var(--border)] object-cover bg-white shadow-xs"
                 />
                 <div>
                   <p className="font-semibold">A pharmacist oversees every transfer.</p>

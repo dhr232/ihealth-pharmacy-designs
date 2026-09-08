@@ -76,9 +76,9 @@ export default function VaccinationsPage() {
               <div className="mt-10 flex items-center gap-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/avatar3.webp"
-                  alt="iHealth Pharmacy injecting pharmacist"
-                  className="h-20 w-20 rounded-xl border border-[var(--border)] object-cover bg-white"
+                  src="/pharmacists/marcus.jpg"
+                  alt="Marcus Chen, RPh - Immunizing Pharmacist"
+                  className="h-20 w-20 rounded-xl border border-[var(--border)] object-cover bg-white shadow-xs"
                 />
                 <div>
                   <p className="font-semibold">Administered by a pharmacist, every time.</p>
