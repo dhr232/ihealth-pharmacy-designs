@@ -455,8 +455,11 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 8. Testimonials ("Healing Stories, Shared Honestly") */}
-        <section id="testimonials" className="bg-slate-50/70 py-20 lg:py-28 border-b border-slate-200/60">
+        {/* 8. Blog / Health Tips ("Stay Informed, Stay Healthy") */}
+        <HomeBlogSection />
+
+        {/* 9. Testimonials ("Healing Stories, Shared Honestly") */}
+        <section id="testimonials" className="bg-white py-20 lg:py-28 border-b border-slate-200/60">
           <div className="mx-auto max-w-5xl px-5 lg:px-8">
             <SectionReveal className="text-center">
               <span className="inline-block text-xs font-bold uppercase tracking-widest text-[var(--brand)]">
@@ -474,7 +477,7 @@ export default function HomePage() {
               {TESTIMONIALS.map((t) => (
                 <StaggerItem key={t.name}>
                   <HoverCard className="h-full">
-                    <figure className="flex h-full flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-6 shadow-2xs">
+                    <figure className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-slate-50/60 p-6 shadow-2xs">
                       <div>
                         <div className="flex items-center gap-1 text-amber-400 mb-3">
                           {[...Array(t.rating)].map((_, i) => (
@@ -486,7 +489,7 @@ export default function HomePage() {
                         </blockquote>
                       </div>
 
-                      <figcaption className="mt-6 flex items-center gap-3 border-t border-slate-100 pt-4">
+                      <figcaption className="mt-6 flex items-center gap-3 border-t border-slate-200/70 pt-4">
                         <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--brand-subtle)] text-xs font-bold text-[var(--brand)]">
                           {t.name.split(" ").map((n) => n[0]).join("")}
                         </span>
@@ -503,11 +506,8 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 9. FAQ Section */}
+        {/* 10. FAQ Section */}
         <FAQSection />
-
-        {/* 10. Blog / Health Tips ("Stay Informed, Stay Healthy") */}
-        <HomeBlogSection />
 
         {/* 11. Newsletter */}
         <section id="newsletter" className="bg-white py-16 lg:py-20 border-b border-slate-200/60">
