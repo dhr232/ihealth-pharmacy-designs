@@ -485,6 +485,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
       </div>
 
       <PharmacistEditor
+        key={editorOpen ? (editingPharmacist?.id ?? "new-pharmacist") : "closed-pharmacist"}
         open={editorOpen}
         initial={editingPharmacist}
         nextOrder={nextPharmacistOrder}
@@ -497,6 +498,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
       />
 
       <PostEditor
+        key={postEditorOpen ? (editingPost?.id ?? "new-post") : "closed-post"}
         open={postEditorOpen}
         initial={editingPost}
         onClose={() => {

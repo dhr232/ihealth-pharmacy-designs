@@ -36,22 +36,6 @@ function buildPostDraft(initial: BlogPost | null): BlogPost {
   return initial ?? emptyPost();
 }
 
-function samePost(a: BlogPost, b: BlogPost): boolean {
-  return (
-    a.id === b.id &&
-    a.title === b.title &&
-    a.slug === b.slug &&
-    a.excerpt === b.excerpt &&
-    a.content === b.content &&
-    a.author === b.author &&
-    a.publishedAt === b.publishedAt &&
-    a.imageUrl === b.imageUrl &&
-    a.status === b.status &&
-    a.themeUsed === b.themeUsed &&
-    a.tags.join(",") === b.tags.join(",")
-  );
-}
-
 function parseList(value: string): string[] {
   return value
     .split(",")
@@ -142,6 +126,8 @@ export function PostEditor({
   onSave: (next: BlogPost) => void;
   onError: (message: string) => void;
 }) {
+  const [prevOpen, setPrevOpen] = useState(open);
+  const [prevId, setPrevId] = useState<string | null>(initial?.id ?? null);
   const [draft, setDraft] = useState<BlogPost>(() => buildPostDraft(initial));
   const [tagsText, setTagsText] = useState(() =>
     toTextList(buildPostDraft(initial).tags)
@@ -149,16 +135,15 @@ export function PostEditor({
   const [mode, setMode] = useState<"edit" | "preview">("edit");
   const [autoSlug, setAutoSlug] = useState<boolean>(true);
 
-  // Re-seed draft when opening with a different record. Derived during
-  // render rather than inside useEffect to avoid cascading-render warnings.
-  if (open) {
+  // Only re-seed when dialog transitions open state or when target post ID changes
+  if (open !== prevOpen || (open && initial?.id !== prevId)) {
+    setPrevOpen(open);
+    setPrevId(initial?.id ?? null);
     const seed = buildPostDraft(initial);
-    if (!samePost(seed, draft)) {
-      setDraft(seed);
-      setTagsText(toTextList(seed.tags));
-      setMode("edit");
-      setAutoSlug(!initial);
-    }
+    setDraft(seed);
+    setTagsText(toTextList(seed.tags));
+    setMode("edit");
+    setAutoSlug(!initial);
   }
 
   function update<K extends keyof BlogPost>(key: K, value: BlogPost[K]) {

@@ -49,20 +49,6 @@ function buildDraft(initial: Pharmacist | null, nextOrder: number): Pharmacist {
   return initial ?? emptyPharmacist(nextOrder);
 }
 
-function sameDraft(a: Pharmacist, b: Pharmacist): boolean {
-  return (
-    a.id === b.id &&
-    a.name === b.name &&
-    a.role === b.role &&
-    a.bio === b.bio &&
-    a.photoUrl === b.photoUrl &&
-    a.yearsExperience === b.yearsExperience &&
-    a.displayOrder === b.displayOrder &&
-    a.credentials.join(",") === b.credentials.join(",") &&
-    a.languages.join(",") === b.languages.join(",")
-  );
-}
-
 function parseList(value: string): string[] {
   return value
     .split(",")
@@ -85,6 +71,8 @@ export function PharmacistEditor({
   onSave: (next: Pharmacist) => void;
   onError: (message: string) => void;
 }) {
+  const [prevOpen, setPrevOpen] = useState(open);
+  const [prevId, setPrevId] = useState<string | null>(initial?.id ?? null);
   const [draft, setDraft] = useState<Pharmacist>(() => buildDraft(initial, nextOrder));
   const [credentialsText, setCredentialsText] = useState(() =>
     toTextList(buildDraft(initial, nextOrder).credentials)
@@ -93,8 +81,11 @@ export function PharmacistEditor({
     toTextList(buildDraft(initial, nextOrder).languages)
   );
 
-  const seed = open ? buildDraft(initial, nextOrder) : null;
-  if (seed && !sameDraft(seed, draft)) {
+  // Only re-seed when dialog transitions open state or when target pharmacist ID changes
+  if (open !== prevOpen || (open && initial?.id !== prevId)) {
+    setPrevOpen(open);
+    setPrevId(initial?.id ?? null);
+    const seed = buildDraft(initial, nextOrder);
     setDraft(seed);
     setCredentialsText(toTextList(seed.credentials));
     setLanguagesText(toTextList(seed.languages));
@@ -212,8 +203,8 @@ export function PharmacistEditor({
                 id="pharm-exp"
                 type="number"
                 min={0}
-                value={Number.isFinite(draft.yearsExperience) ? draft.yearsExperience : 0}
-                onChange={(e) => update("yearsExperience", Number(e.target.value))}
+                value={Number.isFinite(draft.yearsExperience) ? draft.yearsExperience : ""}
+                onChange={(e) => update("yearsExperience", e.target.value === "" ? 0 : Number(e.target.value))}
               />
             </div>
 
@@ -222,8 +213,8 @@ export function PharmacistEditor({
               <Input
                 id="pharm-order"
                 type="number"
-                value={draft.displayOrder}
-                onChange={(e) => update("displayOrder", Number(e.target.value))}
+                value={Number.isFinite(draft.displayOrder) ? draft.displayOrder : ""}
+                onChange={(e) => update("displayOrder", e.target.value === "" ? 1 : Number(e.target.value))}
               />
             </div>
           </div>
