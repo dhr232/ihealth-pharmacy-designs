@@ -51,56 +51,64 @@ const SERVICES = [
     desc: "Ready within the hour, or delivered free to your Abbotsford doorstep.",
     href: "/prescription-refills",
     icon: Pill,
-    gradient: "from-red-500/80 to-red-700/80",
+    image: "/services/refills.jpg",
+    badge: "Fast Refills",
   },
   {
     title: "Transfer to iHealth",
     desc: "Switch pharmacies in 1 simple step — our team handles all former pharmacy records.",
     href: "/transfer",
     icon: ArrowLeftRight,
-    gradient: "from-slate-600/80 to-slate-800/80",
+    image: "/services/transfer.jpg",
+    badge: "1-Step Transfer",
   },
   {
     title: "Minor Ailments Clinic",
     desc: "Walk-in assessment and on-site prescribing for 21 conditions without seeing a doctor.",
     href: "/services/minor-ailments",
     icon: Thermometer,
-    gradient: "from-rose-500/80 to-rose-700/80",
+    image: "/services/minor-ailments.jpg",
+    badge: "Walk-in Prescribing",
   },
   {
     title: "Vaccinations & Flu Shots",
     desc: "COVID-19 boosters, shingles, pneumonia, and travel vaccines administered on-site.",
     href: "/vaccinations",
     icon: Syringe,
-    gradient: "from-teal-500/80 to-teal-700/80",
+    image: "/services/vaccinations.jpg",
+    badge: "Certified Injections",
   },
   {
     title: "MyHealthPack Blister Packs",
     desc: "Pre-sorted medication cards organized by day and time to avoid missed doses.",
     href: "/services/myhealthpack",
     icon: Package,
-    gradient: "from-amber-500/80 to-amber-700/80",
+    image: "/services/blister-packs.jpg",
+    badge: "Complimentary Care",
   },
   {
     title: "Custom Compounding",
     desc: "Specialized dosages, paediatric liquids, veterinary meds, and allergen-free formulas.",
     href: "/services/compounding",
     icon: FlaskConical,
-    gradient: "from-indigo-500/80 to-indigo-700/80",
+    image: "/services/compounding.jpg",
+    badge: "Custom Lab",
   },
   {
     title: "Medication Reviews",
     desc: "In-depth one-on-one consultation, free for eligible BC Fair PharmaCare patients.",
     href: "/services/med-review",
     icon: ClipboardCheck,
-    gradient: "from-emerald-500/80 to-emerald-700/80",
+    image: "/services/med-review.jpg",
+    badge: "1-on-1 Consult",
   },
   {
     title: "Free Prescription Delivery",
     desc: "Complimentary same-day home delivery across Abbotsford for orders over $25.",
     href: "/services/delivery",
     icon: Truck,
-    gradient: "from-sky-500/80 to-sky-700/80",
+    image: "/services/delivery.jpg",
+    badge: "Free over $25",
   },
 ];
 
@@ -234,20 +242,32 @@ export default function HomePage() {
                         href={s.href}
                         className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-xs transition duration-200 hover:-translate-y-1 hover:border-slate-300 hover:shadow-md"
                       >
-                        {/* Gradient header with icon */}
-                        <div className={`relative flex h-32 items-center justify-center bg-gradient-to-br ${s.gradient}`}>
-                          <div
-                            className="absolute inset-0 opacity-20"
-                            style={{
-                              backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)",
-                              backgroundSize: "14px 14px",
-                            }}
+                        {/* Featured Service Image */}
+                        <div className="relative h-44 w-full overflow-hidden bg-slate-100">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={s.image}
+                            alt={s.title}
+                            loading="lazy"
+                            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                           />
-                          <span className="relative flex h-14 w-14 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm transition duration-300 group-hover:scale-110">
-                            <Icon size={28} className="text-white" />
-                          </span>
-                          <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-white/25 opacity-0 backdrop-blur-sm transition duration-300 group-hover:opacity-100">
-                            <ArrowUpRight size={15} className="text-white" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+
+                          {/* Floating Category Icon */}
+                          <div className="absolute top-3 left-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white/95 text-[var(--brand)] shadow-sm backdrop-blur-xs transition duration-300 group-hover:scale-110 group-hover:bg-[var(--brand)] group-hover:text-white">
+                            <Icon size={18} />
+                          </div>
+
+                          {/* Feature Badge */}
+                          <div className="absolute bottom-2.5 left-3">
+                            <span className="inline-flex items-center rounded-md bg-white/95 px-2.5 py-0.5 text-[10px] font-bold text-slate-800 shadow-2xs backdrop-blur-xs">
+                              {s.badge}
+                            </span>
+                          </div>
+
+                          {/* Hover Arrow */}
+                          <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-0 shadow-sm backdrop-blur-xs transition duration-300 group-hover:opacity-100 group-hover:bg-[var(--brand)] group-hover:text-white">
+                            <ArrowUpRight size={16} />
                           </span>
                         </div>
 

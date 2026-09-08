@@ -21,6 +21,7 @@ const ALL_SERVICES = [
     desc: "Direct assessment and prescription for 21 common ailments including UTIs, shingles, cold sores, acid reflux, allergies, and conjunctivitis without needing a doctor appointment.",
     icon: Stethoscope,
     badge: "Walk-ins Welcome",
+    image: "/services/minor-ailments.jpg",
   },
   {
     title: "Custom Compounding",
@@ -28,6 +29,7 @@ const ALL_SERVICES = [
     desc: "Customized medication formulations tailored to your exact strength, allergy-free excipients, paediatric liquids, veterinary meds, and topical pain creams.",
     icon: FlaskConical,
     badge: "Custom Lab",
+    image: "/services/compounding.jpg",
   },
   {
     title: "Vaccinations & Injections",
@@ -35,6 +37,7 @@ const ALL_SERVICES = [
     desc: "Publicly funded flu shots, COVID-19 boosters, shingles, pneumonia, HPV, and travel vaccines administered safely by certified pharmacists.",
     icon: Syringe,
     badge: "Walk-ins & Booking",
+    image: "/services/vaccinations.jpg",
   },
   {
     title: "MyHealthPack Blister Packaging",
@@ -42,6 +45,7 @@ const ALL_SERVICES = [
     desc: "Pre-sorted medication blister cards organized by date and time (morning, noon, evening, bedtime) to make managing daily medications effortless and safe.",
     icon: Package,
     badge: "Complimentary Service",
+    image: "/services/blister-packs.jpg",
   },
   {
     title: "Medication Review & Injections",
@@ -49,6 +53,7 @@ const ALL_SERVICES = [
     desc: "Comprehensive one-on-one review of all your prescription drugs, over-the-counter supplements, and chronic condition management under BC PharmaCare.",
     icon: HeartPulse,
     badge: "1-on-1 Consult",
+    image: "/services/med-review.jpg",
   },
   {
     title: "Free Prescription Delivery",
@@ -56,6 +61,7 @@ const ALL_SERVICES = [
     desc: "Fast, reliable same-day prescription delivery anywhere in Abbotsford for orders over $25. Place requests before 2:00 PM for afternoon delivery.",
     icon: Truck,
     badge: "Free over $25",
+    image: "/services/delivery.jpg",
   },
 ];
 
@@ -93,27 +99,39 @@ export default function ServicesPage() {
               const Icon = s.icon;
               return (
                 <StaggerItem key={s.slug} className="flex flex-col">
-                  <HoverCard className="flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-7 shadow-xs transition duration-200 hover:border-slate-300 hover:shadow-md">
-                    <div className="flex items-center justify-between">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--brand-subtle)] text-[var(--brand)]">
-                        <Icon size={24} />
+                  <HoverCard className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs transition duration-200 hover:border-slate-300 hover:shadow-md">
+                    <div className="relative h-48 w-full overflow-hidden bg-slate-100">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={s.image}
+                        alt={s.title}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition duration-500 hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
+                      <div className="absolute top-3 left-3 flex h-10 w-10 items-center justify-center rounded-xl bg-white/95 text-[var(--brand)] shadow-sm backdrop-blur-xs">
+                        <Icon size={20} />
                       </div>
-                      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-700">
-                        {s.badge}
-                      </span>
+                      <div className="absolute bottom-3 left-3">
+                        <span className="rounded-md bg-white/95 px-2.5 py-1 text-[11px] font-bold text-slate-800 shadow-2xs backdrop-blur-xs">
+                          {s.badge}
+                        </span>
+                      </div>
                     </div>
 
-                    <h2 className="mt-5 text-xl font-bold text-slate-900">{s.title}</h2>
-                    <p className="mt-2.5 flex-1 text-sm leading-relaxed text-slate-600">{s.desc}</p>
+                    <div className="flex flex-1 flex-col p-6">
+                      <h2 className="text-xl font-bold text-slate-900">{s.title}</h2>
+                      <p className="mt-2.5 flex-1 text-sm leading-relaxed text-slate-600">{s.desc}</p>
 
-                    <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-                      <Link
-                        href={`/services/${s.slug}`}
-                        className="inline-flex items-center gap-1.5 text-xs font-bold text-[var(--brand)] hover:underline"
-                      >
-                        <span>Learn details & clinical criteria</span>
-                        <ArrowRight size={14} />
-                      </Link>
+                      <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <Link
+                          href={`/services/${s.slug}`}
+                          className="inline-flex items-center gap-1.5 text-xs font-bold text-[var(--brand)] hover:underline"
+                        >
+                          <span>Learn details & clinical criteria</span>
+                          <ArrowRight size={14} />
+                        </Link>
+                      </div>
                     </div>
                   </HoverCard>
                 </StaggerItem>
