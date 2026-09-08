@@ -389,31 +389,6 @@ export default function FriendlyPage() {
 
       {/* Refill + Transfer now live on dedicated pages: /prescription-refills and /transfer */}
 
-      {/* Bottom CTA */}
-      <section className="bg-white">
-        <div className="mx-auto max-w-4xl px-5 py-20 text-center lg:px-8">
-          <SectionReveal>
-            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Ready for easier prescriptions?</h2>
-            <p className="mx-auto mt-4 max-w-xl text-lg text-[var(--muted)]">
-              Join the Abbotsford families who trust iHealth with their medications, reminders, and everyday health.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <Link
-                href="/prescription-refills"
-                className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-3.5 text-base font-semibold text-white transition hover:bg-[var(--brand-hover)]"
-              >
-                Make an Order
-              </Link>
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-6 py-3.5 text-base font-semibold text-[var(--foreground)] transition hover:border-[var(--brand)] hover:text-[var(--brand)]"
-              >
-                Contact Us
-              </a>
-            </div>
-          </SectionReveal>
-        </div>
-      </section>
 
       {/* Contact */}
       <section id="contact" className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
