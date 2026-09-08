@@ -5,6 +5,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import RefillForm from "./components/RefillForm";
 import NewsletterForm from "./components/NewsletterForm";
+import HomeBlogSection from "./components/HomeBlogSection";
 import FloatingPills3D from "./components/FloatingPills3D";
 import { BlurReveal, SectionReveal, StaggerContainer, StaggerItem, HoverCard, MagneticButton } from "./components/MotionKit";
 import CountUp from "./components/CountUp";
@@ -371,8 +372,11 @@ export default function FriendlyPage() {
         </div>
       </section>
 
+      {/* Latest Blog & Health Articles */}
+      <HomeBlogSection />
+
       {/* Newsletter */}
-      <section id="blog" className="bg-white">
+      <section id="newsletter" className="bg-white">
         <div className="mx-auto max-w-3xl px-5 py-16 text-center lg:px-8">
           <SectionReveal>
             <Mail className="mx-auto h-8 w-8 text-[var(--brand)]" />
