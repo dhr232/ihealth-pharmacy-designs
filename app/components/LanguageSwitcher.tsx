@@ -302,16 +302,16 @@ export default function LanguageSwitcher() {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={`Change language. Current: ${activeLanguage.label}`}
-        className="inline-flex h-10 items-center gap-1.5 rounded-lg border border-[var(--border)] bg-white px-2.5 text-sm font-medium text-[var(--foreground)] shadow-sm transition hover:border-[var(--brand)] hover:text-[var(--brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-1 sm:px-3"
+        className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--border)] bg-slate-50/70 px-2.5 text-xs font-medium text-slate-700 shadow-xs transition hover:border-[var(--brand)] hover:bg-white hover:text-[var(--brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-1"
       >
         {translating ? (
-          <Loader2 size={16} aria-hidden="true" className="animate-spin" />
+          <Loader2 size={14} aria-hidden="true" className="animate-spin text-[var(--brand)]" />
         ) : (
-          <Globe size={16} aria-hidden="true" />
+          <Globe size={14} aria-hidden="true" className="text-slate-500" />
         )}
         <span className="hidden sm:inline">{activeLanguage.label}</span>
         <ChevronDown
-          size={14}
+          size={12}
           aria-hidden="true"
           className={`transition-transform ${open ? "rotate-180" : ""}`}
         />

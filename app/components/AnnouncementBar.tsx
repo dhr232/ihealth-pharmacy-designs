@@ -40,18 +40,18 @@ export default function AnnouncementBar() {
     <div
       role="region"
       aria-label="Pharmacy announcements"
-      className="relative overflow-hidden border-b border-[var(--brand)]/20 bg-[var(--brand-subtle)] text-[var(--foreground)]"
+      className="relative overflow-hidden border-b border-slate-800 bg-slate-950 text-slate-200"
     >
       <div
         className={
           reduced
-            ? "flex flex-wrap items-center justify-center gap-x-6 gap-y-1 px-4 py-2 text-xs"
-            : "flex w-max items-center gap-12 py-2 text-xs animate-[marquee_40s_linear_infinite] motion-reduce:hidden"
+            ? "flex flex-wrap items-center justify-center gap-x-6 gap-y-0.5 px-4 py-1 text-[11px] sm:text-xs"
+            : "flex w-max items-center gap-10 py-1 text-[11px] sm:text-xs animate-[marquee_45s_linear_infinite] motion-reduce:hidden"
         }
       >
         {[...ANNOUNCEMENTS, ...ANNOUNCEMENTS].map((a, i) => (
-          <span key={i} className="flex shrink-0 items-center gap-2">
-            <a.icon size={14} className="text-[var(--brand)]" />
+          <span key={i} className="flex shrink-0 items-center gap-1.5 font-medium tracking-tight">
+            <a.icon size={13} className="text-red-400" />
             {a.text}
           </span>
         ))}

@@ -64,26 +64,31 @@ export default function Header() {
   }
 
   const navLinkClass =
-    "rounded-lg px-2 py-1.5 text-sm font-medium text-[var(--foreground)] transition hover:text-[var(--brand)]";
+    "rounded-md px-2.5 py-1 text-[13px] font-medium text-slate-700 transition hover:bg-slate-100/70 hover:text-[var(--brand)]";
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-white/95 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 lg:px-8">
-        <Link href="/" className="flex items-center gap-2 rounded-lg px-1 py-1 transition hover:opacity-90">
+    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-3 px-4 lg:px-8">
+        <Link href="/" className="flex items-center gap-2 rounded-md py-1 transition hover:opacity-90">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/ihealth-logo-main.jpeg"
             alt="iHealth Pharmacy logo"
-            width={36}
-            height={36}
-            className="h-9 w-9 rounded-full object-contain"
+            width={32}
+            height={32}
+            className="h-8 w-8 rounded-full object-contain ring-1 ring-black/5"
           />
-          <span className="text-xl font-bold tracking-tight text-[var(--foreground)]">
-            iHealth
-          </span>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-lg font-bold tracking-tight text-slate-900">
+              iHealth
+            </span>
+            <span className="hidden text-[11px] font-medium tracking-wide uppercase text-slate-400 sm:inline">
+              Pharmacy
+            </span>
+          </div>
         </Link>
 
-        <nav className="hidden items-center gap-6 lg:flex" aria-label="Main">
+        <nav className="hidden items-center gap-1 xl:gap-1.5 lg:flex" aria-label="Main">
           <Link href="/" className={navLinkClass}>
             Home
           </Link>
@@ -93,20 +98,20 @@ export default function Header() {
               onClick={() => setActionsOpen((v) => !v)}
               aria-expanded={actionsOpen}
               aria-haspopup="menu"
-              className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-sm font-medium text-[var(--foreground)] transition hover:text-[var(--brand)]"
+              className="flex items-center gap-1 rounded-md px-2.5 py-1 text-[13px] font-medium text-slate-700 transition hover:bg-slate-100/70 hover:text-[var(--brand)]"
             >
               Refills & Booking
-              <ChevronDown size={16} className={`transition ${actionsOpen ? "rotate-180" : ""}`} />
+              <ChevronDown size={14} className={`transition-transform duration-150 ${actionsOpen ? "rotate-180" : ""}`} />
             </button>
 
             <AnimatePresence>
               {actionsOpen && (
                 <motion.div
-                  initial={{ opacity: 0, y: 8 }}
+                  initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 8 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute left-0 top-full z-50 w-72 rounded-xl border border-[var(--border)] bg-white p-2 shadow-lg"
+                  exit={{ opacity: 0, y: 6 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute left-0 top-full z-50 mt-1.5 w-72 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl ring-1 ring-black/5"
                   role="menu"
                 >
                   {PATIENT_ACTIONS.map((s) => (
@@ -114,11 +119,11 @@ export default function Header() {
                       key={s.label}
                       href={s.href}
                       role="menuitem"
-                      className="block rounded-lg px-3 py-2.5 transition hover:bg-[var(--surface)]"
+                      className="block rounded-lg px-3 py-2 transition hover:bg-slate-50"
                       onClick={() => setActionsOpen(false)}
                     >
-                      <span className="block text-sm font-medium text-[var(--foreground)]">{s.label}</span>
-                      <span className="block text-xs text-[var(--muted)]">{s.desc}</span>
+                      <span className="block text-xs font-semibold text-slate-900">{s.label}</span>
+                      <span className="block text-[11px] text-slate-500">{s.desc}</span>
                     </Link>
                   ))}
                 </motion.div>
@@ -131,20 +136,20 @@ export default function Header() {
               onClick={() => setServicesOpen((v) => !v)}
               aria-expanded={servicesOpen}
               aria-haspopup="menu"
-              className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-sm font-medium text-[var(--foreground)] transition hover:text-[var(--brand)]"
+              className="flex items-center gap-1 rounded-md px-2.5 py-1 text-[13px] font-medium text-slate-700 transition hover:bg-slate-100/70 hover:text-[var(--brand)]"
             >
               Services
-              <ChevronDown size={16} className={`transition ${servicesOpen ? "rotate-180" : ""}`} />
+              <ChevronDown size={14} className={`transition-transform duration-150 ${servicesOpen ? "rotate-180" : ""}`} />
             </button>
 
             <AnimatePresence>
               {servicesOpen && (
                 <motion.div
-                  initial={{ opacity: 0, y: 8 }}
+                  initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 8 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute left-0 top-full z-50 w-[520px] rounded-xl border border-[var(--border)] bg-white p-4 shadow-lg"
+                  exit={{ opacity: 0, y: 6 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute left-0 top-full z-50 mt-1.5 w-[480px] rounded-xl border border-slate-200 bg-white p-3 shadow-xl ring-1 ring-black/5"
                   role="menu"
                 >
                   <div className="grid grid-cols-2 gap-1">
@@ -153,7 +158,7 @@ export default function Header() {
                         key={s.label}
                         href={s.href}
                         role="menuitem"
-                        className="rounded-lg px-3 py-2 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface)] hover:text-[var(--brand)]"
+                        className="rounded-lg px-3 py-2 text-xs font-medium text-slate-700 transition hover:bg-slate-50 hover:text-[var(--brand)]"
                         onClick={() => setServicesOpen(false)}
                       >
                         {s.label}
@@ -162,14 +167,14 @@ export default function Header() {
                   </div>
                   {isHome && (
                     <>
-                      <div className="my-2 border-t border-[var(--border)]" />
+                      <div className="my-1.5 border-t border-slate-100" />
                       <div className="grid grid-cols-2 gap-1">
                         {HOME_ANCHORS.map((s) => (
                           <a
                             key={s.label}
                             href={s.href}
                             role="menuitem"
-                            className="rounded-lg px-3 py-2 text-sm font-medium text-[var(--muted)] transition hover:bg-[var(--surface)] hover:text-[var(--brand)]"
+                            className="rounded-lg px-3 py-1.5 text-xs font-medium text-slate-500 transition hover:bg-slate-50 hover:text-[var(--brand)]"
                           >
                             {s.label}
                           </a>
@@ -187,29 +192,34 @@ export default function Header() {
           <Link href="/#contact" className={navLinkClass}>Contact</Link>
         </nav>
 
-        <div className="hidden items-center gap-2.5 lg:flex">
+        <div className="hidden items-center gap-2 lg:flex">
           <TextSizeAdjuster />
           <LanguageSwitcher />
+
+          <div className="h-4 w-px bg-slate-200 mx-0.5" aria-hidden="true" />
+
           <a
             href={getWhatsAppUrl()}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Chat with pharmacist on WhatsApp"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-green-200 bg-green-50/70 px-3 py-2 text-sm font-semibold text-[#128C7E] transition hover:bg-green-100 hover:border-green-300"
+            className="inline-flex h-8 items-center gap-1.5 rounded-md border border-emerald-200 bg-emerald-50/80 px-2.5 text-xs font-semibold text-emerald-800 transition hover:bg-emerald-100 hover:border-emerald-300"
           >
-            <MessageCircle size={16} className="text-[#25D366]" />
+            <MessageCircle size={14} className="text-emerald-600" />
             <span>WhatsApp</span>
           </a>
+
           <a
             href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
-            className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-[var(--muted)] transition hover:text-[var(--brand)]"
+            className="inline-flex h-8 items-center gap-1 rounded-md px-2 text-xs font-medium text-slate-600 transition hover:text-[var(--brand)] hover:bg-slate-50"
           >
-            <Phone size={16} />
-            {PHARMACY_INFO.phoneDisplay}
+            <Phone size={13} className="text-slate-400" />
+            <span>{PHARMACY_INFO.phoneDisplay}</span>
           </a>
+
           <Link
             href="/prescription-refills"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--brand-hover)]"
+            className="inline-flex h-8 items-center justify-center rounded-md bg-[var(--brand)] px-3 text-xs font-semibold text-white shadow-xs transition hover:bg-[var(--brand-hover)] active:scale-[0.98]"
           >
             Request Refill
           </Link>
@@ -220,9 +230,9 @@ export default function Header() {
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           aria-controls="mobile-nav"
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-[var(--foreground)] transition hover:bg-[var(--surface)] lg:hidden"
+          className="flex h-8 w-8 items-center justify-center rounded-md text-slate-700 transition hover:bg-slate-100 lg:hidden"
         >
-          {open ? <X size={24} /> : <Menu size={24} />}
+          {open ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 

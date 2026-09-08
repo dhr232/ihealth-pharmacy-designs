@@ -78,7 +78,7 @@ export default function TextSizeAdjuster() {
     <div
       role="group"
       aria-label="Text size accessibility options"
-      className="inline-flex items-center rounded-lg border border-[var(--border)] bg-white p-0.5 shadow-sm"
+      className="inline-flex h-8 items-center rounded-md border border-[var(--border)] bg-slate-50/70 p-0.5 shadow-xs"
     >
       <span className="sr-only">Adjust text size:</span>
       <button
@@ -87,10 +87,10 @@ export default function TextSizeAdjuster() {
         aria-pressed={scale === "normal"}
         aria-label="Standard text size"
         title="Standard text size (100%)"
-        className={`rounded px-2 py-1 text-xs font-semibold transition ${
+        className={`h-6.5 rounded px-1.5 text-[11px] font-semibold transition ${
           scale === "normal"
-            ? "bg-[var(--brand)] text-white"
-            : "text-[var(--foreground)] hover:bg-[var(--surface)]"
+            ? "bg-[var(--brand)] text-white shadow-xs"
+            : "text-slate-600 hover:text-slate-900 hover:bg-white"
         }`}
       >
         A
@@ -101,10 +101,10 @@ export default function TextSizeAdjuster() {
         aria-pressed={scale === "large"}
         aria-label="Large text size (+15%)"
         title="Large text size (+15%)"
-        className={`rounded px-2 py-1 text-xs font-semibold transition ${
+        className={`h-6.5 rounded px-1.5 text-[11px] font-semibold transition ${
           scale === "large"
-            ? "bg-[var(--brand)] text-white"
-            : "text-[var(--foreground)] hover:bg-[var(--surface)]"
+            ? "bg-[var(--brand)] text-white shadow-xs"
+            : "text-slate-600 hover:text-slate-900 hover:bg-white"
         }`}
       >
         A+
@@ -115,10 +115,10 @@ export default function TextSizeAdjuster() {
         aria-pressed={scale === "xlarge"}
         aria-label="Extra large text size (+25%)"
         title="Extra large text size (+25%)"
-        className={`rounded px-2 py-1 text-xs font-semibold transition ${
+        className={`h-6.5 rounded px-1.5 text-[11px] font-semibold transition ${
           scale === "xlarge"
-            ? "bg-[var(--brand)] text-white"
-            : "text-[var(--foreground)] hover:bg-[var(--surface)]"
+            ? "bg-[var(--brand)] text-white shadow-xs"
+            : "text-slate-600 hover:text-slate-900 hover:bg-white"
         }`}
       >
         A++
