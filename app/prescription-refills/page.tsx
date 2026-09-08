@@ -76,9 +76,6 @@ export default function PrescriptionRefillsPage() {
                     <Camera size={22} />
                   </span>
                   <div>
-                    <span className="inline-block rounded bg-green-200/80 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-green-800">
-                      Senior & Caregiver Friendly
-                    </span>
                     <h2 className="text-lg font-bold text-[var(--foreground)]">
                       Refill by Photo on WhatsApp
                     </h2>

@@ -15,14 +15,13 @@ const LANGUAGES = [
   { code: "fr", label: "French", native: "Français" },
   { code: "tl", label: "Tagalog", native: "Tagalog" },
   { code: "ko", label: "Korean", native: "한국어" },
-  { code: "fa", label: "Persian", native: "فارسی" },
+  { code: "fa", label: "Persian", native: "فਾਰسی" },
   { code: "es", label: "Spanish", native: "Español" },
 ] as const;
 
 type LangCode = (typeof LANGUAGES)[number]["code"];
 
 const STORAGE_KEY = "ihealth_lang";
-const GOOGLE_COOKIE = "googtrans";
 
 // Augment window with the bits of the Google Translate API we touch.
 declare global {
@@ -64,11 +63,53 @@ function getStoredLang(): LangCode {
   return "en";
 }
 
+/**
+ * Clear all Google Translate cookies across all possible domain and path variations
+ */
+function clearGoogleTranslateCookies() {
+  if (typeof document === "undefined") return;
+  const hostname = window.location.hostname;
+  const paths = ["/", window.location.pathname];
+  const domains = ["", hostname, `.${hostname}`];
+
+  const parts = hostname.split(".");
+  while (parts.length > 1) {
+    domains.push(`.${parts.join(".")}`);
+    parts.shift();
+  }
+
+  paths.forEach((path) => {
+    domains.forEach((domain) => {
+      const domainAttr = domain ? `; domain=${domain}` : "";
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}${domainAttr}`;
+      document.cookie = `googtrans=/en/en; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}${domainAttr}`;
+      document.cookie = `googtrans=/auto/en; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}${domainAttr}`;
+      document.cookie = `googtrans=; max-age=0; path=${path}${domainAttr}`;
+    });
+  });
+}
+
+/**
+ * Set Google Translate cookie for the specified language
+ */
+function setGoogleTranslateCookie(code: LangCode) {
+  if (typeof document === "undefined") return;
+  const hostname = window.location.hostname;
+  const cookieVal = `/en/${code}`;
+
+  document.cookie = `googtrans=${cookieVal}; path=/`;
+
+  if (
+    hostname &&
+    !hostname.includes("localhost") &&
+    !hostname.includes("127.0.0.1")
+  ) {
+    document.cookie = `googtrans=${cookieVal}; domain=.${hostname}; path=/`;
+  }
+}
+
 export default function LanguageSwitcher() {
   const shouldReduceMotion = useReducedMotion();
-  // SSR-safe: always start as "en" so server and first client render agree.
-  // The persisted language gets applied in a post-mount effect below, AFTER
-  // Google Translate is ready. This avoids hydration mismatches.
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<LangCode>("en");
   const [translating, setTranslating] = useState(false);
@@ -76,94 +117,136 @@ export default function LanguageSwitcher() {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   /* ------------------------------------------------------------------ */
-  /* Apply a language to Google Translate: set the cookie + reload the  */
-  /* hidden <select> in the widget. Both belt and braces.                */
-  /* Declared above the mount effect because the effect references it.   */
+  /* Apply a language to Google Translate                               */
   /* ------------------------------------------------------------------ */
   const applyGTranslate = useCallback((code: LangCode) => {
     if (typeof window === "undefined") return;
-    if (code === "en") {
-      // Clearing the cookie forces Google to revert to source (English).
-      document.cookie = `${GOOGLE_COOKIE}=/en/en; path=/; max-age=0`;
-    } else {
-      // The cookie shape Google Translate reads is `/source/target`.
-      document.cookie = `${GOOGLE_COOKIE}=/en/${code}; path=/`;
-    }
 
-    // Also drive the hidden <select class="goog-te-combo"> if it's mounted.
-    const select = document.querySelector<HTMLSelectElement>(".goog-te-combo");
-    if (select) {
-      select.value = code;
-      select.dispatchEvent(new Event("change", { bubbles: true }));
+    if (code === "en") {
+      clearGoogleTranslateCookies();
+      const select = document.querySelector<HTMLSelectElement>(".goog-te-combo");
+      if (select) {
+        const enOption = select.querySelector<HTMLOptionElement>(
+          'option[value="en"]'
+        );
+        const defaultOption = select.querySelector<HTMLOptionElement>(
+          'option[value=""]'
+        );
+        if (enOption) {
+          select.value = "en";
+        } else if (defaultOption) {
+          select.value = "";
+        } else {
+          select.selectedIndex = 0;
+        }
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    } else {
+      setGoogleTranslateCookie(code);
+      const select = document.querySelector<HTMLSelectElement>(".goog-te-combo");
+      if (select) {
+        select.value = code;
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+      }
     }
   }, []);
 
   /* ------------------------------------------------------------------ */
-  /* Mount: load Google Translate script once, then restore persisted   */
-  /* language from localStorage. Done in effects so SSR + first client  */
-  /* render match (no hydration mismatch).                               */
+  /* Mount: load Google Translate script once, restore persisted lang   */
   /* ------------------------------------------------------------------ */
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.__iHealthGTEInitialized) {
-      // Script already loaded on another route — just restore state.
-      // This setState only fires once on mount; the alternative
-      // useState lazy initializer can't work here because the persisted
-      // language must be applied AFTER Google Translate is ready.
+
+    const stored = getStoredLang();
+    if (stored !== "en") {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setActive(getStoredLang());
+      setActive(stored);
+    }
+
+    if (window.__iHealthGTEInitialized) {
+      if (stored !== "en") {
+        applyGTranslate(stored);
+      }
       return;
     }
 
     window.googleTranslateElementInit = () => {
       if (!window.google?.translate?.TranslateElement) return;
-      new window.google.translate.TranslateElement({
-        pageLanguage: "en",
-        includedLanguages: LANGUAGES.map((l) => l.code).join(","),
-        layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-        autoDisplay: false,
-      }, "google_translate_element");
+      new window.google.translate.TranslateElement(
+        {
+          pageLanguage: "en",
+          includedLanguages: LANGUAGES.map((l) => l.code).join(","),
+          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+          autoDisplay: false,
+        },
+        "google_translate_element"
+      );
       window.__iHealthGTEInitialized = true;
 
-      // Restore the persisted language now that the widget is mounted.
-      const stored = getStoredLang();
-      if (stored !== "en") applyGTranslate(stored);
+      const currentStored = getStoredLang();
+      if (currentStored !== "en") {
+        applyGTranslate(currentStored);
+      }
     };
 
-    // Don't re-inject if the script tag is already on the page.
     if (document.querySelector('script[data-ihealth-gtranslate="1"]')) return;
 
     const script = document.createElement("script");
-    script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    script.src =
+      "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
     script.async = true;
     script.defer = true;
     script.setAttribute("data-ihealth-gtranslate", "1");
     document.head.appendChild(script);
   }, [applyGTranslate]);
 
+  /* ------------------------------------------------------------------ */
+  /* User clicks a language in the menu                                 */
+  /* ------------------------------------------------------------------ */
   const applyLanguage = useCallback(
     (code: LangCode) => {
+      const prev = active;
       setActive(code);
       setOpen(false);
       setTranslating(true);
 
-      try {
-        window.localStorage.setItem(STORAGE_KEY, code);
-      } catch {
-        /* ignore */
+      if (code === "en") {
+        // Switching back to English
+        clearGoogleTranslateCookies();
+        try {
+          window.localStorage.removeItem(STORAGE_KEY);
+          window.localStorage.setItem(STORAGE_KEY, "en");
+        } catch {
+          /* ignore */
+        }
+
+        applyGTranslate("en");
+
+        // If previously translated, reload to cleanly restore original English DOM nodes
+        if (prev !== "en") {
+          setTimeout(() => {
+            window.location.reload();
+          }, 150);
+          return;
+        }
+      } else {
+        // Switching to a non-English language
+        try {
+          window.localStorage.setItem(STORAGE_KEY, code);
+        } catch {
+          /* ignore */
+        }
+
+        applyGTranslate(code);
       }
 
-      applyGTranslate(code);
-
-      // Brief "translating" indicator. Google Translate applies changes
-      // asynchronously so we don't actually need a reload.
       window.setTimeout(() => setTranslating(false), 1200);
     },
-    [applyGTranslate]
+    [active, applyGTranslate]
   );
 
   /* ------------------------------------------------------------------ */
-  /* Outside click + Escape close                                        */
+  /* Outside click + Escape close                                       */
   /* ------------------------------------------------------------------ */
   useEffect(() => {
     if (!open) return;
@@ -187,7 +270,8 @@ export default function LanguageSwitcher() {
     };
   }, [open]);
 
-  const activeLanguage = LANGUAGES.find((l) => l.code === active) ?? LANGUAGES[0];
+  const activeLanguage =
+    LANGUAGES.find((l) => l.code === active) ?? LANGUAGES[0];
 
   return (
     <div ref={containerRef} className="relative notranslate" translate="no">
@@ -234,15 +318,24 @@ export default function LanguageSwitcher() {
             role="menu"
             aria-label="Select language"
             initial={
-              shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.98 }
+              shouldReduceMotion
+                ? { opacity: 0 }
+                : { opacity: 0, y: -6, scale: 0.98 }
             }
             animate={
-              shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }
+              shouldReduceMotion
+                ? { opacity: 1 }
+                : { opacity: 1, y: 0, scale: 1 }
             }
             exit={
-              shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.98 }
+              shouldReduceMotion
+                ? { opacity: 0 }
+                : { opacity: 0, y: -6, scale: 0.98 }
             }
-            transition={{ duration: shouldReduceMotion ? 0 : 0.18, ease: [0.16, 1, 0.3, 1] }}
+            transition={{
+              duration: shouldReduceMotion ? 0 : 0.18,
+              ease: [0.16, 1, 0.3, 1],
+            }}
             className="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-xl border border-[var(--border)] bg-white shadow-xl ring-1 ring-black/5"
           >
             <div className="border-b border-[var(--border)] bg-[var(--surface)] px-4 py-2.5">
