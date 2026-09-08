@@ -103,6 +103,9 @@ export function getPharmacists(): Pharmacist[] {
 
 export function savePharmacists(list: Pharmacist[]): void {
   writeJSON(KEY_PHARMACISTS, list);
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("ihealth_pharmacists_updated", { detail: list }));
+  }
 }
 
 export function upsertPharmacist(item: Pharmacist): Pharmacist[] {

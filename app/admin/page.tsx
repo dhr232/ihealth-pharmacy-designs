@@ -13,6 +13,8 @@ import {
   Plus,
   Stethoscope,
   Trash2,
+  FileText,
+  CheckCircle2,
 } from "lucide-react";
 import {
   clearAuth,
@@ -43,6 +45,12 @@ import { ToastViewport, type ToastKind, type ToastItem } from "./components/Toas
 import { ThemeSelector } from "./components/ThemeSelector";
 import { PharmacistEditor } from "./components/PharmacistEditor";
 import { PostEditor } from "./components/PostEditor";
+import { Button } from "@/app/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/card";
+import { Input } from "@/app/components/ui/input";
+import { Label } from "@/app/components/ui/label";
+import { Badge } from "@/app/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs";
 
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
 const ADMIN_PIN = process.env.NEXT_PUBLIC_ADMIN_PIN ?? "2026";
@@ -51,16 +59,18 @@ type Tab = "pharmacists" | "posts";
 type PostFilter = "all" | PostStatus;
 
 export default function AdminPage() {
-  const [authed, setAuthed] = useState<boolean | null>(() => {
-    if (typeof window === "undefined") return null;
-    return getAuth() !== null;
-  });
-  const hydrated = typeof window !== "undefined";
+  const [mounted, setMounted] = useState(false);
+  const [authed, setAuthed] = useState(false);
 
-  if (!hydrated) {
+  useEffect(() => {
+    setMounted(true);
+    setAuthed(getAuth() !== null);
+  }, []);
+
+  if (!mounted) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[var(--surface)]">
-        <span className="text-sm text-[var(--muted)]">Loading admin...</span>
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+        <span className="text-sm text-slate-500">Loading staff control panel...</span>
       </div>
     );
   }
@@ -80,7 +90,7 @@ export default function AdminPage() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Login                                                              */
+/*  Login Screen (shadcn Card, Input, Button, Label)                 */
 /* ------------------------------------------------------------------ */
 
 function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
@@ -103,69 +113,74 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[var(--surface)] px-4">
+    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
       <motion.div
-        initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
+        initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 0.6, ease: EASE_OUT }}
-        className="w-full max-w-md rounded-2xl border border-[var(--border)] bg-white p-8 shadow-lg"
+        transition={{ duration: 0.4, ease: EASE_OUT }}
+        className="w-full max-w-md"
       >
-        <div className="mb-6 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--brand-subtle)] text-[var(--brand)]">
-            <Pill size={20} />
-          </div>
-          <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">
-              iHealth Pharmacy
-            </p>
-            <h1 className="text-xl font-semibold tracking-tight text-[var(--foreground)]">
-              Admin sign in
-            </h1>
-          </div>
-        </div>
+        <Card className="shadow-lg border-slate-200">
+          <CardHeader className="space-y-1">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--brand-subtle)] text-[var(--brand)]">
+                <Pill size={20} />
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+                  iHealth Pharmacy
+                </p>
+                <CardTitle className="text-xl">Admin Sign In</CardTitle>
+              </div>
+            </div>
+            <CardDescription>
+              Enter the staff PIN to access the pharmacist and blog management dashboard.
+            </CardDescription>
+          </CardHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <label className="flex flex-col gap-1.5 text-sm">
-            <span className="font-medium text-[var(--foreground)]">PIN</span>
-            <input
-              type="password"
-              autoFocus
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              value={pin}
-              onChange={(e) => setPin(e.target.value)}
-              placeholder="Enter your admin PIN"
-              className="rounded-lg border border-[var(--border)] bg-white px-3 py-2.5 text-base text-[var(--foreground)] shadow-sm placeholder:text-[var(--muted)]/70 focus:border-[var(--brand)] focus:outline-none"
-            />
-          </label>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="admin-pin">Staff PIN</Label>
+                <Input
+                  id="admin-pin"
+                  type="password"
+                  autoFocus
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  value={pin}
+                  onChange={(e) => setPin(e.target.value)}
+                  placeholder="Enter 4-digit PIN"
+                  className="font-mono text-base tracking-widest"
+                />
+              </div>
 
-          {error && (
-            <p className="text-sm text-[var(--brand)]" role="alert">
-              {error}
-            </p>
-          )}
+              {error && (
+                <p className="text-sm font-medium text-red-600" role="alert">
+                  {error}
+                </p>
+              )}
 
-          <button
-            type="submit"
-            disabled={busy || !pin}
-            className="inline-flex items-center justify-center rounded-lg bg-[var(--brand)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--brand-hover)] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {busy ? "Signing in..." : "Sign in"}
-          </button>
+              <Button
+                type="submit"
+                disabled={busy || !pin}
+                className="w-full bg-[var(--brand)] text-white hover:bg-[var(--brand-hover)]"
+              >
+                {busy ? "Signing in..." : "Sign in to Dashboard"}
+              </Button>
 
-          <p className="text-xs text-[var(--muted)]">
-            Default PIN is <span className="font-mono font-semibold">2026</span>.
-            Override with the <span className="font-mono">NEXT_PUBLIC_ADMIN_PIN</span> env
-            var at build time.
-          </p>
-
-          <Link
-            href="/"
-            className="text-center text-xs font-medium text-[var(--muted)] hover:text-[var(--brand)]"
-          >
-            Back to site
-          </Link>
-        </form>
+              <div className="flex items-center justify-between pt-2 text-xs text-[var(--muted)]">
+                <span>Default PIN: <strong className="font-mono font-semibold">2026</strong></span>
+                <Link
+                  href="/"
+                  className="font-medium text-[var(--brand)] hover:underline"
+                >
+                  Back to public site
+                </Link>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       </motion.div>
     </main>
   );
@@ -185,7 +200,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     typeof window === "undefined" ? "inter-tight" : getFont()
   );
 
-    // Pharmacist state — hydrate from localStorage on first client render
+  // Pharmacist state — hydrate from localStorage on first client render
   const [pharmacists, setPharmacists] = useState<Pharmacist[]>(() =>
     typeof window === "undefined" ? [] : getPharmacists()
   );
@@ -211,13 +226,6 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     setToasts((current) => current.filter((t) => t.id !== id));
   }, []);
 
-  // (state already hydrated via lazy initializers above)
-
-  // On first mount, asynchronously reconcile the post list with the canonical
-  // JSON at /blog/seed-posts.json. The sync lazy initializer above already
-  // seeded from the bundled SEED_POSTS, so this is a no-op when localStorage
-  // is already populated. If the static JSON was updated separately, this
-  // lets the admin panel pick up the latest canonical content on first load.
   const seededRef = useRef(false);
   useEffect(() => {
     if (seededRef.current) return;
@@ -262,7 +270,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     setEditingPharmacist(null);
     pushToast(
       "success",
-      next.name ? `Saved ${next.name}.` : "Pharmacist saved.",
+      next.name ? `Saved ${next.name}. Public site updated live.` : "Pharmacist saved.",
     );
   }
 
@@ -348,74 +356,89 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--surface)] text-[var(--foreground)]">
+    <div className="min-h-screen bg-slate-50/60 text-slate-900">
       <ToastViewport toasts={toasts} onDismiss={dismissToast} />
 
       {/* Top bar */}
-      <header className="sticky top-0 z-30 border-b border-[var(--border)] bg-white/95 backdrop-blur">
+      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand-subtle)] text-[var(--brand)]">
               <Pill size={18} />
             </div>
-            <div className="hidden sm:block">
-              <p className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
                 iHealth Pharmacy
               </p>
-              <h1 className="text-base font-semibold tracking-tight">Admin</h1>
+              <h1 className="text-base font-bold tracking-tight text-slate-900">
+                Staff Control Panel
+              </h1>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <Link
-              href="/"
-              target="_blank"
-              rel="noopener"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--foreground)] hover:bg-[var(--surface)]"
-            >
-              <ExternalLink size={12} /> View live site
-            </Link>
-            <button
-              type="button"
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/" target="_blank" rel="noopener" className="gap-1.5">
+                <ExternalLink size={13} />
+                <span>View Live Site</span>
+              </Link>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => {
                 onLogout();
                 pushToast("info", "Signed out.");
               }}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--foreground)] hover:bg-[var(--surface)]"
+              className="gap-1.5 text-slate-600 hover:text-slate-900"
             >
-              <LogOut size={12} /> Log out
-            </button>
+              <LogOut size={13} />
+              <span>Log out</span>
+            </Button>
           </div>
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-7xl gap-6 px-4 py-6 sm:px-6 md:grid-cols-[220px,1fr]">
-        {/* Sidebar nav */}
-        <aside>
-          <nav
-            aria-label="Admin sections"
-            className="flex flex-row gap-2 overflow-x-auto rounded-2xl border border-[var(--border)] bg-white p-2 shadow-sm md:flex-col md:overflow-visible"
-          >
-            <NavTab
-              active={tab === "pharmacists"}
-              onClick={() => setTab("pharmacists")}
-              icon={<Stethoscope size={16} />}
-              label="Pharmacist Team"
-              count={pharmacists.length}
-            />
-            <NavTab
-              active={tab === "posts"}
-              onClick={() => setTab("posts")}
-              icon={<Pill size={16} />}
-              label="Blog Posts"
-              count={posts.length}
-            />
-          </nav>
-        </aside>
+      {/* Main Workspace with shadcn Tabs */}
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+        <Tabs
+          value={tab}
+          onValueChange={(v) => setTab(v as Tab)}
+          className="space-y-6"
+        >
+          {/* Navigation Bar */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-4">
+            <TabsList className="bg-slate-200/70 p-1 rounded-xl h-auto">
+              <TabsTrigger
+                value="pharmacists"
+                className="gap-2 px-4 py-2 text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+              >
+                <Stethoscope size={16} />
+                <span>Pharmacist Team</span>
+                <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-xs">
+                  {pharmacists.length}
+                </Badge>
+              </TabsTrigger>
+              <TabsTrigger
+                value="posts"
+                className="gap-2 px-4 py-2 text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+              >
+                <FileText size={16} />
+                <span>Blog Posts</span>
+                <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-xs">
+                  {posts.length}
+                </Badge>
+              </TabsTrigger>
+            </TabsList>
 
-        {/* Main */}
-        <main className="flex flex-col gap-6">
-          {tab === "pharmacists" ? (
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <CheckCircle2 size={14} className="text-emerald-600" />
+              <span>Auto-saved to local database with live instant sync</span>
+            </div>
+          </div>
+
+          {/* Pharmacists Tab */}
+          <TabsContent value="pharmacists" className="m-0 focus-visible:outline-none">
             <PharmacistSection
               items={pharmacists}
               confirmDeleteId={confirmDeleteId}
@@ -427,7 +450,10 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
               onMove={handleMovePharmacist}
               onExport={handleExportPharmacists}
             />
-          ) : (
+          </TabsContent>
+
+          {/* Posts Tab */}
+          <TabsContent value="posts" className="m-0 focus-visible:outline-none">
             <PostsSection
               items={filteredPosts}
               totalCount={posts.length}
@@ -441,15 +467,18 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
               onEdit={openEditPost}
               onExport={handleExportPosts}
             />
-          )}
+          </TabsContent>
 
-          <ThemeSelector
-            theme={theme}
-            font={font}
-            onThemeChange={handleThemeChange}
-            onFontChange={handleFontChange}
-          />
-        </main>
+          {/* Appearance Customizer */}
+          <div className="pt-4 border-t border-slate-200">
+            <ThemeSelector
+              theme={theme}
+              font={font}
+              onThemeChange={handleThemeChange}
+              onFontChange={handleFontChange}
+            />
+          </div>
+        </Tabs>
       </div>
 
       <PharmacistEditor
@@ -479,70 +508,8 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Subcomponents                                                       */
+/*  Pharmacist Section (shadcn Cards, Badges, Buttons)               */
 /* ------------------------------------------------------------------ */
-
-function NavTab({
-  active,
-  onClick,
-  icon,
-  label,
-  count,
-}: {
-  active: boolean;
-  onClick: () => void;
-  icon: React.ReactNode;
-  label: string;
-  count: number;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`flex shrink-0 items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
-        active
-          ? "bg-[var(--brand-subtle)] text-[var(--brand)]"
-          : "text-[var(--muted)] hover:bg-[var(--surface)]"
-      }`}
-    >
-      <span className="flex items-center gap-2">
-        {icon}
-        {label}
-      </span>
-      <span
-        className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
-          active
-            ? "bg-[var(--brand)] text-white"
-            : "bg-[var(--surface)] text-[var(--muted)]"
-        }`}
-      >
-        {count}
-      </span>
-    </button>
-  );
-}
-
-function SectionHeader({
-  title,
-  description,
-  actions,
-}: {
-  title: string;
-  description: string;
-  actions: React.ReactNode;
-}) {
-  return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-      <div>
-        <h2 className="text-xl font-semibold tracking-tight text-[var(--foreground)]">
-          {title}
-        </h2>
-        <p className="mt-1 text-sm text-[var(--muted)]">{description}</p>
-      </div>
-      <div className="flex flex-wrap items-center gap-2">{actions}</div>
-    </div>
-  );
-}
 
 function PharmacistSection({
   items,
@@ -571,121 +538,156 @@ function PharmacistSection({
   );
 
   return (
-    <section className="flex flex-col gap-4">
-      <SectionHeader
-        title="Pharmacist Team"
-        description="Add, edit, and reorder the pharmacists displayed on the public site."
-        actions={
-          <>
-            <button
-              type="button"
-              onClick={onExport}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--surface)]"
-            >
-              <Download size={14} /> Export JSON
-            </button>
-            <button
-              type="button"
-              onClick={onAdd}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[var(--brand-hover)]"
-            >
-              <Plus size={14} /> Add pharmacist
-            </button>
-          </>
-        }
-      />
+    <section className="flex flex-col gap-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h2 className="text-xl font-bold tracking-tight text-slate-900">
+            Our Pharmacists Directory
+          </h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Add new team members, edit credentials, or change portrait photos. Changes reflect on the homepage immediately.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" size="sm" onClick={onExport} className="gap-1.5">
+            <Download size={14} />
+            <span>Export JSON</span>
+          </Button>
+          <Button
+            size="sm"
+            onClick={onAdd}
+            className="gap-1.5 bg-[var(--brand)] text-white hover:bg-[var(--brand-hover)]"
+          >
+            <Plus size={14} />
+            <span>Add Pharmacist</span>
+          </Button>
+        </div>
+      </div>
 
       {sorted.length === 0 ? (
         <EmptyState
-          title="No pharmacists yet"
-          body="Click Add pharmacist to create the first team member."
+          title="No pharmacists configured"
+          body="Click Add Pharmacist above to create the first team member."
         />
       ) : (
-        <ul className="flex flex-col gap-3">
+        <ul className="grid grid-cols-1 gap-4">
           <AnimatePresence initial={false}>
             {sorted.map((p, idx) => (
               <motion.li
                 key={p.id}
                 layout
-                initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
+                initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-                transition={{ duration: 0.3, ease: EASE_OUT }}
-                className="flex items-center gap-4 rounded-2xl border border-[var(--border)] bg-white p-4 shadow-sm"
+                transition={{ duration: 0.25, ease: EASE_OUT }}
               >
-                <Avatar url={p.photoUrl} name={p.name} />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-[var(--foreground)]">
-                    {p.name || "Untitled"}
-                  </p>
-                  <p className="truncate text-xs text-[var(--muted)]">
-                    {p.role || "No role"} &middot; {p.yearsExperience} yr
-                    {p.yearsExperience === 1 ? "" : "s"}
-                  </p>
-                  {p.credentials.length > 0 && (
-                    <p className="mt-1 truncate text-xs text-[var(--muted)]">
-                      {p.credentials.join(" · ")}
-                    </p>
-                  )}
-                </div>
+                <Card className="hover:border-slate-300 transition-colors">
+                  <CardContent className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+                    {/* Portrait Avatar */}
+                    <Avatar url={p.photoUrl} name={p.name} />
 
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => onMove(p.id, "up")}
-                    disabled={idx === 0}
-                    aria-label="Move up"
-                    className="rounded-md p-1.5 text-[var(--muted)] hover:bg-[var(--surface)] disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    <ArrowUp size={14} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onMove(p.id, "down")}
-                    disabled={idx === sorted.length - 1}
-                    aria-label="Move down"
-                    className="rounded-md p-1.5 text-[var(--muted)] hover:bg-[var(--surface)] disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    <ArrowDown size={14} />
-                  </button>
-                </div>
+                    {/* Member Details */}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="text-base font-bold text-slate-900">
+                          {p.name || "Untitled Pharmacist"}
+                        </h3>
+                        <Badge variant="outline" className="text-xs border-slate-300">
+                          {p.role || "Pharmacist"}
+                        </Badge>
+                        <Badge variant="secondary" className="text-xs">
+                          {p.yearsExperience} yr{p.yearsExperience === 1 ? "" : "s"} exp
+                        </Badge>
+                      </div>
 
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => onEdit(p)}
-                    className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--foreground)] hover:bg-[var(--surface)]"
-                  >
-                    Edit
-                  </button>
-                  {confirmDeleteId === p.id ? (
-                    <div className="flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={() => onConfirmDelete(p.id)}
-                        className="rounded-lg bg-[var(--brand)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--brand-hover)]"
-                      >
-                        Confirm
-                      </button>
-                      <button
-                        type="button"
-                        onClick={onCancelDelete}
-                        className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--muted)] hover:bg-[var(--surface)]"
-                      >
-                        Cancel
-                      </button>
+                      {p.credentials.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {p.credentials.map((c) => (
+                            <span
+                              key={c}
+                              className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700"
+                            >
+                              {c}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {p.languages.length > 0 && (
+                        <p className="mt-2 text-xs text-slate-500">
+                          Languages: <span className="text-slate-700 font-medium">{p.languages.join(", ")}</span>
+                        </p>
+                      )}
                     </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => onAskDelete(p.id)}
-                      aria-label={`Delete ${p.name}`}
-                      className="rounded-md p-1.5 text-[var(--muted)] hover:bg-red-50 hover:text-[var(--brand)]"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  )}
-                </div>
+
+                    {/* Order Controls */}
+                    <div className="flex items-center gap-1 border-slate-100 sm:border-l sm:pl-3">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onMove(p.id, "up")}
+                        disabled={idx === 0}
+                        aria-label="Move pharmacist up"
+                        className="h-8 w-8 text-slate-500 hover:text-slate-900"
+                      >
+                        <ArrowUp size={15} />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onMove(p.id, "down")}
+                        disabled={idx === sorted.length - 1}
+                        aria-label="Move pharmacist down"
+                        className="h-8 w-8 text-slate-500 hover:text-slate-900"
+                      >
+                        <ArrowDown size={15} />
+                      </Button>
+                    </div>
+
+                    {/* Edit & Delete Action Buttons */}
+                    <div className="flex items-center gap-2 border-slate-100 sm:border-l sm:pl-3">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onEdit(p)}
+                        className="text-xs font-medium"
+                      >
+                        Edit
+                      </Button>
+
+                      {confirmDeleteId === p.id ? (
+                        <div className="flex items-center gap-1.5">
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => onConfirmDelete(p.id)}
+                            className="text-xs font-medium"
+                          >
+                            Delete
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={onCancelDelete}
+                            className="text-xs text-slate-500"
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => onAskDelete(p.id)}
+                          aria-label={`Delete ${p.name}`}
+                          className="h-8 w-8 text-slate-400 hover:bg-red-50 hover:text-red-600"
+                        >
+                          <Trash2 size={15} />
+                        </Button>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
               </motion.li>
             ))}
           </AnimatePresence>
@@ -694,6 +696,10 @@ function PharmacistSection({
     </section>
   );
 }
+
+/* ------------------------------------------------------------------ */
+/*  Posts Section (shadcn Cards, Badges, Buttons)                    */
+/* ------------------------------------------------------------------ */
 
 function PostsSection({
   items,
@@ -721,142 +727,155 @@ function PostsSection({
   onExport: () => void;
 }) {
   return (
-    <section className="flex flex-col gap-4">
-      <SectionHeader
-        title="Blog Posts"
-        description="Draft and publish health tips, news, and stories."
-        actions={
-          <>
-            <button
-              type="button"
-              onClick={onExport}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--surface)]"
-            >
-              <Download size={14} /> Export JSON
-            </button>
-            <button
-              type="button"
-              onClick={onAdd}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[var(--brand-hover)]"
-            >
-              <Plus size={14} /> New post
-            </button>
-          </>
-        }
-      />
+    <section className="flex flex-col gap-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h2 className="text-xl font-bold tracking-tight text-slate-900">
+            Health Tips & Blog Articles
+          </h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Manage pharmacy articles, seasonal vaccine updates, and patient advice.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" size="sm" onClick={onExport} className="gap-1.5">
+            <Download size={14} />
+            <span>Export JSON</span>
+          </Button>
+          <Button
+            size="sm"
+            onClick={onAdd}
+            className="gap-1.5 bg-[var(--brand)] text-white hover:bg-[var(--brand-hover)]"
+          >
+            <Plus size={14} />
+            <span>New Post</span>
+          </Button>
+        </div>
+      </div>
 
-      <div className="flex items-center gap-1 rounded-xl border border-[var(--border)] bg-white p-1 text-xs font-medium shadow-sm w-fit">
+      {/* Filter Tabs */}
+      <div className="flex items-center gap-1 rounded-xl bg-slate-200/70 p-1 w-fit">
         {(
           [
             { value: "all" as PostFilter, label: `All (${totalCount})` },
-            { value: "draft" as PostFilter, label: "Draft" },
+            { value: "draft" as PostFilter, label: "Drafts" },
             { value: "published" as PostFilter, label: "Published" },
           ]
         ).map(({ value, label }) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => onFilterChange(value)}
-              className={`rounded-lg px-3 py-1.5 ${
-                filter === value
-                  ? "bg-[var(--brand)] text-white"
-                  : "text-[var(--muted)] hover:bg-[var(--surface)]"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
+          <button
+            key={value}
+            type="button"
+            onClick={() => onFilterChange(value)}
+            className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+              filter === value
+                ? "bg-white text-slate-900 shadow-sm"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {items.length === 0 ? (
         <EmptyState
-          title={filter === "all" ? "No posts yet" : `No ${filter} posts`}
+          title={filter === "all" ? "No posts found" : `No ${filter} posts found`}
           body={
             filter === "all"
-              ? "Click New post to write the first article."
-              : "Try a different filter, or create a new post."
+              ? "Click New Post to write the first article."
+              : "Try switching filters or write a new post."
           }
         />
       ) : (
-        <ul className="flex flex-col gap-3">
+        <ul className="grid grid-cols-1 gap-4">
           <AnimatePresence initial={false}>
             {items.map((post) => (
               <motion.li
                 key={post.id}
                 layout
-                initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
+                initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-                transition={{ duration: 0.3, ease: EASE_OUT }}
-                className="flex items-center gap-4 rounded-2xl border border-[var(--border)] bg-white p-4 shadow-sm"
+                transition={{ duration: 0.25, ease: EASE_OUT }}
               >
-                <Cover url={post.imageUrl} title={post.title} />
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span
-                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
-                        post.status === "published"
-                          ? "bg-emerald-100 text-emerald-700"
-                          : "bg-amber-100 text-amber-700"
-                      }`}
-                    >
-                      {post.status}
-                    </span>
-                    <span className="text-xs text-[var(--muted)]">
-                      {post.publishedAt}
-                    </span>
-                  </div>
-                  <p className="mt-1 truncate text-sm font-semibold text-[var(--foreground)]">
-                    {post.title || "Untitled"}
-                  </p>
-                  {post.excerpt && (
-                    <p className="mt-1 line-clamp-1 text-xs text-[var(--muted)]">
-                      {post.excerpt}
-                    </p>
-                  )}
-                  {post.tags.length > 0 && (
-                    <p className="mt-1 text-[11px] text-[var(--muted)]">
-                      {post.tags.map((t) => `#${t}`).join(" ")}
-                    </p>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => onEdit(post)}
-                    className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--foreground)] hover:bg-[var(--surface)]"
-                  >
-                    Edit
-                  </button>
-                  {confirmDeleteId === post.id ? (
-                    <div className="flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={() => onConfirmDelete(post.id)}
-                        className="rounded-lg bg-[var(--brand)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--brand-hover)]"
-                      >
-                        Confirm
-                      </button>
-                      <button
-                        type="button"
-                        onClick={onCancelDelete}
-                        className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--muted)] hover:bg-[var(--surface)]"
-                      >
-                        Cancel
-                      </button>
+                <Card className="hover:border-slate-300 transition-colors">
+                  <CardContent className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+                    <Cover url={post.imageUrl} title={post.title} />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge
+                          variant={post.status === "published" ? "success" : "secondary"}
+                          className="text-[10px] uppercase tracking-wider font-bold"
+                        >
+                          {post.status}
+                        </Badge>
+                        <span className="text-xs text-slate-500 font-medium">
+                          {post.publishedAt}
+                        </span>
+                        {post.category && (
+                          <Badge variant="outline" className="text-[11px] text-slate-600">
+                            {post.category}
+                          </Badge>
+                        )}
+                      </div>
+                      <h3 className="mt-1.5 truncate text-base font-bold text-slate-900">
+                        {post.title || "Untitled Post"}
+                      </h3>
+                      {post.excerpt && (
+                        <p className="mt-1 line-clamp-1 text-xs text-slate-500">
+                          {post.excerpt}
+                        </p>
+                      )}
+                      {post.tags.length > 0 && (
+                        <p className="mt-1 text-[11px] text-slate-400 font-medium">
+                          {post.tags.map((t) => `#${t}`).join(" ")}
+                        </p>
+                      )}
                     </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => onAskDelete(post.id)}
-                      aria-label={`Delete ${post.title}`}
-                      className="rounded-md p-1.5 text-[var(--muted)] hover:bg-red-50 hover:text-[var(--brand)]"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  )}
-                </div>
+
+                    <div className="flex items-center gap-2 border-slate-100 sm:border-l sm:pl-3">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onEdit(post)}
+                        className="text-xs font-medium"
+                      >
+                        Edit
+                      </Button>
+
+                      {confirmDeleteId === post.id ? (
+                        <div className="flex items-center gap-1.5">
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => onConfirmDelete(post.id)}
+                            className="text-xs font-medium"
+                          >
+                            Delete
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={onCancelDelete}
+                            className="text-xs text-slate-500"
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => onAskDelete(post.id)}
+                          aria-label={`Delete ${post.title}`}
+                          className="h-8 w-8 text-slate-400 hover:bg-red-50 hover:text-red-600"
+                        >
+                          <Trash2 size={15} />
+                        </Button>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
               </motion.li>
             ))}
           </AnimatePresence>
@@ -866,6 +885,10 @@ function PostsSection({
   );
 }
 
+/* ------------------------------------------------------------------ */
+/*  Helpers & Subcomponents                                            */
+/* ------------------------------------------------------------------ */
+
 function Avatar({ url, name }: { url: string; name: string }) {
   if (url) {
     return (
@@ -873,7 +896,7 @@ function Avatar({ url, name }: { url: string; name: string }) {
       <img
         src={url}
         alt={name}
-        className="h-12 w-12 shrink-0 rounded-full border border-[var(--border)] object-cover"
+        className="h-14 w-14 shrink-0 rounded-full border-2 border-slate-100 object-cover shadow-xs"
       />
     );
   }
@@ -884,7 +907,7 @@ function Avatar({ url, name }: { url: string; name: string }) {
     .map((s) => s[0]?.toUpperCase() ?? "")
     .join("");
   return (
-    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--brand-subtle)] text-sm font-semibold text-[var(--brand)]">
+    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[var(--brand-subtle)] text-base font-bold text-[var(--brand)]">
       {initials || "?"}
     </div>
   );
@@ -897,12 +920,12 @@ function Cover({ url, title }: { url: string; title: string }) {
       <img
         src={url}
         alt=""
-        className="h-14 w-20 shrink-0 rounded-lg border border-[var(--border)] object-cover"
+        className="h-16 w-24 shrink-0 rounded-lg border border-slate-200 object-cover shadow-xs"
       />
     );
   }
   return (
-    <div className="flex h-14 w-20 shrink-0 items-center justify-center rounded-lg border border-dashed border-[var(--border)] bg-[var(--surface)] text-[10px] font-medium uppercase tracking-wider text-[var(--muted)]">
+    <div className="flex h-16 w-24 shrink-0 items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-100 text-[10px] font-medium uppercase tracking-wider text-slate-400">
       {title ? "No image" : "—"}
     </div>
   );
@@ -910,9 +933,11 @@ function Cover({ url, title }: { url: string; title: string }) {
 
 function EmptyState({ title, body }: { title: string; body: string }) {
   return (
-    <div className="rounded-2xl border border-dashed border-[var(--border)] bg-white p-10 text-center">
-      <p className="text-base font-medium text-[var(--foreground)]">{title}</p>
-      <p className="mt-1 text-sm text-[var(--muted)]">{body}</p>
-    </div>
+    <Card className="border-dashed border-2 bg-white/70">
+      <CardContent className="p-12 text-center">
+        <p className="text-base font-semibold text-slate-800">{title}</p>
+        <p className="mt-1 text-sm text-slate-500">{body}</p>
+      </CardContent>
+    </Card>
   );
 }

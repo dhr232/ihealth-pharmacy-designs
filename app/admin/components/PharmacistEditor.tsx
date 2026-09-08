@@ -1,13 +1,31 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
-import { ImageIcon, X, Upload } from "lucide-react";
+import { ImageIcon, Upload, Sparkles, Check } from "lucide-react";
 import type { Pharmacist } from "../lib/types";
 import { slugify, uuid } from "../lib/storage";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/app/components/ui/dialog";
+import { Button } from "@/app/components/ui/button";
+import { Input } from "@/app/components/ui/input";
+import { Textarea } from "@/app/components/ui/textarea";
+import { Label } from "@/app/components/ui/label";
 
-const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
-const MAX_IMAGE_BYTES = 500 * 1024;
+const MAX_IMAGE_BYTES = 800 * 1024;
+
+const PHOTO_PRESETS = [
+  { name: "Dr. Anika", url: "/pharmacists/anika.jpg" },
+  { name: "Marcus", url: "/pharmacists/marcus.jpg" },
+  { name: "Priya", url: "/pharmacists/priya.jpg" },
+  { name: "Daniel", url: "/pharmacists/daniel.jpg" },
+  { name: "Placeholder", url: "/pharmacists/placeholder.jpg" },
+];
 
 function emptyPharmacist(displayOrder: number): Pharmacist {
   return {
@@ -15,7 +33,7 @@ function emptyPharmacist(displayOrder: number): Pharmacist {
     name: "",
     role: "",
     bio: "",
-    photoUrl: "",
+    photoUrl: "/pharmacists/placeholder.jpg",
     credentials: [],
     languages: [],
     yearsExperience: 0,
@@ -75,10 +93,6 @@ export function PharmacistEditor({
     toTextList(buildDraft(initial, nextOrder).languages)
   );
 
-  // When opening with a different record, re-seed draft from latest props.
-  // We derive seed and only call setState if the seed actually changed —
-  // this avoids the cascading-render warning that comes from setting state
-  // inside useEffect.
   const seed = open ? buildDraft(initial, nextOrder) : null;
   if (seed && !sameDraft(seed, draft)) {
     setDraft(seed);
@@ -94,12 +108,12 @@ export function PharmacistEditor({
     const file = event.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith("image/")) {
-      onError("Please choose an image file.");
+      onError("Please choose an image file (JPG, PNG, WebP).");
       return;
     }
     if (file.size > MAX_IMAGE_BYTES) {
       onError(
-        `Image is ${(file.size / 1024).toFixed(0)}KB. Compression recommended before upload.`,
+        `Image is ${(file.size / 1024).toFixed(0)}KB. Maximum recommended upload size is 800KB.`,
       );
     }
     const reader = new FileReader();
@@ -128,226 +142,182 @@ export function PharmacistEditor({
   }
 
   return (
-    <AnimatePresence>
-      {open && (
-        <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm"
-            onClick={onClose}
-            aria-hidden
-          />
-          <motion.aside
-            role="dialog"
-            aria-modal="true"
-            aria-label={initial ? "Edit pharmacist" : "Add pharmacist"}
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ duration: 0.35, ease: EASE_OUT }}
-            className="fixed right-0 top-0 z-50 flex h-full w-full max-w-xl flex-col overflow-hidden bg-white shadow-2xl"
-          >
-            <header className="flex items-center justify-between border-b border-[var(--border)] px-5 py-4">
-              <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">
-                  {initial ? "Edit" : "Add"} Pharmacist
-                </p>
-                <h2 className="text-lg font-semibold tracking-tight text-[var(--foreground)]">
-                  {initial?.name || "New team member"}
-                </h2>
-              </div>
-              <button
-                type="button"
-                onClick={onClose}
-                className="rounded-md p-2 text-[var(--muted)] hover:bg-[var(--surface)]"
-                aria-label="Close editor"
-              >
-                <X size={18} />
-              </button>
-            </header>
+    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+      <DialogContent className="max-w-xl">
+        <DialogHeader>
+          <DialogTitle>{initial ? "Edit Pharmacist" : "Add New Pharmacist"}</DialogTitle>
+          <DialogDescription>
+            Configure staff profile details. Changes will update the homepage clinical team section immediately.
+          </DialogDescription>
+        </DialogHeader>
 
-            <div className="flex-1 overflow-y-auto px-5 py-5">
-              <div className="flex flex-col gap-4">
-                <Field label="Name" required>
-                  <input
-                    type="text"
-                    value={draft.name}
-                    onChange={(e) => update("name", e.target.value)}
-                    placeholder="Dr. Anika Sharma"
-                    className={inputClass}
-                  />
-                </Field>
-
-                <Field label="Role / title">
-                  <input
-                    type="text"
-                    value={draft.role}
-                    onChange={(e) => update("role", e.target.value)}
-                    placeholder="Pharmacy Manager"
-                    className={inputClass}
-                  />
-                </Field>
-
-                <Field label="Bio">
-                  <textarea
-                    value={draft.bio}
-                    onChange={(e) => update("bio", e.target.value)}
-                    rows={4}
-                    placeholder="Two or three sentences about this pharmacist."
-                    className={`${inputClass} resize-y`}
-                  />
-                </Field>
-
-                <Field
-                  label="Credentials"
-                  hint="Comma-separated, e.g. BSc Pharm, RPh, APA"
-                >
-                  <input
-                    type="text"
-                    value={credentialsText}
-                    onChange={(e) => setCredentialsText(e.target.value)}
-                    placeholder="BSc Pharm, RPh"
-                    className={inputClass}
-                  />
-                </Field>
-
-                <Field
-                  label="Languages"
-                  hint="Comma-separated, e.g. English, Punjabi, Hindi"
-                >
-                  <input
-                    type="text"
-                    value={languagesText}
-                    onChange={(e) => setLanguagesText(e.target.value)}
-                    placeholder="English, Punjabi"
-                    className={inputClass}
-                  />
-                </Field>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <Field label="Years experience">
-                    <input
-                      type="number"
-                      min={0}
-                      value={Number.isFinite(draft.yearsExperience) ? draft.yearsExperience : 0}
-                      onChange={(e) =>
-                        update("yearsExperience", Number(e.target.value))
-                      }
-                      className={inputClass}
-                    />
-                  </Field>
-
-                  <Field label="Display order">
-                    <input
-                      type="number"
-                      value={draft.displayOrder}
-                      onChange={(e) =>
-                        update("displayOrder", Number(e.target.value))
-                      }
-                      className={inputClass}
-                    />
-                  </Field>
-                </div>
-
-                <Field
-                  label="Photo"
-                  hint="Upload an image (max 500KB) or paste a URL/path."
-                >
-                  <div className="flex flex-col gap-3">
-                    <div className="flex items-center gap-2">
-                      <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--surface)]">
-                        <Upload size={14} />
-                        Upload image
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleFile}
-                          className="hidden"
-                        />
-                      </label>
-                      <input
-                        type="text"
-                        value={draft.photoUrl}
-                        onChange={(e) => update("photoUrl", e.target.value)}
-                        placeholder="/pharmacists/name.jpg or data:image/..."
-                        className={`${inputClass} flex-1`}
-                      />
-                    </div>
-                    <PhotoPreview url={draft.photoUrl} />
-                  </div>
-                </Field>
-              </div>
+        <div className="space-y-4 py-2">
+          {/* Full Name & Role */}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="pharm-name">
+                Full Name <span className="text-[var(--brand)]">*</span>
+              </Label>
+              <Input
+                id="pharm-name"
+                value={draft.name}
+                onChange={(e) => update("name", e.target.value)}
+                placeholder="Dr. Anika Sharma"
+              />
             </div>
 
-            <footer className="flex items-center justify-end gap-2 border-t border-[var(--border)] bg-[var(--surface)] px-5 py-3">
-              <button
-                type="button"
-                onClick={onClose}
-                className="rounded-lg border border-[var(--border)] bg-white px-4 py-2 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--surface)]"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleSave}
-                className="rounded-lg bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[var(--brand-hover)]"
-              >
-                {initial ? "Save changes" : "Add pharmacist"}
-              </button>
-            </footer>
-          </motion.aside>
-        </>
-      )}
-    </AnimatePresence>
+            <div className="space-y-1.5">
+              <Label htmlFor="pharm-role">Clinical Role / Title</Label>
+              <Input
+                id="pharm-role"
+                value={draft.role}
+                onChange={(e) => update("role", e.target.value)}
+                placeholder="Pharmacy Manager & Owner"
+              />
+            </div>
+          </div>
+
+          {/* Credentials & Languages */}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="pharm-creds">
+                Credentials <span className="text-xs font-normal text-slate-500">(comma-separated)</span>
+              </Label>
+              <Input
+                id="pharm-creds"
+                value={credentialsText}
+                onChange={(e) => setCredentialsText(e.target.value)}
+                placeholder="BSc Pharm, RPh, APA"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="pharm-lang">
+                Languages Spoken <span className="text-xs font-normal text-slate-500">(comma-separated)</span>
+              </Label>
+              <Input
+                id="pharm-lang"
+                value={languagesText}
+                onChange={(e) => setLanguagesText(e.target.value)}
+                placeholder="English, Punjabi, Hindi"
+              />
+            </div>
+          </div>
+
+          {/* Experience & Display Order */}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="pharm-exp">Years of Experience</Label>
+              <Input
+                id="pharm-exp"
+                type="number"
+                min={0}
+                value={Number.isFinite(draft.yearsExperience) ? draft.yearsExperience : 0}
+                onChange={(e) => update("yearsExperience", Number(e.target.value))}
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="pharm-order">Display Order (Homepage sorting)</Label>
+              <Input
+                id="pharm-order"
+                type="number"
+                value={draft.displayOrder}
+                onChange={(e) => update("displayOrder", Number(e.target.value))}
+              />
+            </div>
+          </div>
+
+          {/* Professional Bio */}
+          <div className="space-y-1.5">
+            <Label htmlFor="pharm-bio">Professional Bio</Label>
+            <Textarea
+              id="pharm-bio"
+              value={draft.bio}
+              onChange={(e) => update("bio", e.target.value)}
+              rows={3}
+              placeholder="Clinical experience, patient care focus, community roots in Abbotsford..."
+            />
+          </div>
+
+          {/* Photo URL & Presets */}
+          <div className="space-y-2">
+            <Label>Pharmacist Photo</Label>
+            <div className="flex flex-wrap items-center gap-1.5 mb-2">
+              <span className="text-xs text-slate-500 mr-1 inline-flex items-center gap-1">
+                <Sparkles size={12} className="text-[var(--brand)]" /> Quick Presets:
+              </span>
+              {PHOTO_PRESETS.map((preset) => {
+                const isSelected = draft.photoUrl === preset.url;
+                return (
+                  <button
+                    key={preset.name}
+                    type="button"
+                    onClick={() => update("photoUrl", preset.url)}
+                    className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium border transition cursor-pointer ${
+                      isSelected
+                        ? "border-[var(--brand)] bg-[var(--brand-subtle)] text-[var(--brand)] font-semibold"
+                        : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                    }`}
+                  >
+                    {isSelected && <Check size={12} />}
+                    <span>{preset.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+                {draft.photoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={draft.photoUrl}
+                    alt="Pharmacist preview"
+                    className="h-full w-full object-cover object-top"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-slate-400">
+                    <ImageIcon size={20} />
+                  </div>
+                )}
+              </div>
+
+              <div className="flex-1 space-y-2">
+                <Input
+                  value={draft.photoUrl}
+                  onChange={(e) => update("photoUrl", e.target.value)}
+                  placeholder="/pharmacists/anika.jpg or image URL"
+                />
+                <div className="flex items-center gap-2">
+                  <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-50">
+                    <Upload size={13} />
+                    Upload from computer
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFile}
+                      className="hidden"
+                    />
+                  </label>
+                  <span className="text-[11px] text-slate-400">Max 800KB</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <DialogFooter className="gap-2 sm:gap-0">
+          <Button variant="outline" type="button" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button variant="brand" type="button" onClick={handleSave}>
+            {initial ? "Save Changes" : "Add to Team"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
-const inputClass =
-  "w-full rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm text-[var(--foreground)] shadow-sm placeholder:text-[var(--muted)]/70 focus:border-[var(--brand)] focus:outline-none";
-
-function Field({
-  label,
-  required,
-  hint,
-  children,
-}: {
-  label: string;
-  required?: boolean;
-  hint?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <label className="flex flex-col gap-1.5 text-sm">
-      <span className="font-medium text-[var(--foreground)]">
-        {label}
-        {required && <span className="ml-0.5 text-[var(--brand)]">*</span>}
-      </span>
-      {children}
-      {hint && <span className="text-xs text-[var(--muted)]">{hint}</span>}
-    </label>
-  );
-}
-
-function PhotoPreview({ url }: { url: string }) {
-  if (!url) {
-    return (
-      <div className="flex aspect-[3/4] w-32 items-center justify-center rounded-lg border border-dashed border-[var(--border)] bg-[var(--surface)] text-[var(--muted)]">
-        <ImageIcon size={20} />
-      </div>
-    );
-  }
-  return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={url}
-      alt="Pharmacist preview"
-      className="h-32 w-32 rounded-lg border border-[var(--border)] object-cover"
-    />
-  );
-}
-
-// slugify is re-exported so editor files stay self-contained; not used here yet.
 export const _slugify = slugify;

@@ -343,7 +343,7 @@ export default function HomePage() {
                       <ArrowRight size={16} />
                     </Link>
                     <Link
-                      href="/team"
+                      href="#team"
                       className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 hover:border-[var(--brand)] hover:text-[var(--brand)] transition"
                     >
                       <span>Meet the Pharmacists</span>

@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { Languages, MessageCircle, PhoneCall, ArrowRight, UserCheck } from "lucide-react";
+import { Languages, MessageCircle, PhoneCall, UserCheck } from "lucide-react";
 import { SectionReveal, HoverCard, StaggerContainer, StaggerItem } from "./MotionKit";
 import { SEED_PHARMACISTS, type Pharmacist } from "@/app/admin/lib/types";
 import { getWhatsAppUrl, PHARMACY_INFO } from "@/data/pharmacy-info";
@@ -38,7 +37,11 @@ export default function PharmacistTeamSection() {
     }
 
     window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
+    window.addEventListener("ihealth_pharmacists_updated", loadPharmacists);
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener("ihealth_pharmacists_updated", loadPharmacists);
+    };
   }, []);
 
   return (
@@ -57,24 +60,26 @@ export default function PharmacistTeamSection() {
             </p>
           </div>
 
-          <Link
-            href="/team"
-            className="inline-flex items-center gap-2 self-start rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-2xs transition hover:border-[var(--brand)] hover:text-[var(--brand)]"
+          <a
+            href={getWhatsAppUrl(PHARMACY_INFO.whatsapp.presets.question)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 self-start rounded-lg bg-[var(--brand)] px-4 py-2.5 text-sm font-semibold text-white shadow-2xs transition hover:bg-[var(--brand-hover)]"
           >
-            <span>View all pharmacists</span>
-            <ArrowRight size={16} />
-          </Link>
+            <MessageCircle size={16} />
+            <span>Ask a Pharmacist</span>
+          </a>
         </SectionReveal>
 
         <StaggerContainer className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {pharmacists.slice(0, 4).map((p) => (
+          {pharmacists.map((p) => (
             <StaggerItem key={p.id} className="flex flex-col">
               <HoverCard className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs transition duration-200 hover:border-slate-300 hover:shadow-md">
                 {/* Photo & Role Tag */}
                 <div className="relative aspect-4/3 overflow-hidden bg-slate-100">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={p.photoUrl || "/pharmacists/anika.jpg"}
+                    src={p.photoUrl || "/pharmacists/placeholder.jpg"}
                     alt={p.name}
                     loading="lazy"
                     className="h-full w-full object-cover object-top transition duration-300 hover:scale-105"

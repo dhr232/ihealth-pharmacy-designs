@@ -168,7 +168,6 @@ export default function Header() {
           </div>
 
           <Link href="/about" className={navLinkClass}>About Us</Link>
-          <Link href="/team" className={navLinkClass}>Pharmacists</Link>
           <Link href="/faq" className={navLinkClass}>FAQ</Link>
           <Link href="/#blog" className={navLinkClass}>Blog</Link>
           <Link href="/#contact" className={navLinkClass}>Contact</Link>
@@ -250,7 +249,6 @@ export default function Header() {
 
               <div className="my-1 border-t border-slate-100" />
               <Link href="/about" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50">About Us</Link>
-              <Link href="/team" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50">Our Pharmacists</Link>
               <Link href="/faq" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50">FAQ</Link>
               <Link href="/#blog" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50">Blog</Link>
               <Link href="/#contact" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50">Contact</Link>
