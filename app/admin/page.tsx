@@ -672,6 +672,19 @@ function PharmacistSection({
 /*  Posts Section (shadcn Cards, Badges, Buttons)                    */
 /* ------------------------------------------------------------------ */
 
+function getScheduleCountdown(dateStr: string): string {
+  try {
+    const target = new Date(dateStr);
+    const now = new Date();
+    const diffMs = target.getTime() - now.getTime();
+    if (diffMs <= 0) return "today";
+    const days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+    return days === 1 ? "tomorrow" : `${days} days`;
+  } catch {
+    return dateStr;
+  }
+}
+
 function PostsSection({
   items,
   totalCount,
@@ -729,8 +742,9 @@ function PostsSection({
         {(
           [
             { value: "all" as PostFilter, label: `All (${totalCount})` },
-            { value: "draft" as PostFilter, label: "Drafts" },
             { value: "published" as PostFilter, label: "Published" },
+            { value: "scheduled" as PostFilter, label: "Scheduled" },
+            { value: "draft" as PostFilter, label: "Drafts" },
           ]
         ).map(({ value, label }) => (
           <button
@@ -774,12 +788,23 @@ function PostsSection({
                     <Cover url={post.imageUrl} title={post.title} />
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <Badge
-                          variant={post.status === "published" ? "success" : "secondary"}
-                          className="text-[10px] uppercase tracking-wider font-bold"
-                        >
-                          {post.status}
-                        </Badge>
+                        {post.status === "scheduled" ? (
+                          <Badge className="bg-amber-100 text-amber-800 border-amber-300 font-bold uppercase tracking-wider text-[10px]">
+                            Scheduled · In {getScheduleCountdown(post.publishedAt)}
+                          </Badge>
+                        ) : (
+                          <Badge
+                            variant={post.status === "published" ? "success" : "secondary"}
+                            className="text-[10px] uppercase tracking-wider font-bold"
+                          >
+                            {post.status}
+                          </Badge>
+                        )}
+                        {post.layoutVariant === "editorial" && (
+                          <Badge variant="outline" className="text-[10px] text-indigo-700 border-indigo-200 bg-indigo-50 font-semibold">
+                            Editorial Layout
+                          </Badge>
+                        )}
                         <span className="text-xs text-slate-500 font-medium">
                           {post.publishedAt}
                         </span>
@@ -805,6 +830,12 @@ function PostsSection({
                     </div>
 
                     <div className="flex items-center gap-2 border-slate-100 sm:border-l sm:pl-3">
+                      <Button variant="ghost" size="sm" asChild className="text-xs font-medium text-slate-600 gap-1 hover:text-slate-900">
+                        <Link href={`/blog/${post.slug}?preview=true`} target="_blank" rel="noopener">
+                          <ExternalLink size={12} />
+                          <span>Preview</span>
+                        </Link>
+                      </Button>
                       <Button
                         variant="outline"
                         size="sm"

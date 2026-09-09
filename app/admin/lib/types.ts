@@ -4,7 +4,9 @@
 
 export type UUID = string;
 
-export type PostStatus = "draft" | "published";
+export type PostStatus = "draft" | "published" | "scheduled";
+
+export type BlogLayoutVariant = "standard" | "editorial";
 
 export type ThemeName =
   | "pharmacy-red"
@@ -56,6 +58,8 @@ export interface BlogPost {
   themeUsed: ThemeName;
   readTimeMinutes: number;
   category: string;
+  layoutVariant?: BlogLayoutVariant;
+  keyTakeaways?: string[];
 }
 
 export interface AuthSession {

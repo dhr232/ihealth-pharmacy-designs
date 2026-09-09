@@ -15,7 +15,7 @@ import {
   Package,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { MKT_01_POSTS, type BlogPost } from "../../data/blog-posts";
+import { MKT_01_POSTS, isPostPublished, type BlogPost } from "../../data/blog-posts";
 import { SectionReveal, StaggerContainer, StaggerItem, HoverCard } from "./MotionKit";
 
 const STORAGE_KEY = "ihealth_admin_posts";
@@ -50,7 +50,7 @@ function formatDate(dateStr: string): string {
 
 export default function HomeBlogSection() {
   const [posts, setPosts] = useState<BlogPost[]>(() => {
-    return MKT_01_POSTS.filter((p) => p.status === "published").slice(0, 3);
+    return MKT_01_POSTS.filter((p) => isPostPublished(p)).slice(0, 3);
   });
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function HomeBlogSection() {
           const parsed = JSON.parse(raw);
           if (Array.isArray(parsed) && parsed.length > 0) {
             const published = parsed.filter(
-              (p: BlogPost) => p && p.status === "published"
+              (p: BlogPost) => p && isPostPublished(p)
             );
             if (published.length > 0) {
               setPosts(published.slice(0, 3));
@@ -74,7 +74,7 @@ export default function HomeBlogSection() {
       } catch {
         /* ignore localStorage parsing issues */
       }
-      setPosts(MKT_01_POSTS.filter((p) => p.status === "published").slice(0, 3));
+      setPosts(MKT_01_POSTS.filter((p) => isPostPublished(p)).slice(0, 3));
     }
 
     loadPublishedPosts();

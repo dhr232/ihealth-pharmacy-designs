@@ -156,7 +156,12 @@ const VALID_THEMES: ReadonlySet<ThemeName> = new Set<ThemeName>([
 // The seed JSON uses "default" as a theme placeholder and may be older than
 // the current schema; this keeps getPosts() resilient without throwing.
 function normaliseSeedPost(raw: Partial<BlogPost> & { id?: string }): BlogPost {
-  const status: BlogPost["status"] = raw.status === "draft" ? "draft" : "published";
+  const status: BlogPost["status"] =
+    raw.status === "draft"
+      ? "draft"
+      : raw.status === "scheduled"
+        ? "scheduled"
+        : "published";
   const theme: ThemeName = VALID_THEMES.has(raw.themeUsed as ThemeName)
     ? (raw.themeUsed as ThemeName)
     : "pharmacy-red";
@@ -174,6 +179,10 @@ function normaliseSeedPost(raw: Partial<BlogPost> & { id?: string }): BlogPost {
     themeUsed: theme,
     readTimeMinutes: typeof raw.readTimeMinutes === "number" ? raw.readTimeMinutes : 5,
     category: raw.category ?? "General",
+    layoutVariant: raw.layoutVariant === "editorial" ? "editorial" : "standard",
+    keyTakeaways: Array.isArray(raw.keyTakeaways)
+      ? raw.keyTakeaways.filter((t): t is string => typeof t === "string")
+      : undefined,
   };
 }
 

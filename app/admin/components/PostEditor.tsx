@@ -3,8 +3,7 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Eye, Pencil, Upload, X } from "lucide-react";
-import type { BlogPost, PostStatus, ThemeName } from "../lib/types";
-import { THEMES } from "../lib/types";
+import type { BlogPost, PostStatus, BlogLayoutVariant } from "../lib/types";
 import { slugify, uuid } from "../lib/storage";
 
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -23,8 +22,10 @@ function emptyPost(): BlogPost {
     imageUrl: "",
     status: "draft",
     themeUsed: "pharmacy-red",
-    readTimeMinutes: 1,
+    readTimeMinutes: 5,
     category: "General",
+    layoutVariant: "editorial",
+    keyTakeaways: [],
   };
 }
 
@@ -132,6 +133,9 @@ export function PostEditor({
   const [tagsText, setTagsText] = useState(() =>
     toTextList(buildPostDraft(initial).tags)
   );
+  const [keyTakeawaysText, setKeyTakeawaysText] = useState(() =>
+    (buildPostDraft(initial).keyTakeaways ?? []).join("\n")
+  );
   const [mode, setMode] = useState<"edit" | "preview">("edit");
   const [autoSlug, setAutoSlug] = useState<boolean>(true);
 
@@ -144,6 +148,7 @@ export function PostEditor({
     const seed = buildPostDraft(initial);
     setDraft(seed);
     setTagsText(toTextList(seed.tags));
+    setKeyTakeawaysText((seed.keyTakeaways ?? []).join("\n"));
     setMode("edit");
     setAutoSlug(!initial);
   }
@@ -186,6 +191,11 @@ export function PostEditor({
     const cleaned: BlogPost = {
       ...draft,
       tags: parseList(tagsText),
+      keyTakeaways: keyTakeawaysText
+        .split("\n")
+        .map((s) => s.trim())
+        .filter(Boolean),
+      layoutVariant: draft.layoutVariant ?? "editorial",
       slug: draft.slug.trim() || slugify(draft.title),
     };
     onSave(cleaned);
@@ -337,27 +347,43 @@ export function PostEditor({
                         }
                         className={inputClass}
                       >
-                        <option value="draft">Draft</option>
-                        <option value="published">Published</option>
+                        <option value="draft">Draft (Private / In progress)</option>
+                        <option value="published">Published (Live immediately)</option>
+                        <option value="scheduled">Scheduled (Auto-publishes on date)</option>
                       </select>
+                      {draft.status === "scheduled" && (
+                        <p className="mt-1 text-xs font-semibold text-amber-700">
+                          Automated release on {draft.publishedAt || "chosen date"}. Stays hidden from public until then.
+                        </p>
+                      )}
                     </Field>
 
-                    <Field label="Theme">
+                    <Field label="Layout Design">
                       <select
-                        value={draft.themeUsed}
+                        value={draft.layoutVariant ?? "editorial"}
                         onChange={(e) =>
-                          update("themeUsed", e.target.value as ThemeName)
+                          update("layoutVariant", e.target.value as BlogLayoutVariant)
                         }
                         className={inputClass}
                       >
-                        {THEMES.map((t) => (
-                          <option key={t.value} value={t.value}>
-                            {t.label}
-                          </option>
-                        ))}
+                        <option value="editorial">Editorial Magazine (Hero, Key Takeaways, Author Card)</option>
+                        <option value="standard">Standard Article (Classic text column)</option>
                       </select>
                     </Field>
                   </div>
+
+                  <Field
+                    label="Key Takeaways (Optional)"
+                    hint="One takeaway bullet per line. Rendered as a prominent clinical highlight box at the top."
+                  >
+                    <textarea
+                      value={keyTakeawaysText}
+                      onChange={(e) => setKeyTakeawaysText(e.target.value)}
+                      rows={3}
+                      placeholder="BC seniors qualify for enhanced high-dose flu shots...&#10;Over-the-counter cold medicines can interact..."
+                      className={`${inputClass} resize-y`}
+                    />
+                  </Field>
 
                   <Field label="Tags" hint="Comma-separated, e.g. wellness, vaccines, seniors">
                     <input

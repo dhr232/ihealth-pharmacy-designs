@@ -14,7 +14,7 @@ import {
   Package,
   ArrowRight,
 } from "lucide-react";
-import { MKT_01_POSTS, type BlogPost } from "../../data/blog-posts";
+import { MKT_01_POSTS, isPostPublished, type BlogPost } from "../../data/blog-posts";
 
 export const metadata: Metadata = {
   title: "Health Tips — iHealth Pharmacy Abbotsford",
@@ -60,7 +60,7 @@ function toArticle(post: BlogPost): Article {
   };
 }
 
-const ARTICLES: Article[] = MKT_01_POSTS.map(toArticle);
+const ARTICLES: Article[] = MKT_01_POSTS.filter((p) => isPostPublished(p)).map(toArticle);
 
 export default function HealthTipsPage() {
   return (
