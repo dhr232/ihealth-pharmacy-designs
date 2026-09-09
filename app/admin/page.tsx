@@ -15,22 +15,34 @@ import {
   Trash2,
   FileText,
   CheckCircle2,
+  Megaphone,
+  AlertCircle,
+  Clock,
+  Truck,
+  Syringe,
+  Heart,
 } from "lucide-react";
 import {
   clearAuth,
   deletePharmacist,
   deletePost,
+  deleteAnnouncement,
   exportJSON,
   getAuth,
   getPharmacists,
   getPosts,
+  getAnnouncements,
   reorderPharmacist,
+  reorderAnnouncement,
   seedPostsFromRemote,
   setAuth,
   upsertPharmacist,
   upsertPost,
+  upsertAnnouncement,
 } from "./lib/storage";
 import type {
+  AnnouncementIcon,
+  AnnouncementItem,
   BlogPost,
   Pharmacist,
   PostStatus,
@@ -38,6 +50,7 @@ import type {
 import { ToastViewport, type ToastKind, type ToastItem } from "./components/Toast";
 import { PharmacistEditor } from "./components/PharmacistEditor";
 import { PostEditor } from "./components/PostEditor";
+import { AnnouncementEditor } from "./components/AnnouncementEditor";
 import { Button } from "@/app/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/card";
 import { Input } from "@/app/components/ui/input";
@@ -48,7 +61,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/ta
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
 const ADMIN_PIN = process.env.NEXT_PUBLIC_ADMIN_PIN ?? "2026";
 
-type Tab = "pharmacists" | "posts";
+type Tab = "pharmacists" | "posts" | "announcements";
 type PostFilter = "all" | PostStatus;
 
 const emptySubscribe = () => () => {};
@@ -207,6 +220,14 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [postEditorOpen, setPostEditorOpen] = useState(false);
   const [confirmDeletePostId, setConfirmDeletePostId] = useState<string | null>(null);
 
+  // Announcement state — hydrate from localStorage on first client render
+  const [announcements, setAnnouncements] = useState<AnnouncementItem[]>(() =>
+    typeof window === "undefined" ? [] : getAnnouncements()
+  );
+  const [editingAnnouncement, setEditingAnnouncement] = useState<AnnouncementItem | null>(null);
+  const [announcementEditorOpen, setAnnouncementEditorOpen] = useState(false);
+  const [confirmDeleteAnnouncementId, setConfirmDeleteAnnouncementId] = useState<string | null>(null);
+
   const pushToast = useCallback((kind: ToastKind, message: string) => {
     const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
     setToasts((current) => [...current, { id, kind, message }]);
@@ -331,6 +352,59 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     pushToast("success", "Posts exported.");
   }
 
+  /* ----- Announcement handlers ----- */
+
+  const nextAnnouncementOrder = useMemo(() => {
+    if (announcements.length === 0) return 1;
+    return Math.max(...announcements.map((a) => a.displayOrder)) + 1;
+  }, [announcements]);
+
+  function openNewAnnouncement() {
+    setEditingAnnouncement(null);
+    setAnnouncementEditorOpen(true);
+  }
+
+  function openEditAnnouncement(item: AnnouncementItem) {
+    setEditingAnnouncement(item);
+    setAnnouncementEditorOpen(true);
+  }
+
+  function handleSaveAnnouncement(next: AnnouncementItem) {
+    const updated = upsertAnnouncement(next);
+    setAnnouncements(updated);
+    setAnnouncementEditorOpen(false);
+    setEditingAnnouncement(null);
+    pushToast(
+      "success",
+      editingAnnouncement ? "Announcement updated." : "Announcement added.",
+    );
+  }
+
+  function handleToggleAnnouncement(id: string, enabled: boolean) {
+    const item = announcements.find((a) => a.id === id);
+    if (!item) return;
+    const updated = upsertAnnouncement({ ...item, enabled });
+    setAnnouncements(updated);
+    pushToast("info", enabled ? "Announcement active on site." : "Announcement paused.");
+  }
+
+  function handleMoveAnnouncement(id: string, direction: "up" | "down") {
+    const updated = reorderAnnouncement(id, direction);
+    setAnnouncements(updated);
+  }
+
+  function handleDeleteAnnouncement(id: string) {
+    const updated = deleteAnnouncement(id);
+    setAnnouncements(updated);
+    setConfirmDeleteAnnouncementId(null);
+    pushToast("success", "Announcement removed.");
+  }
+
+  function handleExportAnnouncements() {
+    exportJSON("announcements.json", announcements);
+    pushToast("success", "Announcements exported.");
+  }
+
 
   return (
     <div className="min-h-screen bg-slate-50/60 text-slate-900">
@@ -406,6 +480,16 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                   {posts.length}
                 </Badge>
               </TabsTrigger>
+              <TabsTrigger
+                value="announcements"
+                className="gap-2 px-4 py-2 text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+              >
+                <Megaphone size={16} />
+                <span>Announcements</span>
+                <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-xs">
+                  {announcements.length}
+                </Badge>
+              </TabsTrigger>
             </TabsList>
 
             <div className="flex items-center gap-2 text-xs text-slate-500">
@@ -446,6 +530,21 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             />
           </TabsContent>
 
+          {/* Announcements Tab */}
+          <TabsContent value="announcements" className="m-0 focus-visible:outline-none">
+            <AnnouncementSection
+              items={announcements}
+              confirmDeleteId={confirmDeleteAnnouncementId}
+              onAskDelete={setConfirmDeleteAnnouncementId}
+              onCancelDelete={() => setConfirmDeleteAnnouncementId(null)}
+              onConfirmDelete={handleDeleteAnnouncement}
+              onAdd={openNewAnnouncement}
+              onEdit={openEditAnnouncement}
+              onMove={handleMoveAnnouncement}
+              onToggle={handleToggleAnnouncement}
+              onExport={handleExportAnnouncements}
+            />
+          </TabsContent>
 
         </Tabs>
       </div>
@@ -472,6 +571,19 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
           setEditingPost(null);
         }}
         onSave={handleSavePost}
+        onError={(msg) => pushToast("error", msg)}
+      />
+
+      <AnnouncementEditor
+        key={announcementEditorOpen ? (editingAnnouncement?.id ?? "new-announcement") : "closed-announcement"}
+        open={announcementEditorOpen}
+        initial={editingAnnouncement}
+        nextOrder={nextAnnouncementOrder}
+        onClose={() => {
+          setAnnouncementEditorOpen(false);
+          setEditingAnnouncement(null);
+        }}
+        onSave={handleSaveAnnouncement}
         onError={(msg) => pushToast("error", msg)}
       />
     </div>
@@ -880,6 +992,236 @@ function PostsSection({
                 </Card>
               </motion.li>
             ))}
+          </AnimatePresence>
+        </ul>
+      )}
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Announcement Section                                              */
+/* ------------------------------------------------------------------ */
+
+const ANNOUNCEMENT_ICONS: Record<AnnouncementIcon, typeof Megaphone> = {
+  megaphone: Megaphone,
+  syringe: Syringe,
+  truck: Truck,
+  clock: Clock,
+  alert: AlertCircle,
+  heart: Heart,
+};
+
+const ANNOUNCEMENT_ICON_COLORS: Record<AnnouncementIcon, { bg: string; text: string }> = {
+  megaphone: { bg: "bg-amber-50 border-amber-200", text: "text-amber-600" },
+  syringe: { bg: "bg-red-50 border-red-200", text: "text-red-600" },
+  truck: { bg: "bg-sky-50 border-sky-200", text: "text-sky-600" },
+  clock: { bg: "bg-emerald-50 border-emerald-200", text: "text-emerald-600" },
+  alert: { bg: "bg-rose-50 border-rose-200", text: "text-rose-600" },
+  heart: { bg: "bg-pink-50 border-pink-200", text: "text-pink-600" },
+};
+
+function AnnouncementSection({
+  items,
+  confirmDeleteId,
+  onAskDelete,
+  onCancelDelete,
+  onConfirmDelete,
+  onAdd,
+  onEdit,
+  onMove,
+  onToggle,
+  onExport,
+}: {
+  items: AnnouncementItem[];
+  confirmDeleteId: string | null;
+  onAskDelete: (id: string) => void;
+  onCancelDelete: () => void;
+  onConfirmDelete: (id: string) => void;
+  onAdd: () => void;
+  onEdit: (item: AnnouncementItem) => void;
+  onMove: (id: string, dir: "up" | "down") => void;
+  onToggle: (id: string, enabled: boolean) => void;
+  onExport: () => void;
+}) {
+  const sorted = useMemo(
+    () => [...items].sort((a, b) => a.displayOrder - b.displayOrder),
+    [items]
+  );
+
+  return (
+    <section className="flex flex-col gap-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h2 className="text-xl font-bold tracking-tight text-slate-900">
+            Top Announcement Ticker
+          </h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Publish announcements, urgent health notices, and seasonal clinic hours to the top ticker across all website pages.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" size="sm" onClick={onExport} className="gap-1.5">
+            <Download size={14} />
+            <span>Export JSON</span>
+          </Button>
+          <Button
+            size="sm"
+            onClick={onAdd}
+            className="gap-1.5 bg-[var(--brand)] text-white hover:bg-[var(--brand-hover)]"
+          >
+            <Plus size={14} />
+            <span>Add Announcement</span>
+          </Button>
+        </div>
+      </div>
+
+      {sorted.length === 0 ? (
+        <EmptyState
+          title="No announcements configured"
+          body="Click Add Announcement above to create your first top ticker notice."
+        />
+      ) : (
+        <ul className="grid grid-cols-1 gap-3">
+          <AnimatePresence initial={false}>
+            {sorted.map((a, idx) => {
+              const IconComp = ANNOUNCEMENT_ICONS[a.icon] || Megaphone;
+              const style = ANNOUNCEMENT_ICON_COLORS[a.icon] || ANNOUNCEMENT_ICON_COLORS.megaphone;
+              return (
+                <motion.li
+                  key={a.id}
+                  layout
+                  initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
+                  transition={{ duration: 0.25, ease: EASE_OUT }}
+                >
+                  <Card
+                    className={`transition-colors ${
+                      !a.enabled ? "bg-slate-50/60 opacity-60 hover:opacity-100" : "bg-white hover:border-slate-300"
+                    }`}
+                  >
+                    <CardContent className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+                      {/* Icon */}
+                      <div
+                        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border ${style.bg} ${style.text}`}
+                      >
+                        <IconComp size={20} />
+                      </div>
+
+                      {/* Content */}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="text-sm font-semibold text-slate-900 leading-snug">
+                            {a.text}
+                          </p>
+                        </div>
+
+                        <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
+                          {a.urgent && (
+                            <Badge className="bg-rose-100 text-rose-700 hover:bg-rose-100 border-rose-200">
+                              Urgent Notice
+                            </Badge>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => onToggle(a.id, !a.enabled)}
+                            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors ${
+                              a.enabled
+                                ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200"
+                                : "bg-slate-200 text-slate-600 hover:bg-slate-300"
+                            }`}
+                            title="Click to toggle live display status"
+                          >
+                            <span
+                              className={`h-1.5 w-1.5 rounded-full ${
+                                a.enabled ? "bg-emerald-600" : "bg-slate-400"
+                              }`}
+                            />
+                            {a.enabled ? "Active on site" : "Paused (Hidden)"}
+                          </button>
+                          {a.link && (
+                            <span className="text-slate-500 font-mono text-[11px] bg-slate-100 px-2 py-0.5 rounded">
+                              Link: {a.link}
+                            </span>
+                          )}
+                          <span className="text-slate-400 text-xs">
+                            Order #{idx + 1}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Order Controls */}
+                      <div className="flex items-center gap-1 border-slate-100 sm:border-l sm:pl-3">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => onMove(a.id, "up")}
+                          disabled={idx === 0}
+                          aria-label="Move announcement up"
+                          className="h-8 w-8 text-slate-500 hover:text-slate-900"
+                        >
+                          <ArrowUp size={15} />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => onMove(a.id, "down")}
+                          disabled={idx === sorted.length - 1}
+                          aria-label="Move announcement down"
+                          className="h-8 w-8 text-slate-500 hover:text-slate-900"
+                        >
+                          <ArrowDown size={15} />
+                        </Button>
+                      </div>
+
+                      {/* Action buttons */}
+                      <div className="flex items-center gap-2 border-slate-100 sm:border-l sm:pl-3">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onEdit(a)}
+                          className="text-xs font-medium"
+                        >
+                          Edit
+                        </Button>
+
+                        {confirmDeleteId === a.id ? (
+                          <div className="flex items-center gap-1.5">
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => onConfirmDelete(a.id)}
+                              className="text-xs font-medium"
+                            >
+                              Delete
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={onCancelDelete}
+                              className="text-xs text-slate-500"
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        ) : (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => onAskDelete(a.id)}
+                            aria-label="Delete announcement"
+                            className="h-8 w-8 text-slate-400 hover:text-red-600 hover:bg-red-50"
+                          >
+                            <Trash2 size={15} />
+                          </Button>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.li>
+              );
+            })}
           </AnimatePresence>
         </ul>
       )}
