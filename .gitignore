@@ -7,6 +7,9 @@ e2e-screenshots
 .agent
 .img2threejs
 .env*.local
+.env
+*.db
+*.db-journal
 playwright-report
 .git
 .vercel/

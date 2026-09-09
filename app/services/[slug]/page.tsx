@@ -37,7 +37,7 @@ const SERVICES: Record<
       "Musculoskeletal Sprains, Strains & Joint Aches",
       "Contraceptive Management & Emergency Contraception",
     ],
-    cta: { label: "Consult with a Pharmacist", href: "/contact" },
+    cta: { label: "Book Assessment Online", href: "/book?service=minor_ailments" },
   },
   compounding: {
     title: "Custom Compounding",
@@ -69,7 +69,7 @@ const SERVICES: Record<
       "Vaccines for adults and seniors",
       "Vaccination records and reminders",
     ],
-    cta: { label: "Book a vaccination", href: "/contact" },
+    cta: { label: "Book a Vaccination Online", href: "/book?service=annual-influenza-immunization" },
   },
   myhealthpack: {
     title: "MyHealthPack Blister Packs",
@@ -101,7 +101,7 @@ const SERVICES: Record<
       "Private consultation room",
       "Free medication review appointments",
     ],
-    cta: { label: "Book a consultation", href: "#contact" },
+    cta: { label: "Book a Consultation Online", href: "/book?service=medication-review-service" },
   },
   delivery: {
     title: "Free Prescription Delivery",

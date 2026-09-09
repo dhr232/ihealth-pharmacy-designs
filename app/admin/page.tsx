@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import {
   ArrowDown,
@@ -14,13 +15,17 @@ import {
   Stethoscope,
   Trash2,
   FileText,
-  CheckCircle2,
   Megaphone,
   AlertCircle,
   Clock,
   Truck,
   Syringe,
   Heart,
+  Calendar,
+  LayoutDashboard,
+  Upload,
+  Users as UsersIcon,
+  Lock,
 } from "lucide-react";
 import {
   clearAuth,
@@ -28,14 +33,12 @@ import {
   deletePost,
   deleteAnnouncement,
   exportJSON,
-  getAuth,
   getPharmacists,
   getPosts,
   getAnnouncements,
   reorderPharmacist,
   reorderAnnouncement,
   seedPostsFromRemote,
-  setAuth,
   upsertPharmacist,
   upsertPost,
   upsertAnnouncement,
@@ -51,147 +54,112 @@ import { ToastViewport, type ToastKind, type ToastItem } from "./components/Toas
 import { PharmacistEditor } from "./components/PharmacistEditor";
 import { PostEditor } from "./components/PostEditor";
 import { AnnouncementEditor } from "./components/AnnouncementEditor";
+import { AppointmentsSection } from "./components/AppointmentsSection";
+import { FlyersSection } from "./components/FlyersSection";
+import { UsersSection } from "./components/UsersSection";
+import { OverviewSection } from "./components/OverviewSection";
+import { DataExportSection } from "./components/DataExportSection";
 import { Button } from "@/app/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/card";
-import { Input } from "@/app/components/ui/input";
-import { Label } from "@/app/components/ui/label";
+import { Card, CardContent } from "@/app/components/ui/card";
 import { Badge } from "@/app/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs";
 
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
-const ADMIN_PIN = process.env.NEXT_PUBLIC_ADMIN_PIN ?? "2026";
 
-type Tab = "pharmacists" | "posts" | "announcements";
+export type Tab =
+  | "overview"
+  | "appointments"
+  | "posts"
+  | "announcements"
+  | "flyers"
+  | "pharmacists"
+  | "users"
+  | "export";
+
 type PostFilter = "all" | PostStatus;
+
+export interface StaffUserSession {
+  userId: string;
+  name: string;
+  email: string;
+  role: "ADMIN" | "PHARMACIST";
+}
 
 const emptySubscribe = () => () => {};
 
 export default function AdminPage() {
+  const router = useRouter();
   const isHydrated = useSyncExternalStore(
     emptySubscribe,
     () => true,
     () => false
   );
-  const [authed, setAuthed] = useState<boolean | null>(null);
 
-  if (!isHydrated) {
+  const [staffUser, setStaffUser] = useState<StaffUserSession | null>(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function verifySession() {
+      try {
+        const res = await fetch("/api/auth/me");
+        if (!res.ok) {
+          throw new Error("Unauthenticated");
+        }
+        const data = await res.json();
+        if (!cancelled && data.success && data.user) {
+          setStaffUser(data.user);
+          setCheckingAuth(false);
+          return;
+        }
+      } catch {
+        // Unauthenticated or fetch error
+      }
+
+      if (!cancelled) {
+        setCheckingAuth(false);
+        router.replace("/admin/login");
+      }
+    }
+
+    verifySession();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [router]);
+
+  if (!isHydrated || checkingAuth) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50">
-        <span className="text-sm text-slate-500">Loading staff control panel...</span>
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 text-teal-700 border border-teal-200 animate-pulse">
+            <Pill size={20} />
+          </div>
+          <span className="text-sm font-medium text-slate-500">Verifying staff credentials...</span>
+        </div>
       </div>
     );
   }
 
-  const isAuthenticated = authed ?? (getAuth() !== null);
-
-  if (!isAuthenticated) {
-    return <LoginScreen onSuccess={() => setAuthed(true)} />;
+  if (!staffUser) {
+    return null;
   }
 
   return (
     <Dashboard
-      onLogout={() => {
+      user={staffUser}
+      onLogout={async () => {
+        try {
+          await fetch("/api/auth/logout", { method: "POST" });
+        } catch {
+          // Best effort
+        }
         clearAuth();
-        setAuthed(false);
+        router.replace("/admin/login");
       }}
     />
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Login Screen (shadcn Card, Input, Button, Label)                 */
-/* ------------------------------------------------------------------ */
-
-function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
-  const [pin, setPin] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
-
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setBusy(true);
-    setError(null);
-    if (pin.trim() !== ADMIN_PIN) {
-      setError("Incorrect PIN. Please try again.");
-      setBusy(false);
-      return;
-    }
-    setAuth();
-    setBusy(false);
-    onSuccess();
-  }
-
-  return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
-        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 0.4, ease: EASE_OUT }}
-        className="w-full max-w-md"
-      >
-        <Card className="shadow-lg border-slate-200">
-          <CardHeader className="space-y-1">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--brand-subtle)] text-[var(--brand)]">
-                <Pill size={20} />
-              </div>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
-                  iHealth Pharmacy
-                </p>
-                <CardTitle className="text-xl">Admin Sign In</CardTitle>
-              </div>
-            </div>
-            <CardDescription>
-              Enter the staff PIN to access the pharmacist and blog management dashboard.
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              <div className="space-y-1.5">
-                <Label htmlFor="admin-pin">Staff PIN</Label>
-                <Input
-                  id="admin-pin"
-                  type="password"
-                  autoFocus
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  value={pin}
-                  onChange={(e) => setPin(e.target.value)}
-                  placeholder="Enter 4-digit PIN"
-                  className="font-mono text-base tracking-widest"
-                />
-              </div>
-
-              {error && (
-                <p className="text-sm font-medium text-red-600" role="alert">
-                  {error}
-                </p>
-              )}
-
-              <Button
-                type="submit"
-                disabled={busy || !pin}
-                className="w-full bg-[var(--brand)] text-white hover:bg-[var(--brand-hover)]"
-              >
-                {busy ? "Signing in..." : "Sign in to Dashboard"}
-              </Button>
-
-              <div className="flex items-center justify-between pt-2 text-xs text-[var(--muted)]">
-                <span>Default PIN: <strong className="font-mono font-semibold">2026</strong></span>
-                <Link
-                  href="/"
-                  className="font-medium text-[var(--brand)] hover:underline"
-                >
-                  Back to public site
-                </Link>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-      </motion.div>
-    </main>
   );
 }
 
@@ -199,8 +167,15 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
 /*  Dashboard                                                          */
 /* ------------------------------------------------------------------ */
 
-function Dashboard({ onLogout }: { onLogout: () => void }) {
-  const [tab, setTab] = useState<Tab>("pharmacists");
+function Dashboard({
+  user,
+  onLogout,
+}: {
+  user: StaffUserSession;
+  onLogout: () => void;
+}) {
+  const isAdmin = user.role === "ADMIN";
+  const [tab, setTab] = useState<Tab>("overview");
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
   // Pharmacist state — hydrate from localStorage on first client render
@@ -405,6 +380,17 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     pushToast("success", "Announcements exported.");
   }
 
+  function handleExportAllData() {
+    const backup = {
+      exportedAt: new Date().toISOString(),
+      pharmacists,
+      posts,
+      announcements,
+      version: "1.0",
+    };
+    exportJSON(`ihealth-backup-${new Date().toISOString().slice(0, 10)}.json`, backup);
+    pushToast("success", "Complete data package exported.");
+  }
 
   return (
     <div className="min-h-screen bg-slate-50/60 text-slate-900">
@@ -414,34 +400,51 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand-subtle)] text-[var(--brand)]">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-50 text-teal-700 border border-teal-200">
               <Pill size={18} />
             </div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
-                iHealth Pharmacy
-              </p>
+              <div className="flex items-center gap-2">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                  iHealth Pharmacy
+                </p>
+                <Badge
+                  className={
+                    isAdmin
+                      ? "bg-indigo-50 text-indigo-700 border-indigo-200 text-[10px] py-0 px-1.5 font-bold"
+                      : "bg-teal-50 text-teal-700 border-teal-200 text-[10px] py-0 px-1.5 font-bold"
+                  }
+                >
+                  {user.role}
+                </Badge>
+              </div>
               <h1 className="text-base font-bold tracking-tight text-slate-900">
                 Staff Control Panel
               </h1>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" asChild>
-              <Link href="/" target="_blank" rel="noopener" className="gap-1.5">
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:block text-right text-xs">
+              <p className="font-semibold text-slate-800">{user.name}</p>
+              <p className="text-slate-500 font-mono text-[11px]">{user.email}</p>
+            </div>
+
+            <Button variant="outline" size="sm" asChild className="hidden md:inline-flex">
+              <Link href="/" target="_blank" rel="noopener" className="gap-1.5 text-xs">
                 <ExternalLink size={13} />
                 <span>View Live Site</span>
               </Link>
             </Button>
+
             <Button
               variant="ghost"
               size="sm"
               onClick={() => {
                 onLogout();
-                pushToast("info", "Signed out.");
+                pushToast("info", "Signed out of staff session.");
               }}
-              className="gap-1.5 text-slate-600 hover:text-slate-900"
+              className="gap-1.5 text-slate-600 hover:text-slate-900 text-xs"
             >
               <LogOut size={13} />
               <span>Log out</span>
@@ -450,7 +453,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
         </div>
       </header>
 
-      {/* Main Workspace with shadcn Tabs */}
+      {/* Main Workspace with Tabs */}
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
         <Tabs
           value={tab}
@@ -458,62 +461,119 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
           className="space-y-6"
         >
           {/* Navigation Bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-4">
-            <TabsList className="bg-slate-200/70 p-1 rounded-xl h-auto">
+          <div className="flex flex-col gap-4 border-b border-slate-200 pb-4">
+            <TabsList className="bg-slate-200/70 p-1 rounded-xl h-auto flex flex-wrap gap-1">
+              {/* Overview Tab */}
               <TabsTrigger
-                value="pharmacists"
-                className="gap-2 px-4 py-2 text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+                value="overview"
+                className="gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
               >
-                <Stethoscope size={16} />
-                <span>Pharmacist Team</span>
-                <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-xs">
-                  {pharmacists.length}
-                </Badge>
+                <LayoutDashboard size={15} />
+                <span>Overview</span>
               </TabsTrigger>
+
+              {/* Appointments Tab */}
+              <TabsTrigger
+                value="appointments"
+                className="gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+              >
+                <Calendar size={15} />
+                <span>Appointments</span>
+              </TabsTrigger>
+
+              {/* Blog Posts Tab */}
               <TabsTrigger
                 value="posts"
-                className="gap-2 px-4 py-2 text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+                className="gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
               >
-                <FileText size={16} />
-                <span>Blog Posts</span>
-                <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-xs">
+                <FileText size={15} />
+                <span>Blog Articles</span>
+                <Badge variant="secondary" className="ml-0.5 px-1 py-0 text-[10px]">
                   {posts.length}
                 </Badge>
               </TabsTrigger>
+
+              {/* Announcements Tab */}
               <TabsTrigger
                 value="announcements"
-                className="gap-2 px-4 py-2 text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+                className="gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
               >
-                <Megaphone size={16} />
+                <Megaphone size={15} />
                 <span>Announcements</span>
-                <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-xs">
+                <Badge variant="secondary" className="ml-0.5 px-1 py-0 text-[10px]">
                   {announcements.length}
                 </Badge>
               </TabsTrigger>
-            </TabsList>
 
-            <div className="flex items-center gap-2 text-xs text-slate-500">
-              <CheckCircle2 size={14} className="text-emerald-600" />
-              <span>Auto-saved to local database with live instant sync</span>
-            </div>
+              {/* Digital Flyers Tab */}
+              <TabsTrigger
+                value="flyers"
+                className="gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+              >
+                <Upload size={15} />
+                <span>Digital Flyers</span>
+              </TabsTrigger>
+
+              {/* Pharmacist Team Tab */}
+              <TabsTrigger
+                value="pharmacists"
+                className="gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+              >
+                <Stethoscope size={15} />
+                <span>Pharmacists</span>
+                <Badge variant="secondary" className="ml-0.5 px-1 py-0 text-[10px]">
+                  {pharmacists.length}
+                </Badge>
+              </TabsTrigger>
+
+              {/* Admin-only: Staff User Management */}
+              {isAdmin && (
+                <TabsTrigger
+                  value="users"
+                  className="gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+                >
+                  <UsersIcon size={15} />
+                  <span>Staff Users</span>
+                  <Badge className="ml-0.5 bg-indigo-100 text-indigo-800 border-none px-1 py-0 text-[9px]">
+                    Admin
+                  </Badge>
+                </TabsTrigger>
+              )}
+
+              {/* Admin-only: Data Export */}
+              {isAdmin && (
+                <TabsTrigger
+                  value="export"
+                  className="gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+                >
+                  <Download size={15} />
+                  <span>Data Export</span>
+                </TabsTrigger>
+              )}
+            </TabsList>
           </div>
 
-          {/* Pharmacists Tab */}
-          <TabsContent value="pharmacists" className="m-0 focus-visible:outline-none">
-            <PharmacistSection
-              items={pharmacists}
-              confirmDeleteId={confirmDeleteId}
-              onAskDelete={setConfirmDeleteId}
-              onCancelDelete={() => setConfirmDeleteId(null)}
-              onConfirmDelete={handleDeletePharmacist}
-              onAdd={openNewPharmacist}
-              onEdit={openEditPharmacist}
-              onMove={handleMovePharmacist}
-              onExport={handleExportPharmacists}
+          {/* Overview Tab Content */}
+          <TabsContent value="overview" className="m-0 focus-visible:outline-none">
+            <OverviewSection
+              user={user}
+              stats={{
+                pharmacistsCount: pharmacists.length,
+                postsCount: posts.length,
+                announcementsCount: announcements.length,
+                flyersCount: 2,
+                appointmentsCount: 3,
+              }}
+              onNavigateTab={(t) => setTab(t as Tab)}
             />
           </TabsContent>
 
-          {/* Posts Tab */}
+          {/* Appointments Tab Content */}
+          <TabsContent value="appointments" className="m-0 focus-visible:outline-none">
+            <AppointmentsSection onToast={pushToast} />
+          </TabsContent>
+
+          {/* Posts Tab Content */}
           <TabsContent value="posts" className="m-0 focus-visible:outline-none">
             <PostsSection
               items={filteredPosts}
@@ -530,7 +590,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             />
           </TabsContent>
 
-          {/* Announcements Tab */}
+          {/* Announcements Tab Content */}
           <TabsContent value="announcements" className="m-0 focus-visible:outline-none">
             <AnnouncementSection
               items={announcements}
@@ -544,6 +604,59 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
               onToggle={handleToggleAnnouncement}
               onExport={handleExportAnnouncements}
             />
+          </TabsContent>
+
+          {/* Digital Flyers Tab Content */}
+          <TabsContent value="flyers" className="m-0 focus-visible:outline-none">
+            <FlyersSection onToast={pushToast} />
+          </TabsContent>
+
+          {/* Pharmacists Tab Content */}
+          <TabsContent value="pharmacists" className="m-0 focus-visible:outline-none">
+            <PharmacistSection
+              items={pharmacists}
+              confirmDeleteId={confirmDeleteId}
+              onAskDelete={setConfirmDeleteId}
+              onCancelDelete={() => setConfirmDeleteId(null)}
+              onConfirmDelete={handleDeletePharmacist}
+              onAdd={openNewPharmacist}
+              onEdit={openEditPharmacist}
+              onMove={handleMovePharmacist}
+              onExport={handleExportPharmacists}
+            />
+          </TabsContent>
+
+          {/* Staff User Management Tab Content (Admin Only) */}
+          <TabsContent value="users" className="m-0 focus-visible:outline-none">
+            {isAdmin ? (
+              <UsersSection onToast={pushToast} />
+            ) : (
+              <Card className="border-slate-200 p-8 text-center">
+                <Lock size={32} className="mx-auto text-slate-400 mb-2" />
+                <h3 className="font-semibold text-slate-800 text-sm">Administrator Access Required</h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  Managing staff credentials and role permissions is restricted to System Administrators.
+                </p>
+              </Card>
+            )}
+          </TabsContent>
+
+          {/* Data Export Tab Content (Admin Only) */}
+          <TabsContent value="export" className="m-0 focus-visible:outline-none">
+            {isAdmin ? (
+              <DataExportSection
+                onToast={pushToast}
+                exportAllData={handleExportAllData}
+              />
+            ) : (
+              <Card className="border-slate-200 p-8 text-center">
+                <Lock size={32} className="mx-auto text-slate-400 mb-2" />
+                <h3 className="font-semibold text-slate-800 text-sm">Administrator Access Required</h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  Exporting system databases and audit logs is restricted to System Administrators.
+                </p>
+              </Card>
+            )}
           </TabsContent>
 
         </Tabs>

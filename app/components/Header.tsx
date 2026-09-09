@@ -55,6 +55,7 @@ const SERVICE_PAGES = [
 ];
 
 const PATIENT_ACTIONS = [
+  { label: "Book Appointment Online", href: "/book", desc: "Minor ailments, vaccines & consults" },
   { label: "Prescription Refills", href: "/prescription-refills", desc: "Ready in 3 easy steps" },
   { label: "Transfer to iHealth", href: "/transfer", desc: "Switch in one simple request" },
   { label: "Patient Care Program", href: "/care-program", desc: "Free auto-sync & doctor renewals" },
@@ -397,6 +398,13 @@ export default function Header() {
           </a>
 
           <Link
+            href="/book"
+            className="inline-flex h-8 items-center justify-center rounded-md border border-emerald-600 bg-emerald-50/60 px-3 text-xs font-semibold text-emerald-800 shadow-2xs transition hover:bg-emerald-100 hover:border-emerald-700 active:scale-[0.98]"
+          >
+            Book Online
+          </Link>
+
+          <Link
             href="/prescription-refills"
             className="inline-flex h-8 items-center justify-center rounded-md bg-[var(--brand)] px-3 text-xs font-semibold text-white shadow-xs transition hover:bg-[var(--brand-hover)] active:scale-[0.98]"
           >
@@ -495,6 +503,13 @@ export default function Header() {
                   <Phone size={16} />
                   Call {PHARMACY_INFO.phoneDisplay}
                 </a>
+                <Link
+                  href="/book"
+                  onClick={() => setOpen(false)}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-700 py-2.5 text-center text-sm font-semibold text-white shadow-xs hover:bg-emerald-800"
+                >
+                  Book Appointment Online
+                </Link>
                 <Link
                   href="/prescription-refills"
                   onClick={() => setOpen(false)}

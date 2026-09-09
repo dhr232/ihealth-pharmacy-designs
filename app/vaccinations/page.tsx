@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import RefillForm from "../components/RefillForm";
 import { SectionReveal } from "../components/MotionKit";
-import { Syringe, ShieldCheck, Users, FileText } from "lucide-react";
+import { Syringe, ShieldCheck, Users, FileText, Calendar } from "lucide-react";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 
 export const metadata: Metadata = {
@@ -49,6 +50,22 @@ export default function VaccinationsPage() {
                 confirm a time. Our trained pharmacists vaccinate in a private
                 setting — most visits take 15 minutes.
               </p>
+
+              <div className="mt-6 flex flex-wrap items-center gap-3">
+                <Link
+                  href="/book?service=annual-influenza-immunization"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[var(--brand)] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--brand-hover)]"
+                >
+                  <Calendar size={16} />
+                  <span>Book Vaccination Online</span>
+                </Link>
+                <a
+                  href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
+                  className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--foreground)] hover:bg-[var(--surface)] transition"
+                >
+                  <span>Call {PHARMACY_INFO.phoneDisplay}</span>
+                </a>
+              </div>
 
               <h2 className="mt-8 text-xl font-semibold">Vaccines we offer</h2>
               <ul className="mt-4 grid gap-2 sm:grid-cols-2">
