@@ -61,17 +61,51 @@ const PATIENT_ACTIONS = [
   { label: "Vaccinations & Flu Shots", href: "/vaccinations", desc: "Walk-in or book ahead" },
 ];
 
+const BLOG_CHANNELS = [
+  {
+    label: "Seniors Health & Chronic Care",
+    href: "/health-tips?category=Seniors",
+    desc: "Medication reviews, blister packs & caregiver guidance",
+  },
+  {
+    label: "Vaccines & Flu Clinic",
+    href: "/health-tips?category=Vaccinations",
+    desc: "Seasonal flu, COVID-19 boosters & travel shots",
+  },
+  {
+    label: "Minor Ailments Clinic",
+    href: "/health-tips?category=Minor+Ailments",
+    desc: "Pharmacist assessment & prescribing for 21 conditions",
+  },
+  {
+    label: "BC PharmaCare & Coverage",
+    href: "/health-tips?category=Coverage",
+    desc: "Fair PharmaCare, Plan D & private insurance billing",
+  },
+];
+
+const FEATURED_BLOG_GUIDE = {
+  title: "Fall 2026 Senior Medication Safety & Immunizations",
+  href: "/blog/fall-2026-senior-medication-safety-immunizations",
+  image: "/blog/post-1.jpg",
+  category: "Seniors Care",
+  snippet: "Essential advice on high-dose flu shots, pneumonia protection, and drug reviews.",
+};
+
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [actionsOpen, setActionsOpen] = useState(false);
+  const [blogOpen, setBlogOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const actionsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const blogTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (actionsTimeoutRef.current) clearTimeout(actionsTimeoutRef.current);
+      if (blogTimeoutRef.current) clearTimeout(blogTimeoutRef.current);
     };
   }, []);
 
@@ -91,6 +125,15 @@ export default function Header() {
 
   function closeActionsSoon() {
     actionsTimeoutRef.current = setTimeout(() => setActionsOpen(false), 150);
+  }
+
+  function openBlog() {
+    if (blogTimeoutRef.current) clearTimeout(blogTimeoutRef.current);
+    setBlogOpen(true);
+  }
+
+  function closeBlogSoon() {
+    blogTimeoutRef.current = setTimeout(() => setBlogOpen(false), 150);
   }
 
   const navLinkClass =
@@ -241,7 +284,102 @@ export default function Header() {
           </div>
 
           <Link href="/about" className={navLinkClass}>About Us</Link>
-          <Link href="/#blog" className={navLinkClass}>Blog</Link>
+
+          {/* Health Tips & Blog Dropdown */}
+          <div className="relative" onMouseEnter={openBlog} onMouseLeave={closeBlogSoon}>
+            <Link
+              href="/health-tips"
+              className="flex items-center gap-1 rounded-md px-2.5 py-1 text-[13px] font-medium text-slate-700 transition hover:bg-slate-100/70 hover:text-[var(--brand)]"
+              onClick={() => setBlogOpen(false)}
+            >
+              Health Tips & Blog
+              <ChevronDown
+                size={14}
+                className={`transition-transform duration-150 ${blogOpen ? "rotate-180" : ""}`}
+              />
+            </Link>
+
+            <AnimatePresence>
+              {blogOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 6 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute left-0 top-full z-50 mt-1.5 w-[580px] rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl ring-1 ring-black/5"
+                  role="menu"
+                >
+                  <div className="grid grid-cols-12 gap-3">
+                    {/* Categories Column */}
+                    <div className="col-span-7 flex flex-col gap-1">
+                      <p className="px-3 pt-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                        Clinical Categories
+                      </p>
+                      {BLOG_CHANNELS.map((item) => (
+                        <Link
+                          key={item.label}
+                          href={item.href}
+                          role="menuitem"
+                          className="group rounded-xl px-3 py-2 transition hover:bg-slate-50"
+                          onClick={() => setBlogOpen(false)}
+                        >
+                          <p className="text-xs font-bold text-slate-900 group-hover:text-[var(--brand)]">
+                            {item.label}
+                          </p>
+                          <p className="line-clamp-1 text-[11px] text-slate-500">
+                            {item.desc}
+                          </p>
+                        </Link>
+                      ))}
+
+                      <div className="mt-2 border-t border-slate-100 pt-2 px-3">
+                        <Link
+                          href="/health-tips"
+                          onClick={() => setBlogOpen(false)}
+                          className="inline-flex items-center gap-1 text-xs font-bold text-[var(--brand)] hover:underline"
+                        >
+                          <span>Explore all health articles &rarr;</span>
+                        </Link>
+                      </div>
+                    </div>
+
+                    {/* Featured Article Column */}
+                    <div className="col-span-5 flex flex-col justify-between rounded-xl border border-slate-100 bg-slate-50/80 p-3">
+                      <div>
+                        <div className="relative aspect-[16/10] overflow-hidden rounded-lg bg-slate-200 shadow-2xs">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={FEATURED_BLOG_GUIDE.image}
+                            alt={FEATURED_BLOG_GUIDE.title}
+                            className="h-full w-full object-cover"
+                          />
+                          <span className="absolute left-2 top-2 rounded bg-white/95 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--brand)] shadow-2xs">
+                            {FEATURED_BLOG_GUIDE.category}
+                          </span>
+                        </div>
+
+                        <p className="mt-2.5 text-xs font-bold leading-snug text-slate-900">
+                          {FEATURED_BLOG_GUIDE.title}
+                        </p>
+                        <p className="mt-1 line-clamp-2 text-[11px] text-slate-500">
+                          {FEATURED_BLOG_GUIDE.snippet}
+                        </p>
+                      </div>
+
+                      <Link
+                        href={FEATURED_BLOG_GUIDE.href}
+                        onClick={() => setBlogOpen(false)}
+                        className="mt-3 inline-flex items-center justify-center rounded-lg bg-white border border-slate-200 py-1.5 text-xs font-bold text-slate-800 shadow-2xs hover:bg-slate-50 hover:text-[var(--brand)] transition-colors"
+                      >
+                        Read Featured Guide
+                      </Link>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           <Link href="/#contact" className={navLinkClass}>Contact</Link>
         </nav>
 
@@ -332,7 +470,7 @@ export default function Header() {
 
               <div className="my-1 border-t border-slate-100" />
               <Link href="/about" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50">About Us</Link>
-              <Link href="/#blog" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50">Blog</Link>
+              <Link href="/health-tips" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50 hover:text-[var(--brand)]">Health Tips & Blog</Link>
               <Link href="/#contact" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50">Contact</Link>
 
               <div className="my-2 border-t border-slate-100" />
