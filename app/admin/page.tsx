@@ -22,27 +22,20 @@ import {
   deletePost,
   exportJSON,
   getAuth,
-  getFont,
   getPharmacists,
   getPosts,
-  getTheme,
   reorderPharmacist,
   seedPostsFromRemote,
   setAuth,
-  setFont,
-  setTheme,
   upsertPharmacist,
   upsertPost,
 } from "./lib/storage";
 import type {
   BlogPost,
-  FontPairingName,
   Pharmacist,
   PostStatus,
-  ThemeName,
 } from "./lib/types";
 import { ToastViewport, type ToastKind, type ToastItem } from "./components/Toast";
-import { ThemeSelector } from "./components/ThemeSelector";
 import { PharmacistEditor } from "./components/PharmacistEditor";
 import { PostEditor } from "./components/PostEditor";
 import { Button } from "@/app/components/ui/button";
@@ -196,12 +189,6 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
 function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [tab, setTab] = useState<Tab>("pharmacists");
   const [toasts, setToasts] = useState<ToastItem[]>([]);
-  const [theme, setThemeState] = useState<ThemeName>(() =>
-    typeof window === "undefined" ? "pharmacy-red" : getTheme()
-  );
-  const [font, setFontState] = useState<FontPairingName>(() =>
-    typeof window === "undefined" ? "inter-tight" : getFont()
-  );
 
   // Pharmacist state — hydrate from localStorage on first client render
   const [pharmacists, setPharmacists] = useState<Pharmacist[]>(() =>
@@ -344,19 +331,6 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     pushToast("success", "Posts exported.");
   }
 
-  /* ----- Theme/font handlers ----- */
-
-  function handleThemeChange(next: ThemeName) {
-    setTheme(next);
-    setThemeState(next);
-    pushToast("info", `Theme set to ${next}.`);
-  }
-
-  function handleFontChange(next: FontPairingName) {
-    setFont(next);
-    setFontState(next);
-    pushToast("info", `Font set to ${next}.`);
-  }
 
   return (
     <div className="min-h-screen bg-slate-50/60 text-slate-900">
@@ -472,15 +446,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             />
           </TabsContent>
 
-          {/* Appearance Customizer */}
-          <div className="pt-4 border-t border-slate-200">
-            <ThemeSelector
-              theme={theme}
-              font={font}
-              onThemeChange={handleThemeChange}
-              onFontChange={handleFontChange}
-            />
-          </div>
+
         </Tabs>
       </div>
 
