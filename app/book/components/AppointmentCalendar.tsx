@@ -237,11 +237,15 @@ export default function AppointmentCalendar({
   }, [selectedDate]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-300">
       {/* Calendar Card */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
+      <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-xs">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-emerald-800 border border-emerald-200/80 mb-2">
+              <CalendarIcon size={12} className="text-emerald-700" />
+              <span>Real-Time Clinical Schedule</span>
+            </div>
             <h2 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
               3. Date & Time Selection
             </h2>
@@ -261,7 +265,7 @@ export default function AppointmentCalendar({
             onClick={() =>
               setCalendarMode(calendarMode === "strip" ? "month" : "strip")
             }
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:border-slate-300 transition-colors"
+            className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-100 hover:border-slate-300 transition-all active:scale-[0.98] shadow-2xs"
           >
             {calendarMode === "strip" ? (
               <>
@@ -281,7 +285,7 @@ export default function AppointmentCalendar({
         {calendarMode === "strip" && (
           <div className="mt-6">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
                 Select Day (Monday &ndash; Saturday)
               </span>
               <div className="flex items-center gap-1.5">
@@ -289,7 +293,7 @@ export default function AppointmentCalendar({
                   type="button"
                   disabled={stripOffset <= 0}
                   onClick={() => setStripOffset((prev) => Math.max(0, prev - 1))}
-                  className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="flex h-8 w-8 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                   aria-label="Previous 7 days"
                 >
                   <ChevronLeft size={16} />
@@ -297,7 +301,7 @@ export default function AppointmentCalendar({
                 <button
                   type="button"
                   onClick={() => setStripOffset((prev) => prev + 1)}
-                  className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                  className="flex h-8 w-8 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors"
                   aria-label="Next 7 days"
                 >
                   <ChevronRight size={16} />
@@ -306,7 +310,7 @@ export default function AppointmentCalendar({
             </div>
 
             {/* Horizontal 7-Day Grid */}
-            <div className="grid grid-cols-7 gap-2">
+            <div className="grid grid-cols-7 gap-2 sm:gap-3">
               {stripDays.map((d) => {
                 const isSelected = selectedDate === d.dateStr;
 
@@ -314,7 +318,7 @@ export default function AppointmentCalendar({
                   return (
                     <div
                       key={d.dateStr}
-                      className="flex flex-col items-center justify-center rounded-xl border border-slate-100 bg-slate-50/50 p-2 text-center opacity-40 cursor-not-allowed"
+                      className="flex flex-col items-center justify-center rounded-2xl border border-slate-100 bg-slate-50/40 p-2.5 sm:p-3 text-center opacity-40 cursor-not-allowed"
                     >
                       <span className="text-[11px] font-semibold text-slate-400">
                         {d.dayOfWeek}
@@ -334,29 +338,29 @@ export default function AppointmentCalendar({
                     key={d.dateStr}
                     type="button"
                     onClick={() => onSelectDateTime(d.dateStr, "", "")}
-                    className={`flex flex-col items-center justify-center rounded-xl p-2.5 transition-all ${
+                    className={`flex flex-col items-center justify-center rounded-2xl p-2.5 sm:p-3.5 transition-all duration-150 cursor-pointer ${
                       isSelected
-                        ? "border-2 border-emerald-600 bg-emerald-50 text-emerald-900 shadow-sm"
-                        : "border border-slate-200 bg-white text-slate-800 hover:border-slate-300 hover:bg-slate-50"
+                        ? "border-2 border-emerald-600 bg-emerald-700 text-white shadow-md shadow-emerald-700/20 scale-[1.03]"
+                        : "border border-slate-200/90 bg-white text-slate-800 hover:border-emerald-400 hover:bg-emerald-50/30 hover:shadow-xs"
                     }`}
                   >
                     <span
-                      className={`text-[11px] font-semibold ${
-                        isSelected ? "text-emerald-700" : "text-slate-500"
+                      className={`text-[11px] font-bold ${
+                        isSelected ? "text-emerald-100" : "text-slate-500"
                       }`}
                     >
                       {d.isToday ? "Today" : d.dayOfWeek}
                     </span>
                     <span
-                      className={`mt-1 text-base font-bold sm:text-lg ${
-                        isSelected ? "text-emerald-950" : "text-slate-900"
+                      className={`mt-1 text-base font-extrabold sm:text-lg ${
+                        isSelected ? "text-white" : "text-slate-900"
                       }`}
                     >
                       {d.dayNumber}
                     </span>
                     <span
-                      className={`mt-0.5 text-[10px] font-semibold uppercase tracking-wider ${
-                        isSelected ? "text-emerald-700" : "text-slate-400"
+                      className={`mt-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                        isSelected ? "text-emerald-200" : "text-slate-400"
                       }`}
                     >
                       {d.monthShort}
@@ -519,10 +523,15 @@ export default function AppointmentCalendar({
                   {/* Morning Slots Section */}
                   {morningSlots.length > 0 && (
                     <div>
-                      <div className="flex items-center gap-2 mb-3 text-slate-700">
-                        <Sun size={16} className="text-amber-500" />
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                      <div className="flex items-center gap-2 mb-3.5 text-slate-700">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-50 text-amber-600 border border-amber-200/60">
+                          <Sun size={15} />
+                        </div>
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-800">
                           Morning (9:00 AM &ndash; 12:45 PM)
+                        </span>
+                        <span className="ml-auto text-[11px] font-semibold text-slate-400">
+                          {morningSlots.filter(s => s.available).length} open
                         </span>
                       </div>
                       <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
@@ -540,12 +549,12 @@ export default function AppointmentCalendar({
                                   slot.label
                                 )
                               }
-                              className={`rounded-xl py-2 px-1 text-xs font-bold transition-all ${
+                              className={`rounded-2xl py-2.5 px-2 text-xs font-bold transition-all duration-150 ${
                                 !slot.available
-                                  ? "bg-slate-100 text-slate-300 line-through cursor-not-allowed border border-slate-100"
+                                  ? "bg-slate-50 text-slate-300 line-through cursor-not-allowed border border-slate-100 opacity-40"
                                   : isSelected
-                                  ? "bg-emerald-700 text-white shadow-sm ring-2 ring-emerald-600/30"
-                                  : "bg-white text-slate-800 border border-slate-200 hover:border-emerald-600 hover:bg-emerald-50/50"
+                                  ? "bg-emerald-700 text-white shadow-md shadow-emerald-700/25 ring-2 ring-emerald-600/30 scale-105"
+                                  : "bg-white text-slate-800 border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 hover:scale-[1.02] hover:shadow-2xs cursor-pointer"
                               }`}
                             >
                               {slot.label}
@@ -558,11 +567,16 @@ export default function AppointmentCalendar({
 
                   {/* Afternoon Slots Section */}
                   {afternoonSlots.length > 0 && (
-                    <div className="border-t border-slate-100 pt-5">
-                      <div className="flex items-center gap-2 mb-3 text-slate-700">
-                        <Sunset size={16} className="text-orange-500" />
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                    <div className="border-t border-slate-100 pt-6">
+                      <div className="flex items-center gap-2 mb-3.5 text-slate-700">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-orange-50 text-orange-600 border border-orange-200/60">
+                          <Sunset size={15} />
+                        </div>
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-800">
                           Afternoon (1:00 PM &ndash; 5:30 PM)
+                        </span>
+                        <span className="ml-auto text-[11px] font-semibold text-slate-400">
+                          {afternoonSlots.filter(s => s.available).length} open
                         </span>
                       </div>
                       <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
@@ -580,12 +594,12 @@ export default function AppointmentCalendar({
                                   slot.label
                                 )
                               }
-                              className={`rounded-xl py-2 px-1 text-xs font-bold transition-all ${
+                              className={`rounded-2xl py-2.5 px-2 text-xs font-bold transition-all duration-150 ${
                                 !slot.available
-                                  ? "bg-slate-100 text-slate-300 line-through cursor-not-allowed border border-slate-100"
+                                  ? "bg-slate-50 text-slate-300 line-through cursor-not-allowed border border-slate-100 opacity-40"
                                   : isSelected
-                                  ? "bg-emerald-700 text-white shadow-sm ring-2 ring-emerald-600/30"
-                                  : "bg-white text-slate-800 border border-slate-200 hover:border-emerald-600 hover:bg-emerald-50/50"
+                                  ? "bg-emerald-700 text-white shadow-md shadow-emerald-700/25 ring-2 ring-emerald-600/30 scale-105"
+                                  : "bg-white text-slate-800 border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 hover:scale-[1.02] hover:shadow-2xs cursor-pointer"
                               }`}
                             >
                               {slot.label}
@@ -603,11 +617,11 @@ export default function AppointmentCalendar({
       </div>
 
       {/* Navigation Footer */}
-      <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+      <div className="sticky bottom-4 z-20 flex items-center justify-between gap-4 rounded-3xl border border-slate-200/90 bg-white/95 backdrop-blur-md p-4 sm:px-6 sm:py-4 shadow-xl shadow-slate-900/10">
         <button
           type="button"
           onClick={onBack}
-          className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+          className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-[0.98]"
         >
           <ChevronLeft size={16} />
           <span>Back to Demographics</span>
@@ -617,7 +631,7 @@ export default function AppointmentCalendar({
           type="button"
           disabled={!selectedDate || !selectedTime}
           onClick={onProceed}
-          className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-2xl bg-emerald-700 px-6 py-3 text-sm font-bold text-white shadow-md shadow-emerald-700/20 transition-all duration-150 hover:bg-emerald-800 hover:shadow-lg active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
         >
           <span>Review & Confirm</span>
           <ChevronRight size={16} />

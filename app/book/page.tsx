@@ -132,56 +132,88 @@ function BookingWizard() {
 
             {/* Stepper Progress Bar */}
             <div className="mt-8">
-              <div className="grid grid-cols-4 gap-2 sm:gap-4">
-                {STEPS.map((s) => {
-                  const Icon = s.icon;
-                  const isCompleted = currentStep > s.id;
-                  const isCurrent = currentStep === s.id;
+              {/* Desktop Connected Stepper */}
+              <div className="hidden sm:block">
+                <ol className="grid grid-cols-4 items-center">
+                  {STEPS.map((s, index) => {
+                    const Icon = s.icon;
+                    const isCompleted = currentStep > s.id;
+                    const isCurrent = currentStep === s.id;
+                    const isUpcoming = currentStep < s.id;
 
-                  return (
-                    <div
-                      key={s.id}
-                      className={`flex flex-col items-center sm:items-start rounded-xl p-2.5 transition-all ${
-                        isCurrent
-                          ? "border border-emerald-600 bg-emerald-50/80"
-                          : isCompleted
-                          ? "border border-slate-200 bg-white"
-                          : "border border-transparent opacity-50"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <div
-                          className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold transition-all ${
-                            isCompleted
-                              ? "bg-emerald-700 text-white"
-                              : isCurrent
-                              ? "bg-emerald-600 text-white"
-                              : "bg-slate-200 text-slate-600"
+                    return (
+                      <li
+                        key={s.id}
+                        className={`relative flex flex-col ${
+                          index !== STEPS.length - 1
+                            ? "after:content-[''] after:w-full after:h-0.5 after:bg-slate-200 after:inline-block after:absolute after:top-4.5 after:left-1/2"
+                            : ""
+                        } ${isCompleted ? "after:!bg-emerald-600" : ""}`}
+                      >
+                        <button
+                          type="button"
+                          disabled={!isCompleted}
+                          onClick={() => {
+                            if (isCompleted) setCurrentStep(s.id);
+                          }}
+                          className={`group z-10 flex flex-col items-center text-center transition-all ${
+                            isCompleted ? "cursor-pointer" : "cursor-default"
                           }`}
                         >
-                          {isCompleted ? (
-                            <CheckCircle2 size={14} className="stroke-[2.5]" />
-                          ) : (
-                            <Icon size={12} />
-                          )}
-                        </div>
-                        <span className="hidden text-xs font-bold sm:inline text-slate-900">
-                          {s.title}
-                        </span>
-                      </div>
-                      <span className="mt-1 text-[11px] font-medium text-slate-500 sm:hidden">
-                        {s.title}
-                      </span>
-                    </div>
-                  );
-                })}
+                          <div
+                            className={`flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold transition-all duration-200 shadow-xs ${
+                              isCompleted
+                                ? "bg-emerald-700 text-white ring-4 ring-emerald-100 group-hover:bg-emerald-800"
+                                : isCurrent
+                                ? "bg-emerald-700 text-white ring-4 ring-emerald-500/20 shadow-md shadow-emerald-700/20"
+                                : "bg-slate-100 text-slate-400 border border-slate-200"
+                            }`}
+                          >
+                            {isCompleted ? (
+                              <CheckCircle2 size={16} className="stroke-[2.5]" />
+                            ) : (
+                              <Icon size={15} />
+                            )}
+                          </div>
+                          <span
+                            className={`mt-2 text-xs font-bold tracking-tight transition-colors ${
+                              isCurrent
+                                ? "text-emerald-900"
+                                : isCompleted
+                                ? "text-slate-700 group-hover:text-emerald-800"
+                                : "text-slate-400"
+                            }`}
+                          >
+                            {s.title}
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ol>
+              </div>
+
+              {/* Mobile Progress Bar & Counter */}
+              <div className="sm:hidden space-y-2">
+                <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
+                  <span className="font-bold text-emerald-800">
+                    Step {currentStep} of {STEPS.length}: {STEPS[currentStep - 1]?.title}
+                  </span>
+                  <span className="text-slate-500">{Math.round((currentStep / STEPS.length) * 100)}%</span>
+                </div>
+                <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+                  <div
+                    className="h-full bg-emerald-600 rounded-full transition-all duration-300 ease-out"
+                    style={{ width: `${(currentStep / STEPS.length) * 100}%` }}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         {/* Main Step Container */}
-        <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+        <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8 transition-all duration-300 animate-in fade-in slide-in-from-bottom-2">
           {currentStep === 1 && (
             <ServiceSelector
               selectedService={selectedService}
