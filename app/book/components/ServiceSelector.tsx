@@ -70,9 +70,9 @@ export default function ServiceSelector({
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Fast Prescription Refill & Transfer Notice */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-teal-200/80 bg-gradient-to-r from-teal-50/90 via-emerald-50/70 to-slate-50 p-5 sm:px-6 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-red-200/80 bg-gradient-to-r from-red-50/80 via-rose-50/40 to-slate-50 p-5 sm:px-6 shadow-xs">
         <div className="flex items-start sm:items-center gap-3.5">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-teal-700 text-white shadow-sm">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--brand)] text-white shadow-sm">
             <Pill size={22} />
           </div>
           <div>
@@ -80,7 +80,7 @@ export default function ServiceSelector({
               <span className="text-sm font-bold text-slate-900">
                 Need a Prescription Refill or Transfer?
               </span>
-              <span className="hidden sm:inline-block rounded-full bg-teal-100/80 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-teal-800">
+              <span className="hidden sm:inline-block rounded-full bg-red-100/80 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-800">
                 No appointment needed
               </span>
             </div>
@@ -92,14 +92,14 @@ export default function ServiceSelector({
         <div className="flex items-center gap-2 shrink-0">
           <Link
             href="/prescription-refills"
-            className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-teal-700 px-3.5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-teal-800 transition-colors"
+            className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[var(--brand)] px-3.5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-[var(--brand-hover)] transition-colors"
           >
             <span>Quick Refill Form</span>
             <ArrowRight size={13} />
           </Link>
           <Link
             href="/transfer"
-            className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-teal-300 bg-white px-3.5 py-2 text-xs font-semibold text-teal-800 hover:bg-teal-50 transition-colors"
+            className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-red-300 bg-white px-3.5 py-2 text-xs font-semibold text-red-900 hover:bg-red-50 transition-colors"
           >
             <span>Transfer Rx</span>
           </Link>
@@ -110,8 +110,8 @@ export default function ServiceSelector({
       <div className="rounded-3xl border border-slate-200/90 bg-white p-5 sm:p-7 shadow-xs">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-emerald-800 border border-emerald-200/80 mb-2">
-              <Sparkles size={12} className="text-emerald-700" />
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-red-800 border border-red-200/80 mb-2">
+              <Sparkles size={12} className="text-[var(--brand)]" />
               <span>Direct Pharmacist Access</span>
             </div>
             <h2 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
@@ -125,7 +125,7 @@ export default function ServiceSelector({
           {/* Party Size Selector */}
           <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50/80 p-2 sm:px-4 sm:py-2.5">
             <div className="flex items-center gap-2 text-slate-700">
-              <Users size={17} className="text-emerald-700" />
+              <Users size={17} className="text-[var(--brand)]" />
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-700">
                 Party Size:
               </span>
@@ -138,7 +138,7 @@ export default function ServiceSelector({
                   onClick={() => onChangePartySize(num)}
                   className={`h-8 w-8 rounded-xl text-xs font-bold transition-all duration-150 ${
                     partySize === num
-                      ? "bg-emerald-700 text-white shadow-sm ring-2 ring-emerald-600/30 scale-105"
+                      ? "bg-[var(--brand)] text-white shadow-sm ring-2 ring-red-600/30 scale-105"
                       : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 hover:border-slate-300"
                   }`}
                   aria-label={`Party size ${num} person${num > 1 ? "s" : ""}`}
@@ -151,8 +151,8 @@ export default function ServiceSelector({
         </div>
 
         {partySize > 1 && (
-          <div className="mt-4 flex items-center gap-2.5 rounded-xl bg-emerald-50/90 border border-emerald-200 px-4 py-2.5 text-xs font-medium text-emerald-950 animate-in fade-in">
-            <Info size={16} className="shrink-0 text-emerald-700" />
+          <div className="mt-4 flex items-center gap-2.5 rounded-xl bg-red-50/90 border border-red-200 px-4 py-2.5 text-xs font-medium text-red-950 animate-in fade-in">
+            <Info size={16} className="shrink-0 text-[var(--brand)]" />
             <span>
               Booking for <strong>{partySize} people</strong>. Consecutive 15-minute appointment slots will be reserved automatically.
             </span>
@@ -170,7 +170,7 @@ export default function ServiceSelector({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search all 21 minor ailments, vaccines, or symptoms (e.g. UTI, allergy, cold sore, flu shot)..."
-            className="w-full rounded-2xl border border-slate-200 bg-slate-50/60 py-3 pl-10 pr-10 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-600 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all"
+            className="w-full rounded-2xl border border-slate-200 bg-slate-50/60 py-3 pl-10 pr-10 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[var(--brand)] focus:bg-white focus:outline-none focus:ring-4 focus:ring-red-500/10 transition-all"
           />
           {searchQuery && (
             <button
@@ -204,7 +204,7 @@ export default function ServiceSelector({
                     <div className="flex items-center gap-2 mb-1.5">
                       <div
                         className={`flex h-6 w-6 items-center justify-center rounded-lg ${
-                          isActive ? "bg-emerald-500/20 text-emerald-400" : "bg-white text-emerald-700 border border-slate-200"
+                          isActive ? "bg-red-500/20 text-red-400" : "bg-white text-[var(--brand)] border border-slate-200"
                         }`}
                       >
                         <CatIcon size={14} />
@@ -213,7 +213,7 @@ export default function ServiceSelector({
                     </div>
                     <span
                       className={`mt-auto line-clamp-1 text-[11px] font-medium ${
-                        isActive ? "text-emerald-400" : "text-slate-500"
+                        isActive ? "text-red-400" : "text-slate-500"
                       }`}
                     >
                       {cat.badge}
@@ -241,7 +241,7 @@ export default function ServiceSelector({
               : `${currentCategoryObj?.name} (${filteredServices.length} options)`}
           </span>
           {selectedService && (
-            <span className="text-xs font-semibold text-emerald-700">
+            <span className="text-xs font-semibold text-[var(--brand)]">
               1 Service Selected
             </span>
           )}
@@ -275,8 +275,8 @@ export default function ServiceSelector({
                   onClick={() => onSelectService(service)}
                   className={`group relative flex flex-col justify-between rounded-2xl border p-5 transition-all duration-200 cursor-pointer ${
                     isSelected
-                      ? "border-emerald-600 bg-emerald-50/50 shadow-md shadow-emerald-700/10 ring-2 ring-emerald-600/30 -translate-y-0.5"
-                      : "border-slate-200/90 bg-white hover:border-emerald-300 hover:shadow-md hover:-translate-y-0.5"
+                      ? "border-[var(--brand)] bg-red-50/40 shadow-md shadow-red-700/10 ring-2 ring-red-600/20 -translate-y-0.5"
+                      : "border-slate-200/90 bg-white hover:border-red-300 hover:shadow-md hover:-translate-y-0.5"
                   }`}
                 >
                   <div>
@@ -286,7 +286,7 @@ export default function ServiceSelector({
                         <span
                           className={`rounded-lg px-2.5 py-1 text-[10px] font-bold tracking-wider uppercase ${
                             service.mspCovered
-                              ? "bg-emerald-100/90 text-emerald-900 border border-emerald-200/80"
+                              ? "bg-red-50 text-red-800 border border-red-200/80"
                               : "bg-slate-100 text-slate-700 border border-slate-200"
                           }`}
                         >
@@ -301,7 +301,7 @@ export default function ServiceSelector({
                       <div
                         className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-all duration-150 ${
                           isSelected
-                            ? "border-emerald-600 bg-emerald-600 text-white shadow-xs scale-105"
+                            ? "border-[var(--brand)] bg-[var(--brand)] text-white shadow-xs scale-105"
                             : "border-slate-300 bg-white text-transparent group-hover:border-slate-400"
                         }`}
                       >
@@ -312,7 +312,7 @@ export default function ServiceSelector({
                     {/* Service Title */}
                     <h3
                       className={`mt-3 text-base font-bold leading-snug transition-colors ${
-                        isSelected ? "text-emerald-950" : "text-slate-900 group-hover:text-emerald-800"
+                        isSelected ? "text-red-950 font-extrabold" : "text-slate-900 group-hover:text-[var(--brand)]"
                       }`}
                     >
                       {service.name}
@@ -338,7 +338,7 @@ export default function ServiceSelector({
                                 >
                                   <ShieldCheck
                                     size={13}
-                                    className="shrink-0 mt-0.5 text-emerald-600"
+                                    className="shrink-0 mt-0.5 text-[var(--brand)]"
                                   />
                                   <span>{ind}</span>
                                 </li>
@@ -353,7 +353,7 @@ export default function ServiceSelector({
                             e.stopPropagation();
                             setExpandedDetailsId(isExpanded ? null : service.id);
                           }}
-                          className="mt-1 text-[11px] font-bold text-emerald-700 hover:text-emerald-800 hover:underline inline-flex items-center gap-1"
+                          className="mt-1 text-[11px] font-bold text-[var(--brand)] hover:text-[var(--brand-hover)] hover:underline inline-flex items-center gap-1"
                         >
                           <span>{isExpanded ? "Hide clinical indications" : "View clinical indications"}</span>
                         </button>
@@ -367,7 +367,7 @@ export default function ServiceSelector({
                     </span>
                     <span
                       className={`text-xs font-bold transition-colors ${
-                        isSelected ? "text-emerald-700" : "text-slate-400 group-hover:text-emerald-700"
+                        isSelected ? "text-[var(--brand)]" : "text-slate-400 group-hover:text-[var(--brand)]"
                       }`}
                     >
                       {isSelected ? "Selected" : "Select Service \u2192"}
@@ -395,7 +395,7 @@ export default function ServiceSelector({
           type="button"
           disabled={!selectedService}
           onClick={onProceed}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-700 px-6 py-3 text-sm font-bold text-white shadow-md shadow-emerald-700/20 transition-all duration-150 hover:bg-emerald-800 hover:shadow-lg active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-[var(--brand)] px-6 py-3 text-sm font-bold text-white shadow-md shadow-red-700/20 transition-all duration-150 hover:bg-[var(--brand-hover)] hover:shadow-lg active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
         >
           <span>Continue to Patient Details</span>
           <ChevronRight size={16} />

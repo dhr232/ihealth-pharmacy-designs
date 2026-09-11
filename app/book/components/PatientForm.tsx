@@ -114,8 +114,8 @@ export default function PatientForm({
     <form onSubmit={handleSubmit} className="space-y-6 animate-in fade-in duration-300">
       <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-xs">
         <div>
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-emerald-800 border border-emerald-200/80 mb-2">
-            <ShieldCheck size={12} className="text-emerald-700" />
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-red-800 border border-red-200/80 mb-2">
+            <ShieldCheck size={12} className="text-[var(--brand)]" />
             <span>BC Health Privacy Protected</span>
           </div>
           <h2 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
@@ -159,7 +159,7 @@ export default function PatientForm({
                     className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                       errors.firstName
                         ? "border-red-400 focus:border-red-500 focus:ring-red-100"
-                        : "border-slate-200 focus:border-emerald-600 focus:ring-emerald-500/10"
+                        : "border-slate-200 focus:border-[var(--brand)] focus:ring-red-500/10"
                     }`}
                   />
                 </div>
@@ -195,7 +195,7 @@ export default function PatientForm({
                     className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                       errors.lastName
                         ? "border-red-400 focus:border-red-500 focus:ring-red-100"
-                        : "border-slate-200 focus:border-emerald-600 focus:ring-emerald-500/10"
+                        : "border-slate-200 focus:border-[var(--brand)] focus:ring-red-500/10"
                     }`}
                   />
                 </div>
@@ -234,7 +234,7 @@ export default function PatientForm({
                     className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                       errors.email
                         ? "border-red-400 focus:border-red-500 focus:ring-red-100"
-                        : "border-slate-200 focus:border-emerald-600 focus:ring-emerald-500/10"
+                        : "border-slate-200 focus:border-[var(--brand)] focus:ring-red-500/10"
                     }`}
                   />
                 </div>
@@ -270,7 +270,7 @@ export default function PatientForm({
                     className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                       errors.phone
                         ? "border-red-400 focus:border-red-500 focus:ring-red-100"
-                        : "border-slate-200 focus:border-emerald-600 focus:ring-emerald-500/10"
+                        : "border-slate-200 focus:border-[var(--brand)] focus:ring-red-500/10"
                     }`}
                   />
                 </div>
@@ -313,7 +313,7 @@ export default function PatientForm({
                     className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                       errors.dateOfBirth
                         ? "border-red-400 focus:border-red-500 focus:ring-red-100"
-                        : "border-slate-200 focus:border-emerald-600 focus:ring-emerald-500/10"
+                        : "border-slate-200 focus:border-[var(--brand)] focus:ring-red-500/10"
                     }`}
                   />
                 </div>
@@ -342,7 +342,7 @@ export default function PatientForm({
                   className={`mt-1.5 w-full rounded-2xl border bg-slate-50/50 py-3 px-4 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                     errors.gender
                       ? "border-red-400 focus:border-red-500 focus:ring-red-100"
-                      : "border-slate-200 focus:border-emerald-600 focus:ring-emerald-500/10"
+                      : "border-slate-200 focus:border-[var(--brand)] focus:ring-red-500/10"
                   }`}
                 >
                   <option value="">Select gender</option>
@@ -389,12 +389,12 @@ export default function PatientForm({
                   className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 font-mono text-sm tracking-widest text-slate-900 placeholder:font-sans placeholder:tracking-normal placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                     errors.phn
                       ? "border-red-400 focus:border-red-500 focus:ring-red-100"
-                      : "border-slate-200 focus:border-emerald-600 focus:ring-emerald-500/10"
+                      : "border-slate-200 focus:border-[var(--brand)] focus:ring-red-500/10"
                   }`}
                 />
               </div>
               <div className="mt-1.5 flex items-start gap-1.5 text-[11px] text-slate-500">
-                <ShieldCheck size={14} className="shrink-0 mt-0.5 text-emerald-600" />
+                <ShieldCheck size={14} className="shrink-0 mt-0.5 text-[var(--brand)]" />
                 <span>
                   Found on the back of your BC Driver&apos;s Licence or front of your BC Services Card. Used for MSP billing eligibility.
                 </span>
@@ -428,7 +428,7 @@ export default function PatientForm({
                     setFormData({ ...formData, reasonForVisit: e.target.value })
                   }
                   placeholder="Briefly describe your symptoms, how long you have had them, or any specific questions for the pharmacist..."
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-600 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all"
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[var(--brand)] focus:bg-white focus:outline-none focus:ring-4 focus:ring-red-500/10 transition-all"
                 />
               </div>
             </div>
@@ -442,7 +442,7 @@ export default function PatientForm({
                   onChange={(e) =>
                     setFormData({ ...formData, caslConsent: e.target.checked })
                   }
-                  className="mt-1 h-4.5 w-4.5 rounded-md border-slate-300 text-emerald-600 focus:ring-emerald-600 transition-colors"
+                  className="mt-1 h-4.5 w-4.5 rounded-md border-slate-300 text-[var(--brand)] focus:ring-red-600 transition-colors"
                 />
                 <span className="text-xs text-slate-600 leading-relaxed">
                   Keep me informed with seasonal clinic updates, health tips, and pharmacy announcements (CASL express consent). You may withdraw consent at any time.
@@ -466,7 +466,7 @@ export default function PatientForm({
 
         <button
           type="submit"
-          className="inline-flex items-center gap-2 rounded-2xl bg-emerald-700 px-6 py-3 text-sm font-bold text-white shadow-md shadow-emerald-700/20 transition-all duration-150 hover:bg-emerald-800 hover:shadow-lg active:scale-[0.98]"
+          className="inline-flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-6 py-3 text-sm font-bold text-white shadow-md shadow-red-700/20 transition-all duration-150 hover:bg-[var(--brand-hover)] hover:shadow-lg active:scale-[0.98]"
         >
           <span>Select Date & Time</span>
           <ChevronRight size={16} />

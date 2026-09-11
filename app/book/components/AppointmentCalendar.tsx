@@ -242,8 +242,8 @@ export default function AppointmentCalendar({
       <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-xs">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-emerald-800 border border-emerald-200/80 mb-2">
-              <CalendarIcon size={12} className="text-emerald-700" />
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-red-800 border border-red-200/80 mb-2">
+              <CalendarIcon size={12} className="text-[var(--brand)]" />
               <span>Real-Time Clinical Schedule</span>
             </div>
             <h2 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
@@ -252,7 +252,7 @@ export default function AppointmentCalendar({
             <p className="mt-1 text-sm text-slate-600">
               Choose an available appointment date and 15-minute consultation window.
               {partySize > 1 && (
-                <span className="ml-1 font-semibold text-emerald-800">
+                <span className="ml-1 font-semibold text-red-900">
                   (Reserving consecutive slots for {partySize} people)
                 </span>
               )}
@@ -269,12 +269,12 @@ export default function AppointmentCalendar({
           >
             {calendarMode === "strip" ? (
               <>
-                <CalendarDays size={16} className="text-emerald-700" />
+                <CalendarDays size={16} className="text-[var(--brand)]" />
                 <span>View Full Month Calendar</span>
               </>
             ) : (
               <>
-                <CalendarIcon size={16} className="text-emerald-700" />
+                <CalendarIcon size={16} className="text-[var(--brand)]" />
                 <span>Switch to 7-Day Quick Strip</span>
               </>
             )}
@@ -340,13 +340,13 @@ export default function AppointmentCalendar({
                     onClick={() => onSelectDateTime(d.dateStr, "", "")}
                     className={`flex flex-col items-center justify-center rounded-2xl p-2.5 sm:p-3.5 transition-all duration-150 cursor-pointer ${
                       isSelected
-                        ? "border-2 border-emerald-600 bg-emerald-700 text-white shadow-md shadow-emerald-700/20 scale-[1.03]"
-                        : "border border-slate-200/90 bg-white text-slate-800 hover:border-emerald-400 hover:bg-emerald-50/30 hover:shadow-xs"
+                        ? "border-2 border-[var(--brand)] bg-[var(--brand)] text-white shadow-md shadow-red-700/20 scale-[1.03]"
+                        : "border border-slate-200/90 bg-white text-slate-800 hover:border-red-400 hover:bg-red-50/30 hover:shadow-xs"
                     }`}
                   >
                     <span
                       className={`text-[11px] font-bold ${
-                        isSelected ? "text-emerald-100" : "text-slate-500"
+                        isSelected ? "text-red-100" : "text-slate-500"
                       }`}
                     >
                       {d.isToday ? "Today" : d.dayOfWeek}
@@ -360,7 +360,7 @@ export default function AppointmentCalendar({
                     </span>
                     <span
                       className={`mt-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                        isSelected ? "text-emerald-200" : "text-slate-400"
+                        isSelected ? "text-red-200" : "text-slate-400"
                       }`}
                     >
                       {d.monthShort}
@@ -446,8 +446,8 @@ export default function AppointmentCalendar({
                     }}
                     className={`flex h-10 flex-col items-center justify-center rounded-lg text-xs font-bold transition-all ${
                       isSelected
-                        ? "bg-emerald-700 text-white shadow-xs"
-                        : "bg-white text-slate-800 border border-slate-200/80 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-900"
+                        ? "bg-[var(--brand)] text-white shadow-xs"
+                        : "bg-white text-slate-800 border border-slate-200/80 hover:bg-rose-50 hover:border-rose-300 hover:text-red-950"
                     }`}
                   >
                     <span>{item.dayNumber}</span>
@@ -461,7 +461,7 @@ export default function AppointmentCalendar({
               <button
                 type="button"
                 onClick={() => setCalendarMode("strip")}
-                className="font-semibold text-emerald-700 hover:underline"
+                className="font-semibold text-[var(--brand)] hover:underline"
               >
                 Close Month View
               </button>
@@ -481,8 +481,8 @@ export default function AppointmentCalendar({
               </h3>
             </div>
             {selectedTime && (
-              <div className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-900">
-                <CheckCircle2 size={14} className="text-emerald-700" />
+              <div className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200/80 bg-rose-50 px-3 py-1 text-xs font-bold text-red-900">
+                <CheckCircle2 size={14} className="text-[var(--brand)]" />
                 <span>Selected: {selectedTime}</span>
               </div>
             )}
@@ -491,7 +491,7 @@ export default function AppointmentCalendar({
           {/* Slots Loading Indicator */}
           {isLoadingSlots && (
             <div className="mt-8 flex flex-col items-center justify-center py-12 text-slate-500">
-              <Loader2 size={24} className="animate-spin text-emerald-600" />
+              <Loader2 size={24} className="animate-spin text-[var(--brand)]" />
               <p className="mt-2 text-xs font-semibold">
                 Checking real-time dispensary calendar availability...
               </p>
@@ -553,8 +553,8 @@ export default function AppointmentCalendar({
                                 !slot.available
                                   ? "bg-slate-50 text-slate-300 line-through cursor-not-allowed border border-slate-100 opacity-40"
                                   : isSelected
-                                  ? "bg-emerald-700 text-white shadow-md shadow-emerald-700/25 ring-2 ring-emerald-600/30 scale-105"
-                                  : "bg-white text-slate-800 border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 hover:scale-[1.02] hover:shadow-2xs cursor-pointer"
+                                  ? "bg-[var(--brand)] text-white shadow-md shadow-red-700/25 ring-2 ring-red-600/30 scale-105"
+                                  : "bg-white text-slate-800 border border-slate-200 hover:border-red-400 hover:bg-rose-50/50 hover:scale-[1.02] hover:shadow-2xs cursor-pointer"
                               }`}
                             >
                               {slot.label}
@@ -598,8 +598,8 @@ export default function AppointmentCalendar({
                                 !slot.available
                                   ? "bg-slate-50 text-slate-300 line-through cursor-not-allowed border border-slate-100 opacity-40"
                                   : isSelected
-                                  ? "bg-emerald-700 text-white shadow-md shadow-emerald-700/25 ring-2 ring-emerald-600/30 scale-105"
-                                  : "bg-white text-slate-800 border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 hover:scale-[1.02] hover:shadow-2xs cursor-pointer"
+                                  ? "bg-[var(--brand)] text-white shadow-md shadow-red-700/25 ring-2 ring-red-600/30 scale-105"
+                                  : "bg-white text-slate-800 border border-slate-200 hover:border-red-400 hover:bg-rose-50/50 hover:scale-[1.02] hover:shadow-2xs cursor-pointer"
                               }`}
                             >
                               {slot.label}
@@ -631,7 +631,7 @@ export default function AppointmentCalendar({
           type="button"
           disabled={!selectedDate || !selectedTime}
           onClick={onProceed}
-          className="inline-flex items-center gap-2 rounded-2xl bg-emerald-700 px-6 py-3 text-sm font-bold text-white shadow-md shadow-emerald-700/20 transition-all duration-150 hover:bg-emerald-800 hover:shadow-lg active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+          className="inline-flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-6 py-3 text-sm font-bold text-white shadow-md shadow-red-700/20 transition-all duration-150 hover:bg-[var(--brand-hover)] hover:shadow-lg active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
         >
           <span>Review & Confirm</span>
           <ChevronRight size={16} />

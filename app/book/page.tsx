@@ -97,8 +97,8 @@ function BookingWizard() {
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-800 border border-emerald-200">
-                    <ShieldCheck size={13} className="text-emerald-700" />
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-red-800 border border-red-200/80">
+                    <ShieldCheck size={13} className="text-[var(--brand)]" />
                     <span>Official BC Clinical Booking</span>
                   </span>
                   <span className="text-xs text-slate-500 font-medium">
@@ -115,14 +115,14 @@ function BookingWizard() {
 
               {/* Dispensary Phone Quick Badge */}
               <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50/80 p-3 text-xs">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-700 text-white shadow-xs">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand)] text-white shadow-xs">
                   <Phone size={18} />
                 </div>
                 <div>
                   <p className="font-semibold text-slate-500">Prefer to book by phone?</p>
                   <a
                     href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
-                    className="font-bold text-slate-900 hover:text-emerald-700"
+                    className="font-bold text-slate-900 hover:text-[var(--brand)] transition-colors"
                   >
                     {PHARMACY_INFO.phoneDisplay}
                   </a>
@@ -148,7 +148,7 @@ function BookingWizard() {
                           index !== STEPS.length - 1
                             ? "after:content-[''] after:w-full after:h-0.5 after:bg-slate-200 after:inline-block after:absolute after:top-4.5 after:left-1/2"
                             : ""
-                        } ${isCompleted ? "after:!bg-emerald-600" : ""}`}
+                        } ${isCompleted ? "after:!bg-[var(--brand)]" : ""}`}
                       >
                         <button
                           type="button"
@@ -163,9 +163,9 @@ function BookingWizard() {
                           <div
                             className={`flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold transition-all duration-200 shadow-xs ${
                               isCompleted
-                                ? "bg-emerald-700 text-white ring-4 ring-emerald-100 group-hover:bg-emerald-800"
+                                ? "bg-[var(--brand)] text-white ring-4 ring-red-100 group-hover:bg-[var(--brand-hover)]"
                                 : isCurrent
-                                ? "bg-emerald-700 text-white ring-4 ring-emerald-500/20 shadow-md shadow-emerald-700/20"
+                                ? "bg-[var(--brand)] text-white ring-4 ring-red-500/20 shadow-md shadow-red-700/20"
                                 : "bg-slate-100 text-slate-400 border border-slate-200"
                             }`}
                           >
@@ -178,9 +178,9 @@ function BookingWizard() {
                           <span
                             className={`mt-2 text-xs font-bold tracking-tight transition-colors ${
                               isCurrent
-                                ? "text-emerald-900"
+                                ? "text-slate-900 font-extrabold"
                                 : isCompleted
-                                ? "text-slate-700 group-hover:text-emerald-800"
+                                ? "text-slate-700 group-hover:text-[var(--brand)]"
                                 : "text-slate-400"
                             }`}
                           >
@@ -196,14 +196,14 @@ function BookingWizard() {
               {/* Mobile Progress Bar & Counter */}
               <div className="sm:hidden space-y-2">
                 <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
-                  <span className="font-bold text-emerald-800">
+                  <span className="font-bold text-red-900">
                     Step {currentStep} of {STEPS.length}: {STEPS[currentStep - 1]?.title}
                   </span>
                   <span className="text-slate-500">{Math.round((currentStep / STEPS.length) * 100)}%</span>
                 </div>
                 <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
                   <div
-                    className="h-full bg-emerald-600 rounded-full transition-all duration-300 ease-out"
+                    className="h-full bg-[var(--brand)] rounded-full transition-all duration-300 ease-out"
                     style={{ width: `${(currentStep / STEPS.length) * 100}%` }}
                   />
                 </div>

@@ -179,12 +179,12 @@ export default function BookingReview({
     return (
       <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-10 shadow-xl shadow-slate-900/5 animate-in fade-in duration-300">
         <div className="mx-auto max-w-2xl text-center">
-          <div className="mx-auto flex h-18 w-18 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 ring-8 ring-emerald-50">
+          <div className="mx-auto flex h-18 w-18 items-center justify-center rounded-full bg-rose-100 text-[var(--brand)] ring-8 ring-rose-50">
             <CheckCircle2 size={40} className="stroke-[2.5]" />
           </div>
 
           <div className="mt-4">
-            <span className="inline-block rounded-full bg-emerald-50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-emerald-800 border border-emerald-200/80">
+            <span className="inline-block rounded-full bg-rose-50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-red-900 border border-rose-200/80">
               Booking Confirmed
             </span>
           </div>
@@ -198,12 +198,12 @@ export default function BookingReview({
           </p>
 
           {/* Confirmation Code Card */}
-          <div className="mt-6 rounded-2xl border border-emerald-200/80 bg-emerald-50/50 p-6 text-center">
-            <p className="text-xs font-bold uppercase tracking-wider text-emerald-800">
+          <div className="mt-6 rounded-2xl border border-rose-200/80 bg-rose-50/50 p-6 text-center">
+            <p className="text-xs font-bold uppercase tracking-wider text-red-900">
               Official Confirmation Reference
             </p>
             <div className="mt-2 flex items-center justify-center gap-3">
-              <p className="font-mono text-3xl sm:text-4xl font-black tracking-widest text-emerald-950">
+              <p className="font-mono text-3xl sm:text-4xl font-black tracking-widest text-red-950">
                 {successResult.confirmationCode}
               </p>
               <button
@@ -213,12 +213,12 @@ export default function BookingReview({
                   setCopiedCode(true);
                   setTimeout(() => setCopiedCode(false), 2500);
                 }}
-                className="inline-flex items-center gap-1 rounded-xl border border-emerald-300/80 bg-white px-3 py-1.5 text-xs font-bold text-emerald-800 hover:bg-emerald-100/60 transition-colors shadow-2xs cursor-pointer"
+                className="inline-flex items-center gap-1 rounded-xl border border-rose-300/80 bg-white px-3 py-1.5 text-xs font-bold text-red-900 hover:bg-rose-100/60 transition-colors shadow-2xs cursor-pointer"
                 title="Copy confirmation code"
               >
                 {copiedCode ? (
                   <>
-                    <Check size={14} className="text-emerald-700" />
+                    <Check size={14} className="text-[var(--brand)]" />
                     <span>Copied!</span>
                   </>
                 ) : (
@@ -229,7 +229,7 @@ export default function BookingReview({
                 )}
               </button>
             </div>
-            <p className="mt-2 text-xs text-emerald-800/80">
+            <p className="mt-2 text-xs text-red-900/80">
               Please present this reference ID or your BC Services Card when checking in at our dispensary.
             </p>
           </div>
@@ -269,12 +269,12 @@ export default function BookingReview({
           </div>
 
           {/* Important Patient Instructions */}
-          <div className="mt-6 rounded-2xl border border-emerald-200/80 bg-emerald-50/60 p-5 text-left">
-            <p className="text-xs font-bold uppercase tracking-wider text-emerald-950 flex items-center gap-1.5">
-              <ShieldCheck size={16} className="text-emerald-700" />
+          <div className="mt-6 rounded-2xl border border-rose-200/80 bg-rose-50/60 p-5 text-left">
+            <p className="text-xs font-bold uppercase tracking-wider text-red-950 flex items-center gap-1.5">
+              <ShieldCheck size={16} className="text-[var(--brand)]" />
               <span>Important Reminders for Your Visit:</span>
             </p>
-            <ul className="mt-2.5 list-disc pl-5 text-xs text-emerald-900 space-y-1.5">
+            <ul className="mt-2.5 list-disc pl-5 text-xs text-red-950 space-y-1.5">
               <li>Bring your official British Columbia Services Card (PHN).</li>
               <li>Please arrive 5 minutes prior to your scheduled consultation.</li>
               <li>Wear loose clothing if receiving an injection or seasonal vaccine.</li>
@@ -310,14 +310,14 @@ export default function BookingReview({
             <button
               type="button"
               onClick={onReset}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-emerald-800 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-[var(--brand)] transition-colors"
             >
               <RotateCcw size={14} />
               <span>Book Another Appointment</span>
             </button>
             <Link
               href="/"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-emerald-800 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-[var(--brand)] transition-colors"
             >
               <Home size={14} />
               <span>Return to Homepage</span>
@@ -333,8 +333,8 @@ export default function BookingReview({
     <div className="space-y-6 animate-in fade-in duration-300">
       <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-xs">
         <div>
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-emerald-800 border border-emerald-200/80 mb-2">
-            <ShieldCheck size={12} className="text-emerald-700" />
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-red-900 border border-rose-200/80 mb-2">
+            <ShieldCheck size={12} className="text-[var(--brand)]" />
             <span>Review & Verify</span>
           </div>
           <h2 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
@@ -362,7 +362,7 @@ export default function BookingReview({
             <div>
               <div className="flex items-center justify-between">
                 <span className="text-base font-bold text-slate-900">{service.name}</span>
-                <span className="rounded-lg bg-emerald-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-900 border border-emerald-200/80">
+                <span className="rounded-lg bg-rose-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-red-900 border border-rose-200/80">
                   {service.coverageBadge}
                 </span>
               </div>
@@ -371,18 +371,18 @@ export default function BookingReview({
 
             <div className="border-t border-slate-200/80 pt-3.5 space-y-2.5 text-xs">
               <div className="flex items-center gap-2.5 text-slate-700">
-                <Calendar size={16} className="text-emerald-700" />
+                <Calendar size={16} className="text-[var(--brand)]" />
                 <span className="font-semibold">{formattedDate}</span>
               </div>
               <div className="flex items-center gap-2.5 text-slate-700">
-                <Clock size={16} className="text-emerald-700" />
+                <Clock size={16} className="text-[var(--brand)]" />
                 <span className="font-semibold">
                   {selectedTime} ({service.durationMinutes * partySize} mins)
                 </span>
               </div>
               {partySize > 1 && (
                 <div className="flex items-center gap-2.5 text-slate-700">
-                  <User size={16} className="text-emerald-700" />
+                  <User size={16} className="text-[var(--brand)]" />
                   <span className="font-semibold">Party of {partySize} people</span>
                 </div>
               )}
@@ -390,7 +390,7 @@ export default function BookingReview({
 
             <div className="border-t border-slate-200/80 pt-3.5 text-xs text-slate-600">
               <div className="flex items-start gap-2.5">
-                <MapPin size={16} className="shrink-0 text-emerald-700 mt-0.5" />
+                <MapPin size={16} className="shrink-0 text-[var(--brand)] mt-0.5" />
                 <div>
                   <strong className="text-slate-900">iHealth Pharmacy Abbotsford</strong>
                   <br />
@@ -482,7 +482,7 @@ export default function BookingReview({
           type="button"
           disabled={isSubmitting}
           onClick={handleConfirmBooking}
-          className="inline-flex items-center gap-2 rounded-2xl bg-emerald-700 px-6 py-3 text-sm font-bold text-white shadow-md shadow-emerald-700/20 transition-all duration-150 hover:bg-emerald-800 hover:shadow-lg active:scale-[0.98] disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-6 py-3 text-sm font-bold text-white shadow-md shadow-red-700/20 transition-all duration-150 hover:bg-[var(--brand-hover)] hover:shadow-lg active:scale-[0.98] disabled:opacity-50"
         >
           {isSubmitting ? (
             <>
