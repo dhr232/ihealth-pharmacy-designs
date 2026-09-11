@@ -182,23 +182,23 @@ export default function TextSizeAdjuster() {
             <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
               Font Scale
             </p>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2.5">
               {/* Option: Normal */}
               <button
                 type="button"
                 onClick={() => changeScale("normal")}
                 aria-pressed={scale === "normal"}
-                className={`flex flex-col items-center justify-center rounded-2xl py-3 px-2 border transition-all duration-150 cursor-pointer ${
+                className={`flex flex-col items-center justify-center rounded-2xl py-3.5 px-2 border transition-all duration-150 cursor-pointer ${
                   scale === "normal"
                     ? "border-[var(--brand)] bg-[var(--brand)] text-white shadow-sm shadow-red-700/20 ring-2 ring-red-600/20"
                     : "border-slate-200 bg-slate-50/70 text-slate-700 hover:bg-white hover:border-slate-300"
                 }`}
               >
-                <span className="text-base font-bold leading-tight">A</span>
-                <span className={`text-[10px] font-medium mt-1 ${scale === "normal" ? "text-white/90" : "text-slate-500"}`}>
+                <span className="text-base font-bold leading-none">A</span>
+                <span className={`text-[11px] font-semibold mt-2 leading-tight ${scale === "normal" ? "text-white" : "text-slate-700"}`}>
                   Default
                 </span>
-                <span className={`text-[9px] font-mono ${scale === "normal" ? "text-white/75" : "text-slate-400"}`}>
+                <span className={`text-[10px] font-mono mt-1 leading-none ${scale === "normal" ? "text-white/80" : "text-slate-400"}`}>
                   100%
                 </span>
               </button>
@@ -208,17 +208,17 @@ export default function TextSizeAdjuster() {
                 type="button"
                 onClick={() => changeScale("large")}
                 aria-pressed={scale === "large"}
-                className={`flex flex-col items-center justify-center rounded-2xl py-3 px-2 border transition-all duration-150 cursor-pointer ${
+                className={`flex flex-col items-center justify-center rounded-2xl py-3.5 px-2 border transition-all duration-150 cursor-pointer ${
                   scale === "large"
                     ? "border-[var(--brand)] bg-[var(--brand)] text-white shadow-sm shadow-red-700/20 ring-2 ring-red-600/20"
                     : "border-slate-200 bg-slate-50/70 text-slate-700 hover:bg-white hover:border-slate-300"
                 }`}
               >
-                <span className="text-lg font-bold leading-tight">A+</span>
-                <span className={`text-[10px] font-medium mt-1 ${scale === "large" ? "text-white/90" : "text-slate-500"}`}>
+                <span className="text-lg font-bold leading-none">A+</span>
+                <span className={`text-[11px] font-semibold mt-2 leading-tight ${scale === "large" ? "text-white" : "text-slate-700"}`}>
                   Large
                 </span>
-                <span className={`text-[9px] font-mono ${scale === "large" ? "text-white/75" : "text-slate-400"}`}>
+                <span className={`text-[10px] font-mono mt-1 leading-none ${scale === "large" ? "text-white/80" : "text-slate-400"}`}>
                   115%
                 </span>
               </button>
@@ -228,17 +228,17 @@ export default function TextSizeAdjuster() {
                 type="button"
                 onClick={() => changeScale("xlarge")}
                 aria-pressed={scale === "xlarge"}
-                className={`flex flex-col items-center justify-center rounded-2xl py-3 px-2 border transition-all duration-150 cursor-pointer ${
+                className={`flex flex-col items-center justify-center rounded-2xl py-3.5 px-2 border transition-all duration-150 cursor-pointer ${
                   scale === "xlarge"
                     ? "border-[var(--brand)] bg-[var(--brand)] text-white shadow-sm shadow-red-700/20 ring-2 ring-red-600/20"
                     : "border-slate-200 bg-slate-50/70 text-slate-700 hover:bg-white hover:border-slate-300"
                 }`}
               >
-                <span className="text-xl font-bold leading-tight">A++</span>
-                <span className={`text-[10px] font-medium mt-1 ${scale === "xlarge" ? "text-white/90" : "text-slate-500"}`}>
+                <span className="text-xl font-bold leading-none">A++</span>
+                <span className={`text-[11px] font-semibold mt-2 leading-tight ${scale === "xlarge" ? "text-white" : "text-slate-700"}`}>
                   Largest
                 </span>
-                <span className={`text-[9px] font-mono ${scale === "xlarge" ? "text-white/75" : "text-slate-400"}`}>
+                <span className={`text-[10px] font-mono mt-1 leading-none ${scale === "xlarge" ? "text-white/80" : "text-slate-400"}`}>
                   125%
                 </span>
               </button>
