@@ -32,80 +32,22 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Generate Prisma client
+        run: npx prisma generate
+
       - name: Type check
         run: npx tsc --noEmit
 
-      - name: Build static export
-        run: npx next build
+      - name: Build Next.js application
+        run: npm run build
 
-      - name: Ensure .nojekyll (avoid Jekyll stripping _next/)
-        run: touch out/.nojekyll
-
-      - name: Verify static export
-        run: |
-          test -f out/index.html || (echo "out/index.html missing" && exit 1)
-          test -f out/.nojekyll || (echo "out/.nojekyll missing" && exit 1)
-          test -d out/_next/static || (echo "_next/static missing" && exit 1)
-
-      - name: Install Playwright
+      - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Smoke test — host static export
+      - name: Run E2E verification suite
         run: |
-          npx http-server out -p 8080 -s &
+          npx next start -p 3000 &
           SERVER_PID=$!
-          sleep 3
-          for path in "" "about/" "contact/" "subscribe/" "services/minor-ailments/"; do
-            code=$(curl -s -o /dev/null -w "%{http_code}" "http://127.0.0.1:8080/$path")
-            echo "GET /$path -> $code"
-            if [ "$code" != "200" ]; then
-              kill $SERVER_PID || true
-              echo "Smoke test failed: expected 200, got $code"
-              exit 1
-            fi
-          done
+          sleep 4
+          node scripts/qa-recommendations-e2e.js
           kill $SERVER_PID || true
-
-      - name: Upload static export for deployment
-        uses: actions/upload-artifact@v4
-        with:
-          name: static-export
-          path: out
-          retention-days: 1
-
-  deploy-hostinger:
-    name: Deploy to Hostinger (push gh-pages)
-    needs: build-and-test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.pull_request == ''
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      contents: write
-
-    steps:
-      - name: Setup git
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Download static export
-        uses: actions/download-artifact@v4
-        with:
-          name: static-export
-          path: out
-
-      - name: Prepare gh-pages tree
-        run: |
-          rm -rf gh-pages
-          mkdir gh-pages
-          cp -r out/. gh-pages/
-          cd gh-pages
-          touch .nojekyll
-          git init -b gh-pages
-          git add -A
-          git commit -m "ci: deploy ${{ github.sha }}" --allow-empty
-
-      - name: Force-push to gh-pages (Hostinger auto-deploys)
-        run: |
-          cd gh-pages
-          git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:gh-pages --force
