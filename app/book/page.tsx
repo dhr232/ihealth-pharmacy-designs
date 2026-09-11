@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { motion, AnimatePresence } from "motion/react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ServiceSelector from "./components/ServiceSelector";
@@ -202,53 +203,63 @@ function BookingWizard() {
         </section>
 
         {/* Main Step Container */}
-        <main className="mx-auto max-w-5xl px-4 py-4 sm:px-6 sm:py-6 lg:px-8 transition-all duration-300 animate-in fade-in slide-in-from-bottom-2">
-          {currentStep === 1 && (
-            <ServiceSelector
-              selectedService={selectedService}
-              onSelectService={(service) => setSelectedService(service)}
-              onProceed={() => setCurrentStep(2)}
-            />
-          )}
+        <main className="mx-auto max-w-5xl px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStep}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -14 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+            >
+              {currentStep === 1 && (
+                <ServiceSelector
+                  selectedService={selectedService}
+                  onSelectService={(service) => setSelectedService(service)}
+                  onProceed={() => setCurrentStep(2)}
+                />
+              )}
 
-          {currentStep === 2 && (
-            <PatientForm
-              initialData={patientData}
-              onSubmit={(data) => {
-                setPatientData(data);
-                setCurrentStep(3);
-              }}
-              onBack={() => setCurrentStep(1)}
-            />
-          )}
+              {currentStep === 2 && (
+                <PatientForm
+                  initialData={patientData}
+                  onSubmit={(data) => {
+                    setPatientData(data);
+                    setCurrentStep(3);
+                  }}
+                  onBack={() => setCurrentStep(1)}
+                />
+              )}
 
-          {currentStep === 3 && selectedService && (
-            <AppointmentCalendar
-              serviceId={selectedService.id}
-              selectedDate={selectedDate}
-              selectedTime={selectedTime}
-              selectedTimeLabel={selectedTimeLabel}
-              onSelectDateTime={(date, time, label) => {
-                setSelectedDate(date);
-                setSelectedTime(time);
-                setSelectedTimeLabel(label);
-              }}
-              onProceed={() => setCurrentStep(4)}
-              onBack={() => setCurrentStep(2)}
-            />
-          )}
+              {currentStep === 3 && selectedService && (
+                <AppointmentCalendar
+                  serviceId={selectedService.id}
+                  selectedDate={selectedDate}
+                  selectedTime={selectedTime}
+                  selectedTimeLabel={selectedTimeLabel}
+                  onSelectDateTime={(date, time, label) => {
+                    setSelectedDate(date);
+                    setSelectedTime(time);
+                    setSelectedTimeLabel(label);
+                  }}
+                  onProceed={() => setCurrentStep(4)}
+                  onBack={() => setCurrentStep(2)}
+                />
+              )}
 
-          {currentStep === 4 && selectedService && (
-            <BookingReview
-              service={selectedService}
-              partySize={partySize}
-              patient={patientData}
-              selectedDate={selectedDate}
-              selectedTime={selectedTime}
-              onBack={() => setCurrentStep(3)}
-              onReset={handleReset}
-            />
-          )}
+              {currentStep === 4 && selectedService && (
+                <BookingReview
+                  service={selectedService}
+                  partySize={partySize}
+                  patient={patientData}
+                  selectedDate={selectedDate}
+                  selectedTime={selectedTime}
+                  onBack={() => setCurrentStep(3)}
+                  onReset={handleReset}
+                />
+              )}
+            </motion.div>
+          </AnimatePresence>
         </main>
       </div>
 

@@ -20,6 +20,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import Link from "next/link";
+import { motion } from "motion/react";
 
 interface BookingReviewProps {
   service: BookingService;
@@ -181,28 +182,113 @@ export default function BookingReview({
   // SUCCESS SCREEN
   if (successResult) {
     return (
-      <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-10 shadow-xl shadow-slate-900/5 animate-in fade-in duration-300">
-        <div className="mx-auto max-w-2xl text-center">
-          <div className="mx-auto flex h-18 w-18 items-center justify-center rounded-full bg-rose-100 text-[var(--brand)] ring-8 ring-rose-50">
-            <CheckCircle2 size={40} className="stroke-[2.5]" />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-10 shadow-xl shadow-slate-900/5 relative overflow-hidden"
+      >
+        {/* Ambient background decoration */}
+        <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-gradient-to-br from-teal-100/30 to-emerald-100/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-gradient-to-tr from-rose-100/30 to-red-100/10 blur-3xl" />
+
+        <div className="relative mx-auto max-w-2xl text-center">
+          {/* Animated Glowing Icon & Rings */}
+          <div className="relative mx-auto flex h-24 w-24 items-center justify-center">
+            {/* Outer ambient pulsing ripple ring */}
+            <motion.div
+              animate={{
+                scale: [1, 1.45, 1],
+                opacity: [0.45, 0.1, 0.45],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="absolute inset-0 rounded-full bg-rose-200/60"
+            />
+
+            {/* Inner pulsing ring */}
+            <motion.div
+              animate={{
+                scale: [1, 1.22, 1],
+                opacity: [0.65, 0.3, 0.65],
+              }}
+              transition={{
+                duration: 2.2,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.2,
+              }}
+              className="absolute inset-1 rounded-full bg-rose-100"
+            />
+
+            {/* Main Spring Pop Icon */}
+            <motion.div
+              initial={{ scale: 0, rotate: -25 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 280,
+                damping: 18,
+                delay: 0.1,
+              }}
+              className="relative flex h-18 w-18 items-center justify-center rounded-full bg-gradient-to-br from-rose-100 to-rose-200 text-[var(--brand)] shadow-md shadow-red-900/15"
+            >
+              <motion.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 340,
+                  damping: 20,
+                  delay: 0.25,
+                }}
+              >
+                <CheckCircle2 size={42} className="stroke-[2.5]" />
+              </motion.div>
+            </motion.div>
           </div>
 
-          <div className="mt-4">
-            <span className="inline-block rounded-full bg-rose-50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-red-900 border border-rose-200/80">
+          {/* Booking Confirmed Pill */}
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.25 }}
+            className="mt-4"
+          >
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-4 py-1 text-xs font-bold uppercase tracking-wider text-red-900 border border-rose-200/80 shadow-2xs">
+              <span className="h-2 w-2 rounded-full bg-[var(--brand)] animate-pulse" />
               Booking Confirmed
             </span>
-          </div>
+          </motion.div>
 
-          <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+          <motion.h2
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.35 }}
+            className="mt-2.5 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl"
+          >
             Your Appointment Is Scheduled!
-          </h2>
+          </motion.h2>
 
-          <p className="mt-2 text-sm text-slate-600">
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.4 }}
+            className="mt-2 text-sm text-slate-600"
+          >
             A confirmation email has been sent to <strong>{successResult.email}</strong>.
-          </p>
+          </motion.p>
 
           {/* Confirmation Code Card */}
-          <div className="mt-6 rounded-2xl border border-rose-200/80 bg-rose-50/50 p-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 16, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.45, delay: 0.45 }}
+            className="mt-6 rounded-2xl border border-rose-200/80 bg-gradient-to-b from-rose-50/70 via-rose-50/40 to-white p-6 text-center shadow-xs"
+          >
             <p className="text-xs font-bold uppercase tracking-wider text-red-900">
               Official Confirmation Reference
             </p>
@@ -210,7 +296,9 @@ export default function BookingReview({
               <p className="font-mono text-3xl sm:text-4xl font-black tracking-widest text-red-950">
                 {successResult.confirmationCode}
               </p>
-              <button
+              <motion.button
+                whileHover={{ scale: 1.06 }}
+                whileTap={{ scale: 0.94 }}
                 type="button"
                 onClick={() => {
                   navigator.clipboard.writeText(successResult.confirmationCode);
@@ -231,15 +319,20 @@ export default function BookingReview({
                     <span>Copy</span>
                   </>
                 )}
-              </button>
+              </motion.button>
             </div>
             <p className="mt-2 text-xs text-red-900/80">
               Please present this reference ID or your BC Services Card when checking in at our dispensary.
             </p>
-          </div>
+          </motion.div>
 
           {/* Summary Details */}
-          <div className="mt-6 rounded-2xl border border-slate-200/90 bg-white p-6 text-left text-xs space-y-3.5 shadow-2xs">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.55 }}
+            className="mt-6 rounded-2xl border border-slate-200/90 bg-white p-6 text-left text-xs space-y-3.5 shadow-2xs"
+          >
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <span className="font-semibold text-slate-500">Service:</span>
               <span className="font-bold text-slate-900">{successResult.serviceName}</span>
@@ -276,10 +369,15 @@ export default function BookingReview({
                 Phone: {pharmacyPhone}
               </span>
             </div>
-          </div>
+          </motion.div>
 
           {/* Important Patient Instructions */}
-          <div className="mt-6 rounded-2xl border border-teal-200/80 bg-teal-50/60 p-5 text-left">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.65 }}
+            className="mt-6 rounded-2xl border border-teal-200/80 bg-teal-50/60 p-5 text-left"
+          >
             <p className="text-xs font-bold uppercase tracking-wider text-teal-950 flex items-center gap-1.5">
               <ShieldCheck size={16} className="text-teal-700" />
               <span>Important Reminders for Your Visit:</span>
@@ -290,57 +388,80 @@ export default function BookingReview({
               <li>Wear loose clothing if receiving an injection or seasonal vaccine.</li>
               <li>Free patient parking is available directly in front of the clinic.</li>
             </ul>
-          </div>
+          </motion.div>
 
           {/* Action CTAs */}
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <a
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.75 }}
+            className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center"
+          >
+            <motion.a
+              whileHover={{ y: -2, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               href={getGoogleCalendarUrl(successResult.confirmationCode)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900 px-6 py-3.5 text-xs font-bold text-white shadow-md shadow-slate-900/10 hover:bg-slate-800 transition-all active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900 px-6 py-3.5 text-xs font-bold text-white shadow-md shadow-slate-900/10 hover:bg-slate-800 transition-all cursor-pointer"
             >
               <Calendar size={16} />
               <span>Add to Google Calendar</span>
               <ExternalLink size={13} className="text-slate-400" />
-            </a>
+            </motion.a>
 
-            <a
+            <motion.a
+              whileHover={{ y: -2, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               href={getWhatsAppUrl(successResult.confirmationCode)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-700 px-6 py-3.5 text-xs font-bold text-white shadow-md shadow-emerald-700/20 hover:bg-emerald-800 transition-all active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-700 px-6 py-3.5 text-xs font-bold text-white shadow-md shadow-emerald-700/20 hover:bg-emerald-800 transition-all cursor-pointer"
             >
               <MessageCircle size={16} />
               <span>WhatsApp Dispensary</span>
-            </a>
-          </div>
+            </motion.a>
+          </motion.div>
 
-          <div className="mt-8 flex items-center justify-center gap-6 border-t border-slate-100 pt-6">
-            <button
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.85 }}
+            className="mt-8 flex items-center justify-center gap-6 border-t border-slate-100 pt-6"
+          >
+            <motion.button
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
               type="button"
               onClick={onReset}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-[var(--brand)] transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-[var(--brand)] transition-colors cursor-pointer"
             >
               <RotateCcw size={14} />
               <span>Book Another Appointment</span>
-            </button>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-[var(--brand)] transition-colors"
-            >
-              <Home size={14} />
-              <span>Return to Homepage</span>
-            </Link>
-          </div>
+            </motion.button>
+            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
+              <Link
+                href="/"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-[var(--brand)] transition-colors cursor-pointer"
+              >
+                <Home size={14} />
+                <span>Return to Homepage</span>
+              </Link>
+            </motion.div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   // REVIEW & SUBMISSION VIEW
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: "easeOut" }}
+      className="space-y-6"
+    >
       <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-xs">
         <div>
           <div className="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-red-900 border border-rose-200/80 mb-2">
@@ -356,10 +477,14 @@ export default function BookingReview({
         </div>
 
         {submitError && (
-          <div className="mt-6 flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-xs text-red-800">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mt-6 flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-xs text-red-800"
+          >
             <AlertCircle size={18} className="shrink-0 text-red-600" />
             <span>{submitError}</span>
-          </div>
+          </motion.div>
         )}
 
         <div className="mt-6 grid gap-6 md:grid-cols-2">
@@ -478,21 +603,25 @@ export default function BookingReview({
 
       {/* Navigation & Submit Action */}
       <div className="sticky bottom-4 z-20 flex items-center justify-between gap-4 rounded-3xl border border-slate-200/90 bg-white/95 backdrop-blur-md p-4 sm:px-6 sm:py-4 shadow-xl shadow-slate-900/10">
-        <button
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           type="button"
           disabled={isSubmitting}
           onClick={onBack}
-          className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-[0.98] disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all cursor-pointer disabled:opacity-50"
         >
           <ChevronLeft size={16} />
           <span>Back to Date & Time</span>
-        </button>
+        </motion.button>
 
-        <button
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           type="button"
           disabled={isSubmitting}
           onClick={handleConfirmBooking}
-          className="inline-flex items-center gap-2 rounded-2xl bg-teal-600 px-6 py-3 text-sm font-bold text-white shadow-md shadow-teal-700/20 transition-all duration-150 hover:bg-teal-700 hover:shadow-lg active:scale-[0.98] disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-2xl bg-teal-600 px-6 py-3 text-sm font-bold text-white shadow-md shadow-teal-700/20 transition-all duration-150 hover:bg-teal-700 hover:shadow-lg cursor-pointer disabled:opacity-50"
         >
           {isSubmitting ? (
             <>
@@ -505,8 +634,8 @@ export default function BookingReview({
               <span>Confirm & Book Appointment</span>
             </>
           )}
-        </button>
+        </motion.button>
       </div>
-    </div>
+    </motion.div>
   );
 }
