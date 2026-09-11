@@ -58,7 +58,7 @@ export function StaffNotificationEmail({
   const alertTitle = isAppointment ? "New Appointment Booking" : "New Prescription Refill Request";
   const badgeText = isAppointment ? "BOOKING ALERT" : "REFILL INTAKE";
   const badgeColor = isAppointment ? "#0369a1" : "#059669";
-  const cleanPhone = patientPhone.replace(/[^0-9]/g, "");
+  const cleanPhone = (patientPhone || "").replace(/[^0-9]/g, "");
 
   // Format Rx numbers display
   let rxDisplay = "Prescription Refill";
@@ -71,7 +71,7 @@ export function StaffNotificationEmail({
   }
 
   const fulfillmentDisplay =
-    pickupOrDelivery.toLowerCase() === "delivery"
+    (pickupOrDelivery || "pickup").toLowerCase() === "delivery"
       ? "Delivery Requested (Free Abbotsford Delivery)"
       : "Pickup at Pharmacy Dispensary";
 

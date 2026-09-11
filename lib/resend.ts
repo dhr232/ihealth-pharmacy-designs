@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import * as React from "react";
+import { render } from "@react-email/render";
 import {
   BookingConfirmationEmail,
   BookingConfirmationEmailProps,
@@ -21,10 +22,20 @@ import {
   WelcomeNewsletterEmailProps,
 } from "../app/components/emails/WelcomeNewsletterEmail";
 
-// Safely initialize Resend client with fallback for dev / missing credentials
-const apiKey = process.env.RESEND_API_KEY;
+export function getResendClient(): Resend | null {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) return null;
+  return new Resend(apiKey);
+}
 
-export const resend: Resend | null = apiKey ? new Resend(apiKey) : null;
+// Safely initialize Resend client with fallback for dev / missing credentials
+export const resend: Resend | null = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
+
+export async function renderEmailHtml(component: React.ReactElement): Promise<string> {
+  return await render(component);
+}
 
 export const DEFAULT_FROM_EMAIL =
   process.env.RESEND_FROM_EMAIL ||
@@ -116,8 +127,9 @@ export async function sendBookingConfirmationEmail(
   } = appointmentData;
 
   const subject = `Booking Confirmed: ${serviceName} [${confirmationId}] - iHealth Pharmacy`;
+  const client = getResendClient();
 
-  if (!resend) {
+  if (!client) {
     console.log(
       `[Resend Mock] sendBookingConfirmationEmail -> To: ${email} | Subject: ${subject} | Confirmation ID: ${confirmationId}`
     );
@@ -129,11 +141,15 @@ export async function sendBookingConfirmationEmail(
   }
 
   try {
-    const { data, error } = await resend.emails.send({
+    const html = await renderEmailHtml(
+      React.createElement(BookingConfirmationEmail, appointmentData)
+    );
+
+    const { data, error } = await client.emails.send({
       from,
       to: email,
       subject,
-      react: React.createElement(BookingConfirmationEmail, appointmentData),
+      html,
     });
 
     if (error) {
@@ -171,8 +187,9 @@ export async function sendRefillConfirmationEmail(
   } = refillData;
 
   const subject = `Refill Request Received [${confirmationId}] - iHealth Pharmacy`;
+  const client = getResendClient();
 
-  if (!resend) {
+  if (!client) {
     console.log(
       `[Resend Mock] sendRefillConfirmationEmail -> To: ${email} | Subject: ${subject} | Refill ID: ${confirmationId}`
     );
@@ -184,11 +201,15 @@ export async function sendRefillConfirmationEmail(
   }
 
   try {
-    const { data, error } = await resend.emails.send({
+    const html = await renderEmailHtml(
+      React.createElement(RefillConfirmationEmail, refillData)
+    );
+
+    const { data, error } = await client.emails.send({
       from,
       to: email,
       subject,
-      react: React.createElement(RefillConfirmationEmail, refillData),
+      html,
     });
 
     if (error) {
@@ -240,8 +261,9 @@ export async function sendStaffBookingNotification(
   } = staffData;
 
   const subject = `[DISPENSARY ALERT] New Appointment: ${patientName} - ${serviceName} [${confirmationId}]`;
+  const client = getResendClient();
 
-  if (!resend) {
+  if (!client) {
     console.log(
       `[Resend Mock] sendStaffBookingNotification -> To: ${to} | Patient: ${patientName} | Service: ${serviceName} [${confirmationId}]`
     );
@@ -272,11 +294,15 @@ export async function sendStaffBookingNotification(
       adminPortalUrl,
     };
 
-    const { data, error } = await resend.emails.send({
+    const html = await renderEmailHtml(
+      React.createElement(StaffNotificationEmail, emailProps)
+    );
+
+    const { data, error } = await client.emails.send({
       from,
       to,
       subject,
-      react: React.createElement(StaffNotificationEmail, emailProps),
+      html,
     });
 
     if (error) {
@@ -328,8 +354,9 @@ export async function sendStaffRefillNotification(
   } = refillData;
 
   const subject = `[DISPENSARY ALERT] New Refill Request: ${patientName} [${confirmationId}]`;
+  const client = getResendClient();
 
-  if (!resend) {
+  if (!client) {
     console.log(
       `[Resend Mock] sendStaffRefillNotification -> To: ${to} | Patient: ${patientName} | Refill: ${confirmationId}`
     );
@@ -359,11 +386,15 @@ export async function sendStaffRefillNotification(
       adminPortalUrl,
     };
 
-    const { data, error } = await resend.emails.send({
+    const html = await renderEmailHtml(
+      React.createElement(StaffNotificationEmail, emailProps)
+    );
+
+    const { data, error } = await client.emails.send({
       from,
       to,
       subject,
-      react: React.createElement(StaffNotificationEmail, emailProps),
+      html,
     });
 
     if (error) {
@@ -400,8 +431,9 @@ export async function sendTwoFactorCodeEmail({
   from = DEFAULT_FROM_EMAIL,
 }: TwoFactorEmailData): Promise<SendEmailResult> {
   const subject = `Your iHealth Pharmacy Verification Code: ${code}`;
+  const client = getResendClient();
 
-  if (!resend) {
+  if (!client) {
     console.log(
       `[Resend Mock] sendTwoFactorCodeEmail -> To: ${email} | Code: ${code} | Expires: ${expiresMinutes}m`
     );
@@ -413,16 +445,20 @@ export async function sendTwoFactorCodeEmail({
   }
 
   try {
-    const { data, error } = await resend.emails.send({
-      from,
-      to: email,
-      subject,
-      react: React.createElement(TwoFactorCodeEmail, {
+    const html = await renderEmailHtml(
+      React.createElement(TwoFactorCodeEmail, {
         email,
         code,
         expiresMinutes,
         userName,
-      }),
+      })
+    );
+
+    const { data, error } = await client.emails.send({
+      from,
+      to: email,
+      subject,
+      html,
     });
 
     if (error) {
@@ -457,8 +493,9 @@ export async function sendWelcomeNewsletterEmail({
   from = DEFAULT_FROM_EMAIL,
 }: WelcomeNewsletterData): Promise<SendEmailResult> {
   const subject = "Welcome to iHealth Pharmacy Wellness Updates";
+  const client = getResendClient();
 
-  if (!resend) {
+  if (!client) {
     console.log(
       `[Resend Mock] sendWelcomeNewsletterEmail -> To: ${email} | Name: ${firstName || "Patient"} | Unsubscribe: ${unsubscribeUrl}`
     );
@@ -470,15 +507,19 @@ export async function sendWelcomeNewsletterEmail({
   }
 
   try {
-    const { data, error } = await resend.emails.send({
-      from,
-      to: email,
-      subject,
-      react: React.createElement(WelcomeNewsletterEmail, {
+    const html = await renderEmailHtml(
+      React.createElement(WelcomeNewsletterEmail, {
         email,
         firstName,
         unsubscribeUrl,
-      }),
+      })
+    );
+
+    const { data, error } = await client.emails.send({
+      from,
+      to: email,
+      subject,
+      html,
     });
 
     if (error) {
@@ -519,7 +560,9 @@ export async function syncResendSubscriber({
     return { success: true };
   }
 
-  if (!resend) {
+  const client = getResendClient();
+
+  if (!client) {
     console.log(
       `[Resend Mock] syncResendSubscriber -> Audience: ${audienceId} | Email: ${email} | Name: ${firstName || "None"}`
     );
@@ -530,7 +573,7 @@ export async function syncResendSubscriber({
   }
 
   try {
-    const { data, error } = await resend.contacts.create({
+    const { data, error } = await client.contacts.create({
       email,
       firstName: firstName || undefined,
       audienceId,
