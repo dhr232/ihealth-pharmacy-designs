@@ -24,6 +24,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import { LiquidMetalButton } from "./ui/LiquidMetalButton";
 import { MegaMenu, MegaMenuItem } from "@/components/ui/mega-menu";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
+import { getBookingUrl } from "@/lib/routes";
 
 const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
   {
@@ -225,7 +226,7 @@ export default function Header() {
 
           {/* Animated Teal Liquid Metal Button */}
           <LiquidMetalButton
-            href="/book"
+            href={getBookingUrl()}
             label="Book Online"
             size="sm"
           />
@@ -279,7 +280,7 @@ export default function Header() {
               {/* Primary Mobile Action Buttons */}
               <div className="grid grid-cols-2 gap-2">
                 <Link
-                  href="/book"
+                  href={getBookingUrl()}
                   onClick={() => setMobileOpen(false)}
                   className="inline-flex items-center justify-center rounded-xl bg-teal-600 py-2.5 text-center text-xs font-bold text-white shadow-xs hover:bg-teal-700 transition-colors"
                 >

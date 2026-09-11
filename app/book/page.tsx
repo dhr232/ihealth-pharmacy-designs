@@ -92,34 +92,34 @@ function BookingWizard() {
         <Header />
 
         {/* Hero Banner */}
-        <section className="border-b border-slate-200 bg-white py-8 sm:py-10">
+        <section className="border-b border-slate-200 bg-white py-3 sm:py-5">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-red-800 border border-red-200/80">
-                    <ShieldCheck size={13} className="text-[var(--brand)]" />
+                  <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-red-800 border border-red-200/80">
+                    <ShieldCheck size={11} className="text-[var(--brand)]" />
                     <span>Official BC Clinical Booking</span>
                   </span>
-                  <span className="text-xs text-slate-500 font-medium">
+                  <span className="text-[10px] sm:text-[11px] text-slate-400 font-medium">
                     booking.ihealthpharmacy.ca
                   </span>
                 </div>
-                <h1 className="mt-2 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+                <h1 className="mt-0.5 text-lg font-extrabold tracking-tight text-slate-900 sm:text-2xl">
                   Book Your Pharmacy Appointment
                 </h1>
-                <p className="mt-1 text-sm text-slate-600">
+                <p className="hidden sm:block mt-0.5 text-xs text-slate-600">
                   Assessments for 21 minor ailments, seasonal vaccines, and medication reviews in Abbotsford.
                 </p>
               </div>
 
               {/* Dispensary Phone Quick Badge */}
-              <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50/80 p-3 text-xs">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand)] text-white shadow-xs">
-                  <Phone size={18} />
+              <div className="hidden sm:flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-1.5 text-xs">
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--brand)] text-white shadow-xs">
+                  <Phone size={14} />
                 </div>
                 <div>
-                  <p className="font-semibold text-slate-500">Prefer to book by phone?</p>
+                  <p className="text-[10px] font-semibold text-slate-500">Book by phone:</p>
                   <a
                     href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
                     className="font-bold text-slate-900 hover:text-[var(--brand)] transition-colors"
@@ -131,7 +131,7 @@ function BookingWizard() {
             </div>
 
             {/* Stepper Progress Bar */}
-            <div className="mt-8">
+            <div className="mt-2.5 sm:mt-4">
               {/* Desktop Connected Stepper */}
               <div className="hidden sm:block">
                 <ol className="grid grid-cols-4 items-center">
@@ -212,7 +212,7 @@ function BookingWizard() {
         </section>
 
         {/* Main Step Container */}
-        <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8 transition-all duration-300 animate-in fade-in slide-in-from-bottom-2">
+        <main className="mx-auto max-w-5xl px-4 py-4 sm:px-6 sm:py-6 lg:px-8 transition-all duration-300 animate-in fade-in slide-in-from-bottom-2">
           {currentStep === 1 && (
             <ServiceSelector
               selectedService={selectedService}
