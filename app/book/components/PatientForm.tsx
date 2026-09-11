@@ -114,8 +114,8 @@ export default function PatientForm({
     <form onSubmit={handleSubmit} className="space-y-6 animate-in fade-in duration-300">
       <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-xs">
         <div>
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-red-800 border border-red-200/80 mb-2">
-            <ShieldCheck size={12} className="text-[var(--brand)]" />
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-teal-50 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-teal-900 border border-teal-200 mb-2">
+            <ShieldCheck size={12} className="text-teal-700" />
             <span>BC Health Privacy Protected</span>
           </div>
           <h2 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">

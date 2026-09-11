@@ -269,12 +269,12 @@ export default function BookingReview({
           </div>
 
           {/* Important Patient Instructions */}
-          <div className="mt-6 rounded-2xl border border-rose-200/80 bg-rose-50/60 p-5 text-left">
-            <p className="text-xs font-bold uppercase tracking-wider text-red-950 flex items-center gap-1.5">
-              <ShieldCheck size={16} className="text-[var(--brand)]" />
+          <div className="mt-6 rounded-2xl border border-teal-200/80 bg-teal-50/60 p-5 text-left">
+            <p className="text-xs font-bold uppercase tracking-wider text-teal-950 flex items-center gap-1.5">
+              <ShieldCheck size={16} className="text-teal-700" />
               <span>Important Reminders for Your Visit:</span>
             </p>
-            <ul className="mt-2.5 list-disc pl-5 text-xs text-red-950 space-y-1.5">
+            <ul className="mt-2.5 list-disc pl-5 text-xs text-teal-900 space-y-1.5">
               <li>Bring your official British Columbia Services Card (PHN).</li>
               <li>Please arrive 5 minutes prior to your scheduled consultation.</li>
               <li>Wear loose clothing if receiving an injection or seasonal vaccine.</li>
@@ -362,7 +362,7 @@ export default function BookingReview({
             <div>
               <div className="flex items-center justify-between">
                 <span className="text-base font-bold text-slate-900">{service.name}</span>
-                <span className="rounded-lg bg-rose-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-red-900 border border-rose-200/80">
+                <span className="rounded-lg bg-teal-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-teal-900 border border-teal-300">
                   {service.coverageBadge}
                 </span>
               </div>

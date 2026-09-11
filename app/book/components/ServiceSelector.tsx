@@ -70,9 +70,9 @@ export default function ServiceSelector({
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Fast Prescription Refill & Transfer Notice */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-red-200/80 bg-gradient-to-r from-red-50/80 via-rose-50/40 to-slate-50 p-5 sm:px-6 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-teal-200/90 bg-gradient-to-r from-teal-50/90 via-emerald-50/40 to-slate-50 p-5 sm:px-6 shadow-xs">
         <div className="flex items-start sm:items-center gap-3.5">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--brand)] text-white shadow-sm">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#0D9488] text-white shadow-sm">
             <Pill size={22} />
           </div>
           <div>
@@ -80,7 +80,7 @@ export default function ServiceSelector({
               <span className="text-sm font-bold text-slate-900">
                 Need a Prescription Refill or Transfer?
               </span>
-              <span className="hidden sm:inline-block rounded-full bg-red-100/80 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-800">
+              <span className="hidden sm:inline-block rounded-full bg-teal-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-teal-900">
                 No appointment needed
               </span>
             </div>
@@ -92,14 +92,14 @@ export default function ServiceSelector({
         <div className="flex items-center gap-2 shrink-0">
           <Link
             href="/prescription-refills"
-            className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[var(--brand)] px-3.5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-[var(--brand-hover)] transition-colors"
+            className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#0D9488] px-3.5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-[#0F766E] transition-colors"
           >
             <span>Quick Refill Form</span>
             <ArrowRight size={13} />
           </Link>
           <Link
             href="/transfer"
-            className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-red-300 bg-white px-3.5 py-2 text-xs font-semibold text-red-900 hover:bg-red-50 transition-colors"
+            className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-teal-300 bg-white px-3.5 py-2 text-xs font-semibold text-teal-900 hover:bg-teal-50 transition-colors"
           >
             <span>Transfer Rx</span>
           </Link>
@@ -286,7 +286,7 @@ export default function ServiceSelector({
                         <span
                           className={`rounded-lg px-2.5 py-1 text-[10px] font-bold tracking-wider uppercase ${
                             service.mspCovered
-                              ? "bg-red-50 text-red-800 border border-red-200/80"
+                              ? "bg-teal-50 text-teal-900 border border-teal-300"
                               : "bg-slate-100 text-slate-700 border border-slate-200"
                           }`}
                         >
