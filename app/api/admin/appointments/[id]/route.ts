@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentStaffSession } from "@/lib/auth";
-import { memoryStatusStore } from "../route";
+import { memoryStatusStore } from "@/lib/appointment-store";
+
 export function generateStaticParams() {
-  return [];
+  return [{ id: "demo" }];
 }
 
 export async function PATCH(

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentStaffSession } from "@/lib/auth";
+import { memoryStatusStore } from "@/lib/appointment-store";
 
 export interface SerializedAppointment {
   id: string;
@@ -58,8 +59,7 @@ const FALLBACK_APPOINTMENTS: SerializedAppointment[] = [
   },
 ];
 
-// Fallback in-memory status changes for development/mock mode
-const memoryStatusStore = new Map<string, "CONFIRMED" | "COMPLETED" | "CANCELLED">();
+// Fallback in-memory status changes for development/mock mode (from @/lib/appointment-store)
 
 export async function GET() {
   const session = await getCurrentStaffSession();
@@ -110,5 +110,3 @@ export async function GET() {
 
   return NextResponse.json({ success: true, appointments: result });
 }
-
-export { memoryStatusStore };
