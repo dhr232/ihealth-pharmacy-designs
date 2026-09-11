@@ -1,13 +1,18 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { prisma, withPrismaFallback } from "@/lib/prisma";
 import {
   comparePassword,
-  generateOtpCode,
-  saveTwoFactorToken,
+  encryptSessionToken,
   SEEDED_ADMIN,
   SEEDED_PHARMACIST,
+  SESSION_COOKIE_NAME,
+  SESSION_MAX_AGE_SECONDS,
+  StaffRole,
 } from "@/lib/auth";
-import { sendTwoFactorCodeEmail } from "@/lib/resend";
+
+// NOTE: 2FA (OTP email step) is temporarily disabled.
+// To re-enable: restore OTP generation, saveTwoFactorToken, sendTwoFactorCodeEmail,
+// return { step: "2FA_REQUIRED" } here, and restore the OTP step in the login page.
 
 export async function POST(request: Request) {
   try {
@@ -37,8 +42,12 @@ export async function POST(request: Request) {
     );
 
     let isValid = false;
-    let userName = "";
-    let userId = "";
+    let userDetails: {
+      id: string;
+      email: string;
+      name: string;
+      role: StaffRole;
+    } | null = null;
 
     if (userRecord) {
       if (!userRecord.isActive) {
@@ -48,55 +57,90 @@ export async function POST(request: Request) {
         );
       }
       isValid = await comparePassword(password, userRecord.hashedPassword);
-      userName = userRecord.name;
-      userId = userRecord.id;
+      if (isValid) {
+        userDetails = {
+          id: userRecord.id,
+          email: userRecord.email,
+          name: userRecord.name,
+          role: userRecord.role as StaffRole,
+        };
+      }
     } else {
-      // Fallback check against seeded admin and pharmacist
+      // Fallback seeded accounts
       if (normalizedEmail === SEEDED_ADMIN.email.toLowerCase()) {
         isValid = password === SEEDED_ADMIN.defaultPassword;
-        userName = SEEDED_ADMIN.name;
-        userId = SEEDED_ADMIN.id;
+        if (isValid) {
+          userDetails = {
+            id: SEEDED_ADMIN.id,
+            email: SEEDED_ADMIN.email,
+            name: SEEDED_ADMIN.name,
+            role: SEEDED_ADMIN.role,
+          };
+        }
       } else if (normalizedEmail === SEEDED_PHARMACIST.email.toLowerCase()) {
         isValid = password === SEEDED_PHARMACIST.defaultPassword;
-        userName = SEEDED_PHARMACIST.name;
-        userId = SEEDED_PHARMACIST.id;
+        if (isValid) {
+          userDetails = {
+            id: SEEDED_PHARMACIST.id,
+            email: SEEDED_PHARMACIST.email,
+            name: SEEDED_PHARMACIST.name,
+            role: SEEDED_PHARMACIST.role,
+          };
+        }
       }
     }
 
-    if (!isValid) {
+    if (!isValid || !userDetails) {
       return NextResponse.json(
         { success: false, error: "Invalid staff email or password." },
         { status: 401 }
       );
     }
 
-    // 2. Generate secure 6-digit OTP code
-    const code = generateOtpCode();
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-
-    // 3. Save hashed token in TwoFactorToken or memory fallback
-    await saveTwoFactorToken({
-      userId,
-      email: normalizedEmail,
-      code,
-      expiresAt,
+    // 2. Create session directly (2FA step skipped)
+    const exp = Date.now() + SESSION_MAX_AGE_SECONDS * 1000;
+    const sessionToken = encryptSessionToken({
+      userId: userDetails.id,
+      email: userDetails.email,
+      name: userDetails.name,
+      role: userDetails.role,
+      exp,
     });
 
-    // 4. Send email via Resend
-    await sendTwoFactorCodeEmail({
-      email: normalizedEmail,
-      code,
-      expiresMinutes: 10,
-      userName: userName || "Staff Member",
-    });
+    // 3. Optionally persist session record in database
+    try {
+      await prisma.session.create({
+        data: {
+          sessionToken,
+          userId: userDetails.id,
+          expiresAt: new Date(exp),
+        },
+      });
+    } catch {
+      // Best-effort: stateless encrypted token works without DB record
+    }
 
-    // 5. Return success step
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
-      step: "2FA_REQUIRED",
-      email: normalizedEmail,
-      ...(process.env.NODE_ENV !== "production" ? { debugCode: code } : {}),
+      user: {
+        name: userDetails.name,
+        email: userDetails.email,
+        role: userDetails.role,
+      },
     });
+
+    // 4. Set HTTP-only secure cookie
+    response.cookies.set({
+      name: SESSION_COOKIE_NAME,
+      value: sessionToken,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: SESSION_MAX_AGE_SECONDS,
+    });
+
+    return response;
   } catch (error) {
     const message = error instanceof Error ? error.message : "Internal server error";
     console.error("Login route error:", error);
