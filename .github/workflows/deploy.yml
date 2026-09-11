@@ -12,14 +12,14 @@ concurrency:
 
 jobs:
   build-and-deploy:
-    name: Build, Validate, Migrate, and Deploy
+    name: Build, Validate, and Deploy to Hostinger
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       DIRECT_URL: ${{ secrets.DIRECT_URL }}
-      NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://ihealthpharmacy.ca' }}
+      NEXT_PUBLIC_SITE_URL: https://ihealthpharmacy.ca
 
     steps:
       - name: Checkout repository
@@ -44,7 +44,7 @@ jobs:
         run: npx prisma generate
 
       - name: Run Prisma Database Migrations
-        if: env.DATABASE_URL != ''
+        if: ${{ secrets.DATABASE_URL != '' }}
         run: npx prisma migrate deploy
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
@@ -56,7 +56,7 @@ jobs:
           NODE_ENV: production
 
       - name: Deploy to Hostinger via SSH with Persistent Uploads Protection
-        if: secrets.HOSTINGER_SSH_HOST != ''
+        if: ${{ secrets.HOSTINGER_SSH_HOST != '' }}
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOSTINGER_SSH_HOST }}
@@ -66,8 +66,8 @@ jobs:
           script: |
             set -e
 
-            DEPLOY_PATH="${{ secrets.HOSTINGER_DEPLOY_PATH || '~/public_html' }}"
-            SHARED_UPLOADS="${{ secrets.HOSTINGER_SHARED_PATH || '~/shared/uploads' }}"
+            DEPLOY_PATH="${HOSTINGER_DEPLOY_PATH:-~/public_html}"
+            SHARED_UPLOADS="${HOSTINGER_SHARED_PATH:-~/shared/uploads}"
 
             echo "Ensuring persistent uploads directory exists..."
             mkdir -p "$SHARED_UPLOADS/flyers"
@@ -106,7 +106,13 @@ jobs:
             echo "Deployment completed successfully."
 
       - name: Trigger Hostinger Webhook Deploy (Fallback)
-        if: secrets.HOSTINGER_SSH_HOST == '' && secrets.HOSTINGER_WEBHOOK_URL != ''
+        if: ${{ secrets.HOSTINGER_SSH_HOST == '' && secrets.HOSTINGER_WEBHOOK_URL != '' }}
         run: |
           echo "Triggering Hostinger deployment webhook..."
           curl -s -X POST "${{ secrets.HOSTINGER_WEBHOOK_URL }}"
+
+      - name: Notice when Hostinger secrets not configured
+        if: ${{ secrets.HOSTINGER_SSH_HOST == '' && secrets.HOSTINGER_WEBHOOK_URL == '' }}
+        run: |
+          echo "Build and validation succeeded."
+          echo "Hostinger automated deployment will run once HOSTINGER_SSH_HOST or HOSTINGER_WEBHOOK_URL is added to repository secrets."
