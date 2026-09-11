@@ -6,6 +6,7 @@ import { ChevronDown, Menu, X, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import TextSizeAdjuster from "./TextSizeAdjuster";
+import { LiquidMetalButton } from "./ui/LiquidMetalButton";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 
 const SERVICE_PAGES = [
@@ -396,12 +397,11 @@ export default function Header() {
             <span>{PHARMACY_INFO.phoneDisplay}</span>
           </a>
 
-          <Link
+          <LiquidMetalButton
             href="/book"
-            className="inline-flex h-8 items-center justify-center rounded-md border border-emerald-600 bg-emerald-50/60 px-3 text-xs font-semibold text-emerald-800 shadow-2xs transition hover:bg-emerald-100 hover:border-emerald-700 active:scale-[0.98]"
-          >
-            Book Online
-          </Link>
+            label="Book Online"
+            size="sm"
+          />
 
           <Link
             href="/prescription-refills"
