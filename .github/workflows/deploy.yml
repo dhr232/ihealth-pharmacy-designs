@@ -19,6 +19,10 @@ jobs:
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       DIRECT_URL: ${{ secrets.DIRECT_URL }}
+      HOSTINGER_SSH_HOST: ${{ secrets.HOSTINGER_SSH_HOST }}
+      HOSTINGER_SSH_USER: ${{ secrets.HOSTINGER_SSH_USER }}
+      HOSTINGER_SSH_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
+      HOSTINGER_WEBHOOK_URL: ${{ secrets.HOSTINGER_WEBHOOK_URL }}
       NEXT_PUBLIC_SITE_URL: https://ihealthpharmacy.ca
 
     steps:
@@ -44,7 +48,7 @@ jobs:
         run: npx prisma generate
 
       - name: Run Prisma Database Migrations
-        if: ${{ secrets.DATABASE_URL != '' }}
+        if: env.DATABASE_URL != ''
         run: npx prisma migrate deploy
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
@@ -56,13 +60,13 @@ jobs:
           NODE_ENV: production
 
       - name: Deploy to Hostinger via SSH with Persistent Uploads Protection
-        if: ${{ secrets.HOSTINGER_SSH_HOST != '' }}
+        if: env.HOSTINGER_SSH_HOST != ''
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOSTINGER_SSH_HOST }}
           username: ${{ secrets.HOSTINGER_SSH_USER }}
           key: ${{ secrets.HOSTINGER_SSH_KEY }}
-          port: ${{ secrets.HOSTINGER_SSH_PORT || 22 }}
+          port: 22
           script: |
             set -e
 
@@ -106,13 +110,13 @@ jobs:
             echo "Deployment completed successfully."
 
       - name: Trigger Hostinger Webhook Deploy (Fallback)
-        if: ${{ secrets.HOSTINGER_SSH_HOST == '' && secrets.HOSTINGER_WEBHOOK_URL != '' }}
+        if: env.HOSTINGER_SSH_HOST == '' && env.HOSTINGER_WEBHOOK_URL != ''
         run: |
           echo "Triggering Hostinger deployment webhook..."
           curl -s -X POST "${{ secrets.HOSTINGER_WEBHOOK_URL }}"
 
       - name: Notice when Hostinger secrets not configured
-        if: ${{ secrets.HOSTINGER_SSH_HOST == '' && secrets.HOSTINGER_WEBHOOK_URL == '' }}
+        if: env.HOSTINGER_SSH_HOST == '' && env.HOSTINGER_WEBHOOK_URL == ''
         run: |
           echo "Build and validation succeeded."
           echo "Hostinger automated deployment will run once HOSTINGER_SSH_HOST or HOSTINGER_WEBHOOK_URL is added to repository secrets."
