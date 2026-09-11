@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { Mail, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { isValidEmail } from "@/lib/validation";
 
 const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "YOUR_WEB3FORMS_KEY_HERE";
 
@@ -15,11 +16,15 @@ export default function NewsletterForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!name.trim() || !email.trim()) {
+    if (!name.trim() && !email.trim()) {
       setError("Please enter both your name and email address.");
       return;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!name.trim()) {
+      setError("Please enter your name.");
+      return;
+    }
+    if (!isValidEmail(email)) {
       setError("Please enter a valid email address.");
       return;
     }

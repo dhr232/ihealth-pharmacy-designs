@@ -13,6 +13,7 @@ import {
   AlertCircle,
   ShieldCheck,
 } from "lucide-react";
+import { isValidEmail } from "@/lib/validation";
 
 type Interest = "tips" | "flu" | "offers" | "events";
 
@@ -78,9 +79,21 @@ export default function SubscribePage() {
     setStatus("sending");
     setErrorMsg("");
 
-    if (!name.trim() || !email.trim()) {
+    if (!name.trim() && !email.trim()) {
       setStatus("error");
       setErrorMsg("Please enter both your name and email address.");
+      return;
+    }
+
+    if (!name.trim()) {
+      setStatus("error");
+      setErrorMsg("Please enter your name.");
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setStatus("error");
+      setErrorMsg("Please enter a valid email address.");
       return;
     }
 

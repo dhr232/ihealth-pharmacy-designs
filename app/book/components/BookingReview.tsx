@@ -102,6 +102,13 @@ export default function BookingReview({
       const data = await response.json();
 
       if (data.success) {
+        const phnDigits = patient.phn ? patient.phn.replace(/\D/g, "") : "";
+        const formattedPhn =
+          data.details?.phnMasked ||
+          (phnDigits.length === 10
+            ? `***-***-${phnDigits.slice(-4)}`
+            : "Not provided (optional)");
+
         setSuccessResult({
           confirmationCode: data.confirmationCode,
           serviceName: service.name,
@@ -110,7 +117,7 @@ export default function BookingReview({
           patientName: `${patient.firstName} ${patient.lastName}`,
           email: patient.email,
           phone: patient.phone,
-          phnMasked: `***-***-${patient.phn.slice(-4)}`,
+          phnMasked: formattedPhn,
         });
       } else {
         setSubmitError(data.error || "Failed to confirm appointment. Please try again.");
@@ -249,8 +256,14 @@ export default function BookingReview({
             </div>
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <span className="font-semibold text-slate-500">BC CareCard / PHN:</span>
-              <span className="font-mono font-semibold text-slate-800">
-                {successResult.phnMasked}
+              <span
+                className={
+                  successResult.phnMasked && successResult.phnMasked !== "Not provided (optional)"
+                    ? "font-mono font-semibold text-slate-800"
+                    : "font-medium text-slate-500 italic"
+                }
+              >
+                {successResult.phnMasked || "Not provided (optional)"}
               </span>
             </div>
             <div className="flex items-start justify-between pt-1">
@@ -429,9 +442,15 @@ export default function BookingReview({
 
               <div className="flex items-center justify-between border-b border-slate-200/70 pb-2.5">
                 <span className="font-medium text-slate-500">BC Personal Health Number (PHN):</span>
-                <span className="font-mono font-bold text-slate-900">
-                  ***-***-{patient.phn.slice(-4)}
-                </span>
+                {patient.phn && patient.phn.trim().length >= 4 ? (
+                  <span className="font-mono font-bold text-slate-900">
+                    ***-***-{patient.phn.replace(/\D/g, "").slice(-4)}
+                  </span>
+                ) : (
+                  <span className="font-medium text-slate-500 italic">
+                    Not provided (optional)
+                  </span>
+                )}
               </div>
 
               {patient.reasonForVisit && (

@@ -11,9 +11,11 @@ import {
   PhoneCall,
   Send,
   Loader2,
+  AlertCircle,
 } from "lucide-react";
 import { SectionReveal, HoverCard, StaggerContainer, StaggerItem } from "./MotionKit";
 import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
+import { isValidEmail, isValidPhone, formatPhoneNumber } from "@/lib/validation";
 
 const BENEFITS = [
   {
@@ -66,13 +68,48 @@ export default function PatientCareProgramSection() {
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
+    email: "",
     phone: "",
     serviceNeeded: "Refill Synchronization & Delivery",
     notes: "",
   });
+  const [errors, setErrors] = useState<{ email?: string; phone?: string }>({});
+
+  function handlePhoneChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const formatted = formatPhoneNumber(e.target.value);
+    setFormData((prev) => ({ ...prev, phone: formatted }));
+    if (errors.phone && isValidPhone(formatted)) {
+      setErrors((prev) => ({ ...prev, phone: undefined }));
+    }
+  }
+
+  function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value;
+    setFormData((prev) => ({ ...prev, email: val }));
+    if (errors.email && isValidEmail(val)) {
+      setErrors((prev) => ({ ...prev, email: undefined }));
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    const newErrors: { email?: string; phone?: string } = {};
+
+    if (!isValidEmail(formData.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    if (!isValidPhone(formData.phone)) {
+      newErrors.phone = "Please enter a valid 10-digit phone number";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
     setSubmitting(true);
     // Simulate swift confirmation
     setTimeout(() => {
@@ -165,14 +202,24 @@ export default function PatientCareProgramSection() {
                     </p>
                     <button
                       type="button"
-                      onClick={() => setSubmitted(false)}
+                      onClick={() => {
+                        setSubmitted(false);
+                        setFormData({
+                          name: "",
+                          email: "",
+                          phone: "",
+                          serviceNeeded: "Refill Synchronization & Delivery",
+                          notes: "",
+                        });
+                        setErrors({});
+                      }}
                       className="mt-4 text-xs font-semibold text-emerald-700 underline"
                     >
                       Submit another request
                     </button>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+                  <form onSubmit={handleSubmit} className="mt-5 space-y-4" noValidate>
                     <div>
                       <label htmlFor="care-name" className="block text-xs font-semibold text-slate-700">
                         Full Name *
@@ -189,6 +236,33 @@ export default function PatientCareProgramSection() {
                     </div>
 
                     <div>
+                      <label htmlFor="care-email" className="block text-xs font-semibold text-slate-700">
+                        Email Address *
+                      </label>
+                      <input
+                        id="care-email"
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={handleEmailChange}
+                        placeholder="you@example.com"
+                        aria-invalid={!!errors.email}
+                        aria-describedby={errors.email ? "care-email-error" : undefined}
+                        className={`mt-1 block w-full rounded-lg border px-3 py-2 text-sm text-slate-900 shadow-2xs focus:outline-none focus:ring-1 ${
+                          errors.email
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                            : "border-slate-300 focus:border-[var(--brand)] focus:ring-[var(--brand)]"
+                        }`}
+                      />
+                      {errors.email && (
+                        <p id="care-email-error" role="alert" className="mt-1 flex items-center gap-1 text-xs font-medium text-red-600">
+                          <AlertCircle size={13} />
+                          <span>{errors.email}</span>
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
                       <label htmlFor="care-phone" className="block text-xs font-semibold text-slate-700">
                         Phone Number *
                       </label>
@@ -197,10 +271,22 @@ export default function PatientCareProgramSection() {
                         type="tel"
                         required
                         value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        onChange={handlePhoneChange}
                         placeholder="(604) 000-0000"
-                        className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 shadow-2xs focus:border-[var(--brand)] focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                        aria-invalid={!!errors.phone}
+                        aria-describedby={errors.phone ? "care-phone-error" : undefined}
+                        className={`mt-1 block w-full rounded-lg border px-3 py-2 text-sm text-slate-900 shadow-2xs focus:outline-none focus:ring-1 ${
+                          errors.phone
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                            : "border-slate-300 focus:border-[var(--brand)] focus:ring-[var(--brand)]"
+                        }`}
                       />
+                      {errors.phone && (
+                        <p id="care-phone-error" role="alert" className="mt-1 flex items-center gap-1 text-xs font-medium text-red-600">
+                          <AlertCircle size={13} />
+                          <span>{errors.phone}</span>
+                        </p>
+                      )}
                     </div>
 
                     <div>

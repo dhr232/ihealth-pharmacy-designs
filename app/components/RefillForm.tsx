@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { Pill, Phone, Loader2, CheckCircle, AlertCircle, MessageCircle, Camera } from "lucide-react";
 import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
+import { isValidEmail, isValidPhone, formatPhoneNumber } from "@/lib/validation";
 
 type Props = {
   variant?: "refill" | "transfer" | "contact" | "vaccination";
@@ -23,21 +24,75 @@ export default function RefillForm({ variant = "refill" }: Props) {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [emailError, setEmailError] = useState("");
+
+  function handlePhoneChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const formatted = formatPhoneNumber(e.target.value);
+    setPhone(formatted);
+    if (phoneError && isValidPhone(formatted)) {
+      setPhoneError("");
+    }
+  }
+
+  function handlePhoneBlur() {
+    if (!isValidPhone(phone)) {
+      setPhoneError("Please enter a valid 10-digit phone number");
+    } else {
+      setPhoneError("");
+    }
+  }
+
+  function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value;
+    setEmail(val);
+    if (emailError && isValidEmail(val)) {
+      setEmailError("");
+    }
+  }
+
+  function handleEmailBlur() {
+    if (!isValidEmail(email)) {
+      setEmailError("Please enter a valid email address");
+    } else {
+      setEmailError("");
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
+    let hasValidationError = false;
+
+    if (!isValidPhone(phone)) {
+      setPhoneError("Please enter a valid 10-digit phone number");
+      hasValidationError = true;
+    } else {
+      setPhoneError("");
+    }
+
+    if (!isValidEmail(email)) {
+      setEmailError("Please enter a valid email address");
+      hasValidationError = true;
+    } else {
+      setEmailError("");
+    }
+
     // Validation
-    if (variant === "contact" && (!name.trim() || !phone.trim())) {
-      setError("Please provide your name and phone number so we can reach you.");
+    if (variant === "contact" && !name.trim()) {
+      setError("Please provide your name so we can reach you.");
       return;
     }
-    if (variant === "vaccination" && (!name.trim() || !phone.trim() || !vaccineType)) {
-      setError("Please provide your name, phone number, and the vaccine you're interested in.");
+    if (variant === "vaccination" && (!name.trim() || !vaccineType)) {
+      setError("Please provide your name and the vaccine you're interested in.");
       return;
     }
-    if ((variant === "refill" || variant === "transfer") && (!rx.trim() || !phone.trim())) {
-      setError("Please provide your Rx number and phone number so we can process your request.");
+    if ((variant === "refill" || variant === "transfer") && !rx.trim()) {
+      setError("Please provide your Rx number so we can process your request.");
+      return;
+    }
+
+    if (hasValidationError) {
       return;
     }
     setError("");
@@ -56,11 +111,13 @@ export default function RefillForm({ variant = "refill" }: Props) {
       if (variant === "refill") {
         formData.append("Rx Number", rx);
         formData.append("Phone", phone);
+        if (email) formData.append("Email", email);
         if (notes) formData.append("Notes", notes);
       } else if (variant === "transfer") {
         formData.append("Current Pharmacy", pharmacy || "(not specified)");
         formData.append("Rx Number", rx);
         formData.append("Phone", phone);
+        if (email) formData.append("Email", email);
         if (notes) formData.append("Notes", notes);
       } else if (variant === "vaccination") {
         formData.append("Name", name);
@@ -139,6 +196,12 @@ export default function RefillForm({ variant = "refill" }: Props) {
             setName("");
             setPharmacy("");
             setNotes("");
+            setEmail("");
+            setVaccineType("");
+            setPreferredDate("");
+            setPhoneError("");
+            setEmailError("");
+            setError("");
           }}
           className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--brand-hover)]"
         >
@@ -160,7 +223,7 @@ export default function RefillForm({ variant = "refill" }: Props) {
         </div>
       </div>
 
-      {variant === "vaccination" && (
+      {(variant === "vaccination" || variant === "contact") && (
         <label className="block">
           <span className="mb-1.5 block text-sm font-medium text-[var(--foreground)]">
             Your name
@@ -253,28 +316,58 @@ export default function RefillForm({ variant = "refill" }: Props) {
         <input
           type="tel"
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={handlePhoneChange}
+          onBlur={handlePhoneBlur}
           placeholder="(604) 555-0123"
-          aria-invalid={!!error}
-          aria-describedby={error ? "form-error" : undefined}
-          className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--brand)]"
+          aria-invalid={!!phoneError}
+          aria-describedby={phoneError ? "refill-phone-error" : undefined}
+          className={`w-full rounded-lg border bg-[var(--background)] px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] ${
+            phoneError
+              ? "border-red-500 focus:border-red-500"
+              : "border-[var(--border)] focus:border-[var(--brand)]"
+          }`}
         />
+        {phoneError && (
+          <p
+            id="refill-phone-error"
+            role="alert"
+            className="mt-1.5 flex items-center gap-1 text-xs font-medium text-red-600"
+          >
+            <AlertCircle size={13} />
+            <span>{phoneError}</span>
+          </p>
+        )}
       </label>
 
-      {variant === "vaccination" && (
-        <label className="mt-4 block">
-          <span className="mb-1.5 block text-sm font-medium text-[var(--foreground)]">
-            Email (optional)
-          </span>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--brand)]"
-          />
-        </label>
-      )}
+      <label className="mt-4 block">
+        <span className="mb-1.5 block text-sm font-medium text-[var(--foreground)]">
+          Email address
+        </span>
+        <input
+          type="email"
+          value={email}
+          onChange={handleEmailChange}
+          onBlur={handleEmailBlur}
+          placeholder="you@example.com"
+          aria-invalid={!!emailError}
+          aria-describedby={emailError ? "refill-email-error" : undefined}
+          className={`w-full rounded-lg border bg-[var(--background)] px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] ${
+            emailError
+              ? "border-red-500 focus:border-red-500"
+              : "border-[var(--border)] focus:border-[var(--brand)]"
+          }`}
+        />
+        {emailError && (
+          <p
+            id="refill-email-error"
+            role="alert"
+            className="mt-1.5 flex items-center gap-1 text-xs font-medium text-red-600"
+          >
+            <AlertCircle size={13} />
+            <span>{emailError}</span>
+          </p>
+        )}
+      </label>
 
       <label className="mt-4 block">
         <span className="mb-1.5 block text-sm font-medium text-[var(--foreground)]">

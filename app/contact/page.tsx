@@ -22,6 +22,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
+import { isValidEmail, isValidPhone, formatPhoneNumber } from "@/lib/validation";
 
 // Note: metadata on a client component is supported via the route segment, but
 // because this file is "use client" we expose title via a sibling-friendly
@@ -81,6 +82,8 @@ export default function ContactPage() {
   });
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   function handleChange(
@@ -89,8 +92,61 @@ export default function ContactPage() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
+  function handlePhoneChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const formatted = formatPhoneNumber(e.target.value);
+    setForm((prev) => ({ ...prev, phone: formatted }));
+    if (phoneError && isValidPhone(formatted)) {
+      setPhoneError("");
+    }
+  }
+
+  function handlePhoneBlur() {
+    if (!isValidPhone(form.phone)) {
+      setPhoneError("Please enter a valid 10-digit phone number");
+    } else {
+      setPhoneError("");
+    }
+  }
+
+  function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value;
+    setForm((prev) => ({ ...prev, email: val }));
+    if (emailError && isValidEmail(val)) {
+      setEmailError("");
+    }
+  }
+
+  function handleEmailBlur() {
+    if (!isValidEmail(form.email)) {
+      setEmailError("Please enter a valid email address");
+    } else {
+      setEmailError("");
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    let hasError = false;
+
+    if (!isValidEmail(form.email)) {
+      setEmailError("Please enter a valid email address");
+      hasError = true;
+    } else {
+      setEmailError("");
+    }
+
+    if (!isValidPhone(form.phone)) {
+      setPhoneError("Please enter a valid 10-digit phone number");
+      hasError = true;
+    } else {
+      setPhoneError("");
+    }
+
+    if (hasError) {
+      return;
+    }
+
     setStatus("sending");
     setErrorMsg("");
 
@@ -109,6 +165,8 @@ export default function ContactPage() {
       if (data.success) {
         setStatus("success");
         setForm({ name: "", email: "", phone: "", subject: "General", message: "" });
+        setEmailError("");
+        setPhoneError("");
       } else {
         setStatus("error");
         setErrorMsg(data.message ?? "Something went wrong. Please call us instead.");
@@ -322,10 +380,23 @@ export default function ContactPage() {
                           type="email"
                           required
                           value={form.email}
-                          onChange={handleChange}
-                          className="w-full rounded-lg border border-[var(--border)] bg-white px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--brand)]"
+                          onChange={handleEmailChange}
+                          onBlur={handleEmailBlur}
+                          aria-invalid={!!emailError}
+                          aria-describedby={emailError ? "contact-email-error" : undefined}
+                          className={`w-full rounded-lg border bg-white px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] ${
+                            emailError
+                              ? "border-red-500 focus:border-red-500"
+                              : "border-[var(--border)] focus:border-[var(--brand)]"
+                          }`}
                           placeholder="you@example.com"
                         />
+                        {emailError && (
+                          <p id="contact-email-error" role="alert" className="mt-1.5 flex items-center gap-1 text-xs font-medium text-red-600">
+                            <AlertCircle size={13} />
+                            <span>{emailError}</span>
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -335,17 +406,31 @@ export default function ContactPage() {
                           htmlFor="phone"
                           className="mb-1.5 block text-sm font-medium text-[var(--foreground)]"
                         >
-                          Phone <span className="text-[var(--muted)]">(optional)</span>
+                          Phone number
                         </label>
                         <input
                           id="phone"
                           name="phone"
                           type="tel"
+                          required
                           value={form.phone}
-                          onChange={handleChange}
-                          className="w-full rounded-lg border border-[var(--border)] bg-white px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--brand)]"
+                          onChange={handlePhoneChange}
+                          onBlur={handlePhoneBlur}
+                          aria-invalid={!!phoneError}
+                          aria-describedby={phoneError ? "contact-phone-error" : undefined}
+                          className={`w-full rounded-lg border bg-white px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] ${
+                            phoneError
+                              ? "border-red-500 focus:border-red-500"
+                              : "border-[var(--border)] focus:border-[var(--brand)]"
+                          }`}
                           placeholder="(604) 555-0000"
                         />
+                        {phoneError && (
+                          <p id="contact-phone-error" role="alert" className="mt-1.5 flex items-center gap-1 text-xs font-medium text-red-600">
+                            <AlertCircle size={13} />
+                            <span>{phoneError}</span>
+                          </p>
+                        )}
                       </div>
                       <div>
                         <label

@@ -13,6 +13,12 @@ import {
   ChevronRight,
   ShieldCheck,
 } from "lucide-react";
+import {
+  isValidEmail,
+  isValidPhone,
+  formatPhoneNumber,
+  isValidOptionalPhn,
+} from "@/lib/validation";
 
 export interface PatientFormData {
   firstName: string;
@@ -21,7 +27,7 @@ export interface PatientFormData {
   phone: string;
   dateOfBirth: string;
   gender: string;
-  phn: string;
+  phn?: string;
   reasonForVisit: string;
   caslConsent: boolean;
 }
@@ -51,8 +57,8 @@ export default function PatientForm({
 
   // Helper for phone formatting
   function handlePhoneChange(raw: string) {
-    const digitsOnly = raw.replace(/\D/g, "").slice(0, 10);
-    setFormData((prev) => ({ ...prev, phone: digitsOnly }));
+    const formatted = formatPhoneNumber(raw);
+    setFormData((prev) => ({ ...prev, phone: formatted }));
     if (errors.phone) {
       setErrors((prev) => ({ ...prev, phone: undefined }));
     }
@@ -73,16 +79,12 @@ export default function PatientForm({
       newErrors.lastName = "Must be at least 2 characters.";
     }
 
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required for appointment confirmation.";
-    } else if (!formData.email.includes("@") || !formData.email.includes(".")) {
-      newErrors.email = "Please enter a valid email address.";
+    if (!isValidEmail(formData.email)) {
+      newErrors.email = "Please enter a valid email address (e.g. name@example.com)";
     }
 
-    if (!formData.phone) {
-      newErrors.phone = "Phone number is required.";
-    } else if (formData.phone.length < 10) {
-      newErrors.phone = "Must be a 10-digit phone number.";
+    if (!isValidPhone(formData.phone)) {
+      newErrors.phone = "Please enter a valid 10-digit phone number (e.g. (604) 853-1893)";
     }
 
     if (!formData.dateOfBirth) {
@@ -93,10 +95,8 @@ export default function PatientForm({
       newErrors.gender = "Please select a gender option.";
     }
 
-    if (!formData.phn) {
-      newErrors.phn = "BC Personal Health Number (PHN) is required.";
-    } else if (formData.phn.length !== 10) {
-      newErrors.phn = "BC PHN must be exactly 10 digits.";
+    if (!isValidOptionalPhn(formData.phn)) {
+      newErrors.phn = "If provided, BC Personal Health Number must be exactly 10 digits.";
     }
 
     setErrors(newErrors);
@@ -266,7 +266,7 @@ export default function PatientForm({
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => handlePhoneChange(e.target.value)}
-                    placeholder="604-555-0199"
+                    placeholder="(604) 853-1893"
                     className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                       errors.phone
                         ? "border-red-400 focus:border-red-500 focus:ring-red-100"
@@ -370,9 +370,12 @@ export default function PatientForm({
             <div>
               <label
                 htmlFor="phn"
-                className="block text-xs font-bold uppercase tracking-wider text-slate-700"
+                className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-700"
               >
-                BC Personal Health Number (PHN) <span className="text-red-500">*</span>
+                <span>BC Health Card / PHN</span>{" "}
+                <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold normal-case text-slate-600 border border-slate-200">
+                  (Optional)
+                </span>
               </label>
               <div className="relative mt-1.5">
                 <CreditCard
@@ -396,7 +399,7 @@ export default function PatientForm({
               <div className="mt-1.5 flex items-start gap-1.5 text-[11px] text-slate-500">
                 <ShieldCheck size={14} className="shrink-0 mt-0.5 text-[var(--brand)]" />
                 <span>
-                  Found on the back of your BC Driver&apos;s Licence or front of your BC Services Card. Used for MSP billing eligibility.
+                  If you have your 10-digit BC Services Card handy, enter it here. Not required to complete your booking.
                 </span>
               </div>
               {errors.phn && (

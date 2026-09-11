@@ -7,6 +7,11 @@ import {
   syncResendSubscriber,
 } from "@/lib/resend";
 import { getServiceByIdOrSlug } from "@/data/booking-services";
+import {
+  isValidEmail,
+  isValidPhone,
+  isValidOptionalPhn,
+} from "@/lib/validation";
 
 // Active in-memory lock to prevent race conditions for concurrent bookings at the exact same timeslot
 const activeBookingLocks = new Set<string>();
@@ -33,7 +38,7 @@ interface AppointmentRequestBody {
   phone: string;
   dateOfBirth: string; // YYYY-MM-DD
   gender: string;
-  phn: string; // 10-digit BC PHN
+  phn?: string; // Optional 10-digit BC PHN
   reasonForVisit?: string;
 
   // Appointment Schedule
@@ -95,33 +100,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!email || !email.includes("@") || !email.includes(".")) {
+    if (!email || !isValidEmail(email)) {
       return NextResponse.json(
-        { success: false, error: "A valid email address is required for confirmation." },
+        { success: false, error: "Please enter a valid email address (e.g. name@example.com)." },
         { status: 400 }
       );
     }
 
-    // Clean phone number
-    const cleanPhone = (phone || "").replace(/[^0-9]/g, "");
-    if (cleanPhone.length < 10) {
+    if (!phone || !isValidPhone(phone)) {
       return NextResponse.json(
-        { success: false, error: "A valid 10-digit telephone number is required." },
+        { success: false, error: "Please enter a valid 10-digit phone number (e.g. (604) 853-1893)." },
         { status: 400 }
       );
     }
 
-    // Clean PHN (10 digits)
-    const cleanPhn = (phn || "").replace(/[^0-9]/g, "");
-    if (cleanPhn.length !== 10) {
+    if (!isValidOptionalPhn(phn)) {
       return NextResponse.json(
         {
           success: false,
-          error: "A valid 10-digit BC Personal Health Number (PHN) is required.",
+          error: "If provided, BC Personal Health Number must be exactly 10 digits.",
         },
         { status: 400 }
       );
     }
+
+    const cleanPhone = phone.replace(/[^0-9]/g, "");
 
     if (!dateOfBirth) {
       return NextResponse.json(
@@ -191,7 +194,14 @@ export async function POST(request: NextRequest) {
     activeBookingLocks.add(slotLockKey);
 
     try {
-      const maskedPhn = `***-***-${cleanPhn.slice(-4)}`;
+      const hasPhn = typeof phn === "string" && phn.trim() !== "";
+      const cleanPhnDigits = hasPhn ? phn.replace(/[^0-9]/g, "") : null;
+      const phnMasked =
+        cleanPhnDigits && cleanPhnDigits.length === 10
+          ? `***-***-${cleanPhnDigits.slice(-4)}`
+          : null;
+      const phnEncrypted =
+        cleanPhnDigits && cleanPhnDigits.length === 10 ? cleanPhnDigits : null;
 
       // Database operation (with resilient fallback if DB is not reachable)
       let dbSuccess = false;
@@ -259,8 +269,8 @@ export async function POST(request: NextRequest) {
                   phone: cleanPhone,
                   dateOfBirth: new Date(dateOfBirth),
                   gender: gender || "Not specified",
-                  phnMasked: maskedPhn,
-                  phnEncrypted: cleanPhn,
+                  phnMasked,
+                  phnEncrypted,
                 },
               });
 
@@ -382,7 +392,7 @@ export async function POST(request: NextRequest) {
           patientName: `${firstName.trim()} ${lastName.trim()}`,
           patientPhone: cleanPhone,
           patientEmail: email.trim().toLowerCase(),
-          patientPhn: maskedPhn,
+          patientPhn: phnMasked || undefined,
           patientDob: dateOfBirth,
           patientGender: gender,
           serviceName,
@@ -411,7 +421,7 @@ export async function POST(request: NextRequest) {
           patientName: `${firstName.trim()} ${lastName.trim()}`,
           email: email.trim().toLowerCase(),
           phone: cleanPhone,
-          phnMasked: maskedPhn,
+          phnMasked,
           pharmacyAddress: "#105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S3",
         },
       });
