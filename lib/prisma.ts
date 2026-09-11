@@ -48,7 +48,11 @@ export async function withPrismaFallback<T>(
     ]);
     isDatabaseReachable = true;
     return result;
-  } catch {
+  } catch (error: unknown) {
+    const err = error as { isSlotConflict?: boolean; code?: string };
+    if (err?.isSlotConflict || err?.code === "SLOT_CONFLICT") {
+      throw error;
+    }
     isDatabaseReachable = false;
     lastFailureTimestamp = Date.now();
     return fallback();

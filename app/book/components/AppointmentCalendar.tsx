@@ -16,7 +16,7 @@ import { TimeSlotItem } from "@/app/api/appointments/slots/route";
 
 interface AppointmentCalendarProps {
   serviceId: string;
-  partySize: number;
+  partySize?: number;
   selectedDate: string; // YYYY-MM-DD
   selectedTime: string; // "09:00"
   selectedTimeLabel: string; // "9:00 AM"
@@ -251,11 +251,6 @@ export default function AppointmentCalendar({
             </h2>
             <p className="mt-1 text-sm text-slate-600">
               Choose an available appointment date and 15-minute consultation window.
-              {partySize > 1 && (
-                <span className="ml-1 font-semibold text-red-900">
-                  (Reserving consecutive slots for {partySize} people)
-                </span>
-              )}
             </p>
           </div>
 
@@ -310,7 +305,7 @@ export default function AppointmentCalendar({
             </div>
 
             {/* Horizontal 7-Day Grid */}
-            <div className="grid grid-cols-7 gap-2 sm:gap-3">
+            <div className="grid grid-cols-7 gap-1 sm:gap-3">
               {stripDays.map((d) => {
                 const isSelected = selectedDate === d.dateStr;
 
@@ -318,15 +313,15 @@ export default function AppointmentCalendar({
                   return (
                     <div
                       key={d.dateStr}
-                      className="flex flex-col items-center justify-center rounded-2xl border border-slate-100 bg-slate-50/40 p-2.5 sm:p-3 text-center opacity-40 cursor-not-allowed"
+                      className="flex flex-col items-center justify-center rounded-xl sm:rounded-2xl border border-slate-100 bg-slate-50/40 p-1.5 sm:p-3 text-center opacity-40 cursor-not-allowed"
                     >
-                      <span className="text-[11px] font-semibold text-slate-400">
+                      <span className="text-[10px] sm:text-[11px] font-semibold text-slate-400">
                         {d.dayOfWeek}
                       </span>
-                      <span className="mt-1 text-sm font-bold text-slate-400">
+                      <span className="mt-1 text-xs sm:text-sm font-bold text-slate-400">
                         {d.dayNumber}
                       </span>
-                      <span className="mt-1 text-[10px] uppercase font-bold text-slate-400">
+                      <span className="mt-1 text-[9px] sm:text-[10px] uppercase font-bold text-slate-400">
                         {d.isSunday ? "Closed" : d.monthShort}
                       </span>
                     </div>
@@ -338,7 +333,7 @@ export default function AppointmentCalendar({
                     key={d.dateStr}
                     type="button"
                     onClick={() => onSelectDateTime(d.dateStr, "", "")}
-                    className={`flex flex-col items-center justify-center rounded-2xl p-2.5 sm:p-3.5 transition-all duration-150 cursor-pointer ${
+                    className={`flex flex-col items-center justify-center rounded-xl sm:rounded-2xl p-1.5 sm:p-3.5 transition-all duration-150 cursor-pointer ${
                       isSelected
                         ? "border-2 border-[var(--brand)] bg-[var(--brand)] text-white shadow-md shadow-red-700/20 scale-[1.03]"
                         : "border border-slate-200/90 bg-white text-slate-800 hover:border-red-400 hover:bg-red-50/30 hover:shadow-xs"

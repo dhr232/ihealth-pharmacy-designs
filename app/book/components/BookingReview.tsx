@@ -26,7 +26,7 @@ import Link from "next/link";
 
 interface BookingReviewProps {
   service: BookingService;
-  partySize: number;
+  partySize?: number;
   patient: PatientFormData;
   selectedDate: string;
   selectedTime: string;
@@ -143,7 +143,7 @@ export default function BookingReview({
     }
 
     const start = new Date(y, m - 1, d, hour, minute);
-    const end = new Date(start.getTime() + service.durationMinutes * partySize * 60 * 1000);
+    const end = new Date(start.getTime() + service.durationMinutes * 60 * 1000);
 
     const pad = (n: number) => String(n).padStart(2, "0");
     const fmt = (dt: Date) =>
@@ -155,7 +155,7 @@ export default function BookingReview({
       `iHealth Pharmacy: ${service.name} [${code}]`
     );
     const details = encodeURIComponent(
-      `Appointment at iHealth Pharmacy Abbotsford\nService: ${service.name}\nParty Size: ${partySize}\nConfirmation: ${code}\nLocation: ${pharmacyAddress}\nPhone: ${pharmacyPhone}`
+      `Appointment at iHealth Pharmacy Abbotsford\nService: ${service.name}\nConfirmation: ${code}\nLocation: ${pharmacyAddress}\nPhone: ${pharmacyPhone}`
     );
     const location = encodeURIComponent(
       `iHealth Pharmacy, ${pharmacyAddress}`
@@ -377,15 +377,9 @@ export default function BookingReview({
               <div className="flex items-center gap-2.5 text-slate-700">
                 <Clock size={16} className="text-[var(--brand)]" />
                 <span className="font-semibold">
-                  {selectedTime} ({service.durationMinutes * partySize} mins)
+                  {selectedTime} ({service.durationMinutes} mins)
                 </span>
               </div>
-              {partySize > 1 && (
-                <div className="flex items-center gap-2.5 text-slate-700">
-                  <User size={16} className="text-[var(--brand)]" />
-                  <span className="font-semibold">Party of {partySize} people</span>
-                </div>
-              )}
             </div>
 
             <div className="border-t border-slate-200/80 pt-3.5 text-xs text-slate-600">

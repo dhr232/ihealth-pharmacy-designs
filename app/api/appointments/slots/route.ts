@@ -124,11 +124,25 @@ export async function GET(request: NextRequest) {
       );
 
       for (const appt of existingAppointments) {
-        // Extract UTC or local time representation
+        // Extract UTC time representation for slot matching
         const apptDate = new Date(appt.startTime);
         const hours = String(apptDate.getUTCHours()).padStart(2, "0");
         const minutes = String(apptDate.getUTCMinutes()).padStart(2, "0");
         bookedTimes.add(`${hours}:${minutes}`);
+
+        // If an appointment spans beyond 15 minutes, exclude all spanned slots
+        const startMs = apptDate.getTime();
+        const endMs = new Date(appt.endTime).getTime();
+        if (endMs > startMs + 15 * 60 * 1000) {
+          let currentMs = startMs + 15 * 60 * 1000;
+          while (currentMs < endMs) {
+            const spanDate = new Date(currentMs);
+            const spanHours = String(spanDate.getUTCHours()).padStart(2, "0");
+            const spanMinutes = String(spanDate.getUTCMinutes()).padStart(2, "0");
+            bookedTimes.add(`${spanHours}:${spanMinutes}`);
+            currentMs += 15 * 60 * 1000;
+          }
+        }
       }
     } catch (dbError) {
       // If DB is unreachable during testing or build, proceed gracefully

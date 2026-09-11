@@ -104,7 +104,7 @@ export default function TextSizeAdjuster() {
   return (
     <aside
       aria-label="Text Size Accessibility"
-      className="fixed left-0 top-1/2 -translate-y-1/2 z-40 select-none print:hidden"
+      className="fixed left-0 bottom-24 sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 z-40 select-none print:hidden"
     >
       {/* Docked Left Edge Floating Button */}
       <button
@@ -149,7 +149,7 @@ export default function TextSizeAdjuster() {
           id="text-size-panel"
           role="dialog"
           aria-labelledby="text-size-title"
-          className="absolute left-full top-1/2 -translate-y-1/2 ml-3 w-72 sm:w-80 rounded-3xl border border-slate-200/90 bg-white/98 backdrop-blur-xl p-5 shadow-2xl shadow-slate-900/15 animate-in fade-in zoom-in-95 duration-150"
+          className="fixed inset-x-4 bottom-24 sm:inset-x-auto sm:bottom-auto sm:absolute sm:left-full sm:top-1/2 sm:-translate-y-1/2 sm:ml-3 w-auto sm:w-80 max-w-sm mx-auto sm:mx-0 rounded-3xl border border-slate-200/90 bg-white/98 backdrop-blur-xl p-5 shadow-2xl shadow-slate-900/20 animate-in fade-in zoom-in-95 duration-150"
         >
           {/* Header */}
           <div className="flex items-start justify-between gap-2 border-b border-slate-100 pb-3">

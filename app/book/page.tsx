@@ -37,7 +37,7 @@ function BookingWizard() {
   const [selectedService, setSelectedService] = useState<BookingService | null>(
     () => ALL_BOOKING_SERVICES[0] || null
   );
-  const [partySize, setPartySize] = useState<number>(1);
+  const partySize = 1;
 
   const [patientData, setPatientData] = useState<PatientFormData>({
     firstName: "",
@@ -219,7 +219,7 @@ function BookingWizard() {
               selectedService={selectedService}
               onSelectService={(service) => setSelectedService(service)}
               partySize={partySize}
-              onChangePartySize={(size) => setPartySize(size)}
+              onChangePartySize={() => {}}
               onProceed={() => setCurrentStep(2)}
             />
           )}

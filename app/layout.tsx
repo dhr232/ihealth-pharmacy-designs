@@ -102,9 +102,72 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
-  title: "iHealth Pharmacy — Independent Pharmacy in Abbotsford, BC",
+  metadataBase: new URL("https://ihealthpharmacy.ca"),
+  title: {
+    default: "iHealth Pharmacy — Independent Pharmacy in Abbotsford, BC",
+    template: "%s | iHealth Pharmacy",
+  },
   description:
-    "Prescription refills, transfers, vaccinations, minor ailment consultations, and compliance packaging. Trusted neighbourhood pharmacy care in Abbotsford, BC.",
+    "Independent community pharmacy in Abbotsford, BC. Fast prescription refills, walk-in 21 minor ailments prescribing covered by BC MSP, custom compounding, and free same-day local delivery.",
+  keywords: [
+    "Pharmacy Abbotsford",
+    "Independent pharmacy Abbotsford",
+    "Prescription refill Abbotsford",
+    "Minor ailments prescribing BC",
+    "Pharmacist prescribing Abbotsford",
+    "Vaccinations Abbotsford",
+    "Shingrix vaccine Abbotsford",
+    "Blister pack pharmacy Abbotsford",
+    "Free pharmacy delivery Abbotsford",
+    "Clearbrook pharmacy",
+    "iHealth Pharmacy",
+  ],
+  authors: [{ name: "iHealth Pharmacy Team", url: "https://ihealthpharmacy.ca" }],
+  creator: "iHealth Pharmacy Ltd.",
+  publisher: "iHealth Pharmacy Ltd.",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "iHealth Pharmacy — Independent Pharmacy in Abbotsford, BC",
+    description:
+      "Your neighbourhood independent pharmacy in Abbotsford. Fast refills, walk-in 21 minor ailments prescribing, compliance packaging, and free same-day delivery.",
+    url: "https://ihealthpharmacy.ca",
+    siteName: "iHealth Pharmacy",
+    locale: "en_CA",
+    type: "website",
+    images: [
+      {
+        url: "/services/all-services.jpg",
+        width: 1200,
+        height: 630,
+        alt: "iHealth Pharmacy Abbotsford, BC",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "iHealth Pharmacy — Independent Pharmacy in Abbotsford, BC",
+    description:
+      "Your neighbourhood independent pharmacy in Abbotsford. Fast refills, walk-in 21 minor ailments prescribing, compliance packaging, and free same-day delivery.",
+    images: ["/services/all-services.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -129,7 +192,12 @@ const jsonLd = {
   description:
     "Independent community pharmacy in Abbotsford, BC offering prescription refills, minor ailments prescribing, custom compounding, MyHealthPack blister packs, and free same-day local delivery.",
   url: "https://ihealthpharmacy.ca",
-  telephone: "+1-604-853-1893",
+  telephone: `+1-${PHARMACY_INFO.phoneRaw}`,
+  currenciesAccepted: "CAD",
+  paymentAccepted: "Cash, Credit Card, Debit Card, Direct Insurance Billing",
+  priceRange: "$$",
+  knowsLanguage: ["English", "Punjabi", "Hindi"],
+  medicalSpecialty: "CommunityPharmacy",
   address: {
     "@type": "PostalAddress",
     streetAddress: PHARMACY_INFO.address.street,
@@ -147,21 +215,54 @@ const jsonLd = {
     {
       "@type": "OpeningHoursSpecification",
       dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      opens: "08:00",
-      closes: "21:00",
-    },
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Saturday", "Sunday"],
       opens: "09:00",
       closes: "18:00",
     },
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Saturday"],
+      opens: "10:00",
+      closes: "15:00",
+    },
   ],
-  currenciesAccepted: "CAD",
-  paymentAccepted: "Cash, Credit Card, Debit Card, Direct Insurance Billing",
-  priceRange: "$$",
-  knowsLanguage: ["English", "Punjabi", "Hindi"],
-  medicalSpecialty: "CommunityPharmacy",
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Clinical Pharmacy Services",
+    itemListElement: [
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "MedicalProcedure",
+          name: "21 Minor Ailments Pharmacist Prescribing",
+          description: "Assessment and prescribing for common conditions, 100% covered by BC MSP.",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "MedicalProcedure",
+          name: "Routine & Travel Vaccinations",
+          description: "Flu shots, COVID-19, Shingrix, and routine immunizations.",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "MedicalProcedure",
+          name: "MyHealthPack Blister Compliance Packaging",
+          description: "Complimentary pre-sorted medication blister packaging.",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "DeliveryService",
+          name: "Free Same-Day Prescription Delivery",
+          description: "Free prescription and medication delivery in Abbotsford for orders over $25.",
+        },
+      },
+    ],
+  },
 };
 
 export default function RootLayout({

@@ -1,8 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { prisma, withPrismaFallback } from "@/lib/prisma";
-import { sendBookingConfirmationEmail, syncResendSubscriber } from "@/lib/resend";
+import {
+  sendBookingConfirmationEmail,
+  sendStaffBookingNotification,
+  syncResendSubscriber,
+} from "@/lib/resend";
 import { getServiceByIdOrSlug } from "@/data/booking-services";
+
+// Active in-memory lock to prevent race conditions for concurrent bookings at the exact same timeslot
+const activeBookingLocks = new Set<string>();
+
+class SlotConflictError extends Error {
+  code = "SLOT_CONFLICT";
+  isSlotConflict = true;
+  constructor(message = "This appointment time slot is already reserved. Please select another available time.") {
+    super(message);
+    this.name = "SlotConflictError";
+  }
+}
 
 interface AppointmentRequestBody {
   // Service
@@ -158,164 +174,251 @@ export async function POST(request: NextRequest) {
     const startDateTime = new Date(Date.UTC(year, month - 1, day, slotHour, slotMinute, 0));
     const endDateTime = new Date(startDateTime.getTime() + durationMinutes * 60 * 1000);
 
-    const maskedPhn = `***-***-${cleanPhn.slice(-4)}`;
+    const slotLockKey = startDateTime.toISOString();
 
-    // Database operation (with resilient fallback if DB is not reachable)
-    let dbSuccess = false;
-    let createdAppointmentId = confirmationCode;
-
-    await withPrismaFallback(
-      async () => {
-        await prisma.$transaction(async (tx) => {
-          // 1. Resolve or ensure Service exists in database
-          let dbService = await tx.service.findFirst({
-            where: {
-              OR: [{ id: serviceId }, { slug: serviceMeta?.slug || serviceId }],
-            },
-          });
-
-          if (!dbService) {
-            // Check if category exists
-            let dbCategory = await tx.serviceCategory.findFirst();
-            if (!dbCategory) {
-              dbCategory = await tx.serviceCategory.create({
-                data: {
-                  slug: "minor_ailments",
-                  name: "Minor Ailments",
-                  description: "Direct pharmacist assessment and prescribing",
-                },
-              });
-            }
-
-            dbService = await tx.service.create({
-              data: {
-                name: serviceName,
-                slug: serviceMeta?.slug || serviceId,
-                durationMinutes: serviceMeta?.durationMinutes || 15,
-                mspCovered: serviceMeta?.mspCovered ?? true,
-                description: serviceMeta?.description || serviceName,
-                categoryId: dbCategory.id,
-              },
-            });
-          }
-
-          // 2. Create Patient
-          const patientRecord = await tx.patient.create({
-            data: {
-              firstName: firstName.trim(),
-              lastName: lastName.trim(),
-              email: email.trim().toLowerCase(),
-              phone: cleanPhone,
-              dateOfBirth: new Date(dateOfBirth),
-              gender: gender || "Not specified",
-              phnMasked: maskedPhn,
-              phnEncrypted: cleanPhn,
-            },
-          });
-
-          // 3. Create Appointment
-          const appointmentRecord = await tx.appointment.create({
-            data: {
-              confirmationCode,
-              serviceId: dbService.id,
-              patientId: patientRecord.id,
-              startTime: startDateTime,
-              endTime: endDateTime,
-              partySize: resolvedPartySize,
-              status: "CONFIRMED",
-              reasonForVisit: reasonForVisit?.trim() || null,
-            },
-          });
-
-          createdAppointmentId = appointmentRecord.id;
-
-          // 4. Handle CASL Subscriber consent if checked
-          if (caslConsent) {
-            const unsubscribeToken = crypto.randomBytes(32).toString("hex");
-            await tx.subscriber.upsert({
-              where: { email: email.trim().toLowerCase() },
-              update: {
-                firstName: firstName.trim(),
-                caslConsent: true,
-                consentTimestamp: new Date(),
-                unsubscribedAt: null,
-              },
-              create: {
-                email: email.trim().toLowerCase(),
-                firstName: firstName.trim(),
-                source: "appointment_booking",
-                caslConsent: true,
-                unsubscribeToken,
-              },
-            });
-          }
-        });
-
-        dbSuccess = true;
-      },
-      () => {
-        // Graceful in-memory fallback
-      }
-    );
-
-    // Sync to Resend contacts if CASL consent was granted
-    if (caslConsent) {
-      try {
-        await syncResendSubscriber({
-          email: email.trim().toLowerCase(),
-          firstName: firstName.trim(),
-        });
-      } catch (err) {
-        console.warn("[Appointments API] Resend sync warning:", err);
-      }
+    // Concurrency guard 1: Check active in-memory booking locks
+    if (activeBookingLocks.has(slotLockKey)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "This appointment time slot is already reserved. Please select another available time.",
+        },
+        { status: 409 }
+      );
     }
 
-    // Send Branded Confirmation Email via Resend
-    const dateFormatted = new Intl.DateTimeFormat("en-CA", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      timeZone: "America/Vancouver",
-    }).format(new Date(year, month - 1, day, 12, 0, 0));
+    // Acquire memory lock
+    activeBookingLocks.add(slotLockKey);
 
-    const preparationNotes = serviceMeta?.preparationNotes || [
-      "Bring your British Columbia Services Card (Personal Health Number / PHN).",
-      "Please arrive 5 minutes prior to your scheduled appointment time.",
-      "Bring a complete list of current medications or relevant health history.",
-    ];
+    try {
+      const maskedPhn = `***-***-${cleanPhn.slice(-4)}`;
 
-    await sendBookingConfirmationEmail({
-      email: email.trim().toLowerCase(),
-      patientName: `${firstName.trim()} ${lastName.trim()}`,
-      confirmationId: confirmationCode,
-      serviceName,
-      date: dateFormatted,
-      time: time.includes("M") ? time : `${slotHour % 12 || 12}:${String(slotMinute).padStart(2, "0")} ${slotHour >= 12 ? "PM" : "AM"}`,
-      pharmacyName: "iHealth Pharmacy Abbotsford",
-      pharmacyAddress: "#105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S1",
-      pharmacyPhone: "(604) 746-4444",
-      preparationNotes,
-    });
+      // Database operation (with resilient fallback if DB is not reachable)
+      let dbSuccess = false;
+      let createdAppointmentId = confirmationCode;
 
-    return NextResponse.json({
-      success: true,
-      confirmationCode,
-      appointmentId: createdAppointmentId,
-      dbSaved: dbSuccess,
-      details: {
+      try {
+        await withPrismaFallback(
+          async () => {
+            await prisma.$transaction(async (tx) => {
+              // Concurrency guard 2: Check if an existing appointment already exists at startTime with status not CANCELLED
+              const existingAppointment = await tx.appointment.findFirst({
+                where: {
+                  startTime: startDateTime,
+                  status: {
+                    not: "CANCELLED",
+                  },
+                },
+                select: { id: true },
+              });
+
+              if (existingAppointment) {
+                throw new SlotConflictError(
+                  "This appointment time slot is already reserved. Please select another available time."
+                );
+              }
+
+              // 1. Resolve or ensure Service exists in database
+              let dbService = await tx.service.findFirst({
+                where: {
+                  OR: [{ id: serviceId }, { slug: serviceMeta?.slug || serviceId }],
+                },
+              });
+
+              if (!dbService) {
+                // Check if category exists
+                let dbCategory = await tx.serviceCategory.findFirst();
+                if (!dbCategory) {
+                  dbCategory = await tx.serviceCategory.create({
+                    data: {
+                      slug: "minor_ailments",
+                      name: "Minor Ailments",
+                      description: "Direct pharmacist assessment and prescribing",
+                    },
+                  });
+                }
+
+                dbService = await tx.service.create({
+                  data: {
+                    name: serviceName,
+                    slug: serviceMeta?.slug || serviceId,
+                    durationMinutes: serviceMeta?.durationMinutes || 15,
+                    mspCovered: serviceMeta?.mspCovered ?? true,
+                    description: serviceMeta?.description || serviceName,
+                    categoryId: dbCategory.id,
+                  },
+                });
+              }
+
+              // 2. Create Patient
+              const patientRecord = await tx.patient.create({
+                data: {
+                  firstName: firstName.trim(),
+                  lastName: lastName.trim(),
+                  email: email.trim().toLowerCase(),
+                  phone: cleanPhone,
+                  dateOfBirth: new Date(dateOfBirth),
+                  gender: gender || "Not specified",
+                  phnMasked: maskedPhn,
+                  phnEncrypted: cleanPhn,
+                },
+              });
+
+              // 3. Create Appointment
+              const appointmentRecord = await tx.appointment.create({
+                data: {
+                  confirmationCode,
+                  serviceId: dbService.id,
+                  patientId: patientRecord.id,
+                  startTime: startDateTime,
+                  endTime: endDateTime,
+                  partySize: resolvedPartySize,
+                  status: "CONFIRMED",
+                  reasonForVisit: reasonForVisit?.trim() || null,
+                },
+              });
+
+              createdAppointmentId = appointmentRecord.id;
+
+              // 4. Handle CASL Subscriber consent if checked
+              if (caslConsent) {
+                const unsubscribeToken = crypto.randomBytes(32).toString("hex");
+                await tx.subscriber.upsert({
+                  where: { email: email.trim().toLowerCase() },
+                  update: {
+                    firstName: firstName.trim(),
+                    caslConsent: true,
+                    consentTimestamp: new Date(),
+                    unsubscribedAt: null,
+                  },
+                  create: {
+                    email: email.trim().toLowerCase(),
+                    firstName: firstName.trim(),
+                    source: "appointment_booking",
+                    caslConsent: true,
+                    unsubscribeToken,
+                  },
+                });
+              }
+            });
+
+            dbSuccess = true;
+          },
+          () => {
+            // Graceful in-memory fallback
+          }
+        );
+      } catch (txError: unknown) {
+        const err = txError as { isSlotConflict?: boolean; code?: string };
+        if (err?.isSlotConflict || err?.code === "SLOT_CONFLICT") {
+          return NextResponse.json(
+            {
+              success: false,
+              error: "This appointment time slot is already reserved. Please select another available time.",
+            },
+            { status: 409 }
+          );
+        }
+        throw txError;
+      }
+
+      // Sync to Resend contacts if CASL consent was granted
+      if (caslConsent) {
+        try {
+          await syncResendSubscriber({
+            email: email.trim().toLowerCase(),
+            firstName: firstName.trim(),
+          });
+        } catch (err) {
+          console.warn("[Appointments API] Resend sync warning:", err);
+        }
+      }
+
+      // Send Branded Confirmation Email via Resend
+      const dateFormatted = new Intl.DateTimeFormat("en-CA", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        timeZone: "America/Vancouver",
+      }).format(new Date(year, month - 1, day, 12, 0, 0));
+
+      const preparationNotes = serviceMeta?.preparationNotes || [
+        "Bring your British Columbia Services Card (Personal Health Number / PHN).",
+        "Please arrive 5 minutes prior to your scheduled appointment time.",
+        "Bring a complete list of current medications or relevant health history.",
+      ];
+
+      const timeDisplay = time.includes("M")
+        ? time
+        : `${slotHour % 12 || 12}:${String(slotMinute).padStart(2, "0")} ${slotHour >= 12 ? "PM" : "AM"}`;
+
+      // 1. Send Branded Booking Confirmation Email to Patient
+      try {
+        await sendBookingConfirmationEmail({
+          email: email.trim().toLowerCase(),
+          patientName: `${firstName.trim()} ${lastName.trim()}`,
+          confirmationId: confirmationCode,
+          serviceName,
+          date: dateFormatted,
+          time: timeDisplay,
+          duration: `${durationMinutes} minutes`,
+          partySize: resolvedPartySize,
+          pharmacyName: "iHealth Pharmacy Abbotsford",
+          pharmacyAddress: "#105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S3",
+          pharmacyPhone: "(604) 853-1893",
+          preparationNotes,
+        });
+      } catch (patientEmailErr) {
+        console.error("[Appointments API] Patient confirmation email error:", patientEmailErr);
+      }
+
+      // 2. Send Alert to Dispensary Staff
+      const staffAlertEmail = process.env.DISPENSARY_ALERT_EMAIL || "dispensary@ihealthpharmacy.ca";
+      try {
+        await sendStaffBookingNotification({
+          to: staffAlertEmail,
+          confirmationId: confirmationCode,
+          patientName: `${firstName.trim()} ${lastName.trim()}`,
+          patientPhone: cleanPhone,
+          patientEmail: email.trim().toLowerCase(),
+          patientPhn: maskedPhn,
+          patientDob: dateOfBirth,
+          patientGender: gender,
+          serviceName,
+          appointmentDate: dateFormatted,
+          appointmentTime: timeDisplay,
+          duration: `${durationMinutes} minutes`,
+          partySize: resolvedPartySize,
+          reasonForVisit: reasonForVisit?.trim(),
+          submittedAt: new Date().toLocaleString("en-CA", { timeZone: "America/Vancouver" }),
+        });
+      } catch (staffEmailErr) {
+        console.error("[Appointments API] Staff alert email error:", staffEmailErr);
+      }
+
+      return NextResponse.json({
+        success: true,
         confirmationCode,
-        serviceName,
-        partySize: resolvedPartySize,
-        date: dateFormatted,
-        time,
-        patientName: `${firstName.trim()} ${lastName.trim()}`,
-        email: email.trim().toLowerCase(),
-        phone: cleanPhone,
-        phnMasked: maskedPhn,
-        pharmacyAddress: "#105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S1",
-      },
-    });
+        appointmentId: createdAppointmentId,
+        dbSaved: dbSuccess,
+        details: {
+          confirmationCode,
+          serviceName,
+          partySize: resolvedPartySize,
+          date: dateFormatted,
+          time: timeDisplay,
+          patientName: `${firstName.trim()} ${lastName.trim()}`,
+          email: email.trim().toLowerCase(),
+          phone: cleanPhone,
+          phnMasked: maskedPhn,
+          pharmacyAddress: "#105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S3",
+        },
+      });
+    } finally {
+      // Release memory lock
+      activeBookingLocks.delete(slotLockKey);
+    }
   } catch (error) {
     console.error("[Appointments API] Unexpected error creating appointment:", error);
     return NextResponse.json(

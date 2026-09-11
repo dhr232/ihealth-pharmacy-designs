@@ -1,44 +1,56 @@
 /* eslint-disable @next/next/no-img-element */
 import * as React from "react";
 
-export interface BookingConfirmationEmailProps {
+export interface RefillConfirmationEmailProps {
   confirmationId?: string;
   patientName?: string;
-  serviceName: string;
-  date: string;
-  time: string;
-  duration?: string;
-  partySize?: number;
+  phone?: string;
+  refillType?: "rx_numbers" | "photo" | "transfer" | string;
+  rxNumbers?: string[] | string;
+  pickupOrDelivery?: "pickup" | "delivery" | string;
+  deliveryAddress?: string;
+  notes?: string;
+  submittedAt?: string;
   pharmacyName?: string;
   pharmacyAddress?: string;
   pharmacyPhone?: string;
   whatsappUrl?: string;
-  preparationNotes?: string[];
   contactUrl?: string;
 }
 
-export function BookingConfirmationEmail({
-  confirmationId = "IH-2026-8941",
+export function RefillConfirmationEmail({
+  confirmationId = "RF-2026-1042",
   patientName,
-  serviceName,
-  date,
-  time,
-  duration = "15 minutes",
-  partySize = 1,
+  phone,
+  refillType = "rx_numbers",
+  rxNumbers,
+  pickupOrDelivery = "pickup",
+  deliveryAddress,
+  notes,
+  submittedAt,
   pharmacyName = "iHealth Pharmacy Abbotsford",
   pharmacyAddress = "#105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S3",
   pharmacyPhone = "(604) 853-1893",
-  whatsappUrl = "https://wa.me/16048531893?text=Hi%20iHealth%20Pharmacy%2C%20I%20have%20a%20question%20about%20my%20appointment.",
-  preparationNotes = [
-    "Bring your British Columbia Services Card (Personal Health Number / PHN).",
-    "Please arrive 5 minutes prior to your scheduled appointment time.",
-    "Bring a complete list of current medications or relevant health history.",
-    "Wear short sleeves or loose clothing if receiving an injection or vaccine.",
-  ],
+  whatsappUrl = "https://wa.me/16048531893?text=Hi%20iHealth%20Pharmacy%2C%20I%20have%20a%20question%20about%20my%20prescription%20refill.",
   contactUrl = "https://ihealthpharmacy.ca/contact",
-}: BookingConfirmationEmailProps) {
+}: RefillConfirmationEmailProps) {
   const greeting = patientName ? `Hello ${patientName},` : "Hello,";
   const cleanPhone = pharmacyPhone.replace(/[^0-9]/g, "");
+
+  // Format Rx numbers display
+  let rxDisplay = "Prescription Refill Request";
+  if (refillType === "photo") {
+    rxDisplay = "Photo Refill Received";
+  } else if (Array.isArray(rxNumbers)) {
+    rxDisplay = rxNumbers.length > 0 ? rxNumbers.join(", ") : "Standard Refill Request";
+  } else if (typeof rxNumbers === "string" && rxNumbers.trim()) {
+    rxDisplay = rxNumbers;
+  }
+
+  const fulfillmentDisplay =
+    pickupOrDelivery.toLowerCase() === "delivery"
+      ? "Free Home Delivery (Abbotsford)"
+      : "In-Store Pickup at Dispensary";
 
   return (
     <div
@@ -67,7 +79,7 @@ export function BookingConfirmationEmail({
         }}
       >
         <tbody>
-          {/* Brand Header */}
+          {/* Header */}
           <tr>
             <td
               style={{
@@ -105,7 +117,7 @@ export function BookingConfirmationEmail({
                           marginBottom: "4px",
                         }}
                       >
-                        Confirmation Code
+                        Refill ID
                       </div>
                       <div
                         style={{
@@ -146,7 +158,7 @@ export function BookingConfirmationEmail({
                   color: "#0f172a",
                 }}
               >
-                Appointment Confirmed
+                Refill Request Received
               </h1>
               <p
                 style={{
@@ -156,12 +168,12 @@ export function BookingConfirmationEmail({
                   color: "#475569",
                 }}
               >
-                Thank you for choosing iHealth Pharmacy Abbotsford. Your appointment is reserved.
+                Our dispensary team has received your prescription order.
               </p>
             </td>
           </tr>
 
-          {/* Main Body */}
+          {/* Body Content */}
           <tr>
             <td style={{ padding: "28px 32px" }}>
               <p
@@ -170,25 +182,44 @@ export function BookingConfirmationEmail({
                   lineHeight: "22px",
                   color: "#1e293b",
                   marginTop: 0,
-                  marginBottom: "20px",
+                  marginBottom: "18px",
                 }}
               >
                 {greeting}
               </p>
-              <p
+
+              {/* Expected Turnaround Highlight Box */}
+              <div
                 style={{
-                  fontSize: "14px",
-                  lineHeight: "22px",
-                  color: "#475569",
-                  marginTop: 0,
+                  backgroundColor: "#ecfdf5",
+                  borderLeft: "4px solid #059669",
+                  borderRadius: "4px",
+                  padding: "16px 20px",
                   marginBottom: "24px",
                 }}
               >
-                Your appointment at {pharmacyName} has been booked. Please review the appointment
-                details and clinical preparation guidelines below.
-              </p>
+                <div
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: 700,
+                    color: "#065f46",
+                    marginBottom: "4px",
+                  }}
+                >
+                  Turnaround Notice
+                </div>
+                <div
+                  style={{
+                    fontSize: "14px",
+                    lineHeight: "22px",
+                    color: "#047857",
+                  }}
+                >
+                  Your prescription is being processed and is usually ready within 1 hour.
+                </div>
+              </div>
 
-              {/* Appointment Details Table Card */}
+              {/* Summary of Submission Table Card */}
               <div
                 style={{
                   backgroundColor: "#f8fafc",
@@ -210,40 +241,11 @@ export function BookingConfirmationEmail({
                     paddingBottom: "8px",
                   }}
                 >
-                  Appointment Details
+                  Refill Summary
                 </div>
 
                 <table width="100%" border={0} cellPadding={0} cellSpacing={0}>
                   <tbody>
-                    {patientName ? (
-                      <tr>
-                        <td
-                          style={{
-                            padding: "8px 0",
-                            fontSize: "13px",
-                            fontWeight: 600,
-                            color: "#64748b",
-                            width: "35%",
-                            verticalAlign: "top",
-                          }}
-                        >
-                          Patient Name
-                        </td>
-                        <td
-                          style={{
-                            padding: "8px 0",
-                            fontSize: "14px",
-                            fontWeight: 700,
-                            color: "#0f172a",
-                            verticalAlign: "top",
-                          }}
-                        >
-                          {patientName}
-                          {partySize > 1 ? ` (${partySize} people)` : ""}
-                        </td>
-                      </tr>
-                    ) : null}
-
                     <tr>
                       <td
                         style={{
@@ -255,7 +257,57 @@ export function BookingConfirmationEmail({
                           verticalAlign: "top",
                         }}
                       >
-                        Service
+                        Refill Reference
+                      </td>
+                      <td
+                        style={{
+                          padding: "8px 0",
+                          fontSize: "14px",
+                          fontWeight: 700,
+                          color: "#059669",
+                          verticalAlign: "top",
+                        }}
+                      >
+                        {confirmationId}
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td
+                        style={{
+                          padding: "8px 0",
+                          fontSize: "13px",
+                          fontWeight: 600,
+                          color: "#64748b",
+                          verticalAlign: "top",
+                        }}
+                      >
+                        Submission Type
+                      </td>
+                      <td
+                        style={{
+                          padding: "8px 0",
+                          fontSize: "14px",
+                          fontWeight: 600,
+                          color: "#0f172a",
+                          verticalAlign: "top",
+                        }}
+                      >
+                        {refillType === "photo" ? "Prescription Photo Refill" : "Prescription Numbers Refill"}
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td
+                        style={{
+                          padding: "8px 0",
+                          fontSize: "13px",
+                          fontWeight: 600,
+                          color: "#64748b",
+                          verticalAlign: "top",
+                        }}
+                      >
+                        Prescription / Item
                       </td>
                       <td
                         style={{
@@ -266,7 +318,7 @@ export function BookingConfirmationEmail({
                           verticalAlign: "top",
                         }}
                       >
-                        {serviceName}
+                        {rxDisplay}
                       </td>
                     </tr>
 
@@ -280,7 +332,7 @@ export function BookingConfirmationEmail({
                           verticalAlign: "top",
                         }}
                       >
-                        Date
+                        Fulfillment Preference
                       </td>
                       <td
                         style={{
@@ -291,59 +343,114 @@ export function BookingConfirmationEmail({
                           verticalAlign: "top",
                         }}
                       >
-                        {date}
+                        {fulfillmentDisplay}
                       </td>
                     </tr>
 
-                    <tr>
-                      <td
-                        style={{
-                          padding: "8px 0",
-                          fontSize: "13px",
-                          fontWeight: 600,
-                          color: "#64748b",
-                          verticalAlign: "top",
-                        }}
-                      >
-                        Time
-                      </td>
-                      <td
-                        style={{
-                          padding: "8px 0",
-                          fontSize: "14px",
-                          fontWeight: 600,
-                          color: "#0f172a",
-                          verticalAlign: "top",
-                        }}
-                      >
-                        {time}
-                      </td>
-                    </tr>
+                    {deliveryAddress ? (
+                      <tr>
+                        <td
+                          style={{
+                            padding: "8px 0",
+                            fontSize: "13px",
+                            fontWeight: 600,
+                            color: "#64748b",
+                            verticalAlign: "top",
+                          }}
+                        >
+                          Delivery Address
+                        </td>
+                        <td
+                          style={{
+                            padding: "8px 0",
+                            fontSize: "14px",
+                            color: "#0f172a",
+                            verticalAlign: "top",
+                          }}
+                        >
+                          {deliveryAddress}
+                        </td>
+                      </tr>
+                    ) : null}
 
-                    <tr>
-                      <td
-                        style={{
-                          padding: "8px 0",
-                          fontSize: "13px",
-                          fontWeight: 600,
-                          color: "#64748b",
-                          verticalAlign: "top",
-                        }}
-                      >
-                        Duration
-                      </td>
-                      <td
-                        style={{
-                          padding: "8px 0",
-                          fontSize: "14px",
-                          fontWeight: 600,
-                          color: "#0f172a",
-                          verticalAlign: "top",
-                        }}
-                      >
-                        {duration}
-                      </td>
-                    </tr>
+                    {phone ? (
+                      <tr>
+                        <td
+                          style={{
+                            padding: "8px 0",
+                            fontSize: "13px",
+                            fontWeight: 600,
+                            color: "#64748b",
+                            verticalAlign: "top",
+                          }}
+                        >
+                          Contact Phone
+                        </td>
+                        <td
+                          style={{
+                            padding: "8px 0",
+                            fontSize: "14px",
+                            color: "#0f172a",
+                            verticalAlign: "top",
+                          }}
+                        >
+                          {phone}
+                        </td>
+                      </tr>
+                    ) : null}
+
+                    {notes ? (
+                      <tr>
+                        <td
+                          style={{
+                            padding: "8px 0",
+                            fontSize: "13px",
+                            fontWeight: 600,
+                            color: "#64748b",
+                            verticalAlign: "top",
+                          }}
+                        >
+                          Patient Instructions
+                        </td>
+                        <td
+                          style={{
+                            padding: "8px 0",
+                            fontSize: "13px",
+                            fontStyle: "italic",
+                            color: "#475569",
+                            verticalAlign: "top",
+                          }}
+                        >
+                          &quot;{notes}&quot;
+                        </td>
+                      </tr>
+                    ) : null}
+
+                    {submittedAt ? (
+                      <tr>
+                        <td
+                          style={{
+                            padding: "8px 0",
+                            fontSize: "13px",
+                            fontWeight: 600,
+                            color: "#64748b",
+                            verticalAlign: "top",
+                          }}
+                        >
+                          Submitted At
+                        </td>
+                        <td
+                          style={{
+                            padding: "8px 0",
+                            fontSize: "13px",
+                            color: "#64748b",
+                            verticalAlign: "top",
+                          }}
+                        >
+                          {submittedAt}
+                        </td>
+                      </tr>
+                    ) : null}
 
                     <tr>
                       <td
@@ -362,7 +469,6 @@ export function BookingConfirmationEmail({
                           padding: "8px 0",
                           fontSize: "14px",
                           lineHeight: "20px",
-                          fontWeight: 500,
                           color: "#0f172a",
                           verticalAlign: "top",
                         }}
@@ -376,12 +482,12 @@ export function BookingConfirmationEmail({
                 </table>
               </div>
 
-              {/* Important Preparation Notes */}
+              {/* Next Steps Information */}
               <div
                 style={{
-                  backgroundColor: "#eff6ff",
+                  backgroundColor: "#f8fafc",
                   borderRadius: "8px",
-                  border: "1px solid #bfdbfe",
+                  border: "1px solid #e2e8f0",
                   padding: "18px 20px",
                   marginBottom: "28px",
                 }}
@@ -392,26 +498,33 @@ export function BookingConfirmationEmail({
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "0.5px",
-                    color: "#1d4ed8",
+                    color: "#334155",
                     marginBottom: "10px",
                   }}
                 >
-                  Important Preparation Notes
+                  What Happens Next
                 </div>
                 <ul
                   style={{
                     margin: 0,
                     paddingLeft: "20px",
-                    color: "#1e3a8a",
+                    color: "#475569",
                     fontSize: "13px",
                     lineHeight: "20px",
                   }}
                 >
-                  {preparationNotes.map((note, idx) => (
-                    <li key={idx} style={{ marginBottom: "6px" }}>
-                      {note}
-                    </li>
-                  ))}
+                  <li style={{ marginBottom: "6px" }}>
+                    A licensed British Columbia pharmacist reviews your profile and insurance coverage.
+                  </li>
+                  <li style={{ marginBottom: "6px" }}>
+                    You will receive a notification via phone or text once the prescription is labeled and ready.
+                  </li>
+                  <li style={{ marginBottom: "6px" }}>
+                    If you requested delivery, our driver will arrange a delivery window with you.
+                  </li>
+                  <li style={{ marginBottom: "0" }}>
+                    Please have your BC Services Card (PHN) ready when picking up or receiving your medication.
+                  </li>
                 </ul>
               </div>
 
@@ -477,7 +590,7 @@ export function BookingConfirmationEmail({
                       textDecoration: "underline",
                     }}
                   >
-                    View Directions and Parking Information
+                    View Store Hours, Location & Contact Details
                   </a>
                 </div>
               ) : null}
@@ -501,8 +614,7 @@ export function BookingConfirmationEmail({
                 {pharmacyName} | {pharmacyAddress}
               </p>
               <p style={{ margin: "0 0 6px 0" }}>
-                Need to reschedule or cancel? Please notify our dispensary by phone at {pharmacyPhone} at
-                least 24 hours prior to your visit.
+                Phone: {pharmacyPhone} | Fax: (604) 853-1894
               </p>
               <p style={{ margin: 0, color: "#94a3b8", fontSize: "11px" }}>
                 Notice: If you are experiencing a medical emergency, please call 911 or visit the
@@ -516,4 +628,4 @@ export function BookingConfirmationEmail({
   );
 }
 
-export default BookingConfirmationEmail;
+export default RefillConfirmationEmail;

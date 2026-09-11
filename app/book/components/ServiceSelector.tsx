@@ -13,7 +13,6 @@ import {
   Clock,
   ShieldCheck,
   ChevronRight,
-  Info,
   Stethoscope,
   Syringe,
   Pill,
@@ -26,8 +25,8 @@ import {
 interface ServiceSelectorProps {
   selectedService: BookingService | null;
   onSelectService: (service: BookingService) => void;
-  partySize: number;
-  onChangePartySize: (size: number) => void;
+  partySize?: number;
+  onChangePartySize?: (size: number) => void;
   onProceed: () => void;
 }
 
@@ -122,42 +121,14 @@ export default function ServiceSelector({
             </p>
           </div>
 
-          {/* Party Size Selector */}
-          <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50/80 p-2 sm:px-4 sm:py-2.5">
-            <div className="flex items-center gap-2 text-slate-700">
-              <Users size={17} className="text-[var(--brand)]" />
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-700">
-                Party Size:
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              {[1, 2, 3, 4, 5].map((num) => (
-                <button
-                  key={num}
-                  type="button"
-                  onClick={() => onChangePartySize(num)}
-                  className={`h-8 w-8 rounded-xl text-xs font-bold transition-all duration-150 ${
-                    partySize === num
-                      ? "bg-[var(--brand)] text-white shadow-sm ring-2 ring-red-600/30 scale-105"
-                      : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 hover:border-slate-300"
-                  }`}
-                  aria-label={`Party size ${num} person${num > 1 ? "s" : ""}`}
-                >
-                  {num}
-                </button>
-              ))}
+          {/* Locked to 1 Patient per Timeslot */}
+          <div className="flex items-center gap-2.5 rounded-2xl border border-slate-200 bg-slate-50/80 px-3.5 py-2">
+            <Users size={16} className="text-[var(--brand)]" />
+            <div className="text-xs">
+              <span className="font-semibold text-slate-700">1 Patient per Slot</span>
             </div>
           </div>
         </div>
-
-        {partySize > 1 && (
-          <div className="mt-4 flex items-center gap-2.5 rounded-xl bg-red-50/90 border border-red-200 px-4 py-2.5 text-xs font-medium text-red-950 animate-in fade-in">
-            <Info size={16} className="shrink-0 text-[var(--brand)]" />
-            <span>
-              Booking for <strong>{partySize} people</strong>. Consecutive 15-minute appointment slots will be reserved automatically.
-            </span>
-          </div>
-        )}
 
         {/* Search Input */}
         <div className="mt-6 relative">
@@ -294,7 +265,7 @@ export default function ServiceSelector({
                         </span>
                         <span className="inline-flex items-center gap-1 rounded-md bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-600 border border-slate-100">
                           <Clock size={12} className="text-slate-400" />
-                          {service.durationMinutes * partySize} mins
+                          {service.durationMinutes} mins
                         </span>
                       </div>
 
