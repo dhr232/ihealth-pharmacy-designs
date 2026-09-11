@@ -40,13 +40,21 @@ export function BookingConfirmationEmail({
   const greeting = patientName ? `Hello ${patientName},` : "Hello,";
   const cleanPhone = pharmacyPhone.replace(/[^0-9]/g, "");
 
+  // Generate Google Calendar Link
+  const calendarTitle = encodeURIComponent(`iHealth Pharmacy: ${serviceName} [${confirmationId}]`);
+  const calendarDetails = encodeURIComponent(
+    `Appointment at ${pharmacyName}\nService: ${serviceName}\nConfirmation: ${confirmationId}\nAddress: ${pharmacyAddress}\nPhone: ${pharmacyPhone}`
+  );
+  const calendarLocation = encodeURIComponent(`${pharmacyName}, ${pharmacyAddress}`);
+  const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${calendarTitle}&details=${calendarDetails}&location=${calendarLocation}`;
+
   return (
     <div
       style={{
-        backgroundColor: "#f1f5f9",
-        fontFamily: "Arial, Helvetica, sans-serif",
+        backgroundColor: "#f8fafc",
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
         margin: 0,
-        padding: "32px 16px 48px 16px",
+        padding: "24px 12px 40px 12px",
         color: "#0f172a",
       }}
     >
@@ -60,67 +68,95 @@ export function BookingConfirmationEmail({
           maxWidth: "600px",
           margin: "0 auto",
           backgroundColor: "#ffffff",
-          borderRadius: "10px",
+          borderRadius: "16px",
           overflow: "hidden",
-          border: "1px solid #cbd5e1",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+          border: "1px solid #e2e8f0",
+          boxShadow: "0 4px 16px rgba(15, 23, 42, 0.05)",
         }}
       >
         <tbody>
-          {/* Brand Header */}
+          {/* Top Brand Accent Stripe */}
           <tr>
             <td
               style={{
-                backgroundColor: "#0f172a",
-                padding: "24px 32px",
-                borderBottom: "4px solid #059669",
+                height: "5px",
+                backgroundColor: "#C01D16",
+                fontSize: "1px",
+                lineHeight: "1px",
+              }}
+            >
+              &nbsp;
+            </td>
+          </tr>
+
+          {/* Clean Light Header with Transparent Logo */}
+          <tr>
+            <td
+              style={{
+                backgroundColor: "#ffffff",
+                padding: "24px 28px 20px 28px",
+                borderBottom: "1px solid #f1f5f9",
               }}
             >
               <table width="100%" border={0} cellPadding={0} cellSpacing={0}>
                 <tbody>
                   <tr>
                     <td style={{ verticalAlign: "middle" }}>
-                      <img
-                        src="https://ihealthpharmacy.ca/ihealth-logo-main.jpeg"
-                        alt="iHealth Pharmacy"
-                        width="160"
-                        height="48"
-                        style={{
-                          display: "block",
-                          maxWidth: "160px",
-                          height: "auto",
-                          border: "0",
-                          borderRadius: "4px",
-                        }}
-                      />
-                    </td>
-                    <td align="right" style={{ verticalAlign: "middle" }}>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          fontWeight: 700,
-                          textTransform: "uppercase",
-                          letterSpacing: "1px",
-                          color: "#94a3b8",
-                          marginBottom: "4px",
-                        }}
-                      >
-                        Confirmation Code
-                      </div>
-                      <div
-                        style={{
-                          display: "inline-block",
-                          backgroundColor: "#059669",
-                          color: "#ffffff",
-                          fontSize: "13px",
-                          fontWeight: 700,
-                          padding: "6px 14px",
-                          borderRadius: "6px",
-                          letterSpacing: "0.5px",
-                        }}
-                      >
-                        {confirmationId}
-                      </div>
+                      <table border={0} cellPadding={0} cellSpacing={0}>
+                        <tbody>
+                          <tr>
+                            <td style={{ verticalAlign: "middle", paddingRight: "14px" }}>
+                              <img
+                                src="https://ihealthpharmacy.ca/ihealth-logo-transparent.png"
+                                alt="iHealth Pharmacy"
+                                width="44"
+                                height="44"
+                                style={{
+                                  display: "block",
+                                  width: "44px",
+                                  height: "44px",
+                                  border: "0",
+                                  outline: "none",
+                                }}
+                              />
+                            </td>
+                            <td style={{ verticalAlign: "middle" }}>
+                              <div
+                                style={{
+                                  fontSize: "20px",
+                                  fontWeight: 800,
+                                  color: "#0f172a",
+                                  lineHeight: "1.1",
+                                  letterSpacing: "-0.4px",
+                                }}
+                              >
+                                iHealth{" "}
+                                <span
+                                  style={{
+                                    fontSize: "13px",
+                                    fontWeight: 700,
+                                    color: "#64748b",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.5px",
+                                  }}
+                                >
+                                  Pharmacy
+                                </span>
+                              </div>
+                              <div
+                                style={{
+                                  fontSize: "11px",
+                                  fontWeight: 600,
+                                  color: "#059669",
+                                  marginTop: "3px",
+                                }}
+                              >
+                                Abbotsford Dispensary
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </td>
                   </tr>
                 </tbody>
@@ -128,74 +164,114 @@ export function BookingConfirmationEmail({
             </td>
           </tr>
 
-          {/* Title Banner */}
+          {/* Confirmation Hero Banner */}
           <tr>
-            <td
-              style={{
-                backgroundColor: "#f8fafc",
-                padding: "20px 32px",
-                borderBottom: "1px solid #e2e8f0",
-              }}
-            >
-              <h1
+            <td style={{ padding: "28px 28px 12px 28px" }}>
+              <div
                 style={{
-                  margin: 0,
-                  fontSize: "20px",
-                  lineHeight: "26px",
+                  display: "inline-block",
+                  backgroundColor: "#ecfdf5",
+                  color: "#065f46",
+                  border: "1px solid #a7f3d0",
+                  fontSize: "11px",
                   fontWeight: 700,
-                  color: "#0f172a",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.8px",
+                  padding: "4px 12px",
+                  borderRadius: "9999px",
+                  marginBottom: "12px",
                 }}
               >
                 Appointment Confirmed
+              </div>
+
+              <h1
+                style={{
+                  margin: "0 0 8px 0",
+                  fontSize: "22px",
+                  lineHeight: "28px",
+                  fontWeight: 800,
+                  color: "#0f172a",
+                  letterSpacing: "-0.3px",
+                }}
+              >
+                Your Appointment is Scheduled
               </h1>
+
               <p
                 style={{
-                  margin: "6px 0 0 0",
+                  margin: 0,
                   fontSize: "14px",
-                  lineHeight: "20px",
+                  lineHeight: "22px",
                   color: "#475569",
                 }}
               >
-                Thank you for choosing iHealth Pharmacy Abbotsford. Your appointment is reserved.
+                {greeting} thank you for choosing iHealth Pharmacy. Your clinical consultation has been
+                reserved at our Abbotsford dispensary.
               </p>
             </td>
           </tr>
 
-          {/* Main Body */}
+          {/* Dedicated Confirmation Reference Card */}
           <tr>
-            <td style={{ padding: "28px 32px" }}>
-              <p
-                style={{
-                  fontSize: "15px",
-                  lineHeight: "22px",
-                  color: "#1e293b",
-                  marginTop: 0,
-                  marginBottom: "20px",
-                }}
-              >
-                {greeting}
-              </p>
-              <p
-                style={{
-                  fontSize: "14px",
-                  lineHeight: "22px",
-                  color: "#475569",
-                  marginTop: 0,
-                  marginBottom: "24px",
-                }}
-              >
-                Your appointment at {pharmacyName} has been booked. Please review the appointment
-                details and clinical preparation guidelines below.
-              </p>
-
-              {/* Appointment Details Table Card */}
+            <td style={{ padding: "12px 28px" }}>
               <div
                 style={{
-                  backgroundColor: "#f8fafc",
-                  borderRadius: "8px",
+                  backgroundColor: "#fef2f2",
+                  borderRadius: "14px",
+                  border: "1px solid #fecaca",
+                  padding: "20px",
+                  textAlign: "center",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "11px",
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    letterSpacing: "1px",
+                    color: "#991b1b",
+                    marginBottom: "6px",
+                  }}
+                >
+                  Official Confirmation Reference
+                </div>
+                <div
+                  style={{
+                    fontSize: "30px",
+                    lineHeight: "36px",
+                    fontWeight: 900,
+                    fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+                    letterSpacing: "3px",
+                    color: "#7f1d1d",
+                    margin: "4px 0",
+                  }}
+                >
+                  {confirmationId}
+                </div>
+                <div
+                  style={{
+                    fontSize: "12px",
+                    lineHeight: "18px",
+                    color: "#991b1b",
+                    marginTop: "6px",
+                  }}
+                >
+                  Please present this reference number or your BC Services Card when arriving.
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          {/* Appointment Details Table */}
+          <tr>
+            <td style={{ padding: "12px 28px 20px 28px" }}>
+              <div
+                style={{
+                  backgroundColor: "#ffffff",
+                  borderRadius: "14px",
                   border: "1px solid #e2e8f0",
                   padding: "20px",
-                  marginBottom: "28px",
                 }}
               >
                 <div
@@ -203,27 +279,111 @@ export function BookingConfirmationEmail({
                     fontSize: "12px",
                     fontWeight: 700,
                     textTransform: "uppercase",
-                    letterSpacing: "1px",
+                    letterSpacing: "0.8px",
                     color: "#059669",
                     marginBottom: "14px",
-                    borderBottom: "1px solid #e2e8f0",
+                    borderBottom: "1px solid #f1f5f9",
                     paddingBottom: "8px",
                   }}
                 >
-                  Appointment Details
+                  Consultation Summary
                 </div>
 
                 <table width="100%" border={0} cellPadding={0} cellSpacing={0}>
                   <tbody>
+                    <tr>
+                      <td
+                        style={{
+                          padding: "9px 0",
+                          fontSize: "13px",
+                          fontWeight: 600,
+                          color: "#64748b",
+                          width: "38%",
+                          borderBottom: "1px solid #f1f5f9",
+                          verticalAlign: "top",
+                        }}
+                      >
+                        Clinical Service
+                      </td>
+                      <td
+                        style={{
+                          padding: "9px 0",
+                          fontSize: "14px",
+                          fontWeight: 700,
+                          color: "#0f172a",
+                          borderBottom: "1px solid #f1f5f9",
+                          verticalAlign: "top",
+                        }}
+                      >
+                        {serviceName}
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td
+                        style={{
+                          padding: "9px 0",
+                          fontSize: "13px",
+                          fontWeight: 600,
+                          color: "#64748b",
+                          borderBottom: "1px solid #f1f5f9",
+                          verticalAlign: "top",
+                        }}
+                      >
+                        Date & Time
+                      </td>
+                      <td
+                        style={{
+                          padding: "9px 0",
+                          fontSize: "14px",
+                          fontWeight: 700,
+                          color: "#0f172a",
+                          borderBottom: "1px solid #f1f5f9",
+                          verticalAlign: "top",
+                        }}
+                      >
+                        {date} at {time}
+                      </td>
+                    </tr>
+
+                    {duration ? (
+                      <tr>
+                        <td
+                          style={{
+                            padding: "9px 0",
+                            fontSize: "13px",
+                            fontWeight: 600,
+                            color: "#64748b",
+                            borderBottom: "1px solid #f1f5f9",
+                            verticalAlign: "top",
+                          }}
+                        >
+                          Expected Duration
+                        </td>
+                        <td
+                          style={{
+                            padding: "9px 0",
+                            fontSize: "13px",
+                            fontWeight: 600,
+                            color: "#0f172a",
+                            borderBottom: "1px solid #f1f5f9",
+                            verticalAlign: "top",
+                          }}
+                        >
+                          {duration}
+                        </td>
+                      </tr>
+                    ) : null}
+
                     {patientName ? (
                       <tr>
                         <td
                           style={{
-                            padding: "8px 0",
+                            padding: "9px 0",
                             fontSize: "13px",
                             fontWeight: 600,
                             color: "#64748b",
-                            width: "35%",
+                            borderBottom: "1px solid #f1f5f9",
                             verticalAlign: "top",
                           }}
                         >
@@ -231,10 +391,11 @@ export function BookingConfirmationEmail({
                         </td>
                         <td
                           style={{
-                            padding: "8px 0",
+                            padding: "9px 0",
                             fontSize: "14px",
                             fontWeight: 700,
                             color: "#0f172a",
+                            borderBottom: "1px solid #f1f5f9",
                             verticalAlign: "top",
                           }}
                         >
@@ -247,122 +408,20 @@ export function BookingConfirmationEmail({
                     <tr>
                       <td
                         style={{
-                          padding: "8px 0",
-                          fontSize: "13px",
-                          fontWeight: 600,
-                          color: "#64748b",
-                          width: "35%",
-                          verticalAlign: "top",
-                        }}
-                      >
-                        Service
-                      </td>
-                      <td
-                        style={{
-                          padding: "8px 0",
-                          fontSize: "14px",
-                          fontWeight: 700,
-                          color: "#0f172a",
-                          verticalAlign: "top",
-                        }}
-                      >
-                        {serviceName}
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td
-                        style={{
-                          padding: "8px 0",
+                          padding: "9px 0",
                           fontSize: "13px",
                           fontWeight: 600,
                           color: "#64748b",
                           verticalAlign: "top",
                         }}
                       >
-                        Date
+                        Clinic Location
                       </td>
                       <td
                         style={{
-                          padding: "8px 0",
-                          fontSize: "14px",
-                          fontWeight: 600,
-                          color: "#0f172a",
-                          verticalAlign: "top",
-                        }}
-                      >
-                        {date}
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td
-                        style={{
-                          padding: "8px 0",
+                          padding: "9px 0",
                           fontSize: "13px",
-                          fontWeight: 600,
-                          color: "#64748b",
-                          verticalAlign: "top",
-                        }}
-                      >
-                        Time
-                      </td>
-                      <td
-                        style={{
-                          padding: "8px 0",
-                          fontSize: "14px",
-                          fontWeight: 600,
-                          color: "#0f172a",
-                          verticalAlign: "top",
-                        }}
-                      >
-                        {time}
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td
-                        style={{
-                          padding: "8px 0",
-                          fontSize: "13px",
-                          fontWeight: 600,
-                          color: "#64748b",
-                          verticalAlign: "top",
-                        }}
-                      >
-                        Duration
-                      </td>
-                      <td
-                        style={{
-                          padding: "8px 0",
-                          fontSize: "14px",
-                          fontWeight: 600,
-                          color: "#0f172a",
-                          verticalAlign: "top",
-                        }}
-                      >
-                        {duration}
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td
-                        style={{
-                          padding: "8px 0",
-                          fontSize: "13px",
-                          fontWeight: 600,
-                          color: "#64748b",
-                          verticalAlign: "top",
-                        }}
-                      >
-                        Location
-                      </td>
-                      <td
-                        style={{
-                          padding: "8px 0",
-                          fontSize: "14px",
-                          lineHeight: "20px",
-                          fontWeight: 500,
+                          lineHeight: "19px",
                           color: "#0f172a",
                           verticalAlign: "top",
                         }}
@@ -465,6 +524,28 @@ export function BookingConfirmationEmail({
                     </tr>
                   </tbody>
                 </table>
+              </div>
+
+              {/* Add to Calendar Button */}
+              <div style={{ textAlign: "center", marginBottom: "12px" }}>
+                <a
+                  href={googleCalendarUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-block",
+                    backgroundColor: "#f8fafc",
+                    color: "#334155",
+                    fontSize: "12px",
+                    fontWeight: 600,
+                    textDecoration: "none",
+                    padding: "8px 16px",
+                    borderRadius: "6px",
+                    border: "1px solid #cbd5e1",
+                  }}
+                >
+                  + Add to Google Calendar
+                </a>
               </div>
 
               {contactUrl ? (

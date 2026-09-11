@@ -35,30 +35,32 @@ export function RefillConfirmationEmail({
   contactUrl = "https://ihealthpharmacy.ca/contact",
 }: RefillConfirmationEmailProps) {
   const greeting = patientName ? `Hello ${patientName},` : "Hello,";
-  const cleanPhone = pharmacyPhone.replace(/[^0-9]/g, "");
+  const cleanPhone = (pharmacyPhone || "").replace(/[^0-9]/g, "");
 
   // Format Rx numbers display
   let rxDisplay = "Prescription Refill Request";
   if (refillType === "photo") {
-    rxDisplay = "Photo Refill Received";
+    rxDisplay = "Photo Prescription Refill";
+  } else if (refillType === "transfer") {
+    rxDisplay = "Prescription Pharmacy Transfer";
   } else if (Array.isArray(rxNumbers)) {
-    rxDisplay = rxNumbers.length > 0 ? rxNumbers.join(", ") : "Standard Refill Request";
+    rxDisplay = rxNumbers.length > 0 ? rxNumbers.join(", ") : "Prescription Refill";
   } else if (typeof rxNumbers === "string" && rxNumbers.trim()) {
     rxDisplay = rxNumbers;
   }
 
   const fulfillmentDisplay =
-    pickupOrDelivery.toLowerCase() === "delivery"
+    (pickupOrDelivery || "pickup").toLowerCase() === "delivery"
       ? "Free Home Delivery (Abbotsford)"
       : "In-Store Pickup at Dispensary";
 
   return (
     <div
       style={{
-        backgroundColor: "#f1f5f9",
-        fontFamily: "Arial, Helvetica, sans-serif",
+        backgroundColor: "#f8fafc",
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
         margin: 0,
-        padding: "32px 16px 48px 16px",
+        padding: "24px 12px 40px 12px",
         color: "#0f172a",
       }}
     >
@@ -72,67 +74,95 @@ export function RefillConfirmationEmail({
           maxWidth: "600px",
           margin: "0 auto",
           backgroundColor: "#ffffff",
-          borderRadius: "10px",
+          borderRadius: "16px",
           overflow: "hidden",
-          border: "1px solid #cbd5e1",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+          border: "1px solid #e2e8f0",
+          boxShadow: "0 4px 16px rgba(15, 23, 42, 0.05)",
         }}
       >
         <tbody>
-          {/* Header */}
+          {/* Top Brand Accent Stripe */}
           <tr>
             <td
               style={{
-                backgroundColor: "#0f172a",
-                padding: "24px 32px",
-                borderBottom: "4px solid #059669",
+                height: "5px",
+                backgroundColor: "#C01D16",
+                fontSize: "1px",
+                lineHeight: "1px",
+              }}
+            >
+              &nbsp;
+            </td>
+          </tr>
+
+          {/* Clean Light Header with Transparent Logo */}
+          <tr>
+            <td
+              style={{
+                backgroundColor: "#ffffff",
+                padding: "24px 28px 20px 28px",
+                borderBottom: "1px solid #f1f5f9",
               }}
             >
               <table width="100%" border={0} cellPadding={0} cellSpacing={0}>
                 <tbody>
                   <tr>
                     <td style={{ verticalAlign: "middle" }}>
-                      <img
-                        src="https://ihealthpharmacy.ca/ihealth-logo-main.jpeg"
-                        alt="iHealth Pharmacy"
-                        width="160"
-                        height="48"
-                        style={{
-                          display: "block",
-                          maxWidth: "160px",
-                          height: "auto",
-                          border: "0",
-                          borderRadius: "4px",
-                        }}
-                      />
-                    </td>
-                    <td align="right" style={{ verticalAlign: "middle" }}>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          fontWeight: 700,
-                          textTransform: "uppercase",
-                          letterSpacing: "1px",
-                          color: "#94a3b8",
-                          marginBottom: "4px",
-                        }}
-                      >
-                        Refill ID
-                      </div>
-                      <div
-                        style={{
-                          display: "inline-block",
-                          backgroundColor: "#059669",
-                          color: "#ffffff",
-                          fontSize: "13px",
-                          fontWeight: 700,
-                          padding: "6px 14px",
-                          borderRadius: "6px",
-                          letterSpacing: "0.5px",
-                        }}
-                      >
-                        {confirmationId}
-                      </div>
+                      <table border={0} cellPadding={0} cellSpacing={0}>
+                        <tbody>
+                          <tr>
+                            <td style={{ verticalAlign: "middle", paddingRight: "14px" }}>
+                              <img
+                                src="https://ihealthpharmacy.ca/ihealth-logo-transparent.png"
+                                alt="iHealth Pharmacy"
+                                width="44"
+                                height="44"
+                                style={{
+                                  display: "block",
+                                  width: "44px",
+                                  height: "44px",
+                                  border: "0",
+                                  outline: "none",
+                                }}
+                              />
+                            </td>
+                            <td style={{ verticalAlign: "middle" }}>
+                              <div
+                                style={{
+                                  fontSize: "20px",
+                                  fontWeight: 800,
+                                  color: "#0f172a",
+                                  lineHeight: "1.1",
+                                  letterSpacing: "-0.4px",
+                                }}
+                              >
+                                iHealth{" "}
+                                <span
+                                  style={{
+                                    fontSize: "13px",
+                                    fontWeight: 700,
+                                    color: "#64748b",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.5px",
+                                  }}
+                                >
+                                  Pharmacy
+                                </span>
+                              </div>
+                              <div
+                                style={{
+                                  fontSize: "11px",
+                                  fontWeight: 600,
+                                  color: "#059669",
+                                  marginTop: "3px",
+                                }}
+                              >
+                                Abbotsford Dispensary
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </td>
                   </tr>
                 </tbody>
@@ -140,93 +170,148 @@ export function RefillConfirmationEmail({
             </td>
           </tr>
 
-          {/* Title Banner */}
+          {/* Hero Banner */}
           <tr>
-            <td
-              style={{
-                backgroundColor: "#f8fafc",
-                padding: "20px 32px",
-                borderBottom: "1px solid #e2e8f0",
-              }}
-            >
-              <h1
+            <td style={{ padding: "28px 28px 12px 28px" }}>
+              <div
                 style={{
-                  margin: 0,
-                  fontSize: "20px",
-                  lineHeight: "26px",
+                  display: "inline-block",
+                  backgroundColor: "#ecfdf5",
+                  color: "#065f46",
+                  border: "1px solid #a7f3d0",
+                  fontSize: "11px",
                   fontWeight: 700,
-                  color: "#0f172a",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.8px",
+                  padding: "4px 12px",
+                  borderRadius: "9999px",
+                  marginBottom: "12px",
                 }}
               >
                 Refill Request Received
+              </div>
+
+              <h1
+                style={{
+                  margin: "0 0 8px 0",
+                  fontSize: "22px",
+                  lineHeight: "28px",
+                  fontWeight: 800,
+                  color: "#0f172a",
+                  letterSpacing: "-0.3px",
+                }}
+              >
+                Your Prescription Order is in Queue
               </h1>
+
               <p
                 style={{
-                  margin: "6px 0 0 0",
+                  margin: 0,
                   fontSize: "14px",
-                  lineHeight: "20px",
+                  lineHeight: "22px",
                   color: "#475569",
                 }}
               >
-                Our dispensary team has received your prescription order.
+                {greeting} thank you for choosing iHealth Pharmacy. Our dispensary team has received
+                your prescription request and our licensed pharmacists are preparing your order.
               </p>
             </td>
           </tr>
 
-          {/* Body Content */}
+          {/* Dedicated Refill Reference Card */}
           <tr>
-            <td style={{ padding: "28px 32px" }}>
-              <p
-                style={{
-                  fontSize: "15px",
-                  lineHeight: "22px",
-                  color: "#1e293b",
-                  marginTop: 0,
-                  marginBottom: "18px",
-                }}
-              >
-                {greeting}
-              </p>
-
-              {/* Expected Turnaround Highlight Box */}
+            <td style={{ padding: "12px 28px" }}>
               <div
                 style={{
                   backgroundColor: "#ecfdf5",
-                  borderLeft: "4px solid #059669",
-                  borderRadius: "4px",
-                  padding: "16px 20px",
-                  marginBottom: "24px",
+                  borderRadius: "14px",
+                  border: "1px solid #a7f3d0",
+                  padding: "20px",
+                  textAlign: "center",
                 }}
               >
                 <div
                   style={{
-                    fontSize: "14px",
+                    fontSize: "11px",
                     fontWeight: 700,
+                    textTransform: "uppercase",
+                    letterSpacing: "1px",
                     color: "#065f46",
-                    marginBottom: "4px",
+                    marginBottom: "6px",
                   }}
                 >
-                  Turnaround Notice
+                  Official Refill Reference
                 </div>
                 <div
                   style={{
-                    fontSize: "14px",
-                    lineHeight: "22px",
+                    fontSize: "30px",
+                    lineHeight: "36px",
+                    fontWeight: 900,
+                    fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+                    letterSpacing: "3px",
+                    color: "#047857",
+                    margin: "4px 0",
+                  }}
+                >
+                  {confirmationId}
+                </div>
+                <div
+                  style={{
+                    fontSize: "12px",
+                    lineHeight: "18px",
+                    color: "#065f46",
+                    marginTop: "6px",
+                  }}
+                >
+                  Please keep this reference code for your records when picking up or contacting our dispensary.
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          {/* Turnaround Notice Highlight */}
+          <tr>
+            <td style={{ padding: "8px 28px 16px 28px" }}>
+              <div
+                style={{
+                  backgroundColor: "#f0fdf4",
+                  borderLeft: "4px solid #059669",
+                  borderRadius: "8px",
+                  padding: "14px 18px",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "13px",
+                    fontWeight: 700,
+                    color: "#065f46",
+                    marginBottom: "3px",
+                  }}
+                >
+                  Estimated Turnaround Time
+                </div>
+                <div
+                  style={{
+                    fontSize: "13px",
+                    lineHeight: "20px",
                     color: "#047857",
                   }}
                 >
-                  Your prescription is being processed and is usually ready within 1 hour.
+                  Your prescription is being processed and is usually ready within 1 hour during dispensary hours.
                 </div>
               </div>
+            </td>
+          </tr>
 
-              {/* Summary of Submission Table Card */}
+          {/* Summary of Submission Table */}
+          <tr>
+            <td style={{ padding: "8px 28px 20px 28px" }}>
               <div
                 style={{
-                  backgroundColor: "#f8fafc",
-                  borderRadius: "8px",
+                  backgroundColor: "#ffffff",
+                  borderRadius: "14px",
                   border: "1px solid #e2e8f0",
                   padding: "20px",
-                  marginBottom: "28px",
                 }}
               >
                 <div
@@ -234,14 +319,14 @@ export function RefillConfirmationEmail({
                     fontSize: "12px",
                     fontWeight: 700,
                     textTransform: "uppercase",
-                    letterSpacing: "1px",
+                    letterSpacing: "0.8px",
                     color: "#059669",
                     marginBottom: "14px",
-                    borderBottom: "1px solid #e2e8f0",
+                    borderBottom: "1px solid #f1f5f9",
                     paddingBottom: "8px",
                   }}
                 >
-                  Refill Summary
+                  Refill Order Details
                 </div>
 
                 <table width="100%" border={0} cellPadding={0} cellSpacing={0}>
@@ -249,11 +334,12 @@ export function RefillConfirmationEmail({
                     <tr>
                       <td
                         style={{
-                          padding: "8px 0",
+                          padding: "9px 0",
                           fontSize: "13px",
                           fontWeight: 600,
                           color: "#64748b",
-                          width: "35%",
+                          width: "38%",
+                          borderBottom: "1px solid #f1f5f9",
                           verticalAlign: "top",
                         }}
                       >
@@ -261,10 +347,11 @@ export function RefillConfirmationEmail({
                       </td>
                       <td
                         style={{
-                          padding: "8px 0",
+                          padding: "9px 0",
                           fontSize: "14px",
                           fontWeight: 700,
-                          color: "#059669",
+                          color: "#047857",
+                          borderBottom: "1px solid #f1f5f9",
                           verticalAlign: "top",
                         }}
                       >
@@ -275,10 +362,11 @@ export function RefillConfirmationEmail({
                     <tr>
                       <td
                         style={{
-                          padding: "8px 0",
+                          padding: "9px 0",
                           fontSize: "13px",
                           fontWeight: 600,
                           color: "#64748b",
+                          borderBottom: "1px solid #f1f5f9",
                           verticalAlign: "top",
                         }}
                       >
@@ -286,24 +374,30 @@ export function RefillConfirmationEmail({
                       </td>
                       <td
                         style={{
-                          padding: "8px 0",
+                          padding: "9px 0",
                           fontSize: "14px",
                           fontWeight: 600,
                           color: "#0f172a",
+                          borderBottom: "1px solid #f1f5f9",
                           verticalAlign: "top",
                         }}
                       >
-                        {refillType === "photo" ? "Prescription Photo Refill" : "Prescription Numbers Refill"}
+                        {refillType === "photo"
+                          ? "Prescription Photo Refill"
+                          : refillType === "transfer"
+                          ? "Prescription Transfer"
+                          : "Prescription Numbers Refill"}
                       </td>
                     </tr>
 
                     <tr>
                       <td
                         style={{
-                          padding: "8px 0",
+                          padding: "9px 0",
                           fontSize: "13px",
                           fontWeight: 600,
                           color: "#64748b",
+                          borderBottom: "1px solid #f1f5f9",
                           verticalAlign: "top",
                         }}
                       >
@@ -311,10 +405,11 @@ export function RefillConfirmationEmail({
                       </td>
                       <td
                         style={{
-                          padding: "8px 0",
+                          padding: "9px 0",
                           fontSize: "14px",
                           fontWeight: 700,
                           color: "#0f172a",
+                          borderBottom: "1px solid #f1f5f9",
                           verticalAlign: "top",
                         }}
                       >
@@ -325,21 +420,23 @@ export function RefillConfirmationEmail({
                     <tr>
                       <td
                         style={{
-                          padding: "8px 0",
+                          padding: "9px 0",
                           fontSize: "13px",
                           fontWeight: 600,
                           color: "#64748b",
+                          borderBottom: "1px solid #f1f5f9",
                           verticalAlign: "top",
                         }}
                       >
-                        Fulfillment Preference
+                        Fulfillment Method
                       </td>
                       <td
                         style={{
-                          padding: "8px 0",
+                          padding: "9px 0",
                           fontSize: "14px",
                           fontWeight: 600,
                           color: "#0f172a",
+                          borderBottom: "1px solid #f1f5f9",
                           verticalAlign: "top",
                         }}
                       >
@@ -351,10 +448,11 @@ export function RefillConfirmationEmail({
                       <tr>
                         <td
                           style={{
-                            padding: "8px 0",
+                            padding: "9px 0",
                             fontSize: "13px",
                             fontWeight: 600,
                             color: "#64748b",
+                            borderBottom: "1px solid #f1f5f9",
                             verticalAlign: "top",
                           }}
                         >
@@ -362,9 +460,10 @@ export function RefillConfirmationEmail({
                         </td>
                         <td
                           style={{
-                            padding: "8px 0",
+                            padding: "9px 0",
                             fontSize: "14px",
                             color: "#0f172a",
+                            borderBottom: "1px solid #f1f5f9",
                             verticalAlign: "top",
                           }}
                         >
@@ -377,10 +476,11 @@ export function RefillConfirmationEmail({
                       <tr>
                         <td
                           style={{
-                            padding: "8px 0",
+                            padding: "9px 0",
                             fontSize: "13px",
                             fontWeight: 600,
                             color: "#64748b",
+                            borderBottom: "1px solid #f1f5f9",
                             verticalAlign: "top",
                           }}
                         >
@@ -388,9 +488,10 @@ export function RefillConfirmationEmail({
                         </td>
                         <td
                           style={{
-                            padding: "8px 0",
+                            padding: "9px 0",
                             fontSize: "14px",
                             color: "#0f172a",
+                            borderBottom: "1px solid #f1f5f9",
                             verticalAlign: "top",
                           }}
                         >
@@ -403,10 +504,11 @@ export function RefillConfirmationEmail({
                       <tr>
                         <td
                           style={{
-                            padding: "8px 0",
+                            padding: "9px 0",
                             fontSize: "13px",
                             fontWeight: 600,
                             color: "#64748b",
+                            borderBottom: "1px solid #f1f5f9",
                             verticalAlign: "top",
                           }}
                         >
@@ -414,10 +516,11 @@ export function RefillConfirmationEmail({
                         </td>
                         <td
                           style={{
-                            padding: "8px 0",
+                            padding: "9px 0",
                             fontSize: "13px",
                             fontStyle: "italic",
                             color: "#475569",
+                            borderBottom: "1px solid #f1f5f9",
                             verticalAlign: "top",
                           }}
                         >
@@ -430,10 +533,11 @@ export function RefillConfirmationEmail({
                       <tr>
                         <td
                           style={{
-                            padding: "8px 0",
+                            padding: "9px 0",
                             fontSize: "13px",
                             fontWeight: 600,
                             color: "#64748b",
+                            borderBottom: "1px solid #f1f5f9",
                             verticalAlign: "top",
                           }}
                         >
@@ -441,9 +545,10 @@ export function RefillConfirmationEmail({
                         </td>
                         <td
                           style={{
-                            padding: "8px 0",
+                            padding: "9px 0",
                             fontSize: "13px",
                             color: "#64748b",
+                            borderBottom: "1px solid #f1f5f9",
                             verticalAlign: "top",
                           }}
                         >
@@ -455,20 +560,20 @@ export function RefillConfirmationEmail({
                     <tr>
                       <td
                         style={{
-                          padding: "8px 0",
+                          padding: "9px 0",
                           fontSize: "13px",
                           fontWeight: 600,
                           color: "#64748b",
                           verticalAlign: "top",
                         }}
                       >
-                        Location
+                        Pharmacy Location
                       </td>
                       <td
                         style={{
-                          padding: "8px 0",
-                          fontSize: "14px",
-                          lineHeight: "20px",
+                          padding: "9px 0",
+                          fontSize: "13px",
+                          lineHeight: "19px",
                           color: "#0f172a",
                           verticalAlign: "top",
                         }}
@@ -482,14 +587,15 @@ export function RefillConfirmationEmail({
                 </table>
               </div>
 
-              {/* Next Steps Information */}
+              {/* What Happens Next Card */}
               <div
                 style={{
                   backgroundColor: "#f8fafc",
-                  borderRadius: "8px",
+                  borderRadius: "12px",
                   border: "1px solid #e2e8f0",
                   padding: "18px 20px",
-                  marginBottom: "28px",
+                  marginTop: "16px",
+                  marginBottom: "24px",
                 }}
               >
                 <div
@@ -520,7 +626,7 @@ export function RefillConfirmationEmail({
                     You will receive a notification via phone or text once the prescription is labeled and ready.
                   </li>
                   <li style={{ marginBottom: "6px" }}>
-                    If you requested delivery, our driver will arrange a delivery window with you.
+                    If you requested delivery, our driver will confirm a delivery window with you.
                   </li>
                   <li style={{ marginBottom: "0" }}>
                     Please have your BC Services Card (PHN) ready when picking up or receiving your medication.
@@ -550,7 +656,7 @@ export function RefillConfirmationEmail({
                             fontWeight: 700,
                             textDecoration: "none",
                             padding: "12px 20px",
-                            borderRadius: "6px",
+                            borderRadius: "8px",
                             textAlign: "center",
                           }}
                         >
@@ -568,7 +674,7 @@ export function RefillConfirmationEmail({
                             fontWeight: 700,
                             textDecoration: "none",
                             padding: "12px 20px",
-                            borderRadius: "6px",
+                            borderRadius: "8px",
                             textAlign: "center",
                           }}
                         >
@@ -597,7 +703,7 @@ export function RefillConfirmationEmail({
             </td>
           </tr>
 
-          {/* Footer */}
+          {/* Clean Footer */}
           <tr>
             <td
               style={{

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import * as React from "react";
 
 export interface TwoFactorCodeEmailProps {
@@ -19,12 +20,11 @@ export function TwoFactorCodeEmail({
     <div
       style={{
         backgroundColor: "#f8fafc",
-        fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
         margin: 0,
-        padding: "32px 16px",
+        padding: "24px 12px 40px 12px",
         color: "#0f172a",
       }}
-      className="bg-slate-50 text-slate-900 font-sans p-8"
     >
       <table
         align="center"
@@ -36,53 +36,112 @@ export function TwoFactorCodeEmail({
           maxWidth: "540px",
           margin: "0 auto",
           backgroundColor: "#ffffff",
-          borderRadius: "12px",
+          borderRadius: "16px",
           overflow: "hidden",
           border: "1px solid #e2e8f0",
-          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
+          boxShadow: "0 4px 16px rgba(15, 23, 42, 0.05)",
         }}
-        className="max-w-lg mx-auto bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm"
       >
-        {/* Header */}
         <tbody>
+          {/* Top Brand Accent Stripe */}
           <tr>
             <td
               style={{
-                backgroundColor: "#0f172a",
-                padding: "24px 32px",
-                borderBottom: "3px solid #059669",
+                height: "5px",
+                backgroundColor: "#C01D16",
+                fontSize: "1px",
+                lineHeight: "1px",
               }}
-              className="bg-slate-900 px-8 py-6 border-b-3 border-emerald-600"
+            >
+              &nbsp;
+            </td>
+          </tr>
+
+          {/* Clean Light Header with Transparent Logo */}
+          <tr>
+            <td
+              style={{
+                backgroundColor: "#ffffff",
+                padding: "24px 28px 20px 28px",
+                borderBottom: "1px solid #f1f5f9",
+              }}
             >
               <table width="100%" border={0} cellPadding={0} cellSpacing={0}>
                 <tbody>
                   <tr>
-                    <td>
-                      <p
+                    <td style={{ verticalAlign: "middle" }}>
+                      <table border={0} cellPadding={0} cellSpacing={0}>
+                        <tbody>
+                          <tr>
+                            <td style={{ verticalAlign: "middle", paddingRight: "14px" }}>
+                              <img
+                                src="https://ihealthpharmacy.ca/ihealth-logo-transparent.png"
+                                alt="iHealth Pharmacy"
+                                width="44"
+                                height="44"
+                                style={{
+                                  display: "block",
+                                  width: "44px",
+                                  height: "44px",
+                                  border: "0",
+                                  outline: "none",
+                                }}
+                              />
+                            </td>
+                            <td style={{ verticalAlign: "middle" }}>
+                              <div
+                                style={{
+                                  fontSize: "20px",
+                                  fontWeight: 800,
+                                  color: "#0f172a",
+                                  lineHeight: "1.1",
+                                  letterSpacing: "-0.4px",
+                                }}
+                              >
+                                iHealth{" "}
+                                <span
+                                  style={{
+                                    fontSize: "13px",
+                                    fontWeight: 700,
+                                    color: "#64748b",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.5px",
+                                  }}
+                                >
+                                  Pharmacy
+                                </span>
+                              </div>
+                              <div
+                                style={{
+                                  fontSize: "11px",
+                                  fontWeight: 600,
+                                  color: "#059669",
+                                  marginTop: "3px",
+                                }}
+                              >
+                                Staff Security & Verification
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                    <td align="right" style={{ verticalAlign: "middle" }}>
+                      <div
                         style={{
-                          margin: 0,
-                          fontSize: "12px",
+                          display: "inline-block",
+                          backgroundColor: "#fef2f2",
+                          color: "#991b1b",
+                          border: "1px solid #fecaca",
+                          fontSize: "11px",
                           fontWeight: 700,
-                          letterSpacing: "1.5px",
-                          textTransform: "uppercase",
-                          color: "#10b981",
+                          letterSpacing: "0.5px",
+                          padding: "4px 10px",
+                          borderRadius: "9999px",
                         }}
-                        className="text-xs font-bold tracking-wider uppercase text-emerald-400"
                       >
-                        iHealth Pharmacy Security
-                      </p>
-                      <h1
-                        style={{
-                          margin: "4px 0 0 0",
-                          fontSize: "20px",
-                          fontWeight: 700,
-                          color: "#ffffff",
-                          lineHeight: "26px",
-                        }}
-                        className="text-lg font-bold text-white mt-1"
-                      >
-                        One-Time Verification Code
-                      </h1>
+                        SECURITY ALERT
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -92,84 +151,92 @@ export function TwoFactorCodeEmail({
 
           {/* Body Content */}
           <tr>
-            <td style={{ padding: "32px" }} className="p-8">
+            <td style={{ padding: "28px 28px 20px 28px" }}>
+              <h1
+                style={{
+                  margin: "0 0 8px 0",
+                  fontSize: "20px",
+                  lineHeight: "26px",
+                  fontWeight: 800,
+                  color: "#0f172a",
+                  letterSpacing: "-0.3px",
+                }}
+              >
+                One-Time Verification Code
+              </h1>
+
               <p
                 style={{
-                  fontSize: "15px",
-                  lineHeight: "24px",
+                  fontSize: "14px",
+                  lineHeight: "22px",
                   color: "#334155",
                   marginTop: 0,
-                  marginBottom: "16px",
+                  marginBottom: "12px",
                 }}
-                className="text-slate-700 text-sm mb-4 mt-0"
               >
                 {greeting}
               </p>
+
               <p
                 style={{
                   fontSize: "14px",
                   lineHeight: "22px",
                   color: "#475569",
-                  margin: "0 0 24px 0",
+                  margin: "0 0 20px 0",
                 }}
-                className="text-slate-600 text-sm mb-6"
               >
-                We received a request to verify your account or confirm access for{" "}
-                <strong>{email}</strong>. Use the one-time code below to complete authentication:
+                We received a request to authenticate staff access for <strong>{email}</strong>.
+                Use the one-time 6-digit code below to complete sign-in:
               </p>
 
-              {/* High-Contrast OTP Code Box */}
+              {/* Clean High-Contrast Verification Code Box */}
               <div
                 style={{
-                  backgroundColor: "#0f172a",
-                  borderRadius: "8px",
+                  backgroundColor: "#f0fdf4",
+                  borderRadius: "14px",
                   border: "2px solid #059669",
                   padding: "24px 16px",
                   textAlign: "center",
                   marginBottom: "20px",
                 }}
-                className="bg-slate-900 rounded-lg border-2 border-emerald-600 p-6 text-center mb-5"
               >
-                <span
+                <div
                   style={{
-                    display: "block",
-                    fontSize: "12px",
-                    fontWeight: 600,
+                    fontSize: "11px",
+                    fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "2px",
-                    color: "#94a3b8",
+                    color: "#065f46",
                     marginBottom: "8px",
                   }}
-                  className="block text-xs font-semibold uppercase tracking-widest text-slate-400 mb-2"
                 >
                   Verification Code
-                </span>
-                <span
+                </div>
+                <div
                   style={{
                     display: "inline-block",
                     fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
-                    fontSize: "36px",
-                    fontWeight: 800,
+                    fontSize: "38px",
+                    lineHeight: "44px",
+                    fontWeight: 900,
                     letterSpacing: "8px",
-                    color: "#ffffff",
+                    color: "#0f172a",
                     userSelect: "all",
                   }}
-                  className="font-mono text-4xl font-extrabold tracking-widest text-white select-all"
                 >
                   {code}
-                </span>
+                </div>
               </div>
 
               {/* Expiry Warning Box */}
               <div
                 style={{
-                  backgroundColor: "#fef3c7",
+                  backgroundColor: "#fffbeb",
                   borderLeft: "4px solid #d97706",
                   padding: "12px 16px",
-                  borderRadius: "4px",
+                  borderRadius: "8px",
                   marginBottom: "24px",
                 }}
-                className="bg-amber-50 border-l-4 border-amber-600 p-3 rounded mb-6"
               >
                 <p
                   style={{
@@ -179,7 +246,6 @@ export function TwoFactorCodeEmail({
                     color: "#92400e",
                     fontWeight: 600,
                   }}
-                  className="text-amber-800 text-xs font-semibold"
                 >
                   Expiry Notice: This code will expire in {expiresMinutes} minutes.
                 </p>
@@ -188,25 +254,23 @@ export function TwoFactorCodeEmail({
               {/* Security Advisory */}
               <div
                 style={{
-                  borderTop: "1px solid #e2e8f0",
+                  borderTop: "1px solid #f1f5f9",
                   paddingTop: "20px",
                   marginTop: "8px",
                 }}
-                className="border-t border-slate-200 pt-5 mt-2"
               >
-                <h2
+                <div
                   style={{
-                    fontSize: "13px",
+                    fontSize: "12px",
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "0.5px",
                     color: "#0f172a",
-                    margin: "0 0 8px 0",
+                    marginBottom: "8px",
                   }}
-                  className="text-xs font-bold uppercase tracking-wide text-slate-900 mb-2"
                 >
                   Security Advisory
-                </h2>
+                </div>
                 <p
                   style={{
                     fontSize: "13px",
@@ -214,10 +278,9 @@ export function TwoFactorCodeEmail({
                     color: "#64748b",
                     margin: "0 0 8px 0",
                   }}
-                  className="text-slate-500 text-xs mb-2"
                 >
-                  iHealth Pharmacy staff will never ask you for your verification code over the phone or by email.
-                  Never share this code with anyone.
+                  iHealth Pharmacy staff will never ask you for your verification code over the phone
+                  or by email. Never share this code with anyone.
                 </p>
                 <p
                   style={{
@@ -226,10 +289,9 @@ export function TwoFactorCodeEmail({
                     color: "#64748b",
                     margin: 0,
                   }}
-                  className="text-slate-500 text-xs"
                 >
                   If you did not initiate this request, someone may be attempting to access your profile.
-                  Please contact the pharmacy immediately at <strong>(604) 746-4444</strong>.
+                  Please notify pharmacy administration immediately at <strong>(604) 853-1893</strong>.
                 </p>
               </div>
             </td>
@@ -239,21 +301,20 @@ export function TwoFactorCodeEmail({
           <tr>
             <td
               style={{
-                backgroundColor: "#f1f5f9",
-                padding: "16px 32px",
+                backgroundColor: "#f8fafc",
+                padding: "20px 32px",
                 borderTop: "1px solid #e2e8f0",
                 fontSize: "11px",
                 lineHeight: "16px",
                 color: "#64748b",
                 textAlign: "center",
               }}
-              className="bg-slate-100 p-4 border-t border-slate-200 text-xs text-slate-500 text-center"
             >
-              <p style={{ margin: "0 0 4px 0" }}>
-                iHealth Pharmacy Abbotsford &bull; #105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S1
+              <p style={{ margin: "0 0 4px 0", fontWeight: 600, color: "#475569" }}>
+                iHealth Pharmacy Abbotsford | #105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S3
               </p>
               <p style={{ margin: 0 }}>
-                Automated security message. Responses to this email address are not monitored.
+                Automated security message. Replies to this email address are not monitored.
               </p>
             </td>
           </tr>

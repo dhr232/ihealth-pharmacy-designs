@@ -56,14 +56,15 @@ export function StaffNotificationEmail({
 }: StaffNotificationEmailProps) {
   const isAppointment = notificationType === "appointment";
   const alertTitle = isAppointment ? "New Appointment Booking" : "New Prescription Refill Request";
-  const badgeText = isAppointment ? "BOOKING ALERT" : "REFILL INTAKE";
-  const badgeColor = isAppointment ? "#0369a1" : "#059669";
+  const badgeText = isAppointment ? "BOOKING INTAKE" : "REFILL INTAKE";
   const cleanPhone = (patientPhone || "").replace(/[^0-9]/g, "");
 
   // Format Rx numbers display
   let rxDisplay = "Prescription Refill";
   if (refillType === "photo") {
-    rxDisplay = "Photo Refill (WhatsApp / Upload)";
+    rxDisplay = "Photo Refill (WhatsApp / Prescription Upload)";
+  } else if (refillType === "transfer") {
+    rxDisplay = "Prescription Transfer Request";
   } else if (Array.isArray(rxNumbers)) {
     rxDisplay = rxNumbers.length > 0 ? rxNumbers.join(", ") : "Online Rx Refill";
   } else if (typeof rxNumbers === "string" && rxNumbers.trim()) {
@@ -78,10 +79,10 @@ export function StaffNotificationEmail({
   return (
     <div
       style={{
-        backgroundColor: "#f1f5f9",
-        fontFamily: "Arial, Helvetica, sans-serif",
+        backgroundColor: "#f8fafc",
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
         margin: 0,
-        padding: "32px 16px 48px 16px",
+        padding: "24px 12px 40px 12px",
         color: "#0f172a",
       }}
     >
@@ -95,63 +96,108 @@ export function StaffNotificationEmail({
           maxWidth: "600px",
           margin: "0 auto",
           backgroundColor: "#ffffff",
-          borderRadius: "10px",
+          borderRadius: "16px",
           overflow: "hidden",
-          border: "1px solid #cbd5e1",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+          border: "1px solid #e2e8f0",
+          boxShadow: "0 4px 16px rgba(15, 23, 42, 0.05)",
         }}
       >
         <tbody>
-          {/* Staff Alert Header */}
+          {/* Top Brand Accent Stripe */}
           <tr>
             <td
               style={{
-                backgroundColor: "#0f172a",
-                padding: "24px 32px",
-                borderBottom: `4px solid ${badgeColor}`,
+                height: "5px",
+                backgroundColor: isAppointment ? "#0284c7" : "#059669",
+                fontSize: "1px",
+                lineHeight: "1px",
+              }}
+            >
+              &nbsp;
+            </td>
+          </tr>
+
+          {/* Clean Light Header with Transparent Logo */}
+          <tr>
+            <td
+              style={{
+                backgroundColor: "#ffffff",
+                padding: "24px 28px 20px 28px",
+                borderBottom: "1px solid #f1f5f9",
               }}
             >
               <table width="100%" border={0} cellPadding={0} cellSpacing={0}>
                 <tbody>
                   <tr>
                     <td style={{ verticalAlign: "middle" }}>
-                      <img
-                        src="https://ihealthpharmacy.ca/ihealth-logo-main.jpeg"
-                        alt="iHealth Pharmacy"
-                        width="160"
-                        height="48"
-                        style={{
-                          display: "block",
-                          maxWidth: "160px",
-                          height: "auto",
-                          border: "0",
-                          borderRadius: "4px",
-                        }}
-                      />
+                      <table border={0} cellPadding={0} cellSpacing={0}>
+                        <tbody>
+                          <tr>
+                            <td style={{ verticalAlign: "middle", paddingRight: "14px" }}>
+                              <img
+                                src="https://ihealthpharmacy.ca/ihealth-logo-transparent.png"
+                                alt="iHealth Pharmacy"
+                                width="44"
+                                height="44"
+                                style={{
+                                  display: "block",
+                                  width: "44px",
+                                  height: "44px",
+                                  border: "0",
+                                  outline: "none",
+                                }}
+                              />
+                            </td>
+                            <td style={{ verticalAlign: "middle" }}>
+                              <div
+                                style={{
+                                  fontSize: "20px",
+                                  fontWeight: 800,
+                                  color: "#0f172a",
+                                  lineHeight: "1.1",
+                                  letterSpacing: "-0.4px",
+                                }}
+                              >
+                                iHealth{" "}
+                                <span
+                                  style={{
+                                    fontSize: "13px",
+                                    fontWeight: 700,
+                                    color: "#64748b",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.5px",
+                                  }}
+                                >
+                                  Pharmacy
+                                </span>
+                              </div>
+                              <div
+                                style={{
+                                  fontSize: "11px",
+                                  fontWeight: 600,
+                                  color: isAppointment ? "#0284c7" : "#059669",
+                                  marginTop: "3px",
+                                }}
+                              >
+                                Dispensary Clinical Team
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </td>
                     <td align="right" style={{ verticalAlign: "middle" }}>
                       <div
                         style={{
+                          display: "inline-block",
+                          backgroundColor: isAppointment ? "#f0f9ff" : "#ecfdf5",
+                          color: isAppointment ? "#0369a1" : "#065f46",
+                          border: `1px solid ${isAppointment ? "#bae6fd" : "#a7f3d0"}`,
                           fontSize: "11px",
                           fontWeight: 700,
-                          textTransform: "uppercase",
-                          letterSpacing: "1px",
-                          color: "#94a3b8",
-                          marginBottom: "4px",
-                        }}
-                      >
-                        Internal Staff Alert
-                      </div>
-                      <div
-                        style={{
-                          display: "inline-block",
-                          backgroundColor: badgeColor,
-                          color: "#ffffff",
-                          fontSize: "12px",
-                          fontWeight: 700,
-                          padding: "6px 12px",
-                          borderRadius: "6px",
                           letterSpacing: "0.5px",
+                          padding: "5px 12px",
+                          borderRadius: "9999px",
                         }}
                       >
                         {badgeText}
@@ -165,57 +211,42 @@ export function StaffNotificationEmail({
 
           {/* Title Banner */}
           <tr>
-            <td
-              style={{
-                backgroundColor: "#f8fafc",
-                padding: "20px 32px",
-                borderBottom: "1px solid #e2e8f0",
-              }}
-            >
-              <table width="100%" border={0} cellPadding={0} cellSpacing={0}>
-                <tbody>
-                  <tr>
-                    <td>
-                      <h1
-                        style={{
-                          margin: 0,
-                          fontSize: "20px",
-                          lineHeight: "26px",
-                          fontWeight: 700,
-                          color: "#0f172a",
-                        }}
-                      >
-                        {alertTitle}
-                      </h1>
-                      <p
-                        style={{
-                          margin: "6px 0 0 0",
-                          fontSize: "14px",
-                          lineHeight: "20px",
-                          color: "#475569",
-                        }}
-                      >
-                        Reference: <strong>{referenceId}</strong>
-                        {submittedAt ? ` | Received: ${submittedAt}` : ""}
-                      </p>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <td style={{ padding: "28px 28px 12px 28px" }}>
+              <h1
+                style={{
+                  margin: "0 0 6px 0",
+                  fontSize: "22px",
+                  lineHeight: "28px",
+                  fontWeight: 800,
+                  color: "#0f172a",
+                  letterSpacing: "-0.3px",
+                }}
+              >
+                {alertTitle}
+              </h1>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: "14px",
+                  lineHeight: "22px",
+                  color: "#64748b",
+                }}
+              >
+                Reference: <strong style={{ color: "#0f172a" }}>{referenceId}</strong>
+                {submittedAt ? ` | Received: ${submittedAt}` : ""}
+              </p>
             </td>
           </tr>
 
-          {/* Main Body */}
+          {/* Patient Demographics Card */}
           <tr>
-            <td style={{ padding: "28px 32px" }}>
-              {/* Patient Information Table Card */}
+            <td style={{ padding: "12px 28px" }}>
               <div
                 style={{
-                  backgroundColor: "#f8fafc",
-                  borderRadius: "8px",
+                  backgroundColor: "#ffffff",
+                  borderRadius: "14px",
                   border: "1px solid #e2e8f0",
                   padding: "20px",
-                  marginBottom: "24px",
                 }}
               >
                 <div
@@ -223,10 +254,10 @@ export function StaffNotificationEmail({
                     fontSize: "12px",
                     fontWeight: 700,
                     textTransform: "uppercase",
-                    letterSpacing: "1px",
-                    color: "#0369a1",
+                    letterSpacing: "0.8px",
+                    color: "#0284c7",
                     marginBottom: "14px",
-                    borderBottom: "1px solid #e2e8f0",
+                    borderBottom: "1px solid #f1f5f9",
                     paddingBottom: "8px",
                   }}
                 >
@@ -242,7 +273,8 @@ export function StaffNotificationEmail({
                           fontSize: "13px",
                           fontWeight: 600,
                           color: "#64748b",
-                          width: "35%",
+                          width: "38%",
+                          borderBottom: "1px solid #f1f5f9",
                           verticalAlign: "top",
                         }}
                       >
@@ -254,6 +286,7 @@ export function StaffNotificationEmail({
                           fontSize: "14px",
                           fontWeight: 700,
                           color: "#0f172a",
+                          borderBottom: "1px solid #f1f5f9",
                           verticalAlign: "top",
                         }}
                       >
@@ -268,6 +301,7 @@ export function StaffNotificationEmail({
                           fontSize: "13px",
                           fontWeight: 600,
                           color: "#64748b",
+                          borderBottom: "1px solid #f1f5f9",
                           verticalAlign: "top",
                         }}
                       >
@@ -279,12 +313,13 @@ export function StaffNotificationEmail({
                           fontSize: "14px",
                           fontWeight: 600,
                           color: "#0f172a",
+                          borderBottom: "1px solid #f1f5f9",
                           verticalAlign: "top",
                         }}
                       >
                         <a
                           href={`tel:${cleanPhone}`}
-                          style={{ color: "#0369a1", textDecoration: "none" }}
+                          style={{ color: "#0284c7", textDecoration: "none", fontWeight: 700 }}
                         >
                           {patientPhone}
                         </a>
@@ -298,6 +333,7 @@ export function StaffNotificationEmail({
                           fontSize: "13px",
                           fontWeight: 600,
                           color: "#64748b",
+                          borderBottom: "1px solid #f1f5f9",
                           verticalAlign: "top",
                         }}
                       >
@@ -308,12 +344,13 @@ export function StaffNotificationEmail({
                           padding: "8px 0",
                           fontSize: "14px",
                           color: "#0f172a",
+                          borderBottom: "1px solid #f1f5f9",
                           verticalAlign: "top",
                         }}
                       >
                         <a
                           href={`mailto:${patientEmail}`}
-                          style={{ color: "#0369a1", textDecoration: "none" }}
+                          style={{ color: "#0284c7", textDecoration: "none" }}
                         >
                           {patientEmail}
                         </a>
@@ -328,10 +365,11 @@ export function StaffNotificationEmail({
                             fontSize: "13px",
                             fontWeight: 600,
                             color: "#64748b",
+                            borderBottom: "1px solid #f1f5f9",
                             verticalAlign: "top",
                           }}
                         >
-                          BC PHN
+                          BC CareCard / PHN
                         </td>
                         <td
                           style={{
@@ -339,7 +377,9 @@ export function StaffNotificationEmail({
                             fontSize: "14px",
                             fontWeight: 700,
                             color: "#047857",
-                            fontFamily: "Courier, monospace",
+                            fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+                            letterSpacing: "1px",
+                            borderBottom: "1px solid #f1f5f9",
                             verticalAlign: "top",
                           }}
                         >
@@ -356,6 +396,7 @@ export function StaffNotificationEmail({
                             fontSize: "13px",
                             fontWeight: 600,
                             color: "#64748b",
+                            borderBottom: "1px solid #f1f5f9",
                             verticalAlign: "top",
                           }}
                         >
@@ -366,6 +407,7 @@ export function StaffNotificationEmail({
                             padding: "8px 0",
                             fontSize: "14px",
                             color: "#0f172a",
+                            borderBottom: "1px solid #f1f5f9",
                             verticalAlign: "top",
                           }}
                         >
@@ -402,15 +444,18 @@ export function StaffNotificationEmail({
                   </tbody>
                 </table>
               </div>
+            </td>
+          </tr>
 
-              {/* Service / Clinical Details Table Card */}
+          {/* Clinical / Intake Details Card */}
+          <tr>
+            <td style={{ padding: "8px 28px 16px 28px" }}>
               <div
                 style={{
-                  backgroundColor: "#f8fafc",
-                  borderRadius: "8px",
+                  backgroundColor: "#ffffff",
+                  borderRadius: "14px",
                   border: "1px solid #e2e8f0",
                   padding: "20px",
-                  marginBottom: "28px",
                 }}
               >
                 <div
@@ -418,14 +463,14 @@ export function StaffNotificationEmail({
                     fontSize: "12px",
                     fontWeight: 700,
                     textTransform: "uppercase",
-                    letterSpacing: "1px",
-                    color: badgeColor,
+                    letterSpacing: "0.8px",
+                    color: isAppointment ? "#0284c7" : "#059669",
                     marginBottom: "14px",
-                    borderBottom: "1px solid #e2e8f0",
+                    borderBottom: "1px solid #f1f5f9",
                     paddingBottom: "8px",
                   }}
                 >
-                  {isAppointment ? "Appointment Schedule" : "Prescription Refill Details"}
+                  {isAppointment ? "Appointment Schedule" : "Prescription Order Details"}
                 </div>
 
                 <table width="100%" border={0} cellPadding={0} cellSpacing={0}>
@@ -439,7 +484,8 @@ export function StaffNotificationEmail({
                               fontSize: "13px",
                               fontWeight: 600,
                               color: "#64748b",
-                              width: "35%",
+                              width: "38%",
+                              borderBottom: "1px solid #f1f5f9",
                               verticalAlign: "top",
                             }}
                           >
@@ -451,6 +497,7 @@ export function StaffNotificationEmail({
                               fontSize: "14px",
                               fontWeight: 700,
                               color: "#0f172a",
+                              borderBottom: "1px solid #f1f5f9",
                               verticalAlign: "top",
                             }}
                           >
@@ -465,17 +512,19 @@ export function StaffNotificationEmail({
                               fontSize: "13px",
                               fontWeight: 600,
                               color: "#64748b",
+                              borderBottom: "1px solid #f1f5f9",
                               verticalAlign: "top",
                             }}
                           >
-                            Date
+                            Scheduled Date
                           </td>
                           <td
                             style={{
                               padding: "8px 0",
                               fontSize: "14px",
-                              fontWeight: 600,
+                              fontWeight: 700,
                               color: "#0f172a",
+                              borderBottom: "1px solid #f1f5f9",
                               verticalAlign: "top",
                             }}
                           >
@@ -490,6 +539,7 @@ export function StaffNotificationEmail({
                               fontSize: "13px",
                               fontWeight: 600,
                               color: "#64748b",
+                              borderBottom: "1px solid #f1f5f9",
                               verticalAlign: "top",
                             }}
                           >
@@ -499,8 +549,9 @@ export function StaffNotificationEmail({
                             style={{
                               padding: "8px 0",
                               fontSize: "14px",
-                              fontWeight: 600,
-                              color: "#0f172a",
+                              fontWeight: 700,
+                              color: "#0284c7",
+                              borderBottom: "1px solid #f1f5f9",
                               verticalAlign: "top",
                             }}
                           >
@@ -515,6 +566,7 @@ export function StaffNotificationEmail({
                               fontSize: "13px",
                               fontWeight: 600,
                               color: "#64748b",
+                              borderBottom: "1px solid #f1f5f9",
                               verticalAlign: "top",
                             }}
                           >
@@ -525,6 +577,7 @@ export function StaffNotificationEmail({
                               padding: "8px 0",
                               fontSize: "14px",
                               color: "#0f172a",
+                              borderBottom: "1px solid #f1f5f9",
                               verticalAlign: "top",
                             }}
                           >
@@ -550,11 +603,12 @@ export function StaffNotificationEmail({
                               style={{
                                 padding: "8px 0",
                                 fontSize: "13px",
+                                fontStyle: "italic",
                                 color: "#334155",
                                 verticalAlign: "top",
                               }}
                             >
-                              {reasonForVisit}
+                              &quot;{reasonForVisit}&quot;
                             </td>
                           </tr>
                         ) : null}
@@ -568,7 +622,8 @@ export function StaffNotificationEmail({
                               fontSize: "13px",
                               fontWeight: 600,
                               color: "#64748b",
-                              width: "35%",
+                              width: "38%",
+                              borderBottom: "1px solid #f1f5f9",
                               verticalAlign: "top",
                             }}
                           >
@@ -580,11 +635,14 @@ export function StaffNotificationEmail({
                               fontSize: "14px",
                               fontWeight: 600,
                               color: "#0f172a",
+                              borderBottom: "1px solid #f1f5f9",
                               verticalAlign: "top",
                             }}
                           >
                             {refillType === "photo"
                               ? "Prescription Photo Refill"
+                              : refillType === "transfer"
+                              ? "Prescription Transfer"
                               : "Prescription Number Refill"}
                           </td>
                         </tr>
@@ -596,6 +654,7 @@ export function StaffNotificationEmail({
                               fontSize: "13px",
                               fontWeight: 600,
                               color: "#64748b",
+                              borderBottom: "1px solid #f1f5f9",
                               verticalAlign: "top",
                             }}
                           >
@@ -607,6 +666,7 @@ export function StaffNotificationEmail({
                               fontSize: "14px",
                               fontWeight: 700,
                               color: "#0f172a",
+                              borderBottom: "1px solid #f1f5f9",
                               verticalAlign: "top",
                             }}
                           >
@@ -621,6 +681,7 @@ export function StaffNotificationEmail({
                               fontSize: "13px",
                               fontWeight: 600,
                               color: "#64748b",
+                              borderBottom: "1px solid #f1f5f9",
                               verticalAlign: "top",
                             }}
                           >
@@ -631,6 +692,7 @@ export function StaffNotificationEmail({
                               padding: "8px 0",
                               fontSize: "14px",
                               color: "#0f172a",
+                              borderBottom: "1px solid #f1f5f9",
                               verticalAlign: "top",
                             }}
                           >
@@ -646,6 +708,7 @@ export function StaffNotificationEmail({
                                 fontSize: "13px",
                                 fontWeight: 600,
                                 color: "#64748b",
+                                borderBottom: "1px solid #f1f5f9",
                                 verticalAlign: "top",
                               }}
                             >
@@ -656,6 +719,7 @@ export function StaffNotificationEmail({
                                 padding: "8px 0",
                                 fontSize: "14px",
                                 color: "#0f172a",
+                                borderBottom: "1px solid #f1f5f9",
                                 verticalAlign: "top",
                               }}
                             >
@@ -695,60 +759,62 @@ export function StaffNotificationEmail({
                   </tbody>
                 </table>
               </div>
+            </td>
+          </tr>
 
-              {/* Staff Action Buttons */}
-              <div style={{ textAlign: "center", marginBottom: "16px" }}>
-                <table
-                  align="center"
-                  border={0}
-                  cellPadding={0}
-                  cellSpacing={0}
-                  style={{ margin: "0 auto" }}
-                >
-                  <tbody>
-                    <tr>
-                      <td style={{ padding: "0 6px 12px 6px" }}>
+          {/* Staff Action Buttons */}
+          <tr>
+            <td style={{ padding: "8px 28px 24px 28px", textAlign: "center" }}>
+              <table
+                align="center"
+                border={0}
+                cellPadding={0}
+                cellSpacing={0}
+                style={{ margin: "0 auto" }}
+              >
+                <tbody>
+                  <tr>
+                    <td style={{ padding: "0 6px 8px 6px" }}>
+                      <a
+                        href={`tel:${cleanPhone}`}
+                        style={{
+                          display: "inline-block",
+                          backgroundColor: "#0f172a",
+                          color: "#ffffff",
+                          fontSize: "13px",
+                          fontWeight: 700,
+                          textDecoration: "none",
+                          padding: "12px 20px",
+                          borderRadius: "8px",
+                          textAlign: "center",
+                        }}
+                      >
+                        Call Patient: {patientPhone}
+                      </a>
+                    </td>
+                    {adminPortalUrl ? (
+                      <td style={{ padding: "0 6px 8px 6px" }}>
                         <a
-                          href={`tel:${cleanPhone}`}
+                          href={adminPortalUrl}
                           style={{
                             display: "inline-block",
-                            backgroundColor: "#0f172a",
+                            backgroundColor: isAppointment ? "#0284c7" : "#059669",
                             color: "#ffffff",
                             fontSize: "13px",
                             fontWeight: 700,
                             textDecoration: "none",
                             padding: "12px 20px",
-                            borderRadius: "6px",
+                            borderRadius: "8px",
                             textAlign: "center",
                           }}
                         >
-                          Call Patient: {patientPhone}
+                          Open Admin Portal
                         </a>
                       </td>
-                      {adminPortalUrl ? (
-                        <td style={{ padding: "0 6px 12px 6px" }}>
-                          <a
-                            href={adminPortalUrl}
-                            style={{
-                              display: "inline-block",
-                              backgroundColor: "#059669",
-                              color: "#ffffff",
-                              fontSize: "13px",
-                              fontWeight: 700,
-                              textDecoration: "none",
-                              padding: "12px 20px",
-                              borderRadius: "6px",
-                              textAlign: "center",
-                            }}
-                          >
-                            Open Admin Portal
-                          </a>
-                        </td>
-                      ) : null}
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                    ) : null}
+                  </tr>
+                </tbody>
+              </table>
             </td>
           </tr>
 

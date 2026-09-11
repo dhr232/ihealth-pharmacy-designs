@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import * as React from "react";
 
 export interface WelcomeNewsletterEmailProps {
@@ -17,12 +18,11 @@ export function WelcomeNewsletterEmail({
     <div
       style={{
         backgroundColor: "#f8fafc",
-        fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
         margin: 0,
-        padding: "32px 16px",
+        padding: "24px 12px 40px 12px",
         color: "#0f172a",
       }}
-      className="bg-slate-50 text-slate-900 font-sans p-8"
     >
       <table
         align="center"
@@ -34,53 +34,112 @@ export function WelcomeNewsletterEmail({
           maxWidth: "600px",
           margin: "0 auto",
           backgroundColor: "#ffffff",
-          borderRadius: "12px",
+          borderRadius: "16px",
           overflow: "hidden",
           border: "1px solid #e2e8f0",
-          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
+          boxShadow: "0 4px 16px rgba(15, 23, 42, 0.05)",
         }}
-        className="max-w-xl mx-auto bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm"
       >
-        {/* Header */}
         <tbody>
+          {/* Top Brand Accent Stripe */}
           <tr>
             <td
               style={{
-                backgroundColor: "#0f172a",
-                padding: "28px 32px",
-                borderBottom: "4px solid #059669",
+                height: "5px",
+                backgroundColor: "#C01D16",
+                fontSize: "1px",
+                lineHeight: "1px",
               }}
-              className="bg-slate-900 px-8 py-7 border-b-4 border-emerald-600"
+            >
+              &nbsp;
+            </td>
+          </tr>
+
+          {/* Clean Light Header with Transparent Logo */}
+          <tr>
+            <td
+              style={{
+                backgroundColor: "#ffffff",
+                padding: "24px 28px 20px 28px",
+                borderBottom: "1px solid #f1f5f9",
+              }}
             >
               <table width="100%" border={0} cellPadding={0} cellSpacing={0}>
                 <tbody>
                   <tr>
-                    <td>
-                      <p
+                    <td style={{ verticalAlign: "middle" }}>
+                      <table border={0} cellPadding={0} cellSpacing={0}>
+                        <tbody>
+                          <tr>
+                            <td style={{ verticalAlign: "middle", paddingRight: "14px" }}>
+                              <img
+                                src="https://ihealthpharmacy.ca/ihealth-logo-transparent.png"
+                                alt="iHealth Pharmacy"
+                                width="44"
+                                height="44"
+                                style={{
+                                  display: "block",
+                                  width: "44px",
+                                  height: "44px",
+                                  border: "0",
+                                  outline: "none",
+                                }}
+                              />
+                            </td>
+                            <td style={{ verticalAlign: "middle" }}>
+                              <div
+                                style={{
+                                  fontSize: "20px",
+                                  fontWeight: 800,
+                                  color: "#0f172a",
+                                  lineHeight: "1.1",
+                                  letterSpacing: "-0.4px",
+                                }}
+                              >
+                                iHealth{" "}
+                                <span
+                                  style={{
+                                    fontSize: "13px",
+                                    fontWeight: 700,
+                                    color: "#64748b",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.5px",
+                                  }}
+                                >
+                                  Pharmacy
+                                </span>
+                              </div>
+                              <div
+                                style={{
+                                  fontSize: "11px",
+                                  fontWeight: 600,
+                                  color: "#059669",
+                                  marginTop: "3px",
+                                }}
+                              >
+                                Wellness & Health Guidance
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                    <td align="right" style={{ verticalAlign: "middle" }}>
+                      <div
                         style={{
-                          margin: 0,
-                          fontSize: "12px",
+                          display: "inline-block",
+                          backgroundColor: "#ecfdf5",
+                          color: "#065f46",
+                          border: "1px solid #a7f3d0",
+                          fontSize: "11px",
                           fontWeight: 700,
-                          letterSpacing: "1.5px",
-                          textTransform: "uppercase",
-                          color: "#10b981",
+                          letterSpacing: "0.5px",
+                          padding: "5px 12px",
+                          borderRadius: "9999px",
                         }}
-                        className="text-xs font-bold tracking-wider uppercase text-emerald-400"
                       >
-                        iHealth Pharmacy Abbotsford
-                      </p>
-                      <h1
-                        style={{
-                          margin: "6px 0 0 0",
-                          fontSize: "22px",
-                          fontWeight: 700,
-                          color: "#ffffff",
-                          lineHeight: "28px",
-                        }}
-                        className="text-xl font-bold text-white mt-1"
-                      >
-                        Welcome to iHealth Wellness
-                      </h1>
+                        COMMUNITY WELLNESS
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -88,63 +147,79 @@ export function WelcomeNewsletterEmail({
             </td>
           </tr>
 
-          {/* Body Content */}
+          {/* Hero Content */}
           <tr>
-            <td style={{ padding: "32px" }} className="p-8">
+            <td style={{ padding: "28px 28px 12px 28px" }}>
+              <h1
+                style={{
+                  margin: "0 0 8px 0",
+                  fontSize: "22px",
+                  lineHeight: "28px",
+                  fontWeight: 800,
+                  color: "#0f172a",
+                  letterSpacing: "-0.3px",
+                }}
+              >
+                Welcome to iHealth Wellness
+              </h1>
+
               <p
                 style={{
-                  fontSize: "16px",
-                  lineHeight: "24px",
+                  fontSize: "14px",
+                  lineHeight: "22px",
                   color: "#334155",
                   marginTop: 0,
-                  marginBottom: "16px",
+                  marginBottom: "12px",
                 }}
-                className="text-slate-700 text-base mb-4 mt-0"
               >
                 {greeting}
               </p>
+
               <p
                 style={{
-                  fontSize: "15px",
-                  lineHeight: "24px",
+                  fontSize: "14px",
+                  lineHeight: "22px",
                   color: "#475569",
                   margin: "0 0 20px 0",
                 }}
-                className="text-slate-600 text-sm mb-5"
               >
                 Thank you for subscribing to the iHealth Pharmacy wellness newsletter. You are now
-                connected to evidence-based health guidance and updates from your local Abbotsford
-                pharmacists.
+                connected to evidence-based health guidance and updates directly from your local
+                Abbotsford pharmacy team.
               </p>
+            </td>
+          </tr>
 
-              {/* What to Expect Box */}
+          {/* What to Expect Card */}
+          <tr>
+            <td style={{ padding: "8px 28px 16px 28px" }}>
               <div
                 style={{
-                  backgroundColor: "#f8fafc",
-                  borderRadius: "8px",
+                  backgroundColor: "#ffffff",
+                  borderRadius: "14px",
                   border: "1px solid #e2e8f0",
                   padding: "20px",
-                  marginBottom: "24px",
                 }}
-                className="bg-slate-50 rounded-lg border border-slate-200 p-5 mb-6"
               >
-                <h2
+                <div
                   style={{
-                    fontSize: "14px",
+                    fontSize: "12px",
                     fontWeight: 700,
                     textTransform: "uppercase",
-                    letterSpacing: "0.5px",
-                    color: "#0f172a",
-                    margin: "0 0 12px 0",
+                    letterSpacing: "0.8px",
+                    color: "#059669",
+                    marginBottom: "14px",
+                    borderBottom: "1px solid #f1f5f9",
+                    paddingBottom: "8px",
                   }}
-                  className="text-xs font-bold uppercase tracking-wide text-slate-900 mb-3"
                 >
                   What You Will Receive
-                </h2>
+                </div>
+
                 <table width="100%" border={0} cellPadding={0} cellSpacing={0}>
                   <tbody>
                     <tr>
-                      <td style={{ paddingBottom: "10px", verticalAlign: "top", width: "24px" }}>
+                      <td style={{ paddingBottom: "12px", verticalAlign: "top", width: "22px" }}>
                         <span
                           style={{
                             display: "inline-block",
@@ -156,12 +231,12 @@ export function WelcomeNewsletterEmail({
                           }}
                         />
                       </td>
-                      <td style={{ paddingBottom: "10px", fontSize: "14px", lineHeight: "20px", color: "#334155" }}>
-                        <strong>Monthly Health Tips:</strong> Preventative care, seasonal health guidance, and condition management written by our clinical pharmacists.
+                      <td style={{ paddingBottom: "12px", fontSize: "13px", lineHeight: "20px", color: "#334155" }}>
+                        <strong style={{ color: "#0f172a" }}>Monthly Health Guidance:</strong> Preventative care, seasonal wellness tips, and chronic condition management written by licensed BC pharmacists.
                       </td>
                     </tr>
                     <tr>
-                      <td style={{ paddingBottom: "10px", verticalAlign: "top", width: "24px" }}>
+                      <td style={{ paddingBottom: "12px", verticalAlign: "top", width: "22px" }}>
                         <span
                           style={{
                             display: "inline-block",
@@ -173,12 +248,12 @@ export function WelcomeNewsletterEmail({
                           }}
                         />
                       </td>
-                      <td style={{ paddingBottom: "10px", fontSize: "14px", lineHeight: "20px", color: "#334155" }}>
-                        <strong>Priority Vaccine Alerts:</strong> Early notice for seasonal influenza and COVID-19 booster booking slots in Abbotsford.
+                      <td style={{ paddingBottom: "12px", fontSize: "13px", lineHeight: "20px", color: "#334155" }}>
+                        <strong style={{ color: "#0f172a" }}>Priority Vaccine Alerts:</strong> Early notice for seasonal influenza and COVID-19 booster booking slots in Abbotsford.
                       </td>
                     </tr>
                     <tr>
-                      <td style={{ verticalAlign: "top", width: "24px" }}>
+                      <td style={{ verticalAlign: "top", width: "22px" }}>
                         <span
                           style={{
                             display: "inline-block",
@@ -190,89 +265,89 @@ export function WelcomeNewsletterEmail({
                           }}
                         />
                       </td>
-                      <td style={{ fontSize: "14px", lineHeight: "20px", color: "#334155" }}>
-                        <strong>Pharmacy Services:</strong> Updates regarding BC Minor Ailments prescribing, medication reviews, and compounding availability.
+                      <td style={{ fontSize: "13px", lineHeight: "20px", color: "#334155" }}>
+                        <strong style={{ color: "#0f172a" }}>Clinical Services Updates:</strong> Timely announcements regarding BC Minor Ailments prescribing, medication reviews, and compounding availability.
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
+            </td>
+          </tr>
 
-              {/* Pharmacy Location Card */}
+          {/* Pharmacy Location Card */}
+          <tr>
+            <td style={{ padding: "8px 28px 16px 28px" }}>
               <div
                 style={{
                   borderLeft: "4px solid #059669",
-                  backgroundColor: "#ecfdf5",
-                  padding: "16px",
-                  borderRadius: "4px",
-                  marginBottom: "28px",
+                  backgroundColor: "#f0fdf4",
+                  padding: "16px 18px",
+                  borderRadius: "8px",
                 }}
-                className="border-l-4 border-emerald-600 bg-emerald-50 p-4 rounded mb-7"
               >
-                <p
+                <div
                   style={{
-                    margin: "0 0 4px 0",
-                    fontSize: "14px",
+                    fontSize: "13px",
                     fontWeight: 700,
                     color: "#065f46",
+                    marginBottom: "4px",
                   }}
-                  className="font-bold text-emerald-900 text-sm mb-1"
                 >
                   Visit iHealth Pharmacy in Abbotsford
-                </p>
-                <p
+                </div>
+                <div
                   style={{
-                    margin: 0,
                     fontSize: "13px",
                     lineHeight: "20px",
                     color: "#047857",
                   }}
-                  className="text-emerald-800 text-xs"
                 >
-                  #105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S1
+                  #105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S3
                   <br />
                   Open Monday to Friday 9:00 AM - 6:00 PM | Saturday 10:00 AM - 3:00 PM
                   <br />
-                  Phone: (604) 746-4444 &bull; Fax: (604) 746-4445
-                </p>
+                  Phone: (604) 853-1893 | Fax: (604) 853-1894
+                </div>
               </div>
+            </td>
+          </tr>
 
-              {/* 1-Click Unsubscribe Callout */}
+          {/* 1-Click Unsubscribe Callout */}
+          <tr>
+            <td style={{ padding: "8px 28px 24px 28px" }}>
               <div
                 style={{
                   backgroundColor: "#f8fafc",
-                  borderRadius: "8px",
+                  borderRadius: "12px",
                   border: "1px dashed #cbd5e1",
-                  padding: "20px",
+                  padding: "18px 20px",
                   textAlign: "center",
                 }}
-                className="bg-slate-50 rounded-lg border border-dashed border-slate-300 p-5 text-center"
               >
                 <p
                   style={{
-                    margin: "0 0 12px 0",
-                    fontSize: "13px",
+                    margin: "0 0 10px 0",
+                    fontSize: "12px",
                     color: "#64748b",
                     lineHeight: "18px",
                   }}
-                  className="text-slate-500 text-xs mb-3"
                 >
-                  CASL Compliance: If you did not subscribe or prefer not to receive newsletters, you can opt out instantly.
+                  CASL Compliance Notice: If you did not subscribe or prefer not to receive newsletters, you can opt out at any time.
                 </p>
                 <a
                   href={unsubscribeUrl}
                   style={{
                     display: "inline-block",
-                    backgroundColor: "#e2e8f0",
+                    backgroundColor: "#f1f5f9",
                     color: "#334155",
-                    fontSize: "13px",
+                    fontSize: "12px",
                     fontWeight: 600,
                     textDecoration: "none",
-                    padding: "10px 20px",
+                    padding: "8px 18px",
                     borderRadius: "6px",
                     border: "1px solid #cbd5e1",
                   }}
-                  className="inline-block bg-slate-200 text-slate-700 text-xs font-semibold px-5 py-2.5 rounded border border-slate-300 hover:bg-slate-300"
                 >
                   Unsubscribe in 1 Click
                 </a>
@@ -284,7 +359,7 @@ export function WelcomeNewsletterEmail({
           <tr>
             <td
               style={{
-                backgroundColor: "#f1f5f9",
+                backgroundColor: "#f8fafc",
                 padding: "24px 32px",
                 borderTop: "1px solid #e2e8f0",
                 fontSize: "11px",
@@ -292,18 +367,17 @@ export function WelcomeNewsletterEmail({
                 color: "#64748b",
                 textAlign: "center",
               }}
-              className="bg-slate-100 p-6 border-t border-slate-200 text-xs text-slate-500 text-center"
             >
-              <p style={{ margin: "0 0 6px 0", fontWeight: 700, color: "#475569" }}>
+              <p style={{ margin: "0 0 4px 0", fontWeight: 700, color: "#475569" }}>
                 iHealth Pharmacy Abbotsford
               </p>
               <p style={{ margin: "0 0 6px 0" }}>
-                #105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S1, Canada
+                #105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S3, Canada
                 <br />
-                Telephone: (604) 746-4444 &bull; Email: info@ihealthpharmacy.ca
+                Telephone: (604) 853-1893 | Email: info@ihealthpharmacy.ca
               </p>
               <p style={{ margin: "0 0 10px 0", color: "#94a3b8" }}>
-                This message was sent to <strong>{email}</strong> in accordance with the Canada Anti-Spam Legislation (CASL).
+                This message was sent to <strong>{email}</strong> in accordance with Canada Anti-Spam Legislation (CASL).
                 You provided express consent through our website or pharmacy intake.
               </p>
               <p style={{ margin: 0 }}>
@@ -314,7 +388,6 @@ export function WelcomeNewsletterEmail({
                     textDecoration: "underline",
                     fontWeight: 600,
                   }}
-                  className="text-emerald-600 underline font-semibold"
                 >
                   Unsubscribe instantly
                 </a>
@@ -325,7 +398,6 @@ export function WelcomeNewsletterEmail({
                     color: "#64748b",
                     textDecoration: "underline",
                   }}
-                  className="text-slate-500 underline"
                 >
                   Privacy Policy
                 </a>
@@ -336,7 +408,6 @@ export function WelcomeNewsletterEmail({
                     color: "#64748b",
                     textDecoration: "underline",
                   }}
-                  className="text-slate-500 underline"
                 >
                   Contact Us
                 </a>
