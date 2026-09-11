@@ -55,7 +55,6 @@ const SERVICE_PAGES = [
 ];
 
 const PATIENT_ACTIONS = [
-  { label: "Book Appointment Online", href: "/book", desc: "Minor ailments, vaccines & consults" },
   { label: "Prescription Refills", href: "/prescription-refills", desc: "Ready in 3 easy steps" },
   { label: "Transfer to iHealth", href: "/transfer", desc: "Switch in one simple request" },
   { label: "Patient Care Program", href: "/care-program", desc: "Free auto-sync & doctor renewals" },
