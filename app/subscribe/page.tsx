@@ -85,6 +85,27 @@ export default function SubscribePage() {
     }
 
     try {
+      // First attempt to subscribe via internal CASL-compliant API route
+      const apiRes = await fetch("/api/newsletter/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: name.trim(),
+          email: email.trim(),
+          source: "subscribe-page",
+          caslConsent: true,
+        }),
+      });
+
+      if (apiRes.ok) {
+        setStatus("success");
+        setName("");
+        setEmail("");
+        setSelected(new Set(["tips"]));
+        return;
+      }
+
+      // Fallback to Web3Forms if API endpoint is unavailable
       const formData = new FormData();
       formData.append("access_key", "YOUR_WEB3FORMS_KEY_HERE");
       formData.append("from_name", "iHealth Pharmacy Newsletter");

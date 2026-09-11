@@ -3,8 +3,7 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Eye, Pencil, Upload, X } from "lucide-react";
-import type { BlogPost, PostStatus, ThemeName } from "../lib/types";
-import { THEMES } from "../lib/types";
+import type { BlogPost, PostStatus, BlogLayoutVariant } from "../lib/types";
 import { slugify, uuid } from "../lib/storage";
 
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -23,8 +22,10 @@ function emptyPost(): BlogPost {
     imageUrl: "",
     status: "draft",
     themeUsed: "pharmacy-red",
-    readTimeMinutes: 1,
+    readTimeMinutes: 5,
     category: "General",
+    layoutVariant: "editorial",
+    keyTakeaways: [],
   };
 }
 
@@ -34,22 +35,6 @@ function toTextList(arr: string[]): string {
 
 function buildPostDraft(initial: BlogPost | null): BlogPost {
   return initial ?? emptyPost();
-}
-
-function samePost(a: BlogPost, b: BlogPost): boolean {
-  return (
-    a.id === b.id &&
-    a.title === b.title &&
-    a.slug === b.slug &&
-    a.excerpt === b.excerpt &&
-    a.content === b.content &&
-    a.author === b.author &&
-    a.publishedAt === b.publishedAt &&
-    a.imageUrl === b.imageUrl &&
-    a.status === b.status &&
-    a.themeUsed === b.themeUsed &&
-    a.tags.join(",") === b.tags.join(",")
-  );
 }
 
 function parseList(value: string): string[] {
@@ -142,23 +127,30 @@ export function PostEditor({
   onSave: (next: BlogPost) => void;
   onError: (message: string) => void;
 }) {
+  const [prevOpen, setPrevOpen] = useState(open);
+  const [prevId, setPrevId] = useState<string | null>(initial?.id ?? null);
   const [draft, setDraft] = useState<BlogPost>(() => buildPostDraft(initial));
   const [tagsText, setTagsText] = useState(() =>
     toTextList(buildPostDraft(initial).tags)
   );
+  const [keyTakeawaysText, setKeyTakeawaysText] = useState(() =>
+    (buildPostDraft(initial).keyTakeaways ?? []).join("\n")
+  );
   const [mode, setMode] = useState<"edit" | "preview">("edit");
   const [autoSlug, setAutoSlug] = useState<boolean>(true);
 
-  // Re-seed draft when opening with a different record. Derived during
-  // render rather than inside useEffect to avoid cascading-render warnings.
-  if (open) {
+  const currentId = initial?.id ?? null;
+
+  // Only re-seed when dialog transitions open state or when target post ID changes
+  if (open !== prevOpen || (open && currentId !== prevId)) {
+    setPrevOpen(open);
+    setPrevId(currentId);
     const seed = buildPostDraft(initial);
-    if (!samePost(seed, draft)) {
-      setDraft(seed);
-      setTagsText(toTextList(seed.tags));
-      setMode("edit");
-      setAutoSlug(!initial);
-    }
+    setDraft(seed);
+    setTagsText(toTextList(seed.tags));
+    setKeyTakeawaysText((seed.keyTakeaways ?? []).join("\n"));
+    setMode("edit");
+    setAutoSlug(!initial);
   }
 
   function update<K extends keyof BlogPost>(key: K, value: BlogPost[K]) {
@@ -199,6 +191,11 @@ export function PostEditor({
     const cleaned: BlogPost = {
       ...draft,
       tags: parseList(tagsText),
+      keyTakeaways: keyTakeawaysText
+        .split("\n")
+        .map((s) => s.trim())
+        .filter(Boolean),
+      layoutVariant: draft.layoutVariant ?? "editorial",
       slug: draft.slug.trim() || slugify(draft.title),
     };
     onSave(cleaned);
@@ -350,27 +347,43 @@ export function PostEditor({
                         }
                         className={inputClass}
                       >
-                        <option value="draft">Draft</option>
-                        <option value="published">Published</option>
+                        <option value="draft">Draft (Private / In progress)</option>
+                        <option value="published">Published (Live immediately)</option>
+                        <option value="scheduled">Scheduled (Auto-publishes on date)</option>
                       </select>
+                      {draft.status === "scheduled" && (
+                        <p className="mt-1 text-xs font-semibold text-amber-700">
+                          Automated release on {draft.publishedAt || "chosen date"}. Stays hidden from public until then.
+                        </p>
+                      )}
                     </Field>
 
-                    <Field label="Theme">
+                    <Field label="Layout Design">
                       <select
-                        value={draft.themeUsed}
+                        value={draft.layoutVariant ?? "editorial"}
                         onChange={(e) =>
-                          update("themeUsed", e.target.value as ThemeName)
+                          update("layoutVariant", e.target.value as BlogLayoutVariant)
                         }
                         className={inputClass}
                       >
-                        {THEMES.map((t) => (
-                          <option key={t.value} value={t.value}>
-                            {t.label}
-                          </option>
-                        ))}
+                        <option value="editorial">Editorial Magazine (Hero, Key Takeaways, Author Card)</option>
+                        <option value="standard">Standard Article (Classic text column)</option>
                       </select>
                     </Field>
                   </div>
+
+                  <Field
+                    label="Key Takeaways (Optional)"
+                    hint="One takeaway bullet per line. Rendered as a prominent clinical highlight box at the top."
+                  >
+                    <textarea
+                      value={keyTakeawaysText}
+                      onChange={(e) => setKeyTakeawaysText(e.target.value)}
+                      rows={3}
+                      placeholder="BC seniors qualify for enhanced high-dose flu shots...&#10;Over-the-counter cold medicines can interact..."
+                      className={`${inputClass} resize-y`}
+                    />
+                  </Field>
 
                   <Field label="Tags" hint="Comma-separated, e.g. wellness, vaccines, seniors">
                     <input

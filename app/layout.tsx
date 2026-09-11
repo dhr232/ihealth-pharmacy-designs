@@ -16,6 +16,8 @@ import "./globals.css";
 import ThemeApplier from "./components/ThemeApplier";
 import AnnouncementBar from "./components/AnnouncementBar";
 import CookieBanner from "./components/CookieBanner";
+import WhatsAppButton from "./components/WhatsAppButton";
+import { PHARMACY_INFO } from "@/data/pharmacy-info";
 
 /* All 10 font families loaded once at build time so the admin's theme/font
    picker can switch between them on the live site via a CSS class.
@@ -102,6 +104,13 @@ export const metadata: Metadata = {
   title: "iHealth Pharmacy — Independent Pharmacy in Abbotsford, BC",
   description:
     "Prescription refills, transfers, vaccinations, minor ailment consultations, and compliance packaging. Trusted neighbourhood pharmacy care in Abbotsford, BC.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    apple: "/apple-icon.png",
+  },
 };
 
 export const viewport: Viewport = {
@@ -109,6 +118,49 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   themeColor: "#C01D16",
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": ["Pharmacy", "MedicalBusiness"],
+  name: PHARMACY_INFO.name,
+  legalName: PHARMACY_INFO.legalName,
+  description:
+    "Independent community pharmacy in Abbotsford, BC offering prescription refills, minor ailments prescribing, custom compounding, MyHealthPack blister packs, and free same-day local delivery.",
+  url: "https://ihealthpharmacy.ca",
+  telephone: "+1-604-853-1893",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: PHARMACY_INFO.address.street,
+    addressLocality: PHARMACY_INFO.address.city,
+    addressRegion: PHARMACY_INFO.address.province,
+    postalCode: PHARMACY_INFO.address.postalCode,
+    addressCountry: "CA",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 49.0504,
+    longitude: -122.3045,
+  },
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "08:00",
+      closes: "21:00",
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Saturday", "Sunday"],
+      opens: "09:00",
+      closes: "18:00",
+    },
+  ],
+  currenciesAccepted: "CAD",
+  paymentAccepted: "Cash, Credit Card, Debit Card, Direct Insurance Billing",
+  priceRange: "$$",
+  knowsLanguage: ["English", "Punjabi", "Hindi"],
+  medicalSpecialty: "CommunityPharmacy",
 };
 
 export default function RootLayout({
@@ -134,11 +186,19 @@ export default function RootLayout({
         "h-full antialiased",
       ].join(" ")}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="min-h-full flex flex-col font-sans font-inter-tight">
         <ThemeApplier />
         <AnnouncementBar />
         {children}
         <CookieBanner />
+        <WhatsAppButton />
+        <div id="google_translate_element" aria-hidden="true" style={{ display: "none" }} />
       </body>
     </html>
   );

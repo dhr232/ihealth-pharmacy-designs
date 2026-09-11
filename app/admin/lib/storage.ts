@@ -3,18 +3,20 @@
 // localStorage is unavailable (private mode, quota errors).
 
 import type {
+  AnnouncementItem,
   AuthSession,
   BlogPost,
   FontPairingName,
   Pharmacist,
   ThemeName,
 } from "./types";
-import { SEED_PHARMACISTS } from "./types";
+import { SEED_ANNOUNCEMENTS, SEED_PHARMACISTS } from "./types";
 import { SEED_POSTS } from "./seed-posts";
 
 const KEY_AUTH = "ihealth_admin_auth";
 const KEY_PHARMACISTS = "ihealth_admin_pharmacists";
 const KEY_POSTS = "ihealth_admin_posts";
+const KEY_ANNOUNCEMENTS = "ihealth_admin_announcements";
 const KEY_THEME = "ihealth_admin_theme";
 const KEY_FONT = "ihealth_admin_font";
 
@@ -103,6 +105,9 @@ export function getPharmacists(): Pharmacist[] {
 
 export function savePharmacists(list: Pharmacist[]): void {
   writeJSON(KEY_PHARMACISTS, list);
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("ihealth_pharmacists_updated", { detail: list }));
+  }
 }
 
 export function upsertPharmacist(item: Pharmacist): Pharmacist[] {
@@ -153,7 +158,12 @@ const VALID_THEMES: ReadonlySet<ThemeName> = new Set<ThemeName>([
 // The seed JSON uses "default" as a theme placeholder and may be older than
 // the current schema; this keeps getPosts() resilient without throwing.
 function normaliseSeedPost(raw: Partial<BlogPost> & { id?: string }): BlogPost {
-  const status: BlogPost["status"] = raw.status === "draft" ? "draft" : "published";
+  const status: BlogPost["status"] =
+    raw.status === "draft"
+      ? "draft"
+      : raw.status === "scheduled"
+        ? "scheduled"
+        : "published";
   const theme: ThemeName = VALID_THEMES.has(raw.themeUsed as ThemeName)
     ? (raw.themeUsed as ThemeName)
     : "pharmacy-red";
@@ -171,6 +181,10 @@ function normaliseSeedPost(raw: Partial<BlogPost> & { id?: string }): BlogPost {
     themeUsed: theme,
     readTimeMinutes: typeof raw.readTimeMinutes === "number" ? raw.readTimeMinutes : 5,
     category: raw.category ?? "General",
+    layoutVariant: raw.layoutVariant === "editorial" ? "editorial" : "standard",
+    keyTakeaways: Array.isArray(raw.keyTakeaways)
+      ? raw.keyTakeaways.filter((t): t is string => typeof t === "string")
+      : undefined,
   };
 }
 
@@ -250,6 +264,60 @@ export function deletePost(id: string): BlogPost[] {
   return list;
 }
 
+/* ---------------- Announcements ---------------- */
+
+export function getAnnouncements(): AnnouncementItem[] {
+  const stored = readJSON<AnnouncementItem[] | null>(KEY_ANNOUNCEMENTS, null);
+  if (stored === null) {
+    saveAnnouncements(SEED_ANNOUNCEMENTS);
+    return SEED_ANNOUNCEMENTS;
+  }
+  return stored;
+}
+
+export function saveAnnouncements(items: AnnouncementItem[]): void {
+  writeJSON(KEY_ANNOUNCEMENTS, items);
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("ihealth_announcements_updated", { detail: items }));
+  }
+}
+
+export function upsertAnnouncement(item: AnnouncementItem): AnnouncementItem[] {
+  const current = getAnnouncements();
+  const index = current.findIndex((a) => a.id === item.id);
+  const next = [...current];
+  if (index >= 0) {
+    next[index] = item;
+  } else {
+    next.push(item);
+  }
+  saveAnnouncements(next);
+  return next;
+}
+
+export function deleteAnnouncement(id: string): AnnouncementItem[] {
+  const list = getAnnouncements().filter((a) => a.id !== id);
+  saveAnnouncements(list);
+  return list;
+}
+
+export function reorderAnnouncement(id: string, direction: "up" | "down"): AnnouncementItem[] {
+  const list = [...getAnnouncements()].sort((a, b) => a.displayOrder - b.displayOrder);
+  const index = list.findIndex((a) => a.id === id);
+  if (index === -1) return list;
+  const targetIndex = direction === "up" ? index - 1 : index + 1;
+  if (targetIndex < 0 || targetIndex >= list.length) return list;
+
+  const currentOrder = list[index].displayOrder;
+  const targetOrder = list[targetIndex].displayOrder;
+  list[index] = { ...list[index], displayOrder: targetOrder };
+  list[targetIndex] = { ...list[targetIndex], displayOrder: currentOrder };
+
+  list.sort((a, b) => a.displayOrder - b.displayOrder);
+  saveAnnouncements(list);
+  return list;
+}
+
 /* ---------------- Theme & Font ---------------- */
 
 export function getTheme(): ThemeName {
@@ -288,6 +356,7 @@ export const STORAGE_KEYS = {
   auth: KEY_AUTH,
   pharmacists: KEY_PHARMACISTS,
   posts: KEY_POSTS,
+  announcements: KEY_ANNOUNCEMENTS,
   theme: KEY_THEME,
   font: KEY_FONT,
 } as const;

@@ -4,7 +4,9 @@
 
 export type UUID = string;
 
-export type PostStatus = "draft" | "published";
+export type PostStatus = "draft" | "published" | "scheduled";
+
+export type BlogLayoutVariant = "standard" | "editorial";
 
 export type ThemeName =
   | "pharmacy-red"
@@ -56,7 +58,62 @@ export interface BlogPost {
   themeUsed: ThemeName;
   readTimeMinutes: number;
   category: string;
+  layoutVariant?: BlogLayoutVariant;
+  keyTakeaways?: string[];
 }
+
+export type AnnouncementIcon =
+  | "clock"
+  | "syringe"
+  | "truck"
+  | "alert"
+  | "megaphone"
+  | "heart";
+
+export interface AnnouncementItem {
+  id: UUID;
+  text: string;
+  icon: AnnouncementIcon;
+  enabled: boolean;
+  urgent?: boolean;
+  link?: string;
+  displayOrder: number;
+}
+
+export const SEED_ANNOUNCEMENTS: AnnouncementItem[] = [
+  {
+    id: "ann-001",
+    text: "Walk-in flu shots available — no appointment needed",
+    icon: "syringe",
+    enabled: true,
+    urgent: false,
+    displayOrder: 1,
+  },
+  {
+    id: "ann-002",
+    text: "Free prescription delivery in Abbotsford for orders over $25",
+    icon: "truck",
+    enabled: true,
+    urgent: false,
+    displayOrder: 2,
+  },
+  {
+    id: "ann-003",
+    text: "Open 7 days a week: Mon–Fri 8am–9pm, Sat–Sun 9am–6pm",
+    icon: "clock",
+    enabled: true,
+    urgent: false,
+    displayOrder: 3,
+  },
+  {
+    id: "ann-004",
+    text: "Shingles and pneumonia vaccines now in stock — book online",
+    icon: "alert",
+    enabled: true,
+    urgent: false,
+    displayOrder: 4,
+  },
+];
 
 export interface AuthSession {
   auth: true;

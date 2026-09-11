@@ -1,0 +1,220 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  PHARMACIST
+}
+
+model User {
+  id              String           @id @default(cuid())
+  name            String
+  email           String           @unique
+  role            Role             @default(PHARMACIST)
+  hashedPassword  String
+  isActive        Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  twoFactorTokens TwoFactorToken[]
+  sessions        Session[]
+  pharmacist      Pharmacist?
+}
+
+model TwoFactorToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String
+  expiresAt DateTime
+  attempts  Int      @default(0)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expiresAt    DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model ServiceCategory {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  description String?
+  sortOrder   Int       @default(0)
+  services    Service[]
+}
+
+model Service {
+  id               String          @id @default(cuid())
+  categoryId       String
+  name             String
+  slug             String          @unique
+  durationMinutes  Int             @default(15)
+  priceCents       Int             @default(0)
+  mspCovered       Boolean         @default(true)
+  description      String
+  preparationNotes String?
+  category         ServiceCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  appointments     Appointment[]
+
+  @@index([categoryId])
+}
+
+model Pharmacist {
+  id                  String               @id @default(cuid())
+  userId              String?              @unique
+  name                String
+  title               String
+  licenseNumber       String
+  bio                 String
+  avatarUrl           String?
+  acceptsAppointments Boolean              @default(true)
+  active              Boolean              @default(true)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  user                User?                @relation(fields: [userId], references: [id], onDelete: SetNull)
+  appointments        Appointment[]
+  schedules           PharmacistSchedule[]
+  blackoutPeriods     BlackoutPeriod[]
+}
+
+model PharmacistSchedule {
+  id                  String     @id @default(cuid())
+  pharmacistId        String
+  dayOfWeek           Int
+  startTime           String
+  endTime             String
+  slotIntervalMinutes Int        @default(15)
+  pharmacist          Pharmacist @relation(fields: [pharmacistId], references: [id], onDelete: Cascade)
+
+  @@index([pharmacistId])
+}
+
+model BlackoutPeriod {
+  id           String      @id @default(cuid())
+  pharmacistId String?
+  startDate    DateTime
+  endDate      DateTime
+  reason       String
+  pharmacist   Pharmacist? @relation(fields: [pharmacistId], references: [id], onDelete: Cascade)
+
+  @@index([pharmacistId])
+}
+
+model Patient {
+  id           String        @id @default(cuid())
+  firstName    String
+  lastName     String
+  email        String
+  phone        String
+  dateOfBirth  DateTime
+  gender       String
+  phnMasked    String?
+  phnEncrypted String?
+  createdAt    DateTime      @default(now())
+  appointments Appointment[]
+}
+
+model Appointment {
+  id               String      @id @default(cuid())
+  confirmationCode String      @unique
+  serviceId        String
+  pharmacistId     String?
+  patientId        String
+  startTime        DateTime
+  endTime          DateTime
+  partySize        Int         @default(1)
+  status           String      @default("CONFIRMED")
+  reasonForVisit   String?
+  internalNotes    String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  service          Service     @relation(fields: [serviceId], references: [id])
+  pharmacist       Pharmacist? @relation(fields: [pharmacistId], references: [id], onDelete: SetNull)
+  patient          Patient     @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId])
+  @@index([pharmacistId])
+  @@index([patientId])
+}
+
+model Subscriber {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  firstName        String?
+  source           String    @default("website_footer")
+  caslConsent      Boolean   @default(true)
+  consentTimestamp DateTime  @default(now())
+  consentIp        String?
+  unsubscribeToken String    @unique
+  unsubscribedAt   DateTime?
+  resendContactId  String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model BlogCategory {
+  id    String     @id @default(cuid())
+  slug  String     @unique
+  name  String
+  posts BlogPost[]
+}
+
+model BlogPost {
+  id              String       @id @default(cuid())
+  slug            String       @unique
+  title           String
+  excerpt         String
+  contentHtml     String
+  categoryId      String
+  authorId        String?
+  coverImageUrl   String?
+  readTimeMinutes Int          @default(5)
+  publishedAt     DateTime?
+  scheduledFor    DateTime?
+  status          String       @default("DRAFT")
+  views           Int          @default(0)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  category        BlogCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([categoryId])
+}
+
+model Announcement {
+  id           String   @id @default(cuid())
+  text         String
+  icon         String   @default("megaphone")
+  urgent       Boolean  @default(false)
+  link         String?
+  enabled      Boolean  @default(true)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Flyer {
+  id           String    @id @default(cuid())
+  title        String
+  pdfUrl       String
+  thumbnailUrl String?
+  validFrom    DateTime?
+  validTo      DateTime?
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}

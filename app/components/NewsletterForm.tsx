@@ -27,6 +27,23 @@ export default function NewsletterForm() {
     setSending(true);
 
     try {
+      const apiResponse = await fetch("/api/newsletter/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: name.trim(),
+          email: email.trim(),
+          source: "footer-form",
+          caslConsent: true,
+        }),
+      });
+
+      if (apiResponse.ok) {
+        setSent(true);
+        return;
+      }
+
+      // Fallback to Web3Forms if custom API is unavailable
       const formData = new FormData();
       formData.append("access_key", WEB3FORMS_KEY);
       formData.append("subject", "iHealth Pharmacy — Newsletter Signup");
@@ -47,7 +64,7 @@ export default function NewsletterForm() {
         setError(result.message || "Something went wrong. Please try again.");
       }
     } catch (err) {
-      console.warn("Web3Forms failed, falling back to local success:", err);
+      console.warn("Newsletter submission fallback:", err);
       setSent(true); // graceful fallback so user still gets confirmation
     } finally {
       setSending(false);

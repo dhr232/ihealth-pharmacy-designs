@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import {
   ArrowDown,
@@ -13,161 +14,152 @@ import {
   Plus,
   Stethoscope,
   Trash2,
+  FileText,
+  Megaphone,
+  AlertCircle,
+  Clock,
+  Truck,
+  Syringe,
+  Heart,
+  Calendar,
+  LayoutDashboard,
+  Upload,
+  Users as UsersIcon,
+  Lock,
 } from "lucide-react";
 import {
   clearAuth,
   deletePharmacist,
   deletePost,
+  deleteAnnouncement,
   exportJSON,
-  getAuth,
-  getFont,
   getPharmacists,
   getPosts,
-  getTheme,
+  getAnnouncements,
   reorderPharmacist,
+  reorderAnnouncement,
   seedPostsFromRemote,
-  setAuth,
-  setFont,
-  setTheme,
   upsertPharmacist,
   upsertPost,
+  upsertAnnouncement,
 } from "./lib/storage";
 import type {
+  AnnouncementIcon,
+  AnnouncementItem,
   BlogPost,
-  FontPairingName,
   Pharmacist,
   PostStatus,
-  ThemeName,
 } from "./lib/types";
 import { ToastViewport, type ToastKind, type ToastItem } from "./components/Toast";
-import { ThemeSelector } from "./components/ThemeSelector";
 import { PharmacistEditor } from "./components/PharmacistEditor";
 import { PostEditor } from "./components/PostEditor";
+import { AnnouncementEditor } from "./components/AnnouncementEditor";
+import { AppointmentsSection } from "./components/AppointmentsSection";
+import { FlyersSection } from "./components/FlyersSection";
+import { UsersSection } from "./components/UsersSection";
+import { OverviewSection } from "./components/OverviewSection";
+import { DataExportSection } from "./components/DataExportSection";
+import { Button } from "@/app/components/ui/button";
+import { Card, CardContent } from "@/app/components/ui/card";
+import { Badge } from "@/app/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs";
 
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
-const ADMIN_PIN = process.env.NEXT_PUBLIC_ADMIN_PIN ?? "2026";
 
-type Tab = "pharmacists" | "posts";
+export type Tab =
+  | "overview"
+  | "appointments"
+  | "posts"
+  | "announcements"
+  | "flyers"
+  | "pharmacists"
+  | "users"
+  | "export";
+
 type PostFilter = "all" | PostStatus;
 
-export default function AdminPage() {
-  const [authed, setAuthed] = useState<boolean | null>(() => {
-    if (typeof window === "undefined") return null;
-    return getAuth() !== null;
-  });
-  const hydrated = typeof window !== "undefined";
+export interface StaffUserSession {
+  userId: string;
+  name: string;
+  email: string;
+  role: "ADMIN" | "PHARMACIST";
+}
 
-  if (!hydrated) {
+const emptySubscribe = () => () => {};
+
+export default function AdminPage() {
+  const router = useRouter();
+  const isHydrated = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+
+  const [staffUser, setStaffUser] = useState<StaffUserSession | null>(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function verifySession() {
+      try {
+        const res = await fetch("/api/auth/me");
+        if (!res.ok) {
+          throw new Error("Unauthenticated");
+        }
+        const data = await res.json();
+        if (!cancelled && data.success && data.user) {
+          setStaffUser(data.user);
+          setCheckingAuth(false);
+          return;
+        }
+      } catch {
+        // Unauthenticated or fetch error
+      }
+
+      if (!cancelled) {
+        setCheckingAuth(false);
+        router.replace("/admin/login");
+      }
+    }
+
+    verifySession();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [router]);
+
+  if (!isHydrated || checkingAuth) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[var(--surface)]">
-        <span className="text-sm text-[var(--muted)]">Loading admin...</span>
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 text-teal-700 border border-teal-200 animate-pulse">
+            <Pill size={20} />
+          </div>
+          <span className="text-sm font-medium text-slate-500">Verifying staff credentials...</span>
+        </div>
       </div>
     );
   }
 
-  if (!authed) {
-    return <LoginScreen onSuccess={() => setAuthed(true)} />;
+  if (!staffUser) {
+    return null;
   }
 
   return (
     <Dashboard
-      onLogout={() => {
+      user={staffUser}
+      onLogout={async () => {
+        try {
+          await fetch("/api/auth/logout", { method: "POST" });
+        } catch {
+          // Best effort
+        }
         clearAuth();
-        setAuthed(false);
+        router.replace("/admin/login");
       }}
     />
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Login                                                              */
-/* ------------------------------------------------------------------ */
-
-function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
-  const [pin, setPin] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
-
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setBusy(true);
-    setError(null);
-    if (pin.trim() !== ADMIN_PIN) {
-      setError("Incorrect PIN. Please try again.");
-      setBusy(false);
-      return;
-    }
-    setAuth();
-    setBusy(false);
-    onSuccess();
-  }
-
-  return (
-    <main className="flex min-h-screen items-center justify-center bg-[var(--surface)] px-4">
-      <motion.div
-        initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
-        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 0.6, ease: EASE_OUT }}
-        className="w-full max-w-md rounded-2xl border border-[var(--border)] bg-white p-8 shadow-lg"
-      >
-        <div className="mb-6 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--brand-subtle)] text-[var(--brand)]">
-            <Pill size={20} />
-          </div>
-          <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">
-              iHealth Pharmacy
-            </p>
-            <h1 className="text-xl font-semibold tracking-tight text-[var(--foreground)]">
-              Admin sign in
-            </h1>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <label className="flex flex-col gap-1.5 text-sm">
-            <span className="font-medium text-[var(--foreground)]">PIN</span>
-            <input
-              type="password"
-              autoFocus
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              value={pin}
-              onChange={(e) => setPin(e.target.value)}
-              placeholder="Enter your admin PIN"
-              className="rounded-lg border border-[var(--border)] bg-white px-3 py-2.5 text-base text-[var(--foreground)] shadow-sm placeholder:text-[var(--muted)]/70 focus:border-[var(--brand)] focus:outline-none"
-            />
-          </label>
-
-          {error && (
-            <p className="text-sm text-[var(--brand)]" role="alert">
-              {error}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            disabled={busy || !pin}
-            className="inline-flex items-center justify-center rounded-lg bg-[var(--brand)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--brand-hover)] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {busy ? "Signing in..." : "Sign in"}
-          </button>
-
-          <p className="text-xs text-[var(--muted)]">
-            Default PIN is <span className="font-mono font-semibold">2026</span>.
-            Override with the <span className="font-mono">NEXT_PUBLIC_ADMIN_PIN</span> env
-            var at build time.
-          </p>
-
-          <Link
-            href="/"
-            className="text-center text-xs font-medium text-[var(--muted)] hover:text-[var(--brand)]"
-          >
-            Back to site
-          </Link>
-        </form>
-      </motion.div>
-    </main>
   );
 }
 
@@ -175,17 +167,18 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
 /*  Dashboard                                                          */
 /* ------------------------------------------------------------------ */
 
-function Dashboard({ onLogout }: { onLogout: () => void }) {
-  const [tab, setTab] = useState<Tab>("pharmacists");
+function Dashboard({
+  user,
+  onLogout,
+}: {
+  user: StaffUserSession;
+  onLogout: () => void;
+}) {
+  const isAdmin = user.role === "ADMIN";
+  const [tab, setTab] = useState<Tab>("overview");
   const [toasts, setToasts] = useState<ToastItem[]>([]);
-  const [theme, setThemeState] = useState<ThemeName>(() =>
-    typeof window === "undefined" ? "pharmacy-red" : getTheme()
-  );
-  const [font, setFontState] = useState<FontPairingName>(() =>
-    typeof window === "undefined" ? "inter-tight" : getFont()
-  );
 
-    // Pharmacist state — hydrate from localStorage on first client render
+  // Pharmacist state — hydrate from localStorage on first client render
   const [pharmacists, setPharmacists] = useState<Pharmacist[]>(() =>
     typeof window === "undefined" ? [] : getPharmacists()
   );
@@ -202,6 +195,14 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [postEditorOpen, setPostEditorOpen] = useState(false);
   const [confirmDeletePostId, setConfirmDeletePostId] = useState<string | null>(null);
 
+  // Announcement state — hydrate from localStorage on first client render
+  const [announcements, setAnnouncements] = useState<AnnouncementItem[]>(() =>
+    typeof window === "undefined" ? [] : getAnnouncements()
+  );
+  const [editingAnnouncement, setEditingAnnouncement] = useState<AnnouncementItem | null>(null);
+  const [announcementEditorOpen, setAnnouncementEditorOpen] = useState(false);
+  const [confirmDeleteAnnouncementId, setConfirmDeleteAnnouncementId] = useState<string | null>(null);
+
   const pushToast = useCallback((kind: ToastKind, message: string) => {
     const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
     setToasts((current) => [...current, { id, kind, message }]);
@@ -211,13 +212,6 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     setToasts((current) => current.filter((t) => t.id !== id));
   }, []);
 
-  // (state already hydrated via lazy initializers above)
-
-  // On first mount, asynchronously reconcile the post list with the canonical
-  // JSON at /blog/seed-posts.json. The sync lazy initializer above already
-  // seeded from the bundled SEED_POSTS, so this is a no-op when localStorage
-  // is already populated. If the static JSON was updated separately, this
-  // lets the admin panel pick up the latest canonical content on first load.
   const seededRef = useRef(false);
   useEffect(() => {
     if (seededRef.current) return;
@@ -262,7 +256,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     setEditingPharmacist(null);
     pushToast(
       "success",
-      next.name ? `Saved ${next.name}.` : "Pharmacist saved.",
+      next.name ? `Saved ${next.name}. Public site updated live.` : "Pharmacist saved.",
     );
   }
 
@@ -333,101 +327,254 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     pushToast("success", "Posts exported.");
   }
 
-  /* ----- Theme/font handlers ----- */
+  /* ----- Announcement handlers ----- */
 
-  function handleThemeChange(next: ThemeName) {
-    setTheme(next);
-    setThemeState(next);
-    pushToast("info", `Theme set to ${next}.`);
+  const nextAnnouncementOrder = useMemo(() => {
+    if (announcements.length === 0) return 1;
+    return Math.max(...announcements.map((a) => a.displayOrder)) + 1;
+  }, [announcements]);
+
+  function openNewAnnouncement() {
+    setEditingAnnouncement(null);
+    setAnnouncementEditorOpen(true);
   }
 
-  function handleFontChange(next: FontPairingName) {
-    setFont(next);
-    setFontState(next);
-    pushToast("info", `Font set to ${next}.`);
+  function openEditAnnouncement(item: AnnouncementItem) {
+    setEditingAnnouncement(item);
+    setAnnouncementEditorOpen(true);
+  }
+
+  function handleSaveAnnouncement(next: AnnouncementItem) {
+    const updated = upsertAnnouncement(next);
+    setAnnouncements(updated);
+    setAnnouncementEditorOpen(false);
+    setEditingAnnouncement(null);
+    pushToast(
+      "success",
+      editingAnnouncement ? "Announcement updated." : "Announcement added.",
+    );
+  }
+
+  function handleToggleAnnouncement(id: string, enabled: boolean) {
+    const item = announcements.find((a) => a.id === id);
+    if (!item) return;
+    const updated = upsertAnnouncement({ ...item, enabled });
+    setAnnouncements(updated);
+    pushToast("info", enabled ? "Announcement active on site." : "Announcement paused.");
+  }
+
+  function handleMoveAnnouncement(id: string, direction: "up" | "down") {
+    const updated = reorderAnnouncement(id, direction);
+    setAnnouncements(updated);
+  }
+
+  function handleDeleteAnnouncement(id: string) {
+    const updated = deleteAnnouncement(id);
+    setAnnouncements(updated);
+    setConfirmDeleteAnnouncementId(null);
+    pushToast("success", "Announcement removed.");
+  }
+
+  function handleExportAnnouncements() {
+    exportJSON("announcements.json", announcements);
+    pushToast("success", "Announcements exported.");
+  }
+
+  function handleExportAllData() {
+    const backup = {
+      exportedAt: new Date().toISOString(),
+      pharmacists,
+      posts,
+      announcements,
+      version: "1.0",
+    };
+    exportJSON(`ihealth-backup-${new Date().toISOString().slice(0, 10)}.json`, backup);
+    pushToast("success", "Complete data package exported.");
   }
 
   return (
-    <div className="min-h-screen bg-[var(--surface)] text-[var(--foreground)]">
+    <div className="min-h-screen bg-slate-50/60 text-slate-900">
       <ToastViewport toasts={toasts} onDismiss={dismissToast} />
 
       {/* Top bar */}
-      <header className="sticky top-0 z-30 border-b border-[var(--border)] bg-white/95 backdrop-blur">
+      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand-subtle)] text-[var(--brand)]">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-50 text-teal-700 border border-teal-200">
               <Pill size={18} />
             </div>
-            <div className="hidden sm:block">
-              <p className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">
-                iHealth Pharmacy
-              </p>
-              <h1 className="text-base font-semibold tracking-tight">Admin</h1>
+            <div>
+              <div className="flex items-center gap-2">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                  iHealth Pharmacy
+                </p>
+                <Badge
+                  className={
+                    isAdmin
+                      ? "bg-indigo-50 text-indigo-700 border-indigo-200 text-[10px] py-0 px-1.5 font-bold"
+                      : "bg-teal-50 text-teal-700 border-teal-200 text-[10px] py-0 px-1.5 font-bold"
+                  }
+                >
+                  {user.role}
+                </Badge>
+              </div>
+              <h1 className="text-base font-bold tracking-tight text-slate-900">
+                Staff Control Panel
+              </h1>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Link
-              href="/"
-              target="_blank"
-              rel="noopener"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--foreground)] hover:bg-[var(--surface)]"
-            >
-              <ExternalLink size={12} /> View live site
-            </Link>
-            <button
-              type="button"
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:block text-right text-xs">
+              <p className="font-semibold text-slate-800">{user.name}</p>
+              <p className="text-slate-500 font-mono text-[11px]">{user.email}</p>
+            </div>
+
+            <Button variant="outline" size="sm" asChild className="hidden md:inline-flex">
+              <Link href="/" target="_blank" rel="noopener" className="gap-1.5 text-xs">
+                <ExternalLink size={13} />
+                <span>View Live Site</span>
+              </Link>
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => {
                 onLogout();
-                pushToast("info", "Signed out.");
+                pushToast("info", "Signed out of staff session.");
               }}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--foreground)] hover:bg-[var(--surface)]"
+              className="gap-1.5 text-slate-600 hover:text-slate-900 text-xs"
             >
-              <LogOut size={12} /> Log out
-            </button>
+              <LogOut size={13} />
+              <span>Log out</span>
+            </Button>
           </div>
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-7xl gap-6 px-4 py-6 sm:px-6 md:grid-cols-[220px,1fr]">
-        {/* Sidebar nav */}
-        <aside>
-          <nav
-            aria-label="Admin sections"
-            className="flex flex-row gap-2 overflow-x-auto rounded-2xl border border-[var(--border)] bg-white p-2 shadow-sm md:flex-col md:overflow-visible"
-          >
-            <NavTab
-              active={tab === "pharmacists"}
-              onClick={() => setTab("pharmacists")}
-              icon={<Stethoscope size={16} />}
-              label="Pharmacist Team"
-              count={pharmacists.length}
-            />
-            <NavTab
-              active={tab === "posts"}
-              onClick={() => setTab("posts")}
-              icon={<Pill size={16} />}
-              label="Blog Posts"
-              count={posts.length}
-            />
-          </nav>
-        </aside>
+      {/* Main Workspace with Tabs */}
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+        <Tabs
+          value={tab}
+          onValueChange={(v) => setTab(v as Tab)}
+          className="space-y-6"
+        >
+          {/* Navigation Bar */}
+          <div className="flex flex-col gap-4 border-b border-slate-200 pb-4">
+            <TabsList className="bg-slate-200/70 p-1 rounded-xl h-auto flex flex-wrap gap-1">
+              {/* Overview Tab */}
+              <TabsTrigger
+                value="overview"
+                className="gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+              >
+                <LayoutDashboard size={15} />
+                <span>Overview</span>
+              </TabsTrigger>
 
-        {/* Main */}
-        <main className="flex flex-col gap-6">
-          {tab === "pharmacists" ? (
-            <PharmacistSection
-              items={pharmacists}
-              confirmDeleteId={confirmDeleteId}
-              onAskDelete={setConfirmDeleteId}
-              onCancelDelete={() => setConfirmDeleteId(null)}
-              onConfirmDelete={handleDeletePharmacist}
-              onAdd={openNewPharmacist}
-              onEdit={openEditPharmacist}
-              onMove={handleMovePharmacist}
-              onExport={handleExportPharmacists}
+              {/* Appointments Tab */}
+              <TabsTrigger
+                value="appointments"
+                className="gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+              >
+                <Calendar size={15} />
+                <span>Appointments</span>
+              </TabsTrigger>
+
+              {/* Blog Posts Tab */}
+              <TabsTrigger
+                value="posts"
+                className="gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+              >
+                <FileText size={15} />
+                <span>Blog Articles</span>
+                <Badge variant="secondary" className="ml-0.5 px-1 py-0 text-[10px]">
+                  {posts.length}
+                </Badge>
+              </TabsTrigger>
+
+              {/* Announcements Tab */}
+              <TabsTrigger
+                value="announcements"
+                className="gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+              >
+                <Megaphone size={15} />
+                <span>Announcements</span>
+                <Badge variant="secondary" className="ml-0.5 px-1 py-0 text-[10px]">
+                  {announcements.length}
+                </Badge>
+              </TabsTrigger>
+
+              {/* Digital Flyers Tab */}
+              <TabsTrigger
+                value="flyers"
+                className="gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+              >
+                <Upload size={15} />
+                <span>Digital Flyers</span>
+              </TabsTrigger>
+
+              {/* Pharmacist Team Tab */}
+              <TabsTrigger
+                value="pharmacists"
+                className="gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+              >
+                <Stethoscope size={15} />
+                <span>Pharmacists</span>
+                <Badge variant="secondary" className="ml-0.5 px-1 py-0 text-[10px]">
+                  {pharmacists.length}
+                </Badge>
+              </TabsTrigger>
+
+              {/* Admin-only: Staff User Management */}
+              {isAdmin && (
+                <TabsTrigger
+                  value="users"
+                  className="gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+                >
+                  <UsersIcon size={15} />
+                  <span>Staff Users</span>
+                  <Badge className="ml-0.5 bg-indigo-100 text-indigo-800 border-none px-1 py-0 text-[9px]">
+                    Admin
+                  </Badge>
+                </TabsTrigger>
+              )}
+
+              {/* Admin-only: Data Export */}
+              {isAdmin && (
+                <TabsTrigger
+                  value="export"
+                  className="gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+                >
+                  <Download size={15} />
+                  <span>Data Export</span>
+                </TabsTrigger>
+              )}
+            </TabsList>
+          </div>
+
+          {/* Overview Tab Content */}
+          <TabsContent value="overview" className="m-0 focus-visible:outline-none">
+            <OverviewSection
+              user={user}
+              stats={{
+                pharmacistsCount: pharmacists.length,
+                postsCount: posts.length,
+                announcementsCount: announcements.length,
+                flyersCount: 2,
+                appointmentsCount: 3,
+              }}
+              onNavigateTab={(t) => setTab(t as Tab)}
             />
-          ) : (
+          </TabsContent>
+
+          {/* Appointments Tab Content */}
+          <TabsContent value="appointments" className="m-0 focus-visible:outline-none">
+            <AppointmentsSection onToast={pushToast} />
+          </TabsContent>
+
+          {/* Posts Tab Content */}
+          <TabsContent value="posts" className="m-0 focus-visible:outline-none">
             <PostsSection
               items={filteredPosts}
               totalCount={posts.length}
@@ -441,18 +588,82 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
               onEdit={openEditPost}
               onExport={handleExportPosts}
             />
-          )}
+          </TabsContent>
 
-          <ThemeSelector
-            theme={theme}
-            font={font}
-            onThemeChange={handleThemeChange}
-            onFontChange={handleFontChange}
-          />
-        </main>
+          {/* Announcements Tab Content */}
+          <TabsContent value="announcements" className="m-0 focus-visible:outline-none">
+            <AnnouncementSection
+              items={announcements}
+              confirmDeleteId={confirmDeleteAnnouncementId}
+              onAskDelete={setConfirmDeleteAnnouncementId}
+              onCancelDelete={() => setConfirmDeleteAnnouncementId(null)}
+              onConfirmDelete={handleDeleteAnnouncement}
+              onAdd={openNewAnnouncement}
+              onEdit={openEditAnnouncement}
+              onMove={handleMoveAnnouncement}
+              onToggle={handleToggleAnnouncement}
+              onExport={handleExportAnnouncements}
+            />
+          </TabsContent>
+
+          {/* Digital Flyers Tab Content */}
+          <TabsContent value="flyers" className="m-0 focus-visible:outline-none">
+            <FlyersSection onToast={pushToast} />
+          </TabsContent>
+
+          {/* Pharmacists Tab Content */}
+          <TabsContent value="pharmacists" className="m-0 focus-visible:outline-none">
+            <PharmacistSection
+              items={pharmacists}
+              confirmDeleteId={confirmDeleteId}
+              onAskDelete={setConfirmDeleteId}
+              onCancelDelete={() => setConfirmDeleteId(null)}
+              onConfirmDelete={handleDeletePharmacist}
+              onAdd={openNewPharmacist}
+              onEdit={openEditPharmacist}
+              onMove={handleMovePharmacist}
+              onExport={handleExportPharmacists}
+            />
+          </TabsContent>
+
+          {/* Staff User Management Tab Content (Admin Only) */}
+          <TabsContent value="users" className="m-0 focus-visible:outline-none">
+            {isAdmin ? (
+              <UsersSection onToast={pushToast} />
+            ) : (
+              <Card className="border-slate-200 p-8 text-center">
+                <Lock size={32} className="mx-auto text-slate-400 mb-2" />
+                <h3 className="font-semibold text-slate-800 text-sm">Administrator Access Required</h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  Managing staff credentials and role permissions is restricted to System Administrators.
+                </p>
+              </Card>
+            )}
+          </TabsContent>
+
+          {/* Data Export Tab Content (Admin Only) */}
+          <TabsContent value="export" className="m-0 focus-visible:outline-none">
+            {isAdmin ? (
+              <DataExportSection
+                onToast={pushToast}
+                exportAllData={handleExportAllData}
+              />
+            ) : (
+              <Card className="border-slate-200 p-8 text-center">
+                <Lock size={32} className="mx-auto text-slate-400 mb-2" />
+                <h3 className="font-semibold text-slate-800 text-sm">Administrator Access Required</h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  Exporting system databases and audit logs is restricted to System Administrators.
+                </p>
+              </Card>
+            )}
+          </TabsContent>
+
+        </Tabs>
       </div>
 
       <PharmacistEditor
+        key={editorOpen ? (editingPharmacist?.id ?? "new-pharmacist") : "closed-pharmacist"}
         open={editorOpen}
         initial={editingPharmacist}
         nextOrder={nextPharmacistOrder}
@@ -465,6 +676,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
       />
 
       <PostEditor
+        key={postEditorOpen ? (editingPost?.id ?? "new-post") : "closed-post"}
         open={postEditorOpen}
         initial={editingPost}
         onClose={() => {
@@ -474,75 +686,26 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
         onSave={handleSavePost}
         onError={(msg) => pushToast("error", msg)}
       />
+
+      <AnnouncementEditor
+        key={announcementEditorOpen ? (editingAnnouncement?.id ?? "new-announcement") : "closed-announcement"}
+        open={announcementEditorOpen}
+        initial={editingAnnouncement}
+        nextOrder={nextAnnouncementOrder}
+        onClose={() => {
+          setAnnouncementEditorOpen(false);
+          setEditingAnnouncement(null);
+        }}
+        onSave={handleSaveAnnouncement}
+        onError={(msg) => pushToast("error", msg)}
+      />
     </div>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/*  Subcomponents                                                       */
+/*  Pharmacist Section (shadcn Cards, Badges, Buttons)               */
 /* ------------------------------------------------------------------ */
-
-function NavTab({
-  active,
-  onClick,
-  icon,
-  label,
-  count,
-}: {
-  active: boolean;
-  onClick: () => void;
-  icon: React.ReactNode;
-  label: string;
-  count: number;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`flex shrink-0 items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
-        active
-          ? "bg-[var(--brand-subtle)] text-[var(--brand)]"
-          : "text-[var(--muted)] hover:bg-[var(--surface)]"
-      }`}
-    >
-      <span className="flex items-center gap-2">
-        {icon}
-        {label}
-      </span>
-      <span
-        className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
-          active
-            ? "bg-[var(--brand)] text-white"
-            : "bg-[var(--surface)] text-[var(--muted)]"
-        }`}
-      >
-        {count}
-      </span>
-    </button>
-  );
-}
-
-function SectionHeader({
-  title,
-  description,
-  actions,
-}: {
-  title: string;
-  description: string;
-  actions: React.ReactNode;
-}) {
-  return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-      <div>
-        <h2 className="text-xl font-semibold tracking-tight text-[var(--foreground)]">
-          {title}
-        </h2>
-        <p className="mt-1 text-sm text-[var(--muted)]">{description}</p>
-      </div>
-      <div className="flex flex-wrap items-center gap-2">{actions}</div>
-    </div>
-  );
-}
 
 function PharmacistSection({
   items,
@@ -571,121 +734,156 @@ function PharmacistSection({
   );
 
   return (
-    <section className="flex flex-col gap-4">
-      <SectionHeader
-        title="Pharmacist Team"
-        description="Add, edit, and reorder the pharmacists displayed on the public site."
-        actions={
-          <>
-            <button
-              type="button"
-              onClick={onExport}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--surface)]"
-            >
-              <Download size={14} /> Export JSON
-            </button>
-            <button
-              type="button"
-              onClick={onAdd}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[var(--brand-hover)]"
-            >
-              <Plus size={14} /> Add pharmacist
-            </button>
-          </>
-        }
-      />
+    <section className="flex flex-col gap-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h2 className="text-xl font-bold tracking-tight text-slate-900">
+            Our Pharmacists Directory
+          </h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Add new team members, edit credentials, or change portrait photos. Changes reflect on the homepage immediately.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" size="sm" onClick={onExport} className="gap-1.5">
+            <Download size={14} />
+            <span>Export JSON</span>
+          </Button>
+          <Button
+            size="sm"
+            onClick={onAdd}
+            className="gap-1.5 bg-[var(--brand)] text-white hover:bg-[var(--brand-hover)]"
+          >
+            <Plus size={14} />
+            <span>Add Pharmacist</span>
+          </Button>
+        </div>
+      </div>
 
       {sorted.length === 0 ? (
         <EmptyState
-          title="No pharmacists yet"
-          body="Click Add pharmacist to create the first team member."
+          title="No pharmacists configured"
+          body="Click Add Pharmacist above to create the first team member."
         />
       ) : (
-        <ul className="flex flex-col gap-3">
+        <ul className="grid grid-cols-1 gap-4">
           <AnimatePresence initial={false}>
             {sorted.map((p, idx) => (
               <motion.li
                 key={p.id}
                 layout
-                initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
+                initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-                transition={{ duration: 0.3, ease: EASE_OUT }}
-                className="flex items-center gap-4 rounded-2xl border border-[var(--border)] bg-white p-4 shadow-sm"
+                transition={{ duration: 0.25, ease: EASE_OUT }}
               >
-                <Avatar url={p.photoUrl} name={p.name} />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-[var(--foreground)]">
-                    {p.name || "Untitled"}
-                  </p>
-                  <p className="truncate text-xs text-[var(--muted)]">
-                    {p.role || "No role"} &middot; {p.yearsExperience} yr
-                    {p.yearsExperience === 1 ? "" : "s"}
-                  </p>
-                  {p.credentials.length > 0 && (
-                    <p className="mt-1 truncate text-xs text-[var(--muted)]">
-                      {p.credentials.join(" · ")}
-                    </p>
-                  )}
-                </div>
+                <Card className="hover:border-slate-300 transition-colors">
+                  <CardContent className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+                    {/* Portrait Avatar */}
+                    <Avatar url={p.photoUrl} name={p.name} />
 
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => onMove(p.id, "up")}
-                    disabled={idx === 0}
-                    aria-label="Move up"
-                    className="rounded-md p-1.5 text-[var(--muted)] hover:bg-[var(--surface)] disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    <ArrowUp size={14} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onMove(p.id, "down")}
-                    disabled={idx === sorted.length - 1}
-                    aria-label="Move down"
-                    className="rounded-md p-1.5 text-[var(--muted)] hover:bg-[var(--surface)] disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    <ArrowDown size={14} />
-                  </button>
-                </div>
+                    {/* Member Details */}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="text-base font-bold text-slate-900">
+                          {p.name || "Untitled Pharmacist"}
+                        </h3>
+                        <Badge variant="outline" className="text-xs border-slate-300">
+                          {p.role || "Pharmacist"}
+                        </Badge>
+                        <Badge variant="secondary" className="text-xs">
+                          {p.yearsExperience} yr{p.yearsExperience === 1 ? "" : "s"} exp
+                        </Badge>
+                      </div>
 
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => onEdit(p)}
-                    className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--foreground)] hover:bg-[var(--surface)]"
-                  >
-                    Edit
-                  </button>
-                  {confirmDeleteId === p.id ? (
-                    <div className="flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={() => onConfirmDelete(p.id)}
-                        className="rounded-lg bg-[var(--brand)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--brand-hover)]"
-                      >
-                        Confirm
-                      </button>
-                      <button
-                        type="button"
-                        onClick={onCancelDelete}
-                        className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--muted)] hover:bg-[var(--surface)]"
-                      >
-                        Cancel
-                      </button>
+                      {p.credentials.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {p.credentials.map((c) => (
+                            <span
+                              key={c}
+                              className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700"
+                            >
+                              {c}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {p.languages.length > 0 && (
+                        <p className="mt-2 text-xs text-slate-500">
+                          Languages: <span className="text-slate-700 font-medium">{p.languages.join(", ")}</span>
+                        </p>
+                      )}
                     </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => onAskDelete(p.id)}
-                      aria-label={`Delete ${p.name}`}
-                      className="rounded-md p-1.5 text-[var(--muted)] hover:bg-red-50 hover:text-[var(--brand)]"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  )}
-                </div>
+
+                    {/* Order Controls */}
+                    <div className="flex items-center gap-1 border-slate-100 sm:border-l sm:pl-3">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onMove(p.id, "up")}
+                        disabled={idx === 0}
+                        aria-label="Move pharmacist up"
+                        className="h-8 w-8 text-slate-500 hover:text-slate-900"
+                      >
+                        <ArrowUp size={15} />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onMove(p.id, "down")}
+                        disabled={idx === sorted.length - 1}
+                        aria-label="Move pharmacist down"
+                        className="h-8 w-8 text-slate-500 hover:text-slate-900"
+                      >
+                        <ArrowDown size={15} />
+                      </Button>
+                    </div>
+
+                    {/* Edit & Delete Action Buttons */}
+                    <div className="flex items-center gap-2 border-slate-100 sm:border-l sm:pl-3">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onEdit(p)}
+                        className="text-xs font-medium"
+                      >
+                        Edit
+                      </Button>
+
+                      {confirmDeleteId === p.id ? (
+                        <div className="flex items-center gap-1.5">
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => onConfirmDelete(p.id)}
+                            className="text-xs font-medium"
+                          >
+                            Delete
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={onCancelDelete}
+                            className="text-xs text-slate-500"
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => onAskDelete(p.id)}
+                          aria-label={`Delete ${p.name}`}
+                          className="h-8 w-8 text-slate-400 hover:bg-red-50 hover:text-red-600"
+                        >
+                          <Trash2 size={15} />
+                        </Button>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
               </motion.li>
             ))}
           </AnimatePresence>
@@ -693,6 +891,23 @@ function PharmacistSection({
       )}
     </section>
   );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Posts Section (shadcn Cards, Badges, Buttons)                    */
+/* ------------------------------------------------------------------ */
+
+function getScheduleCountdown(dateStr: string): string {
+  try {
+    const target = new Date(dateStr);
+    const now = new Date();
+    const diffMs = target.getTime() - now.getTime();
+    if (diffMs <= 0) return "today";
+    const days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+    return days === 1 ? "tomorrow" : `${days} days`;
+  } catch {
+    return dateStr;
+  }
 }
 
 function PostsSection({
@@ -721,142 +936,173 @@ function PostsSection({
   onExport: () => void;
 }) {
   return (
-    <section className="flex flex-col gap-4">
-      <SectionHeader
-        title="Blog Posts"
-        description="Draft and publish health tips, news, and stories."
-        actions={
-          <>
-            <button
-              type="button"
-              onClick={onExport}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--surface)]"
-            >
-              <Download size={14} /> Export JSON
-            </button>
-            <button
-              type="button"
-              onClick={onAdd}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[var(--brand-hover)]"
-            >
-              <Plus size={14} /> New post
-            </button>
-          </>
-        }
-      />
+    <section className="flex flex-col gap-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h2 className="text-xl font-bold tracking-tight text-slate-900">
+            Health Tips & Blog Articles
+          </h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Manage pharmacy articles, seasonal vaccine updates, and patient advice.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" size="sm" onClick={onExport} className="gap-1.5">
+            <Download size={14} />
+            <span>Export JSON</span>
+          </Button>
+          <Button
+            size="sm"
+            onClick={onAdd}
+            className="gap-1.5 bg-[var(--brand)] text-white hover:bg-[var(--brand-hover)]"
+          >
+            <Plus size={14} />
+            <span>New Post</span>
+          </Button>
+        </div>
+      </div>
 
-      <div className="flex items-center gap-1 rounded-xl border border-[var(--border)] bg-white p-1 text-xs font-medium shadow-sm w-fit">
+      {/* Filter Tabs */}
+      <div className="flex items-center gap-1 rounded-xl bg-slate-200/70 p-1 w-fit">
         {(
           [
             { value: "all" as PostFilter, label: `All (${totalCount})` },
-            { value: "draft" as PostFilter, label: "Draft" },
             { value: "published" as PostFilter, label: "Published" },
+            { value: "scheduled" as PostFilter, label: "Scheduled" },
+            { value: "draft" as PostFilter, label: "Drafts" },
           ]
         ).map(({ value, label }) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => onFilterChange(value)}
-              className={`rounded-lg px-3 py-1.5 ${
-                filter === value
-                  ? "bg-[var(--brand)] text-white"
-                  : "text-[var(--muted)] hover:bg-[var(--surface)]"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
+          <button
+            key={value}
+            type="button"
+            onClick={() => onFilterChange(value)}
+            className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+              filter === value
+                ? "bg-white text-slate-900 shadow-sm"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {items.length === 0 ? (
         <EmptyState
-          title={filter === "all" ? "No posts yet" : `No ${filter} posts`}
+          title={filter === "all" ? "No posts found" : `No ${filter} posts found`}
           body={
             filter === "all"
-              ? "Click New post to write the first article."
-              : "Try a different filter, or create a new post."
+              ? "Click New Post to write the first article."
+              : "Try switching filters or write a new post."
           }
         />
       ) : (
-        <ul className="flex flex-col gap-3">
+        <ul className="grid grid-cols-1 gap-4">
           <AnimatePresence initial={false}>
             {items.map((post) => (
               <motion.li
                 key={post.id}
                 layout
-                initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
+                initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-                transition={{ duration: 0.3, ease: EASE_OUT }}
-                className="flex items-center gap-4 rounded-2xl border border-[var(--border)] bg-white p-4 shadow-sm"
+                transition={{ duration: 0.25, ease: EASE_OUT }}
               >
-                <Cover url={post.imageUrl} title={post.title} />
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span
-                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
-                        post.status === "published"
-                          ? "bg-emerald-100 text-emerald-700"
-                          : "bg-amber-100 text-amber-700"
-                      }`}
-                    >
-                      {post.status}
-                    </span>
-                    <span className="text-xs text-[var(--muted)]">
-                      {post.publishedAt}
-                    </span>
-                  </div>
-                  <p className="mt-1 truncate text-sm font-semibold text-[var(--foreground)]">
-                    {post.title || "Untitled"}
-                  </p>
-                  {post.excerpt && (
-                    <p className="mt-1 line-clamp-1 text-xs text-[var(--muted)]">
-                      {post.excerpt}
-                    </p>
-                  )}
-                  {post.tags.length > 0 && (
-                    <p className="mt-1 text-[11px] text-[var(--muted)]">
-                      {post.tags.map((t) => `#${t}`).join(" ")}
-                    </p>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => onEdit(post)}
-                    className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--foreground)] hover:bg-[var(--surface)]"
-                  >
-                    Edit
-                  </button>
-                  {confirmDeleteId === post.id ? (
-                    <div className="flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={() => onConfirmDelete(post.id)}
-                        className="rounded-lg bg-[var(--brand)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--brand-hover)]"
-                      >
-                        Confirm
-                      </button>
-                      <button
-                        type="button"
-                        onClick={onCancelDelete}
-                        className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--muted)] hover:bg-[var(--surface)]"
-                      >
-                        Cancel
-                      </button>
+                <Card className="hover:border-slate-300 transition-colors">
+                  <CardContent className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+                    <Cover url={post.imageUrl} title={post.title} />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        {post.status === "scheduled" ? (
+                          <Badge className="bg-amber-100 text-amber-800 border-amber-300 font-bold uppercase tracking-wider text-[10px]">
+                            Scheduled · In {getScheduleCountdown(post.publishedAt)}
+                          </Badge>
+                        ) : (
+                          <Badge
+                            variant={post.status === "published" ? "success" : "secondary"}
+                            className="text-[10px] uppercase tracking-wider font-bold"
+                          >
+                            {post.status}
+                          </Badge>
+                        )}
+                        {post.layoutVariant === "editorial" && (
+                          <Badge variant="outline" className="text-[10px] text-indigo-700 border-indigo-200 bg-indigo-50 font-semibold">
+                            Editorial Layout
+                          </Badge>
+                        )}
+                        <span className="text-xs text-slate-500 font-medium">
+                          {post.publishedAt}
+                        </span>
+                        {post.category && (
+                          <Badge variant="outline" className="text-[11px] text-slate-600">
+                            {post.category}
+                          </Badge>
+                        )}
+                      </div>
+                      <h3 className="mt-1.5 truncate text-base font-bold text-slate-900">
+                        {post.title || "Untitled Post"}
+                      </h3>
+                      {post.excerpt && (
+                        <p className="mt-1 line-clamp-1 text-xs text-slate-500">
+                          {post.excerpt}
+                        </p>
+                      )}
+                      {post.tags.length > 0 && (
+                        <p className="mt-1 text-[11px] text-slate-400 font-medium">
+                          {post.tags.map((t) => `#${t}`).join(" ")}
+                        </p>
+                      )}
                     </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => onAskDelete(post.id)}
-                      aria-label={`Delete ${post.title}`}
-                      className="rounded-md p-1.5 text-[var(--muted)] hover:bg-red-50 hover:text-[var(--brand)]"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  )}
-                </div>
+
+                    <div className="flex items-center gap-2 border-slate-100 sm:border-l sm:pl-3">
+                      <Button variant="ghost" size="sm" asChild className="text-xs font-medium text-slate-600 gap-1 hover:text-slate-900">
+                        <Link href={`/blog/${post.slug}?preview=true`} target="_blank" rel="noopener">
+                          <ExternalLink size={12} />
+                          <span>Preview</span>
+                        </Link>
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onEdit(post)}
+                        className="text-xs font-medium"
+                      >
+                        Edit
+                      </Button>
+
+                      {confirmDeleteId === post.id ? (
+                        <div className="flex items-center gap-1.5">
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => onConfirmDelete(post.id)}
+                            className="text-xs font-medium"
+                          >
+                            Delete
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={onCancelDelete}
+                            className="text-xs text-slate-500"
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => onAskDelete(post.id)}
+                          aria-label={`Delete ${post.title}`}
+                          className="h-8 w-8 text-slate-400 hover:bg-red-50 hover:text-red-600"
+                        >
+                          <Trash2 size={15} />
+                        </Button>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
               </motion.li>
             ))}
           </AnimatePresence>
@@ -866,6 +1112,240 @@ function PostsSection({
   );
 }
 
+/* ------------------------------------------------------------------ */
+/*  Announcement Section                                              */
+/* ------------------------------------------------------------------ */
+
+const ANNOUNCEMENT_ICONS: Record<AnnouncementIcon, typeof Megaphone> = {
+  megaphone: Megaphone,
+  syringe: Syringe,
+  truck: Truck,
+  clock: Clock,
+  alert: AlertCircle,
+  heart: Heart,
+};
+
+const ANNOUNCEMENT_ICON_COLORS: Record<AnnouncementIcon, { bg: string; text: string }> = {
+  megaphone: { bg: "bg-amber-50 border-amber-200", text: "text-amber-600" },
+  syringe: { bg: "bg-red-50 border-red-200", text: "text-red-600" },
+  truck: { bg: "bg-sky-50 border-sky-200", text: "text-sky-600" },
+  clock: { bg: "bg-emerald-50 border-emerald-200", text: "text-emerald-600" },
+  alert: { bg: "bg-rose-50 border-rose-200", text: "text-rose-600" },
+  heart: { bg: "bg-pink-50 border-pink-200", text: "text-pink-600" },
+};
+
+function AnnouncementSection({
+  items,
+  confirmDeleteId,
+  onAskDelete,
+  onCancelDelete,
+  onConfirmDelete,
+  onAdd,
+  onEdit,
+  onMove,
+  onToggle,
+  onExport,
+}: {
+  items: AnnouncementItem[];
+  confirmDeleteId: string | null;
+  onAskDelete: (id: string) => void;
+  onCancelDelete: () => void;
+  onConfirmDelete: (id: string) => void;
+  onAdd: () => void;
+  onEdit: (item: AnnouncementItem) => void;
+  onMove: (id: string, dir: "up" | "down") => void;
+  onToggle: (id: string, enabled: boolean) => void;
+  onExport: () => void;
+}) {
+  const sorted = useMemo(
+    () => [...items].sort((a, b) => a.displayOrder - b.displayOrder),
+    [items]
+  );
+
+  return (
+    <section className="flex flex-col gap-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h2 className="text-xl font-bold tracking-tight text-slate-900">
+            Top Announcement Ticker
+          </h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Publish announcements, urgent health notices, and seasonal clinic hours to the top ticker across all website pages.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" size="sm" onClick={onExport} className="gap-1.5">
+            <Download size={14} />
+            <span>Export JSON</span>
+          </Button>
+          <Button
+            size="sm"
+            onClick={onAdd}
+            className="gap-1.5 bg-[var(--brand)] text-white hover:bg-[var(--brand-hover)]"
+          >
+            <Plus size={14} />
+            <span>Add Announcement</span>
+          </Button>
+        </div>
+      </div>
+
+      {sorted.length === 0 ? (
+        <EmptyState
+          title="No announcements configured"
+          body="Click Add Announcement above to create your first top ticker notice."
+        />
+      ) : (
+        <ul className="grid grid-cols-1 gap-3">
+          <AnimatePresence initial={false}>
+            {sorted.map((a, idx) => {
+              const IconComp = ANNOUNCEMENT_ICONS[a.icon] || Megaphone;
+              const style = ANNOUNCEMENT_ICON_COLORS[a.icon] || ANNOUNCEMENT_ICON_COLORS.megaphone;
+              return (
+                <motion.li
+                  key={a.id}
+                  layout
+                  initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
+                  transition={{ duration: 0.25, ease: EASE_OUT }}
+                >
+                  <Card
+                    className={`transition-colors ${
+                      !a.enabled ? "bg-slate-50/60 opacity-60 hover:opacity-100" : "bg-white hover:border-slate-300"
+                    }`}
+                  >
+                    <CardContent className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+                      {/* Icon */}
+                      <div
+                        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border ${style.bg} ${style.text}`}
+                      >
+                        <IconComp size={20} />
+                      </div>
+
+                      {/* Content */}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="text-sm font-semibold text-slate-900 leading-snug">
+                            {a.text}
+                          </p>
+                        </div>
+
+                        <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
+                          {a.urgent && (
+                            <Badge className="bg-rose-100 text-rose-700 hover:bg-rose-100 border-rose-200">
+                              Urgent Notice
+                            </Badge>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => onToggle(a.id, !a.enabled)}
+                            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors ${
+                              a.enabled
+                                ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200"
+                                : "bg-slate-200 text-slate-600 hover:bg-slate-300"
+                            }`}
+                            title="Click to toggle live display status"
+                          >
+                            <span
+                              className={`h-1.5 w-1.5 rounded-full ${
+                                a.enabled ? "bg-emerald-600" : "bg-slate-400"
+                              }`}
+                            />
+                            {a.enabled ? "Active on site" : "Paused (Hidden)"}
+                          </button>
+                          {a.link && (
+                            <span className="text-slate-500 font-mono text-[11px] bg-slate-100 px-2 py-0.5 rounded">
+                              Link: {a.link}
+                            </span>
+                          )}
+                          <span className="text-slate-400 text-xs">
+                            Order #{idx + 1}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Order Controls */}
+                      <div className="flex items-center gap-1 border-slate-100 sm:border-l sm:pl-3">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => onMove(a.id, "up")}
+                          disabled={idx === 0}
+                          aria-label="Move announcement up"
+                          className="h-8 w-8 text-slate-500 hover:text-slate-900"
+                        >
+                          <ArrowUp size={15} />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => onMove(a.id, "down")}
+                          disabled={idx === sorted.length - 1}
+                          aria-label="Move announcement down"
+                          className="h-8 w-8 text-slate-500 hover:text-slate-900"
+                        >
+                          <ArrowDown size={15} />
+                        </Button>
+                      </div>
+
+                      {/* Action buttons */}
+                      <div className="flex items-center gap-2 border-slate-100 sm:border-l sm:pl-3">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onEdit(a)}
+                          className="text-xs font-medium"
+                        >
+                          Edit
+                        </Button>
+
+                        {confirmDeleteId === a.id ? (
+                          <div className="flex items-center gap-1.5">
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => onConfirmDelete(a.id)}
+                              className="text-xs font-medium"
+                            >
+                              Delete
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={onCancelDelete}
+                              className="text-xs text-slate-500"
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        ) : (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => onAskDelete(a.id)}
+                            aria-label="Delete announcement"
+                            className="h-8 w-8 text-slate-400 hover:text-red-600 hover:bg-red-50"
+                          >
+                            <Trash2 size={15} />
+                          </Button>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.li>
+              );
+            })}
+          </AnimatePresence>
+        </ul>
+      )}
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Helpers & Subcomponents                                            */
+/* ------------------------------------------------------------------ */
+
 function Avatar({ url, name }: { url: string; name: string }) {
   if (url) {
     return (
@@ -873,7 +1353,7 @@ function Avatar({ url, name }: { url: string; name: string }) {
       <img
         src={url}
         alt={name}
-        className="h-12 w-12 shrink-0 rounded-full border border-[var(--border)] object-cover"
+        className="h-14 w-14 shrink-0 rounded-full border-2 border-slate-100 object-cover shadow-xs"
       />
     );
   }
@@ -884,7 +1364,7 @@ function Avatar({ url, name }: { url: string; name: string }) {
     .map((s) => s[0]?.toUpperCase() ?? "")
     .join("");
   return (
-    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--brand-subtle)] text-sm font-semibold text-[var(--brand)]">
+    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[var(--brand-subtle)] text-base font-bold text-[var(--brand)]">
       {initials || "?"}
     </div>
   );
@@ -897,12 +1377,12 @@ function Cover({ url, title }: { url: string; title: string }) {
       <img
         src={url}
         alt=""
-        className="h-14 w-20 shrink-0 rounded-lg border border-[var(--border)] object-cover"
+        className="h-16 w-24 shrink-0 rounded-lg border border-slate-200 object-cover shadow-xs"
       />
     );
   }
   return (
-    <div className="flex h-14 w-20 shrink-0 items-center justify-center rounded-lg border border-dashed border-[var(--border)] bg-[var(--surface)] text-[10px] font-medium uppercase tracking-wider text-[var(--muted)]">
+    <div className="flex h-16 w-24 shrink-0 items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-100 text-[10px] font-medium uppercase tracking-wider text-slate-400">
       {title ? "No image" : "—"}
     </div>
   );
@@ -910,9 +1390,11 @@ function Cover({ url, title }: { url: string; title: string }) {
 
 function EmptyState({ title, body }: { title: string; body: string }) {
   return (
-    <div className="rounded-2xl border border-dashed border-[var(--border)] bg-white p-10 text-center">
-      <p className="text-base font-medium text-[var(--foreground)]">{title}</p>
-      <p className="mt-1 text-sm text-[var(--muted)]">{body}</p>
-    </div>
+    <Card className="border-dashed border-2 bg-white/70">
+      <CardContent className="p-12 text-center">
+        <p className="text-base font-semibold text-slate-800">{title}</p>
+        <p className="mt-1 text-sm text-slate-500">{body}</p>
+      </CardContent>
+    </Card>
   );
 }

@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import RefillForm from "../components/RefillForm";
 import { SectionReveal } from "../components/MotionKit";
 import { CheckCircle } from "lucide-react";
+import { PHARMACY_INFO } from "@/data/pharmacy-info";
 
 export const metadata: Metadata = {
   title: "Transfer to iHealth — iHealth Pharmacy Abbotsford",
@@ -58,18 +59,22 @@ export default function TransferPage() {
               <div className="mt-10 flex items-center gap-5 rounded-2xl border border-[var(--border)] bg-white p-5 shadow-sm">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/pharmacist-placeholder.svg"
-                  alt="iHealth Pharmacy pharmacist who will handle your transfer"
-                  className="h-24 w-24 rounded-xl border border-[var(--border)] object-cover"
+                  src="/pharmacists/priya.jpg"
+                  alt="Priya Patel, PharmD - Pharmacist"
+                  className="h-20 w-20 rounded-xl border border-[var(--border)] object-cover bg-white shadow-xs"
                 />
                 <div>
                   <p className="font-semibold">A pharmacist oversees every transfer.</p>
                   <p className="mt-1 text-sm text-[var(--muted)]">
                     We verify each prescription, check for interactions, and confirm
                     everything before your first pickup. Questions? Call{" "}
-                    <a href="tel:+16045550199" className="font-medium text-[var(--brand)] hover:underline">
-                      (604) 555-0199
-                    </a>.
+                    <a
+                      href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
+                      className="font-semibold text-[var(--brand)] hover:underline"
+                    >
+                      {PHARMACY_INFO.phoneDisplay}
+                    </a>{" "}
+                    or message us on WhatsApp.
                   </p>
                 </div>
               </div>

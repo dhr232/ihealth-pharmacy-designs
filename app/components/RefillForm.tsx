@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Pill, Phone, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { Pill, Phone, Loader2, CheckCircle, AlertCircle, MessageCircle, Camera } from "lucide-react";
+import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
 
 type Props = {
   variant?: "refill" | "transfer" | "contact" | "vaccination";
@@ -87,7 +88,7 @@ export default function RefillForm({ variant = "refill" }: Props) {
       if (result.success) {
         setSent(true);
       } else {
-        setError(result.message || "Something went wrong. Please call us at 604-853-1893.");
+        setError(result.message || `Something went wrong. Please call us at ${PHARMACY_INFO.phoneDisplay}.`);
       }
     } catch (err) {
       // Fall back to local success state if Web3Forms is unavailable
@@ -125,7 +126,10 @@ export default function RefillForm({ variant = "refill" }: Props) {
           {variant === "contact" && <>Thanks <strong>{name}</strong>. A pharmacist will call or text <strong>{phone}</strong> within one business day.</>}
         </p>
         <p className="mt-3 text-xs text-[var(--muted)]">
-          Need it faster? Call us directly at <a href="tel:6048531893" className="font-semibold text-[var(--brand)] hover:underline">604-853-1893</a>.
+          Need it faster? Call us directly at{" "}
+          <a href={`tel:+1${PHARMACY_INFO.phoneRaw}`} className="font-semibold text-[var(--brand)] hover:underline">
+            {PHARMACY_INFO.phoneDisplay}
+          </a>.
         </p>
         <button
           onClick={() => {
@@ -313,6 +317,29 @@ export default function RefillForm({ variant = "refill" }: Props) {
       <p className="mt-3 text-center text-xs text-[var(--muted)]">
         Your information is sent securely and only used to respond to your request.
       </p>
+
+      <div className="mt-5 border-t border-[var(--border)] pt-4 text-center">
+        <p className="text-xs text-[var(--muted)]">
+          Prefer using WhatsApp instead of an online form?
+        </p>
+        <a
+          href={getWhatsAppUrl(
+            variant === "refill"
+              ? PHARMACY_INFO.whatsapp.presets.photoRefill
+              : variant === "transfer"
+              ? PHARMACY_INFO.whatsapp.presets.transfer
+              : PHARMACY_INFO.whatsapp.presets.question
+          )}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg border border-green-300 bg-green-50 px-4 py-2 text-xs font-semibold text-[#128C7E] transition hover:bg-green-100"
+        >
+          {variant === "refill" ? <Camera size={14} /> : <MessageCircle size={14} />}
+          {variant === "refill"
+            ? "Send Photo of Pill Bottle via WhatsApp"
+            : "Message Pharmacist on WhatsApp"}
+        </a>
+      </div>
     </form>
   );
 }

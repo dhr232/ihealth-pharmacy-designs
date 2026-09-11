@@ -191,4 +191,27 @@ export const SEED_POSTS: BlogPost[] = [
     readTimeMinutes: 5,
     category: "Vaccinations",
   },
+  {
+    id: "post-011",
+    title: "Fall 2026 Senior Medication Safety & Seasonal Immunizations: The Complete Abbotsford Guide",
+    slug: "fall-2026-senior-medication-safety-immunizations",
+    excerpt:
+      "As temperatures drop in the Fraser Valley, learn how to prevent adverse drug interactions, schedule high-dose flu & COVID boosters, and simplify daily regimens.",
+    content: "",
+    author: "Dr. Anika Sharma, BSc Pharm, RPh",
+    publishedAt: "2026-09-15",
+    tags: ["senior health", "medication safety", "flu vaccine", "abbotsford", "myhealthpack"],
+    imageUrl: "/blog/post-3.jpg",
+    status: "scheduled",
+    themeUsed: normaliseTheme("default"),
+    readTimeMinutes: 5,
+    category: "Seniors",
+    layoutVariant: "editorial",
+    keyTakeaways: [
+      "BC seniors qualify for enhanced high-dose flu shots and COVID boosters with zero out-of-pocket costs.",
+      "Over-the-counter cold medicines can interact dangerously with blood pressure and blood thinner prescriptions.",
+      "Annual medication reviews are 100% covered under BC Fair PharmaCare for eligible patients.",
+      "MyHealthPack custom blister cards eliminate missed doses and double-dosing risk with free Abbotsford delivery."
+    ],
+  },
 ];

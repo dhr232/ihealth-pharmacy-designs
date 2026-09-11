@@ -59,6 +59,28 @@
 }
 
 /* ===========================================================
+   Smooth Navigation & Senior Accessibility
+   =========================================================== */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+html[data-text-scale="large"] {
+  font-size: 112.5%;
+}
+
+html[data-text-scale="xlarge"] {
+  font-size: 125%;
+}
+
+/* ===========================================================
    Theme presets (10)
    Applied via [data-theme="..."] on <html>. Each theme overrides
    the new theming layer; the legacy --brand-* vars stay at their

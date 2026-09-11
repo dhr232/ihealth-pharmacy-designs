@@ -1,3 +1,5 @@
+export type BlogLayoutVariant = "standard" | "editorial";
+
 export type BlogPost = {
   id: string;
   title: string;
@@ -8,11 +10,23 @@ export type BlogPost = {
   publishedAt: string;
   tags: string[];
   imageUrl: string;
-  status: "draft" | "published";
+  status: "draft" | "published" | "scheduled";
   themeUsed: string;
   readTimeMinutes: number;
   category: string;
+  layoutVariant?: BlogLayoutVariant;
+  keyTakeaways?: string[];
 };
+
+export function isPostPublished(post: BlogPost, now = new Date()): boolean {
+  if (post.status === "draft") return false;
+  if (post.status === "scheduled") {
+    const publishDate = new Date(post.publishedAt);
+    if (isNaN(publishDate.getTime())) return false;
+    return publishDate.getTime() <= now.getTime();
+  }
+  return post.status === "published";
+}
 
 export const MKT_01_POSTS: BlogPost[] = [
   {
@@ -990,6 +1004,60 @@ If you have questions about COVID-19 vaccines or treatment, talk to one of our p
     themeUsed: "default",
     readTimeMinutes: 5,
     category: "Vaccinations",
+  },
+  {
+    id: "post-011",
+    title: "Fall 2026 Senior Medication Safety & Seasonal Immunizations: The Complete Abbotsford Guide",
+    slug: "fall-2026-senior-medication-safety-immunizations",
+    excerpt: "As temperatures drop in the Fraser Valley, learn how to prevent adverse drug interactions, schedule high-dose flu & COVID boosters, and simplify daily regimens.",
+    content: `As autumn arrives in Abbotsford and temperatures start to drop across the Fraser Valley, seasonal health risks change rapidly—especially for seniors managing multiple daily medications. Cold weather often brings joint stiffness, changes in physical activity, and increased respiratory illness spread.
+
+## Why Autumn Demands a Fresh Medication Review
+
+When daily routines shift from summer gardening to indoor living, blood pressure, blood glucose, and circulation patterns often shift along with them. Over-the-counter cough syrups, decongestants, and pain relievers frequently taken during cold season can interact dangerously with common prescription medications:
+
+- Decongestants containing pseudoephedrine or phenylephrine can sharply elevate blood pressure and interfere with antihypertensive regimens.
+- Common anti-inflammatory medications (NSAIDs like ibuprofen or naproxen) can strain kidneys and interact with blood thinners like apixaban, rivaroxaban, or warfarin.
+- First-generation antihistamines can cause drowsiness and significantly increase fall risks among seniors.
+
+> Clinical Pearl: Always bring any over-the-counter cough, cold, or sinus remedy to our pharmacy counter before purchasing. Our pharmacists check cross-interactions against your active profile in seconds.
+
+## High-Dose Flu & Updated COVID-19 Boosters for Seniors
+
+In British Columbia, seniors aged 65 and older qualify for enhanced seasonal protection. The high-dose influenza vaccine stimulates a stronger immune response than standard flu shots, offering substantially better protection against hospitalization and pneumonia complications.
+
+- Free under BC Fair PharmaCare: Both the enhanced senior influenza vaccine and the updated 2026 COVID-19 mRNA booster are 100% covered.
+- Co-Administration Convenience: You can safely receive your flu shot and COVID booster during the exact same 15-minute appointment.
+- Gentle Administration: Our pharmacists specialize in calm, gentle injection techniques with zero wait times for seniors.
+
+## Simplifying Complex Regimens with MyHealthPack
+
+If you or a loved one takes four or more medications daily, keeping track of morning, noon, and bedtime pills becomes stressful. Missed doses or accidental double-dosing are among the leading causes of avoidable hospital visits in BC.
+
+At iHealth Pharmacy Abbotsford, we organize all prescriptions, vitamins, and supplements into custom compliance packaging (MyHealthPack):
+
+- Color-coded blister cards clearly organized by day of the week and exact time of day.
+- Tamper-evident seals that guarantee medication stability.
+- Free local doorstep delivery across Abbotsford so you never run out of critical treatments.
+
+## How to Book Your Fall Consult with iHealth
+
+A comprehensive medication review is completely free for BC residents who meet PharmaCare criteria. Sit down one-on-one with Dr. Anika Sharma or any of our clinical pharmacists to review every pill, optimize dosing times, and answer all questions in English, Punjabi, or Hindi.`,
+    author: "Dr. Anika Sharma, BSc Pharm, RPh",
+    publishedAt: "2026-09-15",
+    tags: ["senior health", "medication safety", "flu vaccine", "abbotsford", "myhealthpack"],
+    imageUrl: "/blog/post-3.jpg",
+    status: "scheduled",
+    themeUsed: "default",
+    readTimeMinutes: 5,
+    category: "Seniors",
+    layoutVariant: "editorial",
+    keyTakeaways: [
+      "BC seniors qualify for enhanced high-dose flu shots and COVID boosters with zero out-of-pocket costs.",
+      "Over-the-counter cold medicines can interact dangerously with blood pressure and blood thinner prescriptions.",
+      "Annual medication reviews are 100% covered under BC Fair PharmaCare for eligible patients.",
+      "MyHealthPack custom blister cards eliminate missed doses and double-dosing risk with free Abbotsford delivery."
+    ],
   },
 ];
 
