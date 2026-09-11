@@ -24,7 +24,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import { LiquidMetalButton } from "./ui/LiquidMetalButton";
 import { MegaMenu, MegaMenuItem } from "@/components/ui/mega-menu";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
-import { getBookingUrl } from "@/lib/routes";
+import { getBookingUrl, getMainSiteUrl } from "@/lib/routes";
 
 const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
   {
@@ -168,14 +168,38 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
   { id: 4, label: "Contact", link: "/contact" },
 ];
 
-export default function Header() {
+interface HeaderProps {
+  logoHref?: string;
+}
+
+export default function Header({ logoHref }: HeaderProps = {}) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const resolvedLogoHref = logoHref || (typeof window !== "undefined" ? getMainSiteUrl("/") : "/");
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const target = logoHref || getMainSiteUrl("/");
+    if (typeof window !== "undefined" && (target.startsWith("http://") || target.startsWith("https://"))) {
+      try {
+        const targetOrigin = new URL(target).origin;
+        if (targetOrigin !== window.location.origin) {
+          e.preventDefault();
+          window.location.href = target;
+        }
+      } catch {
+        // Fallback to default Link navigation
+      }
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 lg:px-8">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-2.5 shrink-0 group transition hover:opacity-95">
+        <Link
+          href={resolvedLogoHref}
+          onClick={handleLogoClick}
+          className="flex items-center gap-2.5 shrink-0 group transition hover:opacity-95 cursor-pointer"
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/ihealth-logo-main.jpeg"
@@ -293,6 +317,20 @@ export default function Header() {
                 >
                   <RefreshCw size={12} />
                   <span>Request Refill</span>
+                </Link>
+              </div>
+
+              {/* Home Link */}
+              <div className="border-b border-slate-100 pb-2.5">
+                <Link
+                  href={resolvedLogoHref}
+                  onClick={(e) => {
+                    setMobileOpen(false);
+                    handleLogoClick(e);
+                  }}
+                  className="block text-sm font-bold text-slate-900 py-1 hover:text-[var(--brand)] transition-colors"
+                >
+                  Home
                 </Link>
               </div>
 

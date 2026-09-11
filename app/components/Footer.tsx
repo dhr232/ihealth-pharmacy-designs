@@ -2,14 +2,18 @@ import Link from "next/link";
 import { Phone, Mail, MapPin, Clock, MessageCircle, ShieldCheck } from "lucide-react";
 import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
 
-export default function Footer() {
+interface FooterProps {
+  logoHref?: string;
+}
+
+export default function Footer({ logoHref = "/" }: FooterProps = {}) {
   return (
     <footer id="contact" className="border-t border-[var(--border)] bg-[#1a1e23] text-white">
       <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           {/* Col 1: Identity & Multilingual */}
           <div>
-            <Link href="/" className="flex items-center gap-3 group">
+            <Link href={logoHref} className="flex items-center gap-3 group">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/ihealth-logo-main.jpeg"

@@ -22,6 +22,7 @@ import {
   Phone,
 } from "lucide-react";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
+import { getMainSiteUrl } from "@/lib/routes";
 
 const STEPS = [
   { id: 1, title: "Select Service", icon: Stethoscope },
@@ -89,7 +90,7 @@ function BookingWizard() {
   return (
     <div className="min-h-screen bg-slate-50/50 text-slate-900 antialiased flex flex-col justify-between">
       <div>
-        <Header />
+        <Header logoHref={getMainSiteUrl("/")} />
 
         {/* Hero Banner */}
         <section className="border-b border-slate-200 bg-white py-3 sm:py-5">
@@ -263,7 +264,7 @@ function BookingWizard() {
         </main>
       </div>
 
-      <Footer />
+      <Footer logoHref={getMainSiteUrl("/")} />
     </div>
   );
 }

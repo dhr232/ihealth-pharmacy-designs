@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "motion/react";
+import { getMainSiteUrl } from "@/lib/routes";
 
 interface BookingReviewProps {
   service: BookingService;
@@ -441,7 +442,20 @@ export default function BookingReview({
             </motion.button>
             <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
               <Link
-                href="/"
+                href={getMainSiteUrl("/")}
+                onClick={(e) => {
+                  const target = getMainSiteUrl("/");
+                  if (typeof window !== "undefined" && (target.startsWith("http://") || target.startsWith("https://"))) {
+                    try {
+                      if (new URL(target).origin !== window.location.origin) {
+                        e.preventDefault();
+                        window.location.href = target;
+                      }
+                    } catch {
+                      // Fallback
+                    }
+                  }
+                }}
                 className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-[var(--brand)] transition-colors cursor-pointer"
               >
                 <Home size={14} />
