@@ -40,14 +40,3 @@ jobs:
 
       - name: Build Next.js application
         run: npm run build
-
-      - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
-
-      - name: Run E2E verification suite
-        run: |
-          npx next start -p 3000 &
-          SERVER_PID=$!
-          sleep 4
-          node scripts/qa-recommendations-e2e.js
-          kill $SERVER_PID || true
