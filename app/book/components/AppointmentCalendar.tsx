@@ -16,7 +16,6 @@ import { TimeSlotItem } from "@/app/api/appointments/slots/route";
 
 interface AppointmentCalendarProps {
   serviceId: string;
-  partySize?: number;
   selectedDate: string; // YYYY-MM-DD
   selectedTime: string; // "09:00"
   selectedTimeLabel: string; // "9:00 AM"
@@ -27,7 +26,6 @@ interface AppointmentCalendarProps {
 
 export default function AppointmentCalendar({
   serviceId,
-  partySize,
   selectedDate,
   selectedTime,
   onSelectDateTime,

@@ -8,7 +8,6 @@ import {
   Calendar,
   Clock,
   MapPin,
-  User,
   AlertCircle,
   Loader2,
   ChevronLeft,
@@ -18,9 +17,7 @@ import {
   Home,
   Copy,
   Check,
-  Printer,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 

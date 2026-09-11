@@ -25,8 +25,6 @@ import {
 interface ServiceSelectorProps {
   selectedService: BookingService | null;
   onSelectService: (service: BookingService) => void;
-  partySize?: number;
-  onChangePartySize?: (size: number) => void;
   onProceed: () => void;
 }
 
@@ -39,8 +37,6 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
 export default function ServiceSelector({
   selectedService,
   onSelectService,
-  partySize,
-  onChangePartySize,
   onProceed,
 }: ServiceSelectorProps) {
   const [activeTab, setActiveTab] = useState<string>("minor_ailments");

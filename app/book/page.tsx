@@ -139,7 +139,6 @@ function BookingWizard() {
                     const Icon = s.icon;
                     const isCompleted = currentStep > s.id;
                     const isCurrent = currentStep === s.id;
-                    const isUpcoming = currentStep < s.id;
 
                     return (
                       <li
@@ -218,8 +217,6 @@ function BookingWizard() {
             <ServiceSelector
               selectedService={selectedService}
               onSelectService={(service) => setSelectedService(service)}
-              partySize={partySize}
-              onChangePartySize={() => {}}
               onProceed={() => setCurrentStep(2)}
             />
           )}
@@ -238,7 +235,6 @@ function BookingWizard() {
           {currentStep === 3 && selectedService && (
             <AppointmentCalendar
               serviceId={selectedService.id}
-              partySize={partySize}
               selectedDate={selectedDate}
               selectedTime={selectedTime}
               selectedTimeLabel={selectedTimeLabel}
