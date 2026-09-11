@@ -19,7 +19,6 @@ import {
   Calendar,
   CheckCircle2,
   Phone,
-  ShieldCheck,
 } from "lucide-react";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 
@@ -96,16 +95,7 @@ function BookingWizard() {
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-red-800 border border-red-200/80">
-                    <ShieldCheck size={11} className="text-[var(--brand)]" />
-                    <span>Official BC Clinical Booking</span>
-                  </span>
-                  <span className="text-[10px] sm:text-[11px] text-slate-400 font-medium">
-                    booking.ihealthpharmacy.ca
-                  </span>
-                </div>
-                <h1 className="mt-0.5 text-lg font-extrabold tracking-tight text-slate-900 sm:text-2xl">
+                <h1 className="text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl">
                   Book Your Pharmacy Appointment
                 </h1>
                 <p className="hidden sm:block mt-0.5 text-xs text-slate-600">
