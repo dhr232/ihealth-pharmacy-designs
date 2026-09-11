@@ -5,6 +5,7 @@ import {
   BOOKING_CATEGORIES,
   BookingService,
 } from "@/data/booking-services";
+import Link from "next/link";
 import {
   Search,
   Users,
@@ -18,6 +19,7 @@ import {
   Pill,
   Sparkles,
   HeartPulse,
+  ArrowRight,
   LucideIcon,
 } from "lucide-react";
 
@@ -33,7 +35,6 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
   minor_ailments: Stethoscope,
   vaccines: Syringe,
   consultations: HeartPulse,
-  prescriptions: Pill,
 };
 
 export default function ServiceSelector({
@@ -67,7 +68,44 @@ export default function ServiceSelector({
   const currentCategoryObj = BOOKING_CATEGORIES.find((c) => c.slug === activeTab);
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="space-y-6 animate-in fade-in duration-300">
+      {/* Fast Prescription Refill & Transfer Notice */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-teal-200/80 bg-gradient-to-r from-teal-50/90 via-emerald-50/70 to-slate-50 p-5 sm:px-6 shadow-xs">
+        <div className="flex items-start sm:items-center gap-3.5">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-teal-700 text-white shadow-sm">
+            <Pill size={22} />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold text-slate-900">
+                Need a Prescription Refill or Transfer?
+              </span>
+              <span className="hidden sm:inline-block rounded-full bg-teal-100/80 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-teal-800">
+                No appointment needed
+              </span>
+            </div>
+            <p className="mt-0.5 text-xs text-slate-600">
+              Skip the calendar! Submit a 30-second online refill request or send a photo of your pill bottle directly on WhatsApp.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <Link
+            href="/prescription-refills"
+            className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-teal-700 px-3.5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-teal-800 transition-colors"
+          >
+            <span>Quick Refill Form</span>
+            <ArrowRight size={13} />
+          </Link>
+          <Link
+            href="/transfer"
+            className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-teal-300 bg-white px-3.5 py-2 text-xs font-semibold text-teal-800 hover:bg-teal-50 transition-colors"
+          >
+            <span>Transfer Rx</span>
+          </Link>
+        </div>
+      </div>
+
       {/* Category Tabs & Party Size */}
       <div className="rounded-3xl border border-slate-200/90 bg-white p-5 sm:p-7 shadow-xs">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
@@ -148,7 +186,7 @@ export default function ServiceSelector({
         {/* Category Navigation Pills (hidden if searching) */}
         {!searchQuery && (
           <div className="mt-6 border-t border-slate-100 pt-5">
-            <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               {BOOKING_CATEGORIES.map((cat) => {
                 const isActive = activeTab === cat.slug;
                 const CatIcon = CATEGORY_ICONS[cat.slug] || Stethoscope;

@@ -673,69 +673,19 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
           "Bring your prescription medication vial and syringe if already dispensed.",
         ],
       },
-    ],
-  },
-  {
-    id: "cat_prescriptions",
-    slug: "prescriptions",
-    name: "Prescriptions",
-    badge: "Fast & Convenient Dispensing",
-    description:
-      "Prescription transfers, refills, compliance packaging (MyHealthPack), and custom compounding.",
-    services: [
-      {
-        id: "prescription-transfer-consult",
-        slug: "prescription-transfer-consult",
-        categoryId: "cat_prescriptions",
-        categoryName: "Prescriptions",
-        name: "Transfer Prescriptions from Another Pharmacy",
-        shortName: "Prescription Transfer",
-        durationMinutes: 15,
-        priceCents: 0,
-        mspCovered: true,
-        coverageBadge: "Free Pharmacy Service",
-        description:
-          "We contact your former pharmacy and transfer all your active refills to iHealth Pharmacy Abbotsford seamlessly.",
-        clinicalIndications: [
-          "Moving care to iHealth Pharmacy Abbotsford with active prescriptions elsewhere",
-        ],
-        preparationNotes: [
-          "Provide the name and phone number of your current pharmacy, or bring current medication bottles.",
-        ],
-      },
-      {
-        id: "refill-pickup-sync",
-        slug: "refill-pickup-sync",
-        categoryId: "cat_prescriptions",
-        categoryName: "Prescriptions",
-        name: "Prescription Refill Pickup & Synchronization",
-        shortName: "Refill Pickup & Sync",
-        durationMinutes: 15,
-        priceCents: 0,
-        mspCovered: true,
-        coverageBadge: "Free Pharmacy Service",
-        description:
-          "Schedule a fast counter pickup for ready refills and synchronize future renewals onto a single monthly date.",
-        clinicalIndications: [
-          "Existing patients picking up prescriptions with pharmacist consultation",
-        ],
-        preparationNotes: [
-          "Bring your BC Services Card.",
-        ],
-      },
       {
         id: "myhealthpack-blister-setup",
         slug: "myhealthpack-blister-setup",
-        categoryId: "cat_prescriptions",
-        categoryName: "Prescriptions",
+        categoryId: "cat_consultations",
+        categoryName: "Consultations",
         name: "MyHealthPack Compliance Blister Packaging Setup",
         shortName: "MyHealthPack Setup",
         durationMinutes: 20,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "Complimentary Service",
+        coverageBadge: "Complimentary Consultation",
         description:
-          "Consultation to organize your daily medications into custom pre-sealed morning, noon, evening, and bedtime blister cards.",
+          "One-on-one consultation to organize your daily medications into custom pre-sealed morning, noon, evening, and bedtime blister cards.",
         clinicalIndications: [
           "Multiple daily medications, senior care, caregiver assistance, or complex regimens",
         ],
@@ -746,8 +696,8 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
       {
         id: "prescription-adaptation-renewal",
         slug: "prescription-adaptation-renewal",
-        categoryId: "cat_prescriptions",
-        categoryName: "Prescriptions",
+        categoryId: "cat_consultations",
+        categoryName: "Consultations",
         name: "Prescription Adaptation & Emergency Supply Renewal",
         shortName: "Emergency Refill & Adaptation",
         durationMinutes: 15,
@@ -755,7 +705,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         mspCovered: true,
         coverageBadge: "100% Covered by BC MSP",
         description:
-          "Pharmacist assessment to renew an expired maintenance prescription or adapt dosage formulations to prevent therapy interruption.",
+          "Pharmacist clinical assessment to renew an expired maintenance prescription or adapt dosage formulations to prevent therapy interruption.",
         clinicalIndications: [
           "Run out of refills for chronic stable conditions (e.g. blood pressure, thyroid)",
         ],
