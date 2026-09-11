@@ -96,8 +96,8 @@ export function LiquidMetalButton({
           {
             u_repetition: 3.5,
             u_softness: 0.5,
-            u_shiftRed: 0.45,
-            u_shiftBlue: 0.05,
+            u_shiftRed: 0.05,
+            u_shiftBlue: 0.40,
             u_distortion: 0.1,
             u_contour: 0.2,
             u_angle: 45,
@@ -225,7 +225,7 @@ export function LiquidMetalButton({
             height: `${dimensions.innerHeight}px`,
             margin: "2px",
             borderRadius: "9999px",
-            background: "linear-gradient(180deg, #991b1b 0%, #7f1d1d 100%)",
+            background: "linear-gradient(180deg, #0f766e 0%, #115e59 100%)",
             boxShadow: isPressed
               ? "inset 0px 2px 4px rgba(0, 0, 0, 0.5)"
               : "inset 0px 1px 1px rgba(255, 255, 255, 0.25)",
@@ -253,7 +253,7 @@ export function LiquidMetalButton({
             width: `${dimensions.width}px`,
             borderRadius: "9999px",
             boxShadow: isHovered
-              ? "0 0 16px rgba(192, 29, 22, 0.45), 0 4px 10px rgba(0, 0, 0, 0.25)"
+              ? "0 0 18px rgba(13, 148, 136, 0.55), 0 4px 10px rgba(0, 0, 0, 0.25)"
               : "0 2px 6px rgba(0, 0, 0, 0.2)",
             background: "transparent",
             transition: "box-shadow 0.3s ease",

@@ -482,7 +482,7 @@ export default function BookingReview({
           type="button"
           disabled={isSubmitting}
           onClick={handleConfirmBooking}
-          className="inline-flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-6 py-3 text-sm font-bold text-white shadow-md shadow-red-700/20 transition-all duration-150 hover:bg-[var(--brand-hover)] hover:shadow-lg active:scale-[0.98] disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-2xl bg-teal-600 px-6 py-3 text-sm font-bold text-white shadow-md shadow-teal-700/20 transition-all duration-150 hover:bg-teal-700 hover:shadow-lg active:scale-[0.98] disabled:opacity-50"
         >
           {isSubmitting ? (
             <>

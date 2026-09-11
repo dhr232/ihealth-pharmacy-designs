@@ -505,7 +505,7 @@ export default function Header() {
                 <Link
                   href="/book"
                   onClick={() => setOpen(false)}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-700 py-2.5 text-center text-sm font-semibold text-white shadow-xs hover:bg-emerald-800"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-teal-600 py-2.5 text-center text-sm font-semibold text-white shadow-xs hover:bg-teal-700 transition-colors"
                 >
                   Book Appointment Online
                 </Link>
