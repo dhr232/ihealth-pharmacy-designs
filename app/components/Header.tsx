@@ -5,7 +5,6 @@ import Link from "next/link";
 import { ChevronDown, Menu, X, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import LanguageSwitcher from "./LanguageSwitcher";
-import TextSizeAdjuster from "./TextSizeAdjuster";
 import { LiquidMetalButton } from "./ui/LiquidMetalButton";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 
@@ -386,7 +385,6 @@ export default function Header() {
 
         {/* Right Utilities & Refill Button */}
         <div className="hidden items-center gap-2.5 lg:flex">
-          <TextSizeAdjuster />
           <LanguageSwitcher />
 
           <a
@@ -481,12 +479,6 @@ export default function Header() {
               <Link href="/#contact" onClick={() => setOpen(false)} className="rounded-lg px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50">Contact</Link>
 
               <div className="my-2 border-t border-slate-100" />
-              <div className="flex items-center justify-between px-4 py-1">
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                  Text Size
-                </span>
-                <TextSizeAdjuster />
-              </div>
               <div className="px-4 py-1 notranslate" translate="no">
                 <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-slate-500">
                   Language

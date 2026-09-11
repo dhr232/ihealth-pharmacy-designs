@@ -17,6 +17,7 @@ import ThemeApplier from "./components/ThemeApplier";
 import AnnouncementBar from "./components/AnnouncementBar";
 import CookieBanner from "./components/CookieBanner";
 import WhatsAppButton from "./components/WhatsAppButton";
+import TextSizeAdjuster from "./components/TextSizeAdjuster";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 
 /* All 10 font families loaded once at build time so the admin's theme/font
@@ -198,6 +199,7 @@ export default function RootLayout({
         {children}
         <CookieBanner />
         <WhatsAppButton />
+        <TextSizeAdjuster />
         <div id="google_translate_element" aria-hidden="true" style={{ display: "none" }} />
       </body>
     </html>
