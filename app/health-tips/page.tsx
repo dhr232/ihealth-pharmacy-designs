@@ -6,9 +6,9 @@ import HealthTipsDirectory from "./HealthTipsDirectory";
 import { MKT_01_POSTS, isPostPublished } from "../../data/blog-posts";
 
 export const metadata: Metadata = {
-  title: "Health Tips & Clinical Guides — iHealth Pharmacy Abbotsford",
+  title: "Health Tips & Clinical Guides — iHealth Pharmacy Chilliwack",
   description:
-    "Evidence-based health advice, BC PharmaCare guidance, vaccine updates, and senior care recommendations from your local Abbotsford pharmacists.",
+    "Evidence-based health advice, BC PharmaCare guidance, vaccine updates, and senior care recommendations from your local Chilliwack pharmacists.",
 };
 
 export default function HealthTipsPage() {

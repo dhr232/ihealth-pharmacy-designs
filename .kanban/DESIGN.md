@@ -39,13 +39,13 @@ Apply the reference&apos;s layout and visual rhythm to the iHealth Pharmacy site
 - Subhead: "Personalized pharmacy care for every member of your family — prescriptions, reminders, and trusted advice."
 - Primary CTA: "Request Refill" (red)
 - Secondary CTA: "Transfer to iHealth" (outline)
-- Trust mini-card: "Happy Customer — 4.9 ★" + 5 overlapping avatars + short quote
+- Trust mini-card: "Happy Customer — 4.9 " + 5 overlapping avatars + short quote
 
 ## Happy Customer card component
 - White card, rounded-2xl, shadow-lg, subtle border
 - Top row: 5 overlapping circular avatar placeholders (use initials or colored circles for now)
 - Star rating row: 5 amber stars + "4.9" large + "out of 5" small
-- Label: "Trusted by 300+ Abbotsford families"
+- Label: "Trusted by 300+ Chilliwack families"
 - Optional short quote below
 
 ## Services section (numbered cards matching reference)

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -27,7 +27,7 @@ export default function CareProgramPage() {
             </BlurReveal>
             <BlurReveal className="mt-3">
               <p className="mx-auto max-w-2xl text-base text-slate-600 sm:text-lg">
-                Personalized medication management, automatic refill coordination, and free doorstep delivery in Abbotsford. 100% free with no membership fees.
+                Personalized medication management, automatic refill coordination, and free doorstep delivery in Chilliwack. 100% free with no membership fees.
               </p>
             </BlurReveal>
           </div>

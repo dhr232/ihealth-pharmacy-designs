@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
 
     if (!phone || !isValidPhone(phone)) {
       return NextResponse.json(
-        { success: false, error: "Please enter a valid 10-digit phone number (e.g. (604) 853-1893)." },
+        { success: false, error: "Please enter a valid 10-digit phone number (e.g. (604) 392-8393)." },
         { status: 400 }
       );
     }
@@ -374,9 +374,9 @@ export async function POST(request: NextRequest) {
           time: timeDisplay,
           duration: `${durationMinutes} minutes`,
           partySize: resolvedPartySize,
-          pharmacyName: "iHealth Pharmacy Abbotsford",
-          pharmacyAddress: "#105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S3",
-          pharmacyPhone: "(604) 853-1893",
+          pharmacyName: "iHealth Pharmacy Chilliwack",
+          pharmacyAddress: "45619 Yale Rd #101, Chilliwack, BC V2P 0B1",
+          pharmacyPhone: "604-392-8393",
           preparationNotes,
         });
       } catch (patientEmailErr) {
@@ -422,7 +422,7 @@ export async function POST(request: NextRequest) {
           email: email.trim().toLowerCase(),
           phone: cleanPhone,
           phnMasked,
-          pharmacyAddress: "#105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S3",
+          pharmacyAddress: "45619 Yale Rd #101, Chilliwack, BC V2P 0B1",
         },
       });
     } finally {

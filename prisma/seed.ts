@@ -332,7 +332,7 @@ export const PHARMACISTS = [
     name: "Dr. Anika Sharma",
     title: "Pharmacy Manager & Owner",
     licenseNumber: "BC-PHARM-20184",
-    bio: "Anika has been serving Abbotsford families for over 15 years. She specialises in geriatric care and medication reviews, and is passionate about making sure every patient feels heard.",
+    bio: "Anika has been serving Chilliwack families for over 15 years. She specialises in geriatric care and medication reviews, and is passionate about making sure every patient feels heard.",
     avatarUrl: "/pharmacists/anika.jpg",
     acceptsAppointments: true,
     active: true,
@@ -402,7 +402,7 @@ export const INITIAL_ANNOUNCEMENTS = [
     displayOrder: 1,
   },
   {
-    text: "Free prescription delivery in Abbotsford for orders over $25",
+    text: "Free prescription delivery in Chilliwack for orders over $25",
     icon: "truck",
     urgent: false,
     enabled: true,

@@ -64,7 +64,7 @@ const TEMPLATES: { title: string; text: string; icon: AnnouncementIcon; urgent: 
   },
   {
     title: "Free Delivery",
-    text: "Free prescription & OTC home delivery in Abbotsford for orders over $25.",
+    text: "Free prescription & OTC home delivery in Chilliwack for orders over $25.",
     icon: "truck",
     urgent: false,
   },

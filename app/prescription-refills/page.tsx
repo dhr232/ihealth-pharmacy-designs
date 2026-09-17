@@ -16,9 +16,9 @@ import {
 import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
 
 export const metadata: Metadata = {
-  title: "Prescription Refills — iHealth Pharmacy Abbotsford",
+  title: "Prescription Refills — iHealth Pharmacy Chilliwack",
   description:
-    "Request a prescription refill online in 30 seconds or send a photo via WhatsApp. Usually ready within the hour, with free delivery across Abbotsford.",
+    "Request a prescription refill online in 30 seconds or send a photo via WhatsApp. Usually ready within the hour, with free delivery across Chilliwack.",
 };
 
 const STEPS = [
@@ -32,13 +32,13 @@ const STEPS = [
   },
   {
     title: "Pick up or free delivery",
-    body: "We text you the moment it's ready. Free prescription delivery across Abbotsford.",
+    body: "We text you the moment it's ready. Free prescription delivery across Chilliwack.",
   },
 ];
 
 const PERKS = [
   { icon: Clock, text: "Usually ready within the hour" },
-  { icon: Truck, text: "Free delivery across Abbotsford" },
+  { icon: Truck, text: "Free delivery across Chilliwack" },
   { icon: ShieldCheck, text: "Pharmacist reviews every prescription" },
   { icon: CheckCircle, text: "Blister packs / auto-refill available" },
 ];
@@ -65,7 +65,7 @@ export default function PrescriptionRefillsPage() {
               </h1>
               <p className="mt-4 text-lg text-[var(--muted)]">
                 No app to download, no password to remember. Send your refill
-                request and our Abbotsford pharmacy team will have it ready —
+                request and our Chilliwack pharmacy team will have it ready —
                 usually within the hour.
               </p>
 

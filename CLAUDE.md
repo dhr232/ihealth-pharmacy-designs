@@ -1,10 +1,10 @@
-﻿@AGENTS.md
+@AGENTS.md
 
 # iHealth Pharmacy Website -- Agent Runbook
 
 ## Project
 
-Multi-page full-stack website for **iHealth Pharmacy** (Abbotsford, BC).
+Multi-page full-stack website for **iHealth Pharmacy** (Chilliwack, BC).
 - **Repo:** `dhr232/ihealth-pharmacy-designs` at `C:\Users\Dhruvil\pharmacy-website`
 - **Production host:** Hostinger Node.js Cloud Hosting -- auto-deploys from `main` via GitHub OAuth
 - **Temp live URL:** `https://lightslategrey-eel-264716.hostingersite.com`
@@ -26,7 +26,7 @@ Multi-page full-stack website for **iHealth Pharmacy** (Abbotsford, BC).
 
 - Brand red `#C01D16` (`--brand`), hover `#a31812`; foreground `#1f2328`; muted `#5a6270`; surface `#f6f7f9`; border `#d8dce2`
 - Inter font (default). 9 alternate pairings selectable via admin theme picker.
-- Voice: warm, professional, Abbotsford-community, Canadian English
+- Voice: warm, professional, Chilliwack-community, Canadian English
 
 ## Environment Variables (Hostinger hPanel)
 

@@ -175,7 +175,7 @@ export function FlyersSection({ onToast }: FlyersSectionProps) {
           <FileText size={32} className="mx-auto text-slate-400 mb-2" />
           <h3 className="font-semibold text-slate-800 text-sm">No promotional flyers published</h3>
           <p className="text-xs text-slate-500 mt-1">
-            Upload a PDF flyer to make it available for local Abbotsford patients.
+            Upload a PDF flyer to make it available for local Chilliwack patients.
           </p>
         </Card>
       ) : (

@@ -58,7 +58,7 @@ export default function PharmacistTeamSection() {
               Meet Our Caring Experts
             </h2>
             <p className="mt-3 max-w-2xl text-base text-slate-600 sm:text-lg">
-              Experienced, licensed community pharmacists in Abbotsford dedicated to personalized patient guidance, minor ailments prescribing, and continuous care.
+              Experienced, licensed community pharmacists in Chilliwack dedicated to personalized patient guidance, minor ailments prescribing, and continuous care.
             </p>
           </div>
 

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -94,7 +94,7 @@ export default function AdminLoginPage() {
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                  iHealth Pharmacy Abbotsford
+                  iHealth Pharmacy Chilliwack
                 </p>
                 <CardTitle className="text-xl font-bold text-slate-900">
                   Staff Portal Sign In

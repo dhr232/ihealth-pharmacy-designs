@@ -5,7 +5,7 @@ import { SectionReveal, BlurReveal } from "../components/MotionKit";
 import { ShieldCheck, Mail, FileText, Calendar } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — iHealth Pharmacy Abbotsford",
+  title: "Privacy Policy — iHealth Pharmacy Chilliwack",
   description:
     "How iHealth Pharmacy collects, uses, and protects your personal information. PIPEDA and BC PIPA aligned, written in plain English.",
 };
@@ -117,18 +117,18 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
             href="mailto:hello@ihealthpharmacy.ca"
             className="font-medium text-[var(--brand)] underline-offset-2 hover:underline"
           >
-            hello@ihealthpharmacy.ca
+            info@ihealthpharmacy.ca
           </a>
           <br />
           Phone:{" "}
           <a
-            href="tel:+160****0199"
+            href="tel:+16043928393"
             className="font-medium text-[var(--brand)] underline-offset-2 hover:underline"
           >
-            (604) 555-0199
+            604-392-8393
           </a>
           <br />
-          In person: 101 - 45619 Yale Road, Abbotsford, BC V2P 2N1
+          In person: 45619 Yale Rd #101, Chilliwack, BC V2P 0B1
         </p>
       </>
     ),

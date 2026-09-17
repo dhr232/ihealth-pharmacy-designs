@@ -84,7 +84,7 @@ export default function PatientForm({
     }
 
     if (!isValidPhone(formData.phone)) {
-      newErrors.phone = "Please enter a valid 10-digit phone number (e.g. (604) 853-1893)";
+      newErrors.phone = "Please enter a valid 10-digit phone number (e.g. (604) 392-8393)";
     }
 
     if (!formData.dateOfBirth) {
@@ -266,7 +266,7 @@ export default function PatientForm({
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => handlePhoneChange(e.target.value)}
-                    placeholder="(604) 853-1893"
+                    placeholder="(604) 392-8393"
                     className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                       errors.phone
                         ? "border-red-400 focus:border-red-500 focus:ring-red-100"

@@ -10,11 +10,11 @@
 ## Business positioning
 
 ### Audience
-- Local families in Abbotsford, BC who want a pharmacy they can walk into and talk to.
+- Local families in Chilliwack, BC who want a pharmacy they can walk into and talk to.
 - Seniors managing multiple prescriptions and preferring in-person advice.
 - Parents filling kids’ prescriptions, asking about vaccines, or looking for trusted health basics.
 - Small-business employees and walk-in customers who need same-day service without a big-box experience.
-- Newcomers searching online for “pharmacy near me” in Abbotsford.
+- Newcomers searching online for “pharmacy near me” in Chilliwack.
 
 ### Core promise in one sentence
 “You get a pharmacist who knows your name, gives you time, and makes health advice feel simple.”
@@ -31,7 +31,7 @@
 ## Must-have credibility signals
 
 1. **Active pharmacy license and credentials** — list the pharmacy license number, accredited pharmacist team, and relevant affiliations (e.g., BC Pharmacy Association, College of Pharmacists of BC).
-2. **Local address with map + hours** — full street address in Abbotsford, real hours, phone number, and a visible map. No PO boxes or vague “Lower Mainland” language.
+2. **Local address with map + hours** — full street address in Chilliwack, real hours, phone number, and a visible map. No PO boxes or vague “Lower Mainland” language.
 3. **Years in business / experience** — a clear statement of how long we have served the community; if new, emphasize the founders’ combined years of pharmacy experience.
 4. **Services with specifics** — prescription transfers, medication reviews, flu shots, travel vaccines, compounding, blister packaging, free delivery zone, and health consultations. Avoid empty labels like “Wellness Services.”
 5. **Real patient proof** — 2–4 authentic-sounding testimonials with first names and local context. Bonus: a visible rating or review source (Google, Facebook) if available.
@@ -45,7 +45,7 @@
 - **Professional but warm.** Competent enough to handle your medication; human enough to remember your kid’s name.
 - **Plain English first.** Use words a 70-year-old grandmother and a busy parent both understand. “Medication review” not “comprehensive pharmaceutical care optimization.”
 - **Confident, not boastful.** Say what we do and why it matters; skip superlatives like “the best pharmacy in Canada.”
-- **Local, not generic.** Reference Abbotsford, neighbourhood routines, and real community needs.
+- **Local, not generic.** Reference Chilliwack, neighbourhood routines, and real community needs.
 - **Respectful of health concerns.** Never fear-monger. Never make medical guarantees. Use calm, helpful language.
 
 ---

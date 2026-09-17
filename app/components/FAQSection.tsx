@@ -31,9 +31,9 @@ export const FAQ_ITEMS: FAQItem[] = [
     category: "Coverage & Billing",
   },
   {
-    question: "Is prescription delivery free anywhere in Abbotsford?",
+    question: "Is prescription delivery free anywhere in Chilliwack?",
     answer:
-      "Yes! We provide complimentary same-day prescription delivery across Abbotsford for all medication orders over $25. Orders placed before 2:00 PM on weekdays are typically delivered straight to your door that afternoon.",
+      "Yes! We provide complimentary same-day prescription delivery across Chilliwack for all medication orders over $25. Orders placed before 2:00 PM on weekdays are typically delivered straight to your door that afternoon.",
     category: "Delivery",
   },
   {
@@ -125,7 +125,7 @@ export default function FAQSection() {
           <div>
             <h3 className="text-base font-bold text-slate-900">Have a specific health question?</h3>
             <p className="text-xs text-slate-600 mt-0.5">
-              Talk directly with a pharmacist on duty in Abbotsford. No appointment required.
+              Talk directly with a pharmacist on duty in Chilliwack. No appointment required.
             </p>
           </div>
           <div className="mt-4 sm:mt-0 flex flex-wrap items-center gap-3">

@@ -58,8 +58,8 @@ export default function BookingReview({
   const [successResult, setSuccessResult] = useState<BookingSuccessResult | null>(null);
   const [copiedCode, setCopiedCode] = useState(false);
 
-  const pharmacyAddress = "#105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S1";
-  const pharmacyPhone = "(604) 746-4444";
+  const pharmacyAddress = "45619 Yale Rd #101, Chilliwack, BC V2P 0B1";
+  const pharmacyPhone = "604-392-8393";
 
   // Human date formatting
   const formattedDate = (() => {
@@ -161,7 +161,7 @@ export default function BookingReview({
       `iHealth Pharmacy: ${service.name} [${code}]`
     );
     const details = encodeURIComponent(
-      `Appointment at iHealth Pharmacy Abbotsford\nService: ${service.name}\nConfirmation: ${code}\nLocation: ${pharmacyAddress}\nPhone: ${pharmacyPhone}`
+      `Appointment at iHealth Pharmacy Chilliwack\nService: ${service.name}\nConfirmation: ${code}\nLocation: ${pharmacyAddress}\nPhone: ${pharmacyPhone}`
     );
     const location = encodeURIComponent(
       `iHealth Pharmacy, ${pharmacyAddress}`
@@ -177,7 +177,7 @@ export default function BookingReview({
     const text = encodeURIComponent(
       `Hello iHealth Pharmacy, I have an appointment booked for ${service.name} on ${formattedDate} at ${selectedTime}. My confirmation code is ${code}.`
     );
-    return `https://wa.me/16047464444?text=${text}`;
+    return `https://wa.me/16043928393?text=${text}`;
   }
 
   // SUCCESS SCREEN
@@ -363,7 +363,7 @@ export default function BookingReview({
             <div className="flex items-start justify-between pt-1">
               <span className="font-semibold text-slate-500">Dispensary Location:</span>
               <span className="font-medium text-slate-800 text-right">
-                iHealth Pharmacy Abbotsford
+                iHealth Pharmacy Chilliwack
                 <br />
                 {pharmacyAddress}
                 <br />
@@ -535,7 +535,7 @@ export default function BookingReview({
               <div className="flex items-start gap-2.5">
                 <MapPin size={16} className="shrink-0 text-[var(--brand)] mt-0.5" />
                 <div>
-                  <strong className="text-slate-900">iHealth Pharmacy Abbotsford</strong>
+                  <strong className="text-slate-900">iHealth Pharmacy Chilliwack</strong>
                   <br />
                   {pharmacyAddress}
                   <br />

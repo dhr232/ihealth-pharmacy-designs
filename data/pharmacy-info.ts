@@ -4,21 +4,21 @@
 
 export const PHARMACY_INFO = {
   name: "iHealth Pharmacy",
-  tagline: "Your Neighbourhood Pharmacy in Abbotsford, BC",
+  tagline: "Your Neighbourhood Pharmacy in Chilliwack, BC",
   legalName: "iHealth Pharmacy Ltd.",
 
   // Contact numbers
-  phone: process.env.NEXT_PUBLIC_PHARMACY_PHONE || "(604) 853-1893",
-  phoneRaw: process.env.NEXT_PUBLIC_PHARMACY_PHONE_RAW || "6048531893",
-  phoneDisplay: "(604) 853-1893",
-  fax: "(604) 853-1894",
+  phone: process.env.NEXT_PUBLIC_PHARMACY_PHONE || "604-392-8393",
+  phoneRaw: process.env.NEXT_PUBLIC_PHARMACY_PHONE_RAW || "6043928393",
+  phoneDisplay: "604-392-8393",
+  fax: "(604) 392-8394",
   email: "info@ihealthpharmacy.ca",
 
   // WhatsApp configuration
   whatsapp: {
     // E.164 format without '+' symbol for wa.me links
-    number: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "16048531893",
-    displayNumber: "+1 (604) 853-1893",
+    number: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "16043928393",
+    displayNumber: "604-392-8393",
     defaultMessage:
       "Hi iHealth Pharmacy, I have a question about my medication or pharmacy services.",
     presets: {
@@ -39,15 +39,15 @@ export const PHARMACY_INFO = {
 
   // Address and location
   address: {
-    street: "2825 Clearbrook Rd",
-    city: "Abbotsford",
+    street: "45619 Yale Rd #101",
+    city: "Chilliwack",
     province: "BC",
-    postalCode: "V2T 6S3",
+    postalCode: "V2P 0B1",
     country: "Canada",
-    full: "2825 Clearbrook Rd, Abbotsford, BC V2T 6S3",
+    full: "45619 Yale Rd #101, Chilliwack, BC V2P 0B1",
     mapUrl:
-      "https://www.google.com/maps/search/?api=1&query=iHealth+Pharmacy+Abbotsford+BC",
-    parkingNotes: "Free accessible parking available directly in front of the pharmacy.",
+      "https://www.google.com/maps/search/?api=1&query=iHealth+Pharmacy+45619+Yale+Rd+%23101+Chilliwack+BC+V2P+0B1",
+    parkingNotes: "Free customer parking available directly in front of the pharmacy on Yale Road.",
   },
 
   // Operating hours

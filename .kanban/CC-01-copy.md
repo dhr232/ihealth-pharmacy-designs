@@ -8,7 +8,7 @@ Canadian English. No emojis. Minimal exclamation marks. No all-caps.
 ## Hero
 
 - **Headline:** Care that knows your name
-- **Subheadline:** Your neighbourhood pharmacy in Abbotsford, where questions are welcomed, refills are quick, and your pharmacist takes the time to listen.
+- **Subheadline:** Your neighbourhood pharmacy in Chilliwack, where questions are welcomed, refills are quick, and your pharmacist takes the time to listen.
 - **Primary CTA label:** Request a Refill
 - **Secondary CTA label:** Transfer to iHealth
 
@@ -19,7 +19,7 @@ Canadian English. No emojis. Minimal exclamation marks. No all-caps.
 - Licensed BC Pharmacists
 - Same-Day Prescription Transfers
 - Free Local Delivery
-- Trusted by 300+ Abbotsford Neighbours
+- Trusted by 300+ Chilliwack Neighbours
 
 ---
 
@@ -47,7 +47,7 @@ Canadian English. No emojis. Minimal exclamation marks. No all-caps.
 
 ### 6. Free Local Delivery
 - **Title:** Free Local Delivery
-- **Body:** Prescriptions delivered to your door across Abbotsford at no extra charge, so you can focus on feeling better.
+- **Body:** Prescriptions delivered to your door across Chilliwack at no extra charge, so you can focus on feeling better.
 
 ---
 
@@ -63,7 +63,7 @@ Canadian English. No emojis. Minimal exclamation marks. No all-caps.
 
 ### Step 3
 - **Title:** Pick up or get it delivered
-- **Body:** We notify you when it is ready. Choose in-store pickup or free delivery anywhere in Abbotsford.
+- **Body:** We notify you when it is ready. Choose in-store pickup or free delivery anywhere in Chilliwack.
 
 ---
 
@@ -80,7 +80,7 @@ Canadian English. No emojis. Minimal exclamation marks. No all-caps.
 
 - **Headline:** A pharmacist who takes the time
 - **Paragraph 1:** At iHealth Pharmacy, you are never rushed. Our pharmacists sit down with you, explain your medications in plain language, and answer the questions that matter most.
-- **Paragraph 2:** We have been part of the Abbotsford community for years and believe great care starts with knowing the people we serve.
+- **Paragraph 2:** We have been part of the Chilliwack community for years and believe great care starts with knowing the people we serve.
 - **Bullet 1:** One-on-one medication reviews
 - **Bullet 2:** Clear answers without the jargon
 - **Bullet 3:** A familiar pharmacist, every visit
@@ -92,7 +92,7 @@ Canadian English. No emojis. Minimal exclamation marks. No all-caps.
 ### 1
 - **Quote:** The pharmacist remembered my name, my medications, and the concerns I had last time. That level of care is hard to find.
 - **Name:** Jasmin
-- **Neighbourhood:** Clearbrook
+- **Neighbourhood:** Yale Rd
 
 ### 2
 - **Quote:** My prescriptions were transferred in a few hours and delivered to my door the same afternoon. It could not have been easier.
@@ -102,13 +102,13 @@ Canadian English. No emojis. Minimal exclamation marks. No all-caps.
 ### 3
 - **Quote:** They took the time to explain my blister pack to me and followed up a week later. I finally feel in control of my medications.
 - **Name:** Margaret
-- **Neighbourhood:** Central Abbotsford
+- **Neighbourhood:** Central Chilliwack
 
 ---
 
 ## Visit / Contact
 
-- **Address:** 123 Main Street, Abbotsford, BC V2T 0A1
+- **Address:** 123 Main Street, Chilliwack, BC V2P 0B1
 - **Phone:** (604) 555-0199
 - **Email:** hello@ihealthpharmacy.ca
 - **Hours:** Mon–Fri 9:00 a.m. – 7:00 p.m., Sat 9:00 a.m. – 5:00 p.m., Sun closed
@@ -118,5 +118,5 @@ Canadian English. No emojis. Minimal exclamation marks. No all-caps.
 
 ## Footer
 
-- **Tagline:** Trusted pharmacy care, right here in Abbotsford.
+- **Tagline:** Trusted pharmacy care, right here in Chilliwack.
 - **Legal line:** © 2026 iHealth Pharmacy. All rights reserved. Licensed pharmacy operating in British Columbia, Canada.

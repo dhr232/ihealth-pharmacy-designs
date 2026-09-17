@@ -116,7 +116,7 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
             href: "/services/myhealthpack",
           },
           {
-            label: "Free Abbotsford Delivery",
+            label: "Free Chilliwack Delivery",
             description: "Same-day home delivery for orders over $25",
             icon: Truck,
             href: "/care-program",
@@ -134,13 +134,13 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
         items: [
           {
             label: "About Our Pharmacists",
-            description: "Certified British Columbia clinical pharmacists in Abbotsford",
+            description: "Certified British Columbia clinical pharmacists in Chilliwack",
             icon: Stethoscope,
             href: "/about",
           },
           {
             label: "Hours & Location",
-            description: "#105 - 2825 Clearbrook Rd, Abbotsford (Open 7 Days)",
+            description: "45619 Yale Rd #101, Chilliwack, BC (Open 7 Days)",
             icon: MapPin,
             href: "/contact",
           },
@@ -157,9 +157,9 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
           },
           {
             label: "WhatsApp Dispensary Chat",
-            description: "Chat directly with on-duty staff at (604) 746-4444",
+            description: "Chat directly with on-duty staff at 604-392-8393",
             icon: MessageCircle,
-            href: "https://wa.me/16047464444",
+            href: "https://wa.me/16043928393",
           },
         ],
       },
@@ -220,7 +220,7 @@ export default function Header({ logoHref }: HeaderProps = {}) {
             <div className="flex items-center gap-1 mt-0.5">
               <span className="h-1.5 w-1.5 rounded-full bg-teal-500 animate-pulse" />
               <span className="text-[10px] text-teal-700 font-semibold tracking-tight">
-                Abbotsford Dispensary
+                Chilliwack Dispensary
               </span>
             </div>
           </div>

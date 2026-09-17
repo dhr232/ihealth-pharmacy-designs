@@ -25,10 +25,10 @@ export function BookingConfirmationEmail({
   time,
   duration = "15 minutes",
   partySize = 1,
-  pharmacyName = "iHealth Pharmacy Abbotsford",
-  pharmacyAddress = "#105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S3",
-  pharmacyPhone = "(604) 853-1893",
-  whatsappUrl = "https://wa.me/16048531893?text=Hi%20iHealth%20Pharmacy%2C%20I%20have%20a%20question%20about%20my%20appointment.",
+  pharmacyName = "iHealth Pharmacy Chilliwack",
+  pharmacyAddress = "45619 Yale Rd #101, Chilliwack, BC V2P 0B1",
+  pharmacyPhone = "604-392-8393",
+  whatsappUrl = "https://wa.me/16043928393?text=Hi%20iHealth%20Pharmacy%2C%20I%20have%20a%20question%20about%20my%20appointment.",
   preparationNotes = [
     "Bring your British Columbia Services Card (Personal Health Number / PHN).",
     "Please arrive 5 minutes prior to your scheduled appointment time.",
@@ -151,7 +151,7 @@ export function BookingConfirmationEmail({
                                   marginTop: "3px",
                                 }}
                               >
-                                Abbotsford Dispensary
+                                Chilliwack Dispensary
                               </div>
                             </td>
                           </tr>
@@ -207,7 +207,7 @@ export function BookingConfirmationEmail({
                 }}
               >
                 {greeting} thank you for choosing iHealth Pharmacy. Your clinical consultation has been
-                reserved at our Abbotsford dispensary.
+                reserved at our Chilliwack dispensary.
               </p>
             </td>
           </tr>

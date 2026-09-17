@@ -5,7 +5,7 @@
 
 ## Identity
 
-- **Client**: iHealth Pharmacy, Abbotsford, BC, Canada
+- **Client**: iHealth Pharmacy, Chilliwack, BC, Canada
 - **Brand**: red `#C01D16`, Inter font, white/light neutral palette, no emojis
 - **Domain**: `ihealthpharmacy.ca` (transfer planned, not yet done)
 - **Live (production)**: https://honeydew-coyote-883999.hostingersite.com/
@@ -173,7 +173,7 @@ basePath removed · lint 0/0 via lazy-init + derived-state pattern · Web3Forms 
 - **React #418 hydration error**: when state init read `localStorage` synchronously, server vs first-client renders diverged. Fixed by always starting `active="en"` and restoring in a post-mount `useEffect`.
 - **"Maximum call stack size exceeded"**: a hidden fallback `<select>` mirroring the combo was driving itself in an infinite change-event loop. Fallback select removed entirely; we now drive `.goog-te-combo` only when present (one-shot).
 
-### ⚠️ Active bugs in latest refactor (NOT yet fixed — blocks `npm run lint` deploy gate)
+### ️ Active bugs in latest refactor (NOT yet fixed — blocks `npm run lint` deploy gate)
 1. `setScriptReady(true)` called synchronously inside `useEffect` (lines ~90 and ~103). Violates project house rule "no `setState()` directly inside `useEffect()`" → cascading-render lint warning.
 2. `applyGTranslate` referenced inside the mount `useEffect` (line ~107) BEFORE its `const` declaration (line ~125). Runtime works because the callback fires after commit, but ESLint flags `no-use-before-define` / hoisting. Source order matters here.
 3. `scriptReady` state is assigned but never read anywhere — dead state. Delete it (and its two `setScriptReady` calls become no-ops, which collapses bug #1 too).

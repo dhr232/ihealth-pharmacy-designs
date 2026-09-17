@@ -8,7 +8,7 @@ import { Syringe, ShieldCheck, Users, FileText, Calendar } from "lucide-react";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 
 export const metadata: Metadata = {
-  title: "Vaccinations — iHealth Pharmacy Abbotsford",
+  title: "Vaccinations — iHealth Pharmacy Chilliwack",
   description:
     "Flu shots, COVID-19 boosters, shingles, travel vaccines and more. Walk in or request an appointment — trained pharmacists, private setting.",
 };

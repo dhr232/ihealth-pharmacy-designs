@@ -7,7 +7,7 @@ import { CheckCircle } from "lucide-react";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 
 export const metadata: Metadata = {
-  title: "Transfer to iHealth — iHealth Pharmacy Abbotsford",
+  title: "Transfer to iHealth — iHealth Pharmacy Chilliwack",
   description:
     "Switching pharmacies is easy. Give us your current pharmacy's name and we move your prescriptions over — often the same day.",
 };
@@ -16,7 +16,7 @@ const POINTS = [
   "We request your files directly — no phone calls for you",
   "Same-day transfers when possible",
   "All insurance and dosing history preserved",
-  "Free delivery across Abbotsford once you're set up",
+  "Free delivery across Chilliwack once you're set up",
 ];
 
 export default function TransferPage() {

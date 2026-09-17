@@ -101,7 +101,7 @@ function BookingWizard() {
                   Book Your Pharmacy Appointment
                 </h1>
                 <p className="hidden sm:block mt-0.5 text-xs text-slate-600">
-                  Assessments for 21 minor ailments, seasonal vaccines, and medication reviews in Abbotsford.
+                  Assessments for 21 minor ailments, seasonal vaccines, and medication reviews in Chilliwack.
                 </p>
               </div>
 

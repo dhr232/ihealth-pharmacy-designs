@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { Pill, Clock, Stethoscope, ShieldCheck } from "lucide-react";
 import CountUp from "./CountUp";
@@ -10,7 +10,7 @@ const METRICS = [
     value: 10000,
     suffix: "+",
     label: "Prescriptions Filled",
-    description: "Trusted by Abbotsford families for safe, accurate dispensing.",
+    description: "Trusted by Chilliwack families for safe, accurate dispensing.",
   },
   {
     icon: Clock,

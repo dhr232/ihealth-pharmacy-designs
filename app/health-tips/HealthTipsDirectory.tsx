@@ -130,7 +130,7 @@ export default function HealthTipsDirectory({
           </h1>
 
           <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
-            Practical, evidence-based guidance written and clinically reviewed by our Abbotsford pharmacy team. Covering senior care, BC Fair PharmaCare, vaccinations, and minor ailments.
+            Practical, evidence-based guidance written and clinically reviewed by our Chilliwack pharmacy team. Covering senior care, BC Fair PharmaCare, vaccinations, and minor ailments.
           </p>
 
           {/* Search bar */}

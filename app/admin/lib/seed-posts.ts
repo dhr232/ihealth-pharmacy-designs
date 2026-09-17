@@ -34,11 +34,11 @@ export const SEED_POSTS: BlogPost[] = [
     title: "How to Transfer Your Prescription to iHealth Pharmacy in 3 Easy Steps",
     slug: "how-to-transfer-your-prescription",
     excerpt:
-      "Switching pharmacies is simpler than most people think. Here's exactly what to expect when you transfer your prescriptions to iHealth Pharmacy in Abbotsford.",
+      "Switching pharmacies is simpler than most people think. Here's exactly what to expect when you transfer your prescriptions to iHealth Pharmacy in Chilliwack.",
     content: "",
     author: "The iHealth Pharmacy Team",
     publishedAt: "2026-09-04",
-    tags: ["prescriptions", "transfer", "Abbotsford"],
+    tags: ["prescriptions", "transfer", "Chilliwack"],
     imageUrl: "/blog/post-1.jpg",
     status: "published",
     themeUsed: normaliseTheme("default"),
@@ -47,14 +47,14 @@ export const SEED_POSTS: BlogPost[] = [
   },
   {
     id: "post-002",
-    title: "Flu Season 2026: What Abbotsford Residents Need to Know",
-    slug: "flu-season-2026-abbotsford",
+    title: "Flu Season 2026: What Chilliwack Residents Need to Know",
+    slug: "flu-season-2026-chilliwack",
     excerpt:
       "When does flu season peak in BC, who should get vaccinated, and what's new this year. A practical guide for Fraser Valley families.",
     content: "",
     author: "The iHealth Pharmacy Team",
     publishedAt: "2026-09-18",
-    tags: ["flu shot", "vaccination", "Abbotsford", "seasonal"],
+    tags: ["flu shot", "vaccination", "Chilliwack", "seasonal"],
     imageUrl: "/blog/post-2.jpg",
     status: "published",
     themeUsed: normaliseTheme("default"),
@@ -66,7 +66,7 @@ export const SEED_POSTS: BlogPost[] = [
     title: "Understanding Your BC Pharmacare Coverage in 2026",
     slug: "bc-pharmacare-coverage-2026",
     excerpt:
-      "Fair PharmaCare, Plan D, and private insurance can work together. Here's how Abbotsford residents can lower their out-of-pocket medication costs.",
+      "Fair PharmaCare, Plan D, and private insurance can work together. Here's how Chilliwack residents can lower their out-of-pocket medication costs.",
     content: "",
     author: "The iHealth Pharmacy Team",
     publishedAt: "2026-10-02",
@@ -95,7 +95,7 @@ export const SEED_POSTS: BlogPost[] = [
   },
   {
     id: "post-005",
-    title: "Managing Multiple Medications: A Guide for Seniors in Abbotsford",
+    title: "Managing Multiple Medications: A Guide for Seniors in Chilliwack",
     slug: "managing-multiple-medications-seniors",
     excerpt:
       "If you take five or more daily medications, organization is everything. Here's how to stay on track and avoid common pitfalls.",
@@ -111,8 +111,8 @@ export const SEED_POSTS: BlogPost[] = [
   },
   {
     id: "post-006",
-    title: "Travel Vaccinations: What You Need Before Flying from Abbotsford",
-    slug: "travel-vaccinations-abbotsford",
+    title: "Travel Vaccinations: What You Need Before Flying from Chilliwack",
+    slug: "travel-vaccinations-chilliwack",
     excerpt:
       "Planning a trip abroad? Some countries require specific vaccines before you enter. Here's how to prepare for travel from YVR or YXX.",
     content: "",
@@ -128,7 +128,7 @@ export const SEED_POSTS: BlogPost[] = [
   {
     id: "post-007",
     title:
-      "MyHealthPack: Simplifying Daily Medications for Busy Abbotsford Families",
+      "MyHealthPack: Simplifying Daily Medications for Busy Chilliwack Families",
     slug: "myhealthpack-compliance-packaging",
     excerpt:
       "If you're juggling prescriptions for multiple family members, compliance packaging takes the mental load off. Here's how it works.",
@@ -145,7 +145,7 @@ export const SEED_POSTS: BlogPost[] = [
   {
     id: "post-008",
     title:
-      "Minor Ailments: 7 Conditions Your Abbotsford Pharmacist Can Now Prescribe For",
+      "Minor Ailments: 7 Conditions Your Chilliwack Pharmacist Can Now Prescribe For",
     slug: "minor-ailments-pharmacist-prescribing",
     excerpt:
       "Since 2023, BC pharmacists can assess and prescribe for many common conditions. Skip the doctor's wait for these everyday issues.",
@@ -161,14 +161,14 @@ export const SEED_POSTS: BlogPost[] = [
   },
   {
     id: "post-009",
-    title: "Free Prescription Delivery in Abbotsford: How It Works",
-    slug: "free-prescription-delivery-abbotsford",
+    title: "Free Prescription Delivery in Chilliwack: How It Works",
+    slug: "free-prescription-delivery-chilliwack",
     excerpt:
-      "If getting to the pharmacy is a barrier, we bring your prescriptions to you. Here's how our free Abbotsford delivery service works.",
+      "If getting to the pharmacy is a barrier, we bring your prescriptions to you. Here's how our free Chilliwack delivery service works.",
     content: "",
     author: "The iHealth Pharmacy Team",
     publishedAt: "2026-12-12",
-    tags: ["delivery", "Abbotsford", "convenience"],
+    tags: ["delivery", "Chilliwack", "convenience"],
     imageUrl: "/blog/post-9.jpg",
     status: "published",
     themeUsed: normaliseTheme("default"),
@@ -193,14 +193,14 @@ export const SEED_POSTS: BlogPost[] = [
   },
   {
     id: "post-011",
-    title: "Fall 2026 Senior Medication Safety & Seasonal Immunizations: The Complete Abbotsford Guide",
+    title: "Fall 2026 Senior Medication Safety & Seasonal Immunizations: The Complete Chilliwack Guide",
     slug: "fall-2026-senior-medication-safety-immunizations",
     excerpt:
       "As temperatures drop in the Fraser Valley, learn how to prevent adverse drug interactions, schedule high-dose flu & COVID boosters, and simplify daily regimens.",
     content: "",
     author: "Dr. Anika Sharma, BSc Pharm, RPh",
     publishedAt: "2026-09-15",
-    tags: ["senior health", "medication safety", "flu vaccine", "abbotsford", "myhealthpack"],
+    tags: ["senior health", "medication safety", "flu vaccine", "chilliwack", "myhealthpack"],
     imageUrl: "/blog/post-3.jpg",
     status: "scheduled",
     themeUsed: normaliseTheme("default"),
@@ -211,7 +211,7 @@ export const SEED_POSTS: BlogPost[] = [
       "BC seniors qualify for enhanced high-dose flu shots and COVID boosters with zero out-of-pocket costs.",
       "Over-the-counter cold medicines can interact dangerously with blood pressure and blood thinner prescriptions.",
       "Annual medication reviews are 100% covered under BC Fair PharmaCare for eligible patients.",
-      "MyHealthPack custom blister cards eliminate missed doses and double-dosing risk with free Abbotsford delivery."
+      "MyHealthPack custom blister cards eliminate missed doses and double-dosing risk with free Chilliwack delivery."
     ],
   },
 ];

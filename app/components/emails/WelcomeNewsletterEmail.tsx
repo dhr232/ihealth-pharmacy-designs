@@ -185,7 +185,7 @@ export function WelcomeNewsletterEmail({
               >
                 Thank you for subscribing to the iHealth Pharmacy wellness newsletter. You are now
                 connected to evidence-based health guidance and updates directly from your local
-                Abbotsford pharmacy team.
+                Chilliwack pharmacy team.
               </p>
             </td>
           </tr>
@@ -249,7 +249,7 @@ export function WelcomeNewsletterEmail({
                         />
                       </td>
                       <td style={{ paddingBottom: "12px", fontSize: "13px", lineHeight: "20px", color: "#334155" }}>
-                        <strong style={{ color: "#0f172a" }}>Priority Vaccine Alerts:</strong> Early notice for seasonal influenza and COVID-19 booster booking slots in Abbotsford.
+                        <strong style={{ color: "#0f172a" }}>Priority Vaccine Alerts:</strong> Early notice for seasonal influenza and COVID-19 booster booking slots in Chilliwack.
                       </td>
                     </tr>
                     <tr>
@@ -294,7 +294,7 @@ export function WelcomeNewsletterEmail({
                     marginBottom: "4px",
                   }}
                 >
-                  Visit iHealth Pharmacy in Abbotsford
+                  Visit iHealth Pharmacy in Chilliwack
                 </div>
                 <div
                   style={{
@@ -303,11 +303,11 @@ export function WelcomeNewsletterEmail({
                     color: "#047857",
                   }}
                 >
-                  #105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S3
+                  45619 Yale Rd #101, Chilliwack, BC V2P 0B1
                   <br />
-                  Open Monday to Friday 9:00 AM - 6:00 PM | Saturday 10:00 AM - 3:00 PM
+                  Open Monday to Friday 8:00 AM - 9:00 PM | Saturday - Sunday 9:00 AM - 6:00 PM
                   <br />
-                  Phone: (604) 853-1893 | Fax: (604) 853-1894
+                  Phone: 604-392-8393 | Fax: (604) 392-8394
                 </div>
               </div>
             </td>
@@ -369,12 +369,12 @@ export function WelcomeNewsletterEmail({
               }}
             >
               <p style={{ margin: "0 0 4px 0", fontWeight: 700, color: "#475569" }}>
-                iHealth Pharmacy Abbotsford
+                iHealth Pharmacy Chilliwack
               </p>
               <p style={{ margin: "0 0 6px 0" }}>
-                #105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S3, Canada
+                45619 Yale Rd #101, Chilliwack, BC V2P 0B1, Canada
                 <br />
-                Telephone: (604) 853-1893 | Email: info@ihealthpharmacy.ca
+                Telephone: 604-392-8393 | Email: info@ihealthpharmacy.ca
               </p>
               <p style={{ margin: "0 0 10px 0", color: "#94a3b8" }}>
                 This message was sent to <strong>{email}</strong> in accordance with Canada Anti-Spam Legislation (CASL).

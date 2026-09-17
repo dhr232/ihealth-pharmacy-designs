@@ -58,7 +58,7 @@ const ALL_SERVICES = [
   {
     title: "Free Prescription Delivery",
     slug: "delivery",
-    desc: "Fast, reliable same-day prescription delivery anywhere in Abbotsford for orders over $25. Place requests before 2:00 PM for afternoon delivery.",
+    desc: "Fast, reliable same-day prescription delivery anywhere in Chilliwack for orders over $25. Place requests before 2:00 PM for afternoon delivery.",
     icon: Truck,
     badge: "Free over $25",
     image: "/services/delivery.jpg",
@@ -86,7 +86,7 @@ export default function ServicesPage() {
             </BlurReveal>
             <BlurReveal className="mt-3">
               <p className="mx-auto max-w-2xl text-base text-slate-600 sm:text-lg">
-                From walk-in minor ailment prescribing and custom compounding to blister packs and free home delivery in Abbotsford.
+                From walk-in minor ailment prescribing and custom compounding to blister packs and free home delivery in Chilliwack.
               </p>
             </BlurReveal>
           </div>

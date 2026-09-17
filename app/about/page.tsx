@@ -16,16 +16,16 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About Us — iHealth Pharmacy Abbotsford",
+  title: "About Us — iHealth Pharmacy Chilliwack",
   description:
-    "Independent, family-run pharmacy in Abbotsford, BC. Meet our pharmacists, learn our story, and discover what makes iHealth different.",
+    "Independent, family-run pharmacy in Chilliwack, BC. Meet our pharmacists, learn our story, and discover what makes iHealth different.",
 };
 
 const WHY_US = [
   {
     icon: HeartHandshake,
     title: "Independently owned",
-    body: "We're local owners, not a chain. Decisions are made in Abbotsford, for Abbotsford patients.",
+    body: "We're local owners, not a chain. Decisions are made in Chilliwack, for Chilliwack patients.",
   },
   {
     icon: Sparkles,
@@ -35,7 +35,7 @@ const WHY_US = [
   {
     icon: Truck,
     title: "Free local delivery",
-    body: "Free same-day delivery across Abbotsford for prescriptions, OTC, and compliance packs.",
+    body: "Free same-day delivery across Chilliwack for prescriptions, OTC, and compliance packs.",
   },
   {
     icon: Globe,
@@ -75,7 +75,7 @@ export default function AboutPage() {
             </BlurReveal>
             <BlurReveal className="mt-5">
               <p className="mx-auto max-w-2xl text-lg text-[var(--muted)] md:text-xl">
-                Independent, family-run, and rooted in Abbotsford. We treat every patient like a neighbour.
+                Independent, family-run, and rooted in Chilliwack. We treat every patient like a neighbour.
               </p>
             </BlurReveal>
           </div>
@@ -100,7 +100,7 @@ export default function AboutPage() {
             <p>
               Beyond prescriptions, we offer a growing range of clinical services: minor ailment
               consultations, vaccinations, compounding, medication reviews, and free local delivery.
-              Our goal is to be the most trusted healthcare touchpoint in Abbotsford — the first
+              Our goal is to be the most trusted healthcare touchpoint in Chilliwack — the first
               place you think of when something health-related comes up.
             </p>
           </div>
@@ -169,7 +169,7 @@ export default function AboutPage() {
                   Navigating prescription coverage shouldn&apos;t be confusing. We bill your insurance directly at the counter so you never have to wait for reimbursement checks.
                 </p>
                 <p className="mt-3 text-base leading-relaxed text-[var(--muted)]">
-                  Our pharmacists also assist Abbotsford seniors and families with registering for <strong>BC Fair PharmaCare</strong> to ensure you receive your full provincial medication deductible subsidies.
+                  Our pharmacists also assist Chilliwack seniors and families with registering for <strong>BC Fair PharmaCare</strong> to ensure you receive your full provincial medication deductible subsidies.
                 </p>
               </div>
 

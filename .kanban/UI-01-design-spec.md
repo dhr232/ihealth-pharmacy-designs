@@ -92,7 +92,7 @@ Remove: floating badges, emoji icons, logo-only visual, and playful copy.
 
 New composition:
 1. **Left column (55%):**
-   - Small uppercase eyebrow text (`12px`, `500`, `#5A6270`, `0.08em` spacing): “Independent Pharmacy in Abbotsford, BC”
+   - Small uppercase eyebrow text (`12px`, `500`, `#5A6270`, `0.08em` spacing): “Independent Pharmacy in Chilliwack, BC”
    - H1: “Your pharmacist, right around the corner.”
    - Subheadline (`18px`, muted): “Same-day local delivery, easy prescription transfers, and one-on-one medication care.”
    - Primary CTA button: “Refill a Prescription”

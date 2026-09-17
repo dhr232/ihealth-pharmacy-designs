@@ -25,7 +25,7 @@ export default function Footer({ logoHref = "/" }: FooterProps = {}) {
               <span className="text-lg font-semibold transition group-hover:text-white/90">{PHARMACY_INFO.name}</span>
             </Link>
             <p className="mt-3 text-sm leading-relaxed text-white/70">
-              Independent, community pharmacy in Abbotsford, BC. Personalized
+              Independent, community pharmacy in Chilliwack, BC. Personalized
               medication reviews, blister packaging, minor ailments prescribing,
               and free local delivery.
             </p>

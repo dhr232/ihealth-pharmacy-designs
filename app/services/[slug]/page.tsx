@@ -83,7 +83,7 @@ const SERVICES: Record<
       "High-contrast printed schedule with medication pictures",
       "Automatic refill synchronization with doctors",
       "Direct billing to BC Fair PharmaCare and private insurance",
-      "Free same-day delivery across Abbotsford",
+      "Free same-day delivery across Chilliwack",
     ],
     cta: { label: "Set up MyHealthPack", href: "/contact" },
   },
@@ -107,7 +107,7 @@ const SERVICES: Record<
     title: "Free Prescription Delivery",
     tagline: "Your medications delivered to your door",
     description:
-      "Can’t make it in? We offer free same-day delivery across Abbotsford for qualifying prescriptions. We text you when your order is on its way.",
+      "Can’t make it in? We offer free same-day delivery across Chilliwack for qualifying prescriptions. We text you when your order is on its way.",
     image: "/services/delivery.jpg",
     points: [
       "Free same-day local delivery",
@@ -115,7 +115,7 @@ const SERVICES: Record<
       "Safe and discreet packaging",
       "Ideal for seniors and busy families",
       "Scheduled delivery options",
-      "Delivery across Abbotsford",
+      "Delivery across Chilliwack",
     ],
     cta: { label: "Set up delivery", href: "#contact" },
   },

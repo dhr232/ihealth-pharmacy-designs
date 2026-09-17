@@ -14,6 +14,7 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import ThemeApplier from "./components/ThemeApplier";
+import ChunkErrorRecovery from "./components/ChunkErrorRecovery";
 import AnnouncementBar from "./components/AnnouncementBar";
 import CookieBanner from "./components/CookieBanner";
 import WhatsAppButton from "./components/WhatsAppButton";
@@ -104,22 +105,22 @@ const lora = Lora({
 export const metadata: Metadata = {
   metadataBase: new URL("https://ihealthpharmacy.ca"),
   title: {
-    default: "iHealth Pharmacy — Independent Pharmacy in Abbotsford, BC",
+    default: "iHealth Pharmacy — Independent Pharmacy in Chilliwack, BC",
     template: "%s | iHealth Pharmacy",
   },
   description:
-    "Independent community pharmacy in Abbotsford, BC. Fast prescription refills, walk-in 21 minor ailments prescribing covered by BC MSP, custom compounding, and free same-day local delivery.",
+    "Independent community pharmacy in Chilliwack, BC. Fast prescription refills, walk-in 21 minor ailments prescribing covered by BC MSP, custom compounding, and free same-day local delivery.",
   keywords: [
-    "Pharmacy Abbotsford",
-    "Independent pharmacy Abbotsford",
-    "Prescription refill Abbotsford",
+    "Pharmacy Chilliwack",
+    "Independent pharmacy Chilliwack",
+    "Prescription refill Chilliwack",
     "Minor ailments prescribing BC",
-    "Pharmacist prescribing Abbotsford",
-    "Vaccinations Abbotsford",
-    "Shingrix vaccine Abbotsford",
-    "Blister pack pharmacy Abbotsford",
-    "Free pharmacy delivery Abbotsford",
-    "Clearbrook pharmacy",
+    "Pharmacist prescribing Chilliwack",
+    "Vaccinations Chilliwack",
+    "Shingrix vaccine Chilliwack",
+    "Blister pack pharmacy Chilliwack",
+    "Free pharmacy delivery Chilliwack",
+    "Yale Rd pharmacy Chilliwack",
     "iHealth Pharmacy",
   ],
   authors: [{ name: "iHealth Pharmacy Team", url: "https://ihealthpharmacy.ca" }],
@@ -134,9 +135,9 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "iHealth Pharmacy — Independent Pharmacy in Abbotsford, BC",
+    title: "iHealth Pharmacy — Independent Pharmacy in Chilliwack, BC",
     description:
-      "Your neighbourhood independent pharmacy in Abbotsford. Fast refills, walk-in 21 minor ailments prescribing, compliance packaging, and free same-day delivery.",
+      "Your neighbourhood independent pharmacy in Chilliwack. Fast refills, walk-in 21 minor ailments prescribing, compliance packaging, and free same-day delivery.",
     url: "https://ihealthpharmacy.ca",
     siteName: "iHealth Pharmacy",
     locale: "en_CA",
@@ -146,15 +147,15 @@ export const metadata: Metadata = {
         url: "/services/all-services.jpg",
         width: 1200,
         height: 630,
-        alt: "iHealth Pharmacy Abbotsford, BC",
+        alt: "iHealth Pharmacy Chilliwack, BC",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "iHealth Pharmacy — Independent Pharmacy in Abbotsford, BC",
+    title: "iHealth Pharmacy — Independent Pharmacy in Chilliwack, BC",
     description:
-      "Your neighbourhood independent pharmacy in Abbotsford. Fast refills, walk-in 21 minor ailments prescribing, compliance packaging, and free same-day delivery.",
+      "Your neighbourhood independent pharmacy in Chilliwack. Fast refills, walk-in 21 minor ailments prescribing, compliance packaging, and free same-day delivery.",
     images: ["/services/all-services.jpg"],
   },
   robots: {
@@ -190,7 +191,7 @@ const jsonLd = {
   name: PHARMACY_INFO.name,
   legalName: PHARMACY_INFO.legalName,
   description:
-    "Independent community pharmacy in Abbotsford, BC offering prescription refills, minor ailments prescribing, custom compounding, MyHealthPack blister packs, and free same-day local delivery.",
+    "Independent community pharmacy in Chilliwack, BC offering prescription refills, minor ailments prescribing, custom compounding, MyHealthPack blister packs, and free same-day local delivery.",
   url: "https://ihealthpharmacy.ca",
   telephone: `+1-${PHARMACY_INFO.phoneRaw}`,
   currenciesAccepted: "CAD",
@@ -208,8 +209,8 @@ const jsonLd = {
   },
   geo: {
     "@type": "GeoCoordinates",
-    latitude: 49.0504,
-    longitude: -122.3045,
+    latitude: 49.1687,
+    longitude: -121.9545,
   },
   openingHoursSpecification: [
     {
@@ -258,7 +259,7 @@ const jsonLd = {
         itemOffered: {
           "@type": "DeliveryService",
           name: "Free Same-Day Prescription Delivery",
-          description: "Free prescription and medication delivery in Abbotsford for orders over $25.",
+          description: "Free prescription and medication delivery in Chilliwack for orders over $25.",
         },
       },
     ],
@@ -293,8 +294,32 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* A redeploy replaces /_next/static with freshly hashed files. A tab
+            that already has this page's HTML open can then request a script
+            or stylesheet that no longer exists. Catch that resource failure
+            here, inline and outside the app bundle, so it still runs even
+            when the main JS chunk itself is the one that 404s. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){
+              var KEY = "ihealth_asset_reload_at";
+              var COOLDOWN = 10000;
+              window.addEventListener("error", function (event) {
+                var target = event.target;
+                if (!target || target === window) return;
+                var url = target.src || target.href || "";
+                if (url.indexOf("/_next/static/") === -1) return;
+                var last = Number(sessionStorage.getItem(KEY) || 0);
+                if (Date.now() - last < COOLDOWN) return;
+                sessionStorage.setItem(KEY, String(Date.now()));
+                window.location.reload();
+              }, true);
+            })();`,
+          }}
+        />
       </head>
       <body className="min-h-full flex flex-col font-sans font-inter-tight">
+        <ChunkErrorRecovery />
         <ThemeApplier />
         <AnnouncementBar />
         {children}

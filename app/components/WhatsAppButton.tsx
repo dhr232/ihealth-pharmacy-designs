@@ -116,7 +116,7 @@ export default function WhatsAppButton() {
                       iHealth Pharmacy Team
                     </h2>
                     <p className="text-xs text-white/90">
-                      Pharmacist on Duty • Abbotsford
+                      Pharmacist on Duty • Chilliwack
                     </p>
                     <span className="mt-1 inline-block rounded bg-white/20 px-2 py-0.5 text-[11px] font-medium text-white">
                       English • ਪੰਜਾਬੀ • Hindi
@@ -135,7 +135,7 @@ export default function WhatsAppButton() {
               </div>
 
               <p className="mt-3 text-xs leading-relaxed text-white/95">
-                Have a question or prescription? Chat with our Abbotsford pharmacy team on WhatsApp. You can also send a voice message or photo of your pill bottle if typing is difficult.
+                Have a question or prescription? Chat with our Chilliwack pharmacy team on WhatsApp. You can also send a voice message or photo of your pill bottle if typing is difficult.
               </p>
             </div>
 

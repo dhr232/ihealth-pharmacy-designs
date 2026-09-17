@@ -250,12 +250,12 @@ export default async function BlogPostPage({
                     {post.author}
                   </h3>
                   <p className="mt-1 text-sm text-slate-600 leading-relaxed">
-                    Have questions about medication interactions, high-dose flu shots, or blister packaging in Abbotsford? Talk to our pharmacy team directly.
+                    Have questions about medication interactions, high-dose flu shots, or blister packaging in Chilliwack? Talk to our pharmacy team directly.
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                   <a
-                    href="https://wa.me/16047464444?text=Hi%20iHealth%20Pharmacy,%20I%20read%20your%20medication%20safety%20guide%20and%20had%20a%20question"
+                    href="https://wa.me/16043928393?text=Hi%20iHealth%20Pharmacy,%20I%20read%20your%20medication%20safety%20guide%20and%20had%20a%20question"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-emerald-700 transition"
@@ -264,11 +264,11 @@ export default async function BlogPostPage({
                     <span>WhatsApp Pharmacist</span>
                   </a>
                   <a
-                    href="tel:6047464444"
+                    href="tel:6043928393"
                     className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-100 transition"
                   >
                     <Phone size={14} />
-                    <span>(604) 746-4444</span>
+                    <span>604-392-8393</span>
                   </a>
                 </div>
               </div>

@@ -1,6 +1,6 @@
 # iHealth Pharmacy Website
 
-Full-stack website for **iHealth Pharmacy** (Abbotsford, BC) — marketing pages, prescription/vaccination booking, a subscriber newsletter, and a 2FA-protected staff admin panel.
+Full-stack website for **iHealth Pharmacy** (Chilliwack, BC) — marketing pages, prescription/vaccination booking, a subscriber newsletter, and a 2FA-protected staff admin panel.
 
 **Live site:** [ihealthpharmacy.ca](https://ihealthpharmacy.ca)
 

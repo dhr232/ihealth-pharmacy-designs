@@ -8,7 +8,7 @@
 | Hero headline | Content: "Care that knows your name" | UI: "Your pharmacist, right around the corner." | **Use content headline** | Directly expresses CEO's core promise of personal care. |
 | Primary CTA | Content: "Request a Refill" | UI: "Refill a Prescription" | **Use "Request a Refill"** | Aligns with CEO decision #1 (hero should lead with the main customer path). |
 | Secondary CTA | Content: "Transfer to iHealth" | UI: "Transfer my prescription →" | **Use "Transfer to iHealth"** | Clearer for patients not yet at iHealth. |
-| Trust bar items | Content: 4 items incl. social proof | UI: 3 items | **Use 4 items** | "Trusted by 300+ Abbotsford Neighbours" satisfies CEO credibility signal #5. |
+| Trust bar items | Content: 4 items incl. social proof | UI: 3 items | **Use 4 items** | "Trusted by 300+ Chilliwack Neighbours" satisfies CEO credibility signal #5. |
 | Font | Cleanup used Atkinson/Quicksand | UI: Inter | **Use Inter** | Inter is the agency-grade standard for healthcare SaaS and professional services. |
 | Hero visual | Logo placeholder | Real photo or illustration | **Use clean logo lockup for now** | No real photography available. Add a Phase 2 ticket for photo shoot or premium illustration. |
 | Service cards | — | 3-column Lucide icons on soft circles | **Use UI spec** | Removes emoji blobs, keeps warmth via rounded corners. |
@@ -27,9 +27,9 @@ Rebuild `app/variants/friendly/page.tsx` and its components to match the profess
    - Logo + wordmark left, links center, "Request a Refill" CTA right
    - Mobile: hamburger sheet
 3. **Hero**
-   - Eyebrow: "Independent Pharmacy in Abbotsford, BC"
+   - Eyebrow: "Independent Pharmacy in Chilliwack, BC"
    - H1: "Care that knows your name"
-   - Sub: "Your neighbourhood pharmacy in Abbotsford, where questions are welcomed, refills are quick, and your pharmacist takes the time to listen."
+   - Sub: "Your neighbourhood pharmacy in Chilliwack, where questions are welcomed, refills are quick, and your pharmacist takes the time to listen."
    - Primary: "Request a Refill"
    - Secondary: "Transfer to iHealth →"
    - Trust bar: 4 items with Lucide icons
@@ -50,7 +50,7 @@ Rebuild `app/variants/friendly/page.tsx` and its components to match the profess
    - Use approved names + neighbourhoods
 9. **Visit / Contact**
    - Lucide icons for address, phone, email, hours, parking
-   - Real Google Maps embed iframe (use a placeholder Google Maps embed URL for 123 Main Street, Abbotsford, BC)
+   - Real Google Maps embed iframe (use a placeholder Google Maps embed URL for 123 Main Street, Chilliwack, BC)
 10. **Footer**
     - 4-column footer with links, services, contact, legal
 11. **Accessibility pass**

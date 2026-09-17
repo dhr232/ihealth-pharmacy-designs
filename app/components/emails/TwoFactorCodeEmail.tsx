@@ -291,7 +291,7 @@ export function TwoFactorCodeEmail({
                   }}
                 >
                   If you did not initiate this request, someone may be attempting to access your profile.
-                  Please notify pharmacy administration immediately at <strong>(604) 853-1893</strong>.
+                  Please notify pharmacy administration immediately at <strong>604-392-8393</strong>.
                 </p>
               </div>
             </td>
@@ -311,7 +311,7 @@ export function TwoFactorCodeEmail({
               }}
             >
               <p style={{ margin: "0 0 4px 0", fontWeight: 600, color: "#475569" }}>
-                iHealth Pharmacy Abbotsford | #105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S3
+                iHealth Pharmacy Chilliwack | 45619 Yale Rd #101, Chilliwack, BC V2P 0B1
               </p>
               <p style={{ margin: 0 }}>
                 Automated security message. Replies to this email address are not monitored.

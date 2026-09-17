@@ -105,7 +105,7 @@ export default function HomeBlogSection() {
               Stay Informed, Stay Healthy
             </h2>
             <p className="mt-3 max-w-2xl text-base text-slate-600 sm:text-lg">
-              Evidence-based health guidance, BC Pharmacare updates, and practical wellness advice from your local Abbotsford pharmacists.
+              Evidence-based health guidance, BC Pharmacare updates, and practical wellness advice from your local Chilliwack pharmacists.
             </p>
           </div>
 

@@ -73,7 +73,7 @@ export function StaffNotificationEmail({
 
   const fulfillmentDisplay =
     (pickupOrDelivery || "pickup").toLowerCase() === "delivery"
-      ? "Delivery Requested (Free Abbotsford Delivery)"
+      ? "Delivery Requested (Free Chilliwack Delivery)"
       : "Pickup at Pharmacy Dispensary";
 
   return (

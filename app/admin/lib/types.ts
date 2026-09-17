@@ -91,7 +91,7 @@ export const SEED_ANNOUNCEMENTS: AnnouncementItem[] = [
   },
   {
     id: "ann-002",
-    text: "Free prescription delivery in Abbotsford for orders over $25",
+    text: "Free prescription delivery in Chilliwack for orders over $25",
     icon: "truck",
     enabled: true,
     urgent: false,
@@ -125,7 +125,7 @@ export const SEED_PHARMACISTS: Pharmacist[] = [
     id: "seed-pharm-001",
     name: "Dr. Anika Sharma",
     role: "Pharmacy Manager & Owner",
-    bio: "Anika has been serving Abbotsford families for over 15 years. She specialises in geriatric care and medication reviews, and is passionate about making sure every patient feels heard.",
+    bio: "Anika has been serving Chilliwack families for over 15 years. She specialises in geriatric care and medication reviews, and is passionate about making sure every patient feels heard.",
     photoUrl: "/pharmacists/anika.jpg",
     credentials: ["BSc Pharm", "RPh", "APA"],
     languages: ["English", "Punjabi", "Hindi"],

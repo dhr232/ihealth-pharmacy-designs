@@ -178,7 +178,7 @@ export async function GET(request: NextRequest) {
 <body>
   <div class="card">
     <div class="card-header">
-      <p class="brand-title">iHealth Pharmacy Abbotsford</p>
+      <p class="brand-title">iHealth Pharmacy Chilliwack</p>
       <h1 class="header-title">${
         isResubscribing
           ? "Subscription Preferences Updated"
@@ -230,9 +230,9 @@ export async function GET(request: NextRequest) {
     </div>
 
     <div class="card-footer">
-      <strong>iHealth Pharmacy</strong><br />
-      #105 - 2825 Clearbrook Rd, Abbotsford, BC V2T 6S1<br />
-      Questions? Contact our dispensary at (604) 746-4444 or visit our <a href="/privacy">Privacy Policy</a>.
+      <strong>iHealth Pharmacy Chilliwack</strong><br />
+      45619 Yale Rd #101, Chilliwack, BC V2P 0B1<br />
+      Questions? Contact our dispensary at 604-392-8393 or visit our <a href="/privacy">Privacy Policy</a>.
     </div>
   </div>
 </body>

@@ -31,7 +31,7 @@ const BENEFITS = [
     desc: "Organized by date and time of day to eliminate missed doses and pill bottle confusion.",
   },
   {
-    title: "Free Same-Day Abbotsford Delivery",
+    title: "Free Same-Day Chilliwack Delivery",
     desc: "Prescriptions brought safely to your doorstep when you order before 2:00 PM on weekdays.",
   },
   {
@@ -131,7 +131,7 @@ export default function PatientCareProgramSection() {
             Healthcare That Cares More
           </h2>
           <p className="mt-3 text-base text-slate-600 sm:text-lg">
-            Join the iHealth Patient Care program at zero extra cost. We simplify your medications, coordinate renewals with your doctor, and deliver directly to your Abbotsford home.
+            Join the iHealth Patient Care program at zero extra cost. We simplify your medications, coordinate renewals with your doctor, and deliver directly to your Chilliwack home.
           </p>
         </SectionReveal>
 
@@ -189,7 +189,7 @@ export default function PatientCareProgramSection() {
                     Enroll or Request a Consult
                   </h3>
                   <p className="mt-1 text-xs text-slate-500">
-                    Speak directly with an Abbotsford pharmacist. We handle transfers and renewals.
+                    Speak directly with a Chilliwack pharmacist. We handle transfers and renewals.
                   </p>
                 </div>
 

@@ -446,7 +446,7 @@ export function PharmacistEditor({
               value={draft.bio}
               onChange={(e) => update("bio", e.target.value)}
               rows={3}
-              placeholder="Clinical experience, patient care focus, community roots in Abbotsford..."
+              placeholder="Clinical experience, patient care focus, community roots in Chilliwack..."
             />
           </div>
 

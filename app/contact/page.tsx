@@ -43,7 +43,7 @@ const FAQ = [
   {
     icon: Truck,
     q: "Do you offer delivery?",
-    a: "Yes. We offer free same-day delivery across Abbotsford for prescriptions and OTC essentials. Same-day cut-off is 3:00 pm, Mon–Fri. Scheduled delivery is also available.",
+    a: "Yes. We offer free same-day delivery across Chilliwack for prescriptions and OTC essentials. Same-day cut-off is 3:00 pm, Mon–Fri. Scheduled delivery is also available.",
   },
   {
     icon: ShieldCheck,

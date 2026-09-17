@@ -33,8 +33,8 @@ export const MKT_01_POSTS: BlogPost[] = [
     id: "post-001",
     title: "How to Transfer Your Prescription to iHealth Pharmacy in 3 Easy Steps",
     slug: "how-to-transfer-your-prescription",
-    excerpt: "Switching pharmacies is simpler than most people think. Here's exactly what to expect when you transfer your prescriptions to iHealth Pharmacy in Abbotsford.",
-    content: `Switching pharmacies should feel like a relief, not a chore. If you've been waiting for a reason to move your prescriptions somewhere closer to home, somewhere that knows your name, or somewhere with shorter lines, this is your sign. Transferring to iHealth Pharmacy in Abbotsford takes most people less than five minutes of their time. We handle the rest.
+    excerpt: "Switching pharmacies is simpler than most people think. Here's exactly what to expect when you transfer your prescriptions to iHealth Pharmacy in Chilliwack.",
+    content: `Switching pharmacies should feel like a relief, not a chore. If you've been waiting for a reason to move your prescriptions somewhere closer to home, somewhere that knows your name, or somewhere with shorter lines, this is your sign. Transferring to iHealth Pharmacy in Chilliwack takes most people less than five minutes of their time. We handle the rest.
 
 ## Step 1: Tell us where you're transferring from
 
@@ -42,7 +42,7 @@ You don't need to call your old pharmacy. You don't need to fill out forms. Just
 
 You can transfer in three ways:
 
-- Walk into iHealth Pharmacy at our Abbotsford location and speak with a pharmacist
+- Walk into iHealth Pharmacy at our Chilliwack location and speak with a pharmacist
 - Call us directly during business hours
 - Submit a transfer request through our website at any time
 
@@ -62,18 +62,18 @@ Once everything is transferred, you have three options:
 
 **Pick up in store.** Pop in, grab your prescriptions, and ask the pharmacist any questions. Most refills are ready within 15 minutes of arriving.
 
-**Free delivery.** If you're in Abbotsford and your order totals over $25, we deliver to your door at no charge. Same-day delivery is available for most requests placed before 2pm on weekdays.
+**Free delivery.** If you're in Chilliwack and your order totals over $25, we deliver to your door at no charge. Same-day delivery is available for most requests placed before 2pm on weekdays.
 
 **Automatic refills.** For ongoing medications, we can enroll you in our auto-refill program. Your prescriptions are filled a few days before you run out, and we text you when they're ready. You can pause or cancel anytime.
 
 ## Why people transfer to iHealth
 
-Abbotsford residents switch to us for a few common reasons. Some are looking for shorter wait times and more personal attention. Others want a pharmacy that offers services their previous one didn't, like minor ailment prescribing, travel vaccinations, or compliance packaging for multiple daily medications. Many just want a pharmacist who speaks their language — we offer service in English, Punjabi, and Hindi.
+Chilliwack residents switch to us for a few common reasons. Some are looking for shorter wait times and more personal attention. Others want a pharmacy that offers services their previous one didn't, like minor ailment prescribing, travel vaccinations, or compliance packaging for multiple daily medications. Many just want a pharmacist who speaks their language — we offer service in English, Punjabi, and Hindi.
 
 A few things that set us apart:
 
 - Open 7 days a week with extended hours
-- Free delivery within Abbotsford
+- Free delivery within Chilliwack
 - Multilingual staff
 - No-cost medication reviews for BC Pharmacare patients
 - A pharmacist on duty who can prescribe for common minor ailments
@@ -84,12 +84,12 @@ Your medication history follows you, not your pharmacy. When you transfer, your 
 
 ## Ready to transfer?
 
-Call us at 604-853-1893 or stop by the pharmacy in person. If you're not sure whether to make the switch, come in for a chat first — no commitment required. We'd rather you feel confident about the move than rush through it.
+Call us at 604-392-8393 or stop by the pharmacy in person. If you're not sure whether to make the switch, come in for a chat first — no commitment required. We'd rather you feel confident about the move than rush through it.
 
 Switching pharmacies is a small step that often makes a noticeable difference in how you manage your health. We make it easy because we'd rather spend time getting to know you than shuffling paperwork.`,
     author: "The iHealth Pharmacy Team",
     publishedAt: "2026-09-04",
-    tags: ["prescriptions", "transfer", "Abbotsford"],
+    tags: ["prescriptions", "transfer", "Chilliwack"],
     imageUrl: "/blog/post-1.jpg",
     status: "published",
     themeUsed: "default",
@@ -99,10 +99,10 @@ Switching pharmacies is a small step that often makes a noticeable difference in
 
   {
     id: "post-002",
-    title: "Flu Season 2026: What Abbotsford Residents Need to Know",
-    slug: "flu-season-2026-abbotsford",
+    title: "Flu Season 2026: What Chilliwack Residents Need to Know",
+    slug: "flu-season-2026-chilliwack",
     excerpt: "When does flu season peak in BC, who should get vaccinated, and what's new this year. A practical guide for Fraser Valley families.",
-    content: `Last flu season in BC was unusually early, with cases climbing in late October and peaking well before the new year. If you're planning to wait until December to get your flu shot, you may be too late. Here's what Abbotsford residents should know heading into the 2026–2027 influenza season.
+    content: `Last flu season in BC was unusually early, with cases climbing in late October and peaking well before the new year. If you're planning to wait until December to get your flu shot, you may be too late. Here's what Chilliwack residents should know heading into the 2026–2027 influenza season.
 
 ## When to get vaccinated
 
@@ -153,7 +153,7 @@ No appointment needed for flu shots at iHealth Pharmacy. We're open seven days a
 If you have questions about whether the flu shot is right for you, talk to one of our pharmacists. We're happy to walk through your specific situation, including timing around other vaccines or medications.`,
     author: "The iHealth Pharmacy Team",
     publishedAt: "2026-09-18",
-    tags: ["flu shot", "vaccination", "Abbotsford", "seasonal"],
+    tags: ["flu shot", "vaccination", "Chilliwack", "seasonal"],
     imageUrl: "/blog/post-2.jpg",
     status: "published",
     themeUsed: "default",
@@ -165,7 +165,7 @@ If you have questions about whether the flu shot is right for you, talk to one o
     id: "post-003",
     title: "Understanding Your BC Pharmacare Coverage in 2026",
     slug: "bc-pharmacare-coverage-2026",
-    excerpt: "Fair PharmaCare, Plan D, and private insurance can work together. Here's how Abbotsford residents can lower their out-of-pocket medication costs.",
+    excerpt: "Fair PharmaCare, Plan D, and private insurance can work together. Here's how Chilliwack residents can lower their out-of-pocket medication costs.",
     content: `If you take prescription medications regularly and live in BC, you probably have access to at least one drug coverage program — and you may be leaving money on the table by not using it. BC's pharmacare system has several layers, and understanding how they fit together can save you hundreds or even thousands of dollars a year.
 
 ## The basics of BC Pharmacare
@@ -360,10 +360,10 @@ Compounding isn't right for every patient or every medication, but when it's nee
 
   {
     id: "post-005",
-    title: "Managing Multiple Medications: A Guide for Seniors in Abbotsford",
+    title: "Managing Multiple Medications: A Guide for Seniors in Chilliwack",
     slug: "managing-multiple-medications-seniors",
     excerpt: "If you take five or more daily medications, organization is everything. Here's how to stay on track and avoid common pitfalls.",
-    content: `If you're a senior in Abbotsford taking multiple daily medications, you're not alone. Over 60% of Canadian seniors take five or more prescription medications, and many also use over-the-counter drugs, vitamins, and supplements on top of that. Managing all of it well takes some thought — but with the right systems, it becomes second nature.
+    content: `If you're a senior in Chilliwack taking multiple daily medications, you're not alone. Over 60% of Canadian seniors take five or more prescription medications, and many also use over-the-counter drugs, vitamins, and supplements on top of that. Managing all of it well takes some thought — but with the right systems, it becomes second nature.
 
 ## Why medication management matters more with age
 
@@ -443,13 +443,13 @@ Your healthcare team can only help if they know what's happening. A few things t
 - Ask questions. If you're not sure why you're taking something or how to take it, ask. There's no such thing as a stupid medication question.
 - Tell us about changes in your life. New diagnoses, new doctors, hospital stays, or changes in your living situation can all affect your medication needs.
 
-## Abbotsford-specific resources
+## Chilliwack-specific resources
 
-If you're a senior in Abbotsford, a few local resources that can help:
+If you're a senior in Chilliwack, a few local resources that can help:
 
 - **iHealth Pharmacy medication reviews.** Free, no appointment needed. We can review everything you take and suggest improvements.
 - **MyHealthPack blister packaging.** Free for most patients. We sort your pills by day and time so you never have to think about it.
-- **Free delivery in Abbotsford.** If getting to the pharmacy is a barrier, we deliver prescriptions to your door at no charge.
+- **Free delivery in Chilliwack.** If getting to the pharmacy is a barrier, we deliver prescriptions to your door at no charge.
 - **Home visits.** For seniors with mobility challenges, our pharmacists can visit your home for medication consultations. Talk to us about arranging this.
 
 Managing multiple medications doesn't have to be overwhelming. With the right support and a few simple systems, you can take your medications safely and confidently, and spend less time worrying about them.`,
@@ -465,12 +465,12 @@ Managing multiple medications doesn't have to be overwhelming. With the right su
 
   {
     id: "post-006",
-    title: "Travel Vaccinations: What You Need Before Flying from Abbotsford",
-    slug: "travel-vaccinations-abbotsford",
+    title: "Travel Vaccinations: What You Need Before Flying from Chilliwack",
+    slug: "travel-vaccinations-chilliwack",
     excerpt: "Planning a trip abroad? Some countries require specific vaccines before you enter. Here's how to prepare for travel from YVR or YXX.",
     content: `Whether you're heading to Mexico for a beach vacation, visiting family in India, or taking a business trip to East Africa, travel vaccines are one of those things you don't want to think about the week before departure. Some require multiple doses spread over weeks. Some need to be given at specific intervals before travel. And a few destinations will literally turn you away at the border if your records aren't in order.
 
-Here's what Abbotsford travelers need to know about travel vaccinations.
+Here's what Chilliwack travelers need to know about travel vaccinations.
 
 ## Six to eight weeks before travel
 
@@ -587,12 +587,12 @@ Stop by the pharmacy or call to book a travel consultation. Bring your itinerary
 
   {
     id: "post-007",
-    title: "MyHealthPack: Simplifying Daily Medications for Busy Abbotsford Families",
+    title: "MyHealthPack: Simplifying Daily Medications for Busy Chilliwack Families",
     slug: "myhealthpack-compliance-packaging",
     excerpt: "If you're juggling prescriptions for multiple family members, compliance packaging takes the mental load off. Here's how it works.",
     content: `Most of us don't think twice about taking a pill or two. But when you're managing prescriptions for yourself, your partner, and maybe an aging parent — and several of those prescriptions involve multiple daily doses — the math gets complicated fast. Did Dad take his evening dose? Is the white one in the morning or at night? Did we already give the antibiotic today?
 
-Compliance packaging, which we call MyHealthPack at iHealth Pharmacy, removes almost all of that confusion. Here's how it works and why so many Abbotsford families rely on it.
+Compliance packaging, which we call MyHealthPack at iHealth Pharmacy, removes almost all of that confusion. Here's how it works and why so many Chilliwack families rely on it.
 
 ## What MyHealthPack is
 
@@ -646,9 +646,9 @@ Medications that don't fit nicely in blister packaging:
 
 We work around these by keeping them as separate fills alongside your MyHealthPack card.
 
-## Free delivery in Abbotsford
+## Free delivery in Chilliwack
 
-Picking up a blister card every week or two is straightforward, but for many families it's an inconvenience. We offer free prescription delivery anywhere in Abbotsford for orders over $25. We'll bring your MyHealthPack card straight to your door — and if you have questions, the delivery driver can connect you with a pharmacist by phone.
+Picking up a blister card every week or two is straightforward, but for many families it's an inconvenience. We offer free prescription delivery anywhere in Chilliwack for orders over $25. We'll bring your MyHealthPack card straight to your door — and if you have questions, the delivery driver can connect you with a pharmacist by phone.
 
 ## Safety benefits
 
@@ -687,12 +687,12 @@ Compliance packaging is one of those services that, once you start, you wonder h
 
   {
     id: "post-008",
-    title: "Minor Ailments: 7 Conditions Your Abbotsford Pharmacist Can Now Prescribe For",
+    title: "Minor Ailments: 7 Conditions Your Chilliwack Pharmacist Can Now Prescribe For",
     slug: "minor-ailments-pharmacist-prescribing",
     excerpt: "Since 2023, BC pharmacists can assess and prescribe for many common conditions. Skip the doctor's wait for these everyday issues.",
     content: `A few years ago, getting treatment for a urinary tract infection, pink eye, or cold sore meant booking a doctor's appointment, sitting in a waiting room, and paying a visit fee — even though the diagnosis is often straightforward and the treatment is well-established. That's no longer the only path.
 
-Since 2023, BC pharmacists can independently assess and prescribe for a growing list of minor ailments. For Abbotsford residents, this means faster access to treatment for everyday health issues — often without leaving the pharmacy.
+Since 2023, BC pharmacists can independently assess and prescribe for a growing list of minor ailments. For Chilliwack residents, this means faster access to treatment for everyday health issues — often without leaving the pharmacy.
 
 ## How pharmacist prescribing works
 
@@ -775,7 +775,7 @@ For patients without Pharmacare coverage, there may be a small fee for the asses
 
 Pharmacist prescribing isn't about replacing doctors. It's about matching the right professional to the right level of care. For straightforward, well-defined conditions, a pharmacist is the appropriate clinician. This frees up doctors to focus on complex cases while making sure patients get timely treatment.
 
-For Abbotsford residents, it also means not having to wait days for an appointment when you have something that needs attention now.
+For Chilliwack residents, it also means not having to wait days for an appointment when you have something that needs attention now.
 
 ## What to bring
 
@@ -799,16 +799,16 @@ If you're not sure whether your condition falls under pharmacist prescribing, ju
 
   {
     id: "post-009",
-    title: "Free Prescription Delivery in Abbotsford: How It Works",
-    slug: "free-prescription-delivery-abbotsford",
-    excerpt: "If getting to the pharmacy is a barrier, we bring your prescriptions to you. Here's how our free Abbotsford delivery service works.",
+    title: "Free Prescription Delivery in Chilliwack: How It Works",
+    slug: "free-prescription-delivery-chilliwack",
+    excerpt: "If getting to the pharmacy is a barrier, we bring your prescriptions to you. Here's how our free Chilliwack delivery service works.",
     content: `Sometimes the hardest part of managing your medications isn't the medication itself — it's getting to the pharmacy. Maybe your mobility is limited. Maybe you're juggling work and kids. Maybe you're recovering from surgery. Maybe you just don't feel like driving across town.
 
-That's exactly why we offer free prescription delivery in Abbotsford. Same-day for most orders, no charge, straight to your door.
+That's exactly why we offer free prescription delivery in Chilliwack. Same-day for most orders, no charge, straight to your door.
 
 ## Who qualifies for free delivery
 
-Free delivery applies to anyone in Abbotsford with a prescription order totaling $25 or more. The threshold is intentionally low — it covers most prescription fills. If you're picking up a single refill that costs less than $25, we'll still deliver it; we just have a small $5 delivery fee in that case.
+Free delivery applies to anyone in Chilliwack with a prescription order totaling $25 or more. The threshold is intentionally low — it covers most prescription fills. If you're picking up a single refill that costs less than $25, we'll still deliver it; we just have a small $5 delivery fee in that case.
 
 There's no minimum for seniors, patients with mobility challenges, or anyone enrolled in our auto-refill program. We want to make medication access easy for everyone.
 
@@ -819,19 +819,19 @@ There are a few ways:
 - **In person.** When you drop off a prescription or pick up a refill, ask for delivery.
 - **By phone.** Call us and request delivery for your next refill.
 - **Online.** Use the request form on our website.
-- **Through your doctor.** Many Abbotsford doctors can send prescriptions directly to us electronically — we get them in real time, and you can request delivery when we confirm receipt.
+- **Through your doctor.** Many Chilliwack doctors can send prescriptions directly to us electronically — we get them in real time, and you can request delivery when we confirm receipt.
 
 If you're already enrolled in our auto-refill program, delivery is the default — we just bring it to you when it's ready.
 
 ## What areas we cover
 
-We deliver anywhere in Abbotsford:
+We deliver anywhere in Chilliwack:
 
-- Central Abbotsford
-- Abbotsford East and West
-- McMillan, Clearbrook, and the surrounding neighborhoods
-- Areas near UFV
-- Most rural routes within Abbotsford city limits
+- Central Chilliwack & Downtown
+- Sardis & Vedder Crossing
+- Promontory, Fairfield Island, and surrounding neighbourhoods
+- Areas near UFV Chilliwack campus
+- Most rural routes within Chilliwack city limits
 
 If you're just outside city limits, give us a call and we'll let you know if we can reach you. For most addresses in the Fraser Valley within a 15-minute drive, we're able to deliver.
 
@@ -873,7 +873,7 @@ Delivery isn't always the best option. You might prefer to pick up in person if:
 - You're also shopping for OTC items we carry
 - You just want to stretch your legs
 
-Our in-pharmacy experience is unhurried, and pharmacists are available to talk without an appointment. If you're in Abbotsford and able to come by, we're always happy to see you.
+Our in-pharmacy experience is unhurried, and pharmacists are available to talk without an appointment. If you're in Chilliwack and able to come by, we're always happy to see you.
 
 ## For caregivers and family members
 
@@ -897,10 +897,10 @@ If you've never used our delivery service before, the first step is a one-time s
 
 After that, you can request delivery with each refill. Most patients find that once they've tried it, they rarely come in person unless they need to.
 
-For Abbotsford residents who have been putting off refills because getting to the pharmacy is a barrier, free delivery is the easiest way to stay on track. Give us a call or stop in next time you're nearby, and we'll get you set up.`,
+For Chilliwack residents who have been putting off refills because getting to the pharmacy is a barrier, free delivery is the easiest way to stay on track. Give us a call or stop in next time you're nearby, and we'll get you set up.`,
     author: "The iHealth Pharmacy Team",
     publishedAt: "2026-12-12",
-    tags: ["delivery", "Abbotsford", "convenience"],
+    tags: ["delivery", "Chilliwack", "convenience"],
     imageUrl: "/blog/post-9.jpg",
     status: "published",
     themeUsed: "default",
@@ -913,7 +913,7 @@ For Abbotsford residents who have been putting off refills because getting to th
     title: "COVID-19 Boosters Fall 2026: Updated Guidance for Fraser Valley Residents",
     slug: "covid-boosters-fall-2026",
     excerpt: "Updated COVID-19 vaccines target new variants. Here's who should get boosted this fall and what to expect.",
-    content: `COVID-19 hasn't gone away. The virus continues to evolve, and updated vaccines are released each year to match circulating strains. For Abbotsford residents wondering whether to get another booster this fall, here's the current guidance.
+    content: `COVID-19 hasn't gone away. The virus continues to evolve, and updated vaccines are released each year to match circulating strains. For Chilliwack residents wondering whether to get another booster this fall, here's the current guidance.
 
 ## Who should get a fall 2026 booster
 
@@ -993,7 +993,7 @@ Beyond vaccines, the basics still work:
 - Test if you have symptoms, especially before visiting vulnerable family members
 - Keep your regular medications refilled — don't wait until you're out
 
-iHealth Pharmacy is here to help with all of it, from vaccines to prescriptions to advice when you're not sure what to do. We've been part of the Abbotsford community through every phase of the pandemic and we're committed to keeping our neighbors healthy through this winter and beyond.
+iHealth Pharmacy is here to help with all of it, from vaccines to prescriptions to advice when you're not sure what to do. We've been part of the Chilliwack community through every phase of the pandemic and we're committed to keeping our neighbors healthy through this winter and beyond.
 
 If you have questions about COVID-19 vaccines or treatment, talk to one of our pharmacists. We can help you make an informed decision based on your personal health situation.`,
     author: "The iHealth Pharmacy Team",
@@ -1007,10 +1007,10 @@ If you have questions about COVID-19 vaccines or treatment, talk to one of our p
   },
   {
     id: "post-011",
-    title: "Fall 2026 Senior Medication Safety & Seasonal Immunizations: The Complete Abbotsford Guide",
+    title: "Fall 2026 Senior Medication Safety & Seasonal Immunizations: The Complete Chilliwack Guide",
     slug: "fall-2026-senior-medication-safety-immunizations",
     excerpt: "As temperatures drop in the Fraser Valley, learn how to prevent adverse drug interactions, schedule high-dose flu & COVID boosters, and simplify daily regimens.",
-    content: `As autumn arrives in Abbotsford and temperatures start to drop across the Fraser Valley, seasonal health risks change rapidly—especially for seniors managing multiple daily medications. Cold weather often brings joint stiffness, changes in physical activity, and increased respiratory illness spread.
+    content: `As autumn arrives in Chilliwack and temperatures start to drop across the Fraser Valley, seasonal health risks change rapidly—especially for seniors managing multiple daily medications. Cold weather often brings joint stiffness, changes in physical activity, and increased respiratory illness spread.
 
 ## Why Autumn Demands a Fresh Medication Review
 
@@ -1034,18 +1034,18 @@ In British Columbia, seniors aged 65 and older qualify for enhanced seasonal pro
 
 If you or a loved one takes four or more medications daily, keeping track of morning, noon, and bedtime pills becomes stressful. Missed doses or accidental double-dosing are among the leading causes of avoidable hospital visits in BC.
 
-At iHealth Pharmacy Abbotsford, we organize all prescriptions, vitamins, and supplements into custom compliance packaging (MyHealthPack):
+At iHealth Pharmacy Chilliwack, we organize all prescriptions, vitamins, and supplements into custom compliance packaging (MyHealthPack):
 
 - Color-coded blister cards clearly organized by day of the week and exact time of day.
 - Tamper-evident seals that guarantee medication stability.
-- Free local doorstep delivery across Abbotsford so you never run out of critical treatments.
+- Free local doorstep delivery across Chilliwack so you never run out of critical treatments.
 
 ## How to Book Your Fall Consult with iHealth
 
 A comprehensive medication review is completely free for BC residents who meet PharmaCare criteria. Sit down one-on-one with Dr. Anika Sharma or any of our clinical pharmacists to review every pill, optimize dosing times, and answer all questions in English, Punjabi, or Hindi.`,
     author: "Dr. Anika Sharma, BSc Pharm, RPh",
     publishedAt: "2026-09-15",
-    tags: ["senior health", "medication safety", "flu vaccine", "abbotsford", "myhealthpack"],
+    tags: ["senior health", "medication safety", "flu vaccine", "chilliwack", "myhealthpack"],
     imageUrl: "/blog/post-3.jpg",
     status: "scheduled",
     themeUsed: "default",
@@ -1056,7 +1056,7 @@ A comprehensive medication review is completely free for BC residents who meet P
       "BC seniors qualify for enhanced high-dose flu shots and COVID boosters with zero out-of-pocket costs.",
       "Over-the-counter cold medicines can interact dangerously with blood pressure and blood thinner prescriptions.",
       "Annual medication reviews are 100% covered under BC Fair PharmaCare for eligible patients.",
-      "MyHealthPack custom blister cards eliminate missed doses and double-dosing risk with free Abbotsford delivery."
+      "MyHealthPack custom blister cards eliminate missed doses and double-dosing risk with free Chilliwack delivery."
     ],
   },
 ];

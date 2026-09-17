@@ -48,7 +48,7 @@ import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
 const SERVICES = [
   {
     title: "Prescription Refills",
-    desc: "Ready within the hour, or delivered free to your Abbotsford doorstep.",
+    desc: "Ready within the hour, or delivered free to your Chilliwack doorstep.",
     href: "/prescription-refills",
     icon: Pill,
     image: "/services/refills.jpg",
@@ -104,7 +104,7 @@ const SERVICES = [
   },
   {
     title: "Free Prescription Delivery",
-    desc: "Complimentary same-day home delivery across Abbotsford for orders over $25.",
+    desc: "Complimentary same-day home delivery across Chilliwack for orders over $25.",
     href: "/services/delivery",
     icon: Truck,
     image: "/services/delivery.jpg",
@@ -117,21 +117,21 @@ const TESTIMONIALS = [
     quote:
       "They texted me before I even got home — my refill was ready for pickup. The staff is always so courteous and genuinely knows our family.",
     name: "Jasmin P.",
-    location: "Abbotsford, BC",
+    location: "Chilliwack, BC",
     rating: 5,
   },
   {
     quote:
       "The pharmacist remembered my mother's allergy without having to look it up. That level of personal attention is rare today.",
     name: "Daniel O.",
-    location: "Clearbrook, Abbotsford",
+    location: "Yale Rd, Chilliwack",
     rating: 5,
   },
   {
     quote:
       "Transferring my prescription took one quick message. They handled everything with my old clinic and delivered my blister packs the next day.",
     name: "Margaret L.",
-    location: "Aldergrove / Abbotsford",
+    location: "Sardis / Chilliwack",
     rating: 5,
   },
 ];
@@ -165,7 +165,7 @@ export default function HomePage() {
               </h1>
 
               <p className="mt-4 max-w-lg text-base leading-relaxed text-slate-600 sm:text-lg">
-                Your neighborhood independent pharmacy in Abbotsford. Fast prescription refills, 21 prescribable minor ailments on walk-in, and free same-day local delivery.
+                Your neighborhood independent pharmacy in Chilliwack. Fast prescription refills, 21 prescribable minor ailments on walk-in, and free same-day local delivery.
               </p>
 
               {/* Dual Action Buttons */}
@@ -230,7 +230,7 @@ export default function HomePage() {
                 Reliable Medicine, Expert Guidance
               </h2>
               <p className="mt-3 text-base text-slate-600 sm:text-lg">
-                Clinical assessments, specialized compounding, vaccinations, and free Abbotsford delivery — explore our full suite of pharmacy services.
+                Clinical assessments, specialized compounding, vaccinations, and free Chilliwack delivery — explore our full suite of pharmacy services.
               </p>
             </SectionReveal>
 
@@ -318,7 +318,7 @@ export default function HomePage() {
                     Committed to Quality Community Care
                   </h2>
                   <p className="mt-4 text-base text-slate-600 sm:text-lg leading-relaxed">
-                    iHealth Pharmacy is an independent community pharmacy in Abbotsford, BC. We believe healthcare is fundamentally human — where patients are recognized by name, questions are answered thoroughly, and your health comes first.
+                    iHealth Pharmacy is an independent community pharmacy in Chilliwack, BC. We believe healthcare is fundamentally human — where patients are recognized by name, questions are answered thoroughly, and your health comes first.
                   </p>
 
                   <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -329,7 +329,7 @@ export default function HomePage() {
                         Our Vision
                       </div>
                       <p className="mt-2 text-xs leading-relaxed text-slate-600">
-                        To empower every Abbotsford resident with accessible, personalized clinical care that improves quality of life.
+                        To empower every Chilliwack resident with accessible, personalized clinical care that improves quality of life.
                       </p>
                     </div>
 
@@ -460,7 +460,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="text-base font-bold text-slate-900">Direct Doctor Line</h3>
                 <p className="mt-1.5 text-xs text-slate-600 leading-relaxed">
-                  We liaise directly with your Abbotsford family doctor or specialist for renewals and dosage adjustments.
+                  We liaise directly with your Chilliwack family doctor or specialist for renewals and dosage adjustments.
                 </p>
               </div>
 
@@ -480,7 +480,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="text-base font-bold text-slate-900">Free Home Delivery</h3>
                 <p className="mt-1.5 text-xs text-slate-600 leading-relaxed">
-                  Free prescription delivery across Abbotsford for orders over $25. Same-day service on weekdays.
+                  Free prescription delivery across Chilliwack for orders over $25. Same-day service on weekdays.
                 </p>
               </div>
             </div>
@@ -518,7 +518,7 @@ export default function HomePage() {
                 Healing Stories, Shared Honestly
               </h2>
               <p className="mt-3 text-base text-slate-600">
-                What Abbotsford families, seniors, and caregivers say about their care at iHealth Pharmacy.
+                What Chilliwack families, seniors, and caregivers say about their care at iHealth Pharmacy.
               </p>
             </SectionReveal>
 
@@ -616,9 +616,9 @@ export default function HomePage() {
                 <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
                   Come Say Hello.
                 </h2>
-              <p className="mt-3 text-base text-slate-600">
-                Drop by our Clearbrook location or call our clinical desk directly.
-              </p>
+                <p className="mt-3 text-base text-slate-600">
+                  Drop by our Chilliwack location or call our clinical desk directly.
+                </p>
 
               <ul className="mt-8 space-y-4">
                 <li className="flex items-start gap-3">
@@ -700,8 +700,8 @@ export default function HomePage() {
             <SectionReveal className="h-full">
               <div className="h-full min-h-[360px] lg:min-h-[440px] flex flex-col overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
                 <iframe
-                  title="iHealth Pharmacy Abbotsford location"
-                  src="https://maps.google.com/maps?q=2825%20Clearbrook%20Rd%2C%20Abbotsford%2C%20BC%20V2T%206S3&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                  title="iHealth Pharmacy Chilliwack location"
+                  src="https://maps.google.com/maps?q=45619%20Yale%20Rd%20%23101%2C%20Chilliwack%2C%20BC%20V2P%200B1&t=&z=15&ie=UTF8&iwloc=&output=embed"
                   width="100%"
                   height="100%"
                   className="min-h-[300px] flex-1 border-0"

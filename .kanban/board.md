@@ -20,7 +20,7 @@
 - [ ] **FE-24** Wire real Web3Forms access key (need user)
 - [ ] **FE-25** Wire real WhatsApp number (need user)
 - [ ] **DOM-01** Point ihealthpharmacy.ca to Hostinger (DNS decision)
-- [ ] **HOST-01** ✅ DONE — Hostinger deployed via Git integration
+- [ ] **HOST-01**  DONE — Hostinger deployed via Git integration
 
 ## Next Sprint — Booking Subdomain
 - [ ] **BOOK-01** Scope: standalone booking subdomain (booking.ihealthpharmacy.ca or similar) with calendar + appointment type selection
@@ -36,7 +36,7 @@
 ## Backlog
 - WhatsApp live-chat integration (own Kanban board — see `ihealth-messaging`)
 - Service area map with delivery zones
-- Multilingual support (EN + Punjabi for Abbotsford)
+- Multilingual support (EN + Punjabi for Chilliwack)
 - Online booking for medication reviews
 
 ## Kanban Boards

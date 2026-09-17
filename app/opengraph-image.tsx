@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "nodejs";
-export const alt = "iHealth Pharmacy — Abbotsford Dispensary";
+export const alt = "iHealth Pharmacy — Chilliwack Dispensary";
 export const size = {
   width: 1200,
   height: 630,
@@ -73,7 +73,7 @@ export default async function Image() {
                 iHealth <span style={{ color: "#94a3b8", fontSize: "22px", fontWeight: "600" }}>PHARMACY</span>
               </span>
               <span style={{ fontSize: "14px", color: "#2dd4bf", fontWeight: "700" }}>
-                Abbotsford Dispensary
+                Chilliwack Dispensary
               </span>
             </div>
           </div>
@@ -114,7 +114,7 @@ export default async function Image() {
           </div>
 
           <p style={{ fontSize: "20px", color: "#94a3b8", margin: 0, maxWidth: "850px", lineHeight: 1.4 }}>
-            Independent community healthcare in Abbotsford. Fast refills, 21 prescribable minor ailments on walk-in, and free same-day delivery.
+            Independent community healthcare in Chilliwack. Fast refills, 21 prescribable minor ailments on walk-in, and free same-day delivery.
           </p>
 
           {/* Service Feature Badges */}
@@ -152,9 +152,9 @@ export default async function Image() {
           }}
         >
           <div style={{ display: "flex", gap: "24px", color: "#cbd5e1", fontSize: "16px", fontWeight: "600" }}>
-            <span>#105 - 2825 Clearbrook Rd, Abbotsford, BC</span>
+            <span>45619 Yale Rd #101, Chilliwack, BC</span>
             <span>·</span>
-            <span>(604) 853-1893</span>
+            <span>604-392-8393</span>
           </div>
 
           <div style={{ color: "#2dd4bf", fontSize: "15px", fontWeight: "700" }}>

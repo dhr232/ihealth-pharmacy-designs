@@ -67,7 +67,7 @@ A fully rebuilt, professional 2026 agency-grade website for iHealth Pharmacy, wi
 - Minor ailments image: placeholder
 - Testimonials: placeholder patient quotes
 - Newsletter / forms: client-side success states (needs backend)
-- Map embed: generic Abbotsford coordinates
+- Map embed: generic Chilliwack coordinates
 
 ## Next steps for client
 1. Provide exact address + real Google Maps link

@@ -5,7 +5,7 @@ import { SectionReveal, BlurReveal } from "../components/MotionKit";
 import { Scale, FileText, Calendar, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Terms of Use — iHealth Pharmacy Abbotsford",
+  title: "Terms of Use — iHealth Pharmacy Chilliwack",
   description:
     "Terms of use for the iHealth Pharmacy website and online services. Plain-English summary of your rights and ours.",
 };
@@ -111,18 +111,18 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
             href="mailto:hello@ihealthpharmacy.ca"
             className="font-medium text-[var(--brand)] underline-offset-2 hover:underline"
           >
-            hello@ihealthpharmacy.ca
+            info@ihealthpharmacy.ca
           </a>
           <br />
           Phone:{" "}
           <a
-            href="tel:+160****0199"
+            href="tel:+16043928393"
             className="font-medium text-[var(--brand)] underline-offset-2 hover:underline"
           >
-            (604) 555-0199
+            604-392-8393
           </a>
           <br />
-          Address: 101 - 45619 Yale Road, Abbotsford, BC V2P 2N1
+          Address: 45619 Yale Rd #101, Chilliwack, BC V2P 0B1
         </p>
       </>
     ),
