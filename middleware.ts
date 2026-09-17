@@ -25,7 +25,9 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+  response.headers.set("Cache-Control", "public, max-age=0, must-revalidate");
+  return response;
 }
 
 export const config = {
