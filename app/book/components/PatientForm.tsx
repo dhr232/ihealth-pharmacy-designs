@@ -159,7 +159,7 @@ export default function PatientForm({
                     className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                       errors.firstName
                         ? "border-red-400 focus:border-red-500 focus:ring-red-100"
-                        : "border-slate-200 focus:border-[var(--brand)] focus:ring-red-500/10"
+                        : "border-slate-200 focus:border-[var(--brand)] focus:ring-[var(--brand)]/10"
                     }`}
                   />
                 </div>
@@ -195,7 +195,7 @@ export default function PatientForm({
                     className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                       errors.lastName
                         ? "border-red-400 focus:border-red-500 focus:ring-red-100"
-                        : "border-slate-200 focus:border-[var(--brand)] focus:ring-red-500/10"
+                        : "border-slate-200 focus:border-[var(--brand)] focus:ring-[var(--brand)]/10"
                     }`}
                   />
                 </div>
@@ -234,7 +234,7 @@ export default function PatientForm({
                     className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                       errors.email
                         ? "border-red-400 focus:border-red-500 focus:ring-red-100"
-                        : "border-slate-200 focus:border-[var(--brand)] focus:ring-red-500/10"
+                        : "border-slate-200 focus:border-[var(--brand)] focus:ring-[var(--brand)]/10"
                     }`}
                   />
                 </div>
@@ -270,7 +270,7 @@ export default function PatientForm({
                     className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                       errors.phone
                         ? "border-red-400 focus:border-red-500 focus:ring-red-100"
-                        : "border-slate-200 focus:border-[var(--brand)] focus:ring-red-500/10"
+                        : "border-slate-200 focus:border-[var(--brand)] focus:ring-[var(--brand)]/10"
                     }`}
                   />
                 </div>
@@ -313,7 +313,7 @@ export default function PatientForm({
                     className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                       errors.dateOfBirth
                         ? "border-red-400 focus:border-red-500 focus:ring-red-100"
-                        : "border-slate-200 focus:border-[var(--brand)] focus:ring-red-500/10"
+                        : "border-slate-200 focus:border-[var(--brand)] focus:ring-[var(--brand)]/10"
                     }`}
                   />
                 </div>
@@ -342,7 +342,7 @@ export default function PatientForm({
                   className={`mt-1.5 w-full rounded-2xl border bg-slate-50/50 py-3 px-4 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                     errors.gender
                       ? "border-red-400 focus:border-red-500 focus:ring-red-100"
-                      : "border-slate-200 focus:border-[var(--brand)] focus:ring-red-500/10"
+                      : "border-slate-200 focus:border-[var(--brand)] focus:ring-[var(--brand)]/10"
                   }`}
                 >
                   <option value="">Select gender</option>
@@ -392,7 +392,7 @@ export default function PatientForm({
                   className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 font-mono text-sm tracking-widest text-slate-900 placeholder:font-sans placeholder:tracking-normal placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                     errors.phn
                       ? "border-red-400 focus:border-red-500 focus:ring-red-100"
-                      : "border-slate-200 focus:border-[var(--brand)] focus:ring-red-500/10"
+                      : "border-slate-200 focus:border-[var(--brand)] focus:ring-[var(--brand)]/10"
                   }`}
                 />
               </div>
@@ -431,7 +431,7 @@ export default function PatientForm({
                     setFormData({ ...formData, reasonForVisit: e.target.value })
                   }
                   placeholder="Briefly describe your symptoms, how long you have had them, or any specific questions for the pharmacist..."
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[var(--brand)] focus:bg-white focus:outline-none focus:ring-4 focus:ring-red-500/10 transition-all"
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[var(--brand)] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[var(--brand)]/10 transition-all"
                 />
               </div>
             </div>
@@ -445,7 +445,7 @@ export default function PatientForm({
                   onChange={(e) =>
                     setFormData({ ...formData, caslConsent: e.target.checked })
                   }
-                  className="mt-1 h-4.5 w-4.5 rounded-md border-slate-300 text-[var(--brand)] focus:ring-red-600 transition-colors"
+                  className="mt-1 h-4.5 w-4.5 rounded-md border-slate-300 text-[var(--brand)] focus:ring-[var(--brand)] transition-colors"
                 />
                 <span className="text-xs text-slate-600 leading-relaxed">
                   Keep me informed with seasonal clinic updates, health tips, and pharmacy announcements (CASL express consent). You may withdraw consent at any time.
@@ -469,7 +469,7 @@ export default function PatientForm({
 
         <button
           type="submit"
-          className="inline-flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-6 py-3 text-sm font-bold text-white shadow-md shadow-red-700/20 transition-all duration-150 hover:bg-[var(--brand-hover)] hover:shadow-lg active:scale-[0.98]"
+          className="inline-flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-6 py-3 text-sm font-bold text-white shadow-md shadow-[#2F4BC4]/20 transition-all duration-150 hover:bg-[var(--brand-hover)] hover:shadow-lg active:scale-[0.98]"
         >
           <span>Select Date & Time</span>
           <ChevronRight size={16} />

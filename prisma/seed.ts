@@ -329,10 +329,10 @@ export const OTHER_CANONICAL_SERVICES = [
 
 export const PHARMACISTS = [
   {
-    name: "Dr. Anika Sharma",
+    name: "Dr. Rutu Patel",
     title: "Pharmacy Manager & Owner",
     licenseNumber: "BC-PHARM-20184",
-    bio: "Anika has been serving Chilliwack families for over 15 years. She specialises in geriatric care and medication reviews, and is passionate about making sure every patient feels heard.",
+    bio: "Rutu has been serving Chilliwack families for over 15 years. She specialises in geriatric care and medication reviews, and is passionate about making sure every patient feels heard.",
     avatarUrl: "/pharmacists/anika.jpg",
     acceptsAppointments: true,
     active: true,

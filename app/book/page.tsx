@@ -154,9 +154,9 @@ function BookingWizard() {
                           <div
                             className={`flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold transition-all duration-200 shadow-xs ${
                               isCompleted
-                                ? "bg-[var(--brand)] text-white ring-4 ring-red-100 group-hover:bg-[var(--brand-hover)]"
+                                ? "bg-[var(--brand)] text-white ring-4 ring-[#E8ECFB] group-hover:bg-[var(--brand-hover)]"
                                 : isCurrent
-                                ? "bg-[var(--brand)] text-white ring-4 ring-red-500/20 shadow-md shadow-red-700/20"
+                                ? "bg-[var(--brand)] text-white ring-4 ring-[#3D5FE0]/20 shadow-md shadow-[#2F4BC4]/20"
                                 : "bg-slate-100 text-slate-400 border border-slate-200"
                             }`}
                           >
@@ -187,7 +187,7 @@ function BookingWizard() {
               {/* Mobile Progress Bar & Counter */}
               <div className="sm:hidden space-y-2">
                 <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
-                  <span className="font-bold text-red-900">
+                  <span className="font-bold text-[#1E2A44]">
                     Step {currentStep} of {STEPS.length}: {STEPS[currentStep - 1]?.title}
                   </span>
                   <span className="text-slate-500">{Math.round((currentStep / STEPS.length) * 100)}%</span>

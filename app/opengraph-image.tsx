@@ -44,7 +44,7 @@ export default async function Image() {
             width: "600px",
             height: "600px",
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(192,29,22,0.22) 0%, rgba(9,13,22,0) 70%)",
+            background: "radial-gradient(circle, rgba(61,95,224,0.22) 0%, rgba(9,13,22,0) 70%)",
           }}
         />
 
@@ -56,14 +56,14 @@ export default async function Image() {
                 width: "54px",
                 height: "54px",
                 borderRadius: "18px",
-                backgroundColor: "#C01D16",
+                backgroundColor: "#3D5FE0",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 color: "#ffffff",
                 fontSize: "26px",
                 fontWeight: "900",
-                boxShadow: "0 10px 25px rgba(192,29,22,0.4)",
+                boxShadow: "0 10px 25px rgba(61,95,224,0.4)",
               }}
             >
               iH

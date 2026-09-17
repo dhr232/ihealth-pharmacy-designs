@@ -61,7 +61,7 @@ export default function FAQSection() {
     <section id="faq" className="bg-white pt-10 pb-16 lg:pt-14 lg:pb-20">
       <div className="mx-auto max-w-5xl px-5 lg:px-8">
         <SectionReveal className="text-center">
-          <div className="inline-flex items-center rounded-full bg-red-50 border border-red-200/80 px-3.5 py-1 mb-4 shadow-2xs">
+          <div className="inline-flex items-center rounded-full bg-[#E8ECFB] border border-[#C7D2F7] px-3.5 py-1 mb-4 shadow-2xs">
             <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
               Frequently Asked Questions
             </span>

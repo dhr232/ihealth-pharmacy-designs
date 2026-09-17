@@ -12,35 +12,57 @@ export default function PharmacistTeamSection() {
   const [pharmacists, setPharmacists] = useState<Pharmacist[]>(SEED_PHARMACISTS);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    let isMounted = true;
 
-    function loadPharmacists() {
+    async function fetchPharmacists() {
       try {
-        const raw = window.localStorage.getItem(STORAGE_KEY);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            setPharmacists(parsed.sort((a: Pharmacist, b: Pharmacist) => a.displayOrder - b.displayOrder));
+        const res = await fetch("/api/pharmacists", { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          const list = Array.isArray(data) ? data : data.pharmacists;
+          if (isMounted && Array.isArray(list) && list.length > 0) {
+            setPharmacists(list.sort((a: Pharmacist, b: Pharmacist) => a.displayOrder - b.displayOrder));
             return;
           }
         }
       } catch {
-        /* ignore */
+        // Fetch failed, fall back to localStorage or seed
       }
-      setPharmacists(SEED_PHARMACISTS);
+
+      if (typeof window !== "undefined") {
+        try {
+          const raw = window.localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              if (isMounted) {
+                setPharmacists(parsed.sort((a: Pharmacist, b: Pharmacist) => a.displayOrder - b.displayOrder));
+                return;
+              }
+            }
+          }
+        } catch {
+          /* ignore */
+        }
+      }
+
+      if (isMounted) {
+        setPharmacists(SEED_PHARMACISTS);
+      }
     }
 
-    loadPharmacists();
+    fetchPharmacists();
 
     function onStorage(e: StorageEvent) {
-      if (e.key === STORAGE_KEY) loadPharmacists();
+      if (e.key === STORAGE_KEY) fetchPharmacists();
     }
 
     window.addEventListener("storage", onStorage);
-    window.addEventListener("ihealth_pharmacists_updated", loadPharmacists);
+    window.addEventListener("ihealth_pharmacists_updated", fetchPharmacists);
     return () => {
+      isMounted = false;
       window.removeEventListener("storage", onStorage);
-      window.removeEventListener("ihealth_pharmacists_updated", loadPharmacists);
+      window.removeEventListener("ihealth_pharmacists_updated", fetchPharmacists);
     };
   }, []);
 
@@ -49,7 +71,7 @@ export default function PharmacistTeamSection() {
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <SectionReveal className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
-            <div className="inline-flex items-center rounded-full bg-red-50 border border-red-200/80 px-3.5 py-1 mb-4 shadow-2xs">
+            <div className="inline-flex items-center rounded-full bg-[#E8ECFB] border border-[#C7D2F7] px-3.5 py-1 mb-4 shadow-2xs">
               <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
                 Our Clinical Team
               </span>

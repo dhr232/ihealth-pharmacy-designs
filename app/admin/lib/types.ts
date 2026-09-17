@@ -123,9 +123,9 @@ export interface AuthSession {
 export const SEED_PHARMACISTS: Pharmacist[] = [
   {
     id: "seed-pharm-001",
-    name: "Dr. Anika Sharma",
+    name: "Dr. Rutu Patel",
     role: "Pharmacy Manager & Owner",
-    bio: "Anika has been serving Chilliwack families for over 15 years. She specialises in geriatric care and medication reviews, and is passionate about making sure every patient feels heard.",
+    bio: "Rutu has been serving Chilliwack families for over 15 years. She specialises in geriatric care and medication reviews, and is passionate about making sure every patient feels heard.",
     photoUrl: "/pharmacists/anika.jpg",
     credentials: ["BSc Pharm", "RPh", "APA"],
     languages: ["English", "Punjabi", "Hindi"],

@@ -16,28 +16,35 @@
    =========================================================== */
 
 :root {
-  /* iHealth Pharmacy 2026 professional palette */
+  /* iHealth Pharmacy 2026 professional palette
+     Warm-welcome update: brand red swapped for the calmer royal-blue +
+     leaf-green scheme (matches the reference healthcare layout) so the
+     primary accent reads as trustworthy/calm rather than as an alert
+     to older visitors. */
   --background: #ffffff;
-  --foreground: #1f2328;
+  --foreground: #1e2a44;
   --muted: #5a6270;
   --surface: #f6f7f9;
   --border: #d8dce2;
-  --brand: #c01d16;
-  --brand-hover: #a31812;
-  --brand-subtle: #fdf2f2;
-  --focus: #c01d16;
+  --brand: #3d5fe0;
+  --brand-hover: #2f4bc4;
+  --brand-subtle: #e8ecfb;
+  --brand-secondary: #4caf7d;
+  --brand-secondary-hover: #3d9468;
+  --brand-secondary-subtle: #e6f7ec;
+  --focus: #3d5fe0;
 
-  /* New theming layer — defaults mirror the legacy brand-red palette
-     so any consumer of --color-accent etc. sees the original look
+  /* New theming layer — defaults mirror the legacy brand palette
+     so any consumer of --color-accent etc. sees the same look
      until a [data-theme] block overrides them. */
-  --color-accent: #c01d16;
+  --color-accent: #3d5fe0;
   --color-accent-fg: #ffffff;
   --color-bg: #ffffff;
   --color-surface: #f6f7f9;
-  --color-ink: #1f2328;
+  --color-ink: #1e2a44;
   --color-ink-muted: #5a6270;
   --color-border: #d8dce2;
-  --color-accent-soft: #fdf2f2;
+  --color-accent-soft: #e8ecfb;
 
   /* Font pairing — defaults to Inter / Inter */
   --font-display: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
@@ -55,6 +62,9 @@
   --color-brand: var(--brand);
   --color-brand-hover: var(--brand-hover);
   --color-brand-subtle: var(--brand-subtle);
+  --color-brand-secondary: var(--brand-secondary);
+  --color-brand-secondary-hover: var(--brand-secondary-hover);
+  --color-brand-secondary-subtle: var(--brand-secondary-subtle);
   --font-sans: var(--font-body);
 }
 
@@ -81,13 +91,15 @@ html[data-text-scale="xlarge"] {
 }
 
 /* ===========================================================
-   Theme presets (10)
+   Theme presets (10, admin theme picker)
    Applied via [data-theme="..."] on <html>. Each theme overrides
-   the new theming layer; the legacy --brand-* vars stay at their
-   :root defaults so existing pages still render in brand-red.
+   the new theming layer only; the legacy --brand-* vars (which is
+   what most components actually render with) stay at their
+   :root defaults — now the warm-welcome royal-blue palette —
+   regardless of which preset is picked here.
    =========================================================== */
 
-/* 1. Pharmacy Red — default */
+/* 1. Pharmacy Red — kept as a selectable option, no longer the site default */
 [data-theme="pharmacy-red"] {
   --color-accent: #c01d16;
   --color-accent-fg: #ffffff;

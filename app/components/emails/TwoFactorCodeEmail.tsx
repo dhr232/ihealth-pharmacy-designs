@@ -48,7 +48,7 @@ export function TwoFactorCodeEmail({
             <td
               style={{
                 height: "5px",
-                backgroundColor: "#C01D16",
+                backgroundColor: "#3D5FE0",
                 fontSize: "1px",
                 lineHeight: "1px",
               }}

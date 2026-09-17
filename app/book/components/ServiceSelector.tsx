@@ -166,7 +166,7 @@ export default function ServiceSelector({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search symptoms or service (e.g. UTI, flu, allergy, cold sore, shingles)..."
-            className="w-full rounded-xl border border-slate-200 bg-slate-50/70 py-2 pl-9 pr-9 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:border-[var(--brand)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/10 transition-all"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50/70 py-2 pl-9 pr-9 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:border-[var(--brand)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--brand)]/10 transition-all"
           />
           {searchQuery && (
             <button
@@ -257,7 +257,7 @@ export default function ServiceSelector({
                   onClick={() => onSelectService(service)}
                   className={`group relative flex flex-col justify-between rounded-2xl border p-3.5 sm:p-4 transition-all duration-150 cursor-pointer ${
                     isSelected
-                      ? "border-[var(--brand)] bg-red-50/40 shadow-sm ring-2 ring-red-600/15"
+                      ? "border-[var(--brand)] bg-[#E8ECFB]/40 shadow-sm ring-2 ring-[#3D5FE0]/15"
                       : "border-slate-200/90 bg-white hover:border-slate-300 hover:shadow-2xs"
                   }`}
                 >
@@ -277,7 +277,7 @@ export default function ServiceSelector({
                         <div className="min-w-0">
                           <h3
                             className={`text-sm font-bold leading-snug transition-colors ${
-                              isSelected ? "text-red-950 font-extrabold" : "text-slate-900 group-hover:text-[var(--brand)]"
+                              isSelected ? "text-[#1E2A44] font-extrabold" : "text-slate-900 group-hover:text-[var(--brand)]"
                             }`}
                           >
                             {service.name}
@@ -361,7 +361,7 @@ export default function ServiceSelector({
 
                   {/* Fast Action Footer on Selected Card */}
                   {isSelected && (
-                    <div className="mt-2.5 pt-2.5 border-t border-red-200/60 flex items-center justify-between animate-in fade-in duration-150">
+                    <div className="mt-2.5 pt-2.5 border-t border-[#C7D2F7] flex items-center justify-between animate-in fade-in duration-150">
                       <span className="text-[11px] font-bold text-[var(--brand)]">
                         Service Selected
                       </span>

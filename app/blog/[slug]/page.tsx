@@ -63,7 +63,7 @@ function renderContent(content: string) {
       return (
         <div
           key={key}
-          className="my-7 rounded-2xl border border-rose-200/80 bg-rose-50/70 p-5 sm:p-6 shadow-sm"
+          className="my-7 rounded-2xl border border-[#C7D2F7] bg-[#E8ECFB]/70 p-5 sm:p-6 shadow-sm"
         >
           <div className="flex items-start gap-3.5">
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[var(--brand)] text-white font-bold text-sm shadow-sm">
@@ -211,7 +211,7 @@ export default async function BlogPostPage({
 
               {/* Key Takeaways Card */}
               {post.keyTakeaways && post.keyTakeaways.length > 0 && (
-                <div className="mt-8 rounded-2xl border border-rose-100 bg-gradient-to-br from-rose-50/80 via-white to-rose-50/40 p-6 sm:p-7 shadow-sm">
+                <div className="mt-8 rounded-2xl border border-[#E8ECFB] bg-gradient-to-br from-[#E8ECFB]/80 via-white to-[#E8ECFB]/40 p-6 sm:p-7 shadow-sm">
                   <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[var(--brand)]">
                     <Sparkles size={16} />
                     <span>Key Clinical Takeaways at a Glance</span>

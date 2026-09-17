@@ -240,7 +240,7 @@ export default function AppointmentCalendar({
       <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-xs">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-red-800 border border-red-200/80 mb-2">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#E8ECFB] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-[#1E2A44] border border-[#C7D2F7] mb-2">
               <CalendarIcon size={12} className="text-[var(--brand)]" />
               <span>Real-Time Clinical Schedule</span>
             </div>
@@ -333,13 +333,13 @@ export default function AppointmentCalendar({
                     onClick={() => onSelectDateTime(d.dateStr, "", "")}
                     className={`flex flex-col items-center justify-center rounded-xl sm:rounded-2xl p-1.5 sm:p-3.5 transition-all duration-150 cursor-pointer ${
                       isSelected
-                        ? "border-2 border-[var(--brand)] bg-[var(--brand)] text-white shadow-md shadow-red-700/20 scale-[1.03]"
-                        : "border border-slate-200/90 bg-white text-slate-800 hover:border-red-400 hover:bg-red-50/30 hover:shadow-xs"
+                        ? "border-2 border-[var(--brand)] bg-[var(--brand)] text-white shadow-md shadow-[#2F4BC4]/20 scale-[1.03]"
+                        : "border border-slate-200/90 bg-white text-slate-800 hover:border-[#3D5FE0] hover:bg-[#E8ECFB] hover:shadow-xs"
                     }`}
                   >
                     <span
                       className={`text-[11px] font-bold ${
-                        isSelected ? "text-red-100" : "text-slate-500"
+                        isSelected ? "text-blue-100" : "text-slate-500"
                       }`}
                     >
                       {d.isToday ? "Today" : d.dayOfWeek}
@@ -353,7 +353,7 @@ export default function AppointmentCalendar({
                     </span>
                     <span
                       className={`mt-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                        isSelected ? "text-red-200" : "text-slate-400"
+                        isSelected ? "text-blue-100" : "text-slate-400"
                       }`}
                     >
                       {d.monthShort}
@@ -440,7 +440,7 @@ export default function AppointmentCalendar({
                     className={`flex h-10 flex-col items-center justify-center rounded-lg text-xs font-bold transition-all ${
                       isSelected
                         ? "bg-[var(--brand)] text-white shadow-xs"
-                        : "bg-white text-slate-800 border border-slate-200/80 hover:bg-rose-50 hover:border-rose-300 hover:text-red-950"
+                        : "bg-white text-slate-800 border border-slate-200/80 hover:bg-[#E8ECFB] hover:border-[#C7D2F7] hover:text-[#1E2A44]"
                     }`}
                   >
                     <span>{item.dayNumber}</span>
@@ -474,7 +474,7 @@ export default function AppointmentCalendar({
               </h3>
             </div>
             {selectedTime && (
-              <div className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200/80 bg-rose-50 px-3 py-1 text-xs font-bold text-red-900">
+              <div className="inline-flex items-center gap-1.5 rounded-lg border border-[#C7D2F7] bg-[#E8ECFB] px-3 py-1 text-xs font-bold text-[#1E2A44]">
                 <CheckCircle2 size={14} className="text-[var(--brand)]" />
                 <span>Selected: {selectedTime}</span>
               </div>
@@ -546,8 +546,8 @@ export default function AppointmentCalendar({
                                 !slot.available
                                   ? "bg-slate-50 text-slate-300 line-through cursor-not-allowed border border-slate-100 opacity-40"
                                   : isSelected
-                                  ? "bg-[var(--brand)] text-white shadow-md shadow-red-700/25 ring-2 ring-red-600/30 scale-105"
-                                  : "bg-white text-slate-800 border border-slate-200 hover:border-red-400 hover:bg-rose-50/50 hover:scale-[1.02] hover:shadow-2xs cursor-pointer"
+                                  ? "bg-[var(--brand)] text-white shadow-md shadow-[#2F4BC4]/25 ring-2 ring-[#3D5FE0]/30 scale-105"
+                                  : "bg-white text-slate-800 border border-slate-200 hover:border-[#3D5FE0] hover:bg-[#E8ECFB]/50 hover:scale-[1.02] hover:shadow-2xs cursor-pointer"
                               }`}
                             >
                               {slot.label}
@@ -591,8 +591,8 @@ export default function AppointmentCalendar({
                                 !slot.available
                                   ? "bg-slate-50 text-slate-300 line-through cursor-not-allowed border border-slate-100 opacity-40"
                                   : isSelected
-                                  ? "bg-[var(--brand)] text-white shadow-md shadow-red-700/25 ring-2 ring-red-600/30 scale-105"
-                                  : "bg-white text-slate-800 border border-slate-200 hover:border-red-400 hover:bg-rose-50/50 hover:scale-[1.02] hover:shadow-2xs cursor-pointer"
+                                  ? "bg-[var(--brand)] text-white shadow-md shadow-[#2F4BC4]/25 ring-2 ring-[#3D5FE0]/30 scale-105"
+                                  : "bg-white text-slate-800 border border-slate-200 hover:border-[#3D5FE0] hover:bg-[#E8ECFB]/50 hover:scale-[1.02] hover:shadow-2xs cursor-pointer"
                               }`}
                             >
                               {slot.label}
@@ -624,7 +624,7 @@ export default function AppointmentCalendar({
           type="button"
           disabled={!selectedDate || !selectedTime}
           onClick={onProceed}
-          className="inline-flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-6 py-3 text-sm font-bold text-white shadow-md shadow-red-700/20 transition-all duration-150 hover:bg-[var(--brand-hover)] hover:shadow-lg active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+          className="inline-flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-6 py-3 text-sm font-bold text-white shadow-md shadow-[#2F4BC4]/20 transition-all duration-150 hover:bg-[var(--brand-hover)] hover:shadow-lg active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
         >
           <span>Review & Confirm</span>
           <ChevronRight size={16} />

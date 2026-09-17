@@ -38,6 +38,7 @@ import {
   getAnnouncements,
   reorderPharmacist,
   reorderAnnouncement,
+  savePharmacists,
   seedPostsFromRemote,
   upsertPharmacist,
   upsertPost,
@@ -232,6 +233,29 @@ function Dashboard({
     };
   }, []);
 
+  const seededPharmacistsRef = useRef(false);
+  useEffect(() => {
+    if (seededPharmacistsRef.current) return;
+    seededPharmacistsRef.current = true;
+    let cancelled = false;
+    fetch("/api/admin/pharmacists", { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (cancelled || !data) return;
+        const list = Array.isArray(data) ? data : data.pharmacists;
+        if (Array.isArray(list) && list.length > 0) {
+          setPharmacists(list);
+          savePharmacists(list);
+        }
+      })
+      .catch(() => {
+        // Fallback already hydrated from storage
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   /* ----- Pharmacist handlers ----- */
 
   const nextPharmacistOrder = useMemo(() => {
@@ -249,18 +273,28 @@ function Dashboard({
     setEditorOpen(true);
   }
 
-  function handleSavePharmacist(next: Pharmacist) {
+  async function handleSavePharmacist(next: Pharmacist) {
     const updated = upsertPharmacist(next);
     setPharmacists(updated);
     setEditorOpen(false);
     setEditingPharmacist(null);
     pushToast(
       "success",
-      next.name ? `Saved ${next.name}. Public site updated live.` : "Pharmacist saved.",
+      next.name ? `Saved ${next.name}. Public site and database updated.` : "Pharmacist saved.",
     );
+
+    try {
+      await fetch("/api/admin/pharmacists", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(next),
+      });
+    } catch (err) {
+      console.warn("Network error persisting pharmacist to database:", err);
+    }
   }
 
-  function handleDeletePharmacist(id: string) {
+  async function handleDeletePharmacist(id: string) {
     const target = pharmacists.find((p) => p.id === id);
     const updated = deletePharmacist(id);
     setPharmacists(updated);
@@ -269,6 +303,14 @@ function Dashboard({
       "success",
       target ? `Removed ${target.name}.` : "Pharmacist removed.",
     );
+
+    try {
+      await fetch(`/api/admin/pharmacists?id=${encodeURIComponent(id)}`, {
+        method: "DELETE",
+      });
+    } catch (err) {
+      console.warn("Network error deleting pharmacist on database:", err);
+    }
   }
 
   function handleMovePharmacist(id: string, direction: "up" | "down") {

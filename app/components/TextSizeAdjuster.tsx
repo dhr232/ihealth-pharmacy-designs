@@ -119,7 +119,7 @@ export default function TextSizeAdjuster() {
           isOpen
             ? "border-[var(--brand)] bg-slate-900 text-white shadow-xl"
             : isScaled
-            ? "border-red-300 bg-white/95 backdrop-blur-md text-[var(--brand)] shadow-red-900/10 hover:bg-slate-50"
+            ? "border-[#C7D2F7] bg-white/95 backdrop-blur-md text-[var(--brand)] shadow-[#2F4BC4]/10 hover:bg-slate-50"
             : "border-slate-300/80 bg-white/95 backdrop-blur-md text-slate-800 shadow-slate-900/10 hover:bg-slate-50 hover:text-[var(--brand)]"
         }`}
       >
@@ -190,7 +190,7 @@ export default function TextSizeAdjuster() {
                 aria-pressed={scale === "normal"}
                 className={`flex flex-col items-center justify-center rounded-2xl py-3.5 px-2 border transition-all duration-150 cursor-pointer ${
                   scale === "normal"
-                    ? "border-[var(--brand)] bg-[var(--brand)] text-white shadow-sm shadow-red-700/20 ring-2 ring-red-600/20"
+                    ? "border-[var(--brand)] bg-[var(--brand)] text-white shadow-sm shadow-[#2F4BC4]/20 ring-2 ring-[#3D5FE0]/20"
                     : "border-slate-200 bg-slate-50/70 text-slate-700 hover:bg-white hover:border-slate-300"
                 }`}
               >
@@ -210,7 +210,7 @@ export default function TextSizeAdjuster() {
                 aria-pressed={scale === "large"}
                 className={`flex flex-col items-center justify-center rounded-2xl py-3.5 px-2 border transition-all duration-150 cursor-pointer ${
                   scale === "large"
-                    ? "border-[var(--brand)] bg-[var(--brand)] text-white shadow-sm shadow-red-700/20 ring-2 ring-red-600/20"
+                    ? "border-[var(--brand)] bg-[var(--brand)] text-white shadow-sm shadow-[#2F4BC4]/20 ring-2 ring-[#3D5FE0]/20"
                     : "border-slate-200 bg-slate-50/70 text-slate-700 hover:bg-white hover:border-slate-300"
                 }`}
               >
@@ -230,7 +230,7 @@ export default function TextSizeAdjuster() {
                 aria-pressed={scale === "xlarge"}
                 className={`flex flex-col items-center justify-center rounded-2xl py-3.5 px-2 border transition-all duration-150 cursor-pointer ${
                   scale === "xlarge"
-                    ? "border-[var(--brand)] bg-[var(--brand)] text-white shadow-sm shadow-red-700/20 ring-2 ring-red-600/20"
+                    ? "border-[var(--brand)] bg-[var(--brand)] text-white shadow-sm shadow-[#2F4BC4]/20 ring-2 ring-[#3D5FE0]/20"
                     : "border-slate-200 bg-slate-50/70 text-slate-700 hover:bg-white hover:border-slate-300"
                 }`}
               >

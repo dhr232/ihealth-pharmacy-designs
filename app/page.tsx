@@ -309,7 +309,7 @@ export default function HomePage() {
               {/* Left Column Text */}
               <div className="lg:col-span-6">
                 <SectionReveal>
-                  <div className="inline-flex items-center rounded-full bg-red-50 border border-red-200/80 px-3.5 py-1 mb-4 shadow-2xs">
+                  <div className="inline-flex items-center rounded-full bg-[#E8ECFB] border border-[#C7D2F7] px-3.5 py-1 mb-4 shadow-2xs">
                     <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
                       About Our Community Practice
                     </span>
@@ -608,7 +608,7 @@ export default function HomePage() {
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
             <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
               <SectionReveal>
-                <div className="inline-flex items-center rounded-full bg-red-50 border border-red-200/80 px-3.5 py-1 mb-4 shadow-2xs">
+                <div className="inline-flex items-center rounded-full bg-[#E8ECFB] border border-[#C7D2F7] px-3.5 py-1 mb-4 shadow-2xs">
                   <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
                     Get in Touch
                   </span>

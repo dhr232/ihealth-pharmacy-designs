@@ -117,10 +117,10 @@ export default function HealthTipsDirectory({
     <div>
       {/* Editorial Hub Hero */}
       <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(192,29,22,0.25),rgba(255,255,255,0))]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(61,95,224,0.25),rgba(255,255,255,0))]" />
         
         <div className="relative mx-auto max-w-5xl px-4 py-16 text-center sm:px-6 sm:py-20 lg:py-24">
-          <div className="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-red-300">
+          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-300">
             <BookOpen size={14} />
             <span>Clinical Knowledge & Patient Guides</span>
           </div>
@@ -145,7 +145,7 @@ export default function HealthTipsDirectory({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search health tips, vaccines, symptoms, or coverage..."
-                className="w-full rounded-2xl border border-slate-700 bg-slate-800/90 py-3.5 pl-11 pr-11 text-sm text-white placeholder-slate-400 shadow-xl backdrop-blur-md transition-all focus:border-red-500 focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                className="w-full rounded-2xl border border-slate-700 bg-slate-800/90 py-3.5 pl-11 pr-11 text-sm text-white placeholder-slate-400 shadow-xl backdrop-blur-md transition-all focus:border-[#3D5FE0] focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-[#3D5FE0]/30"
               />
               {searchQuery && (
                 <button
@@ -181,7 +181,7 @@ export default function HealthTipsDirectory({
                   }}
                   className={`inline-flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition-all ${
                     isSelected
-                      ? "bg-[var(--brand)] text-white shadow-sm shadow-red-950/10"
+                      ? "bg-[var(--brand)] text-white shadow-sm shadow-[#1E2A44]/10"
                       : "border border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-100/70"
                   }`}
                 >
@@ -248,7 +248,7 @@ export default function HealthTipsDirectory({
                 <div className="flex flex-col justify-between p-6 sm:p-8 lg:col-span-5 lg:p-10">
                   <div>
                     <div className="flex flex-wrap items-center gap-2 text-xs font-semibold">
-                      <span className="rounded-md bg-red-50 px-2.5 py-1 text-[var(--brand)]">
+                      <span className="rounded-md bg-[#E8ECFB] px-2.5 py-1 text-[var(--brand)]">
                         {featuredPost.category}
                       </span>
                       <span className="text-slate-400">•</span>
@@ -390,7 +390,7 @@ export default function HealthTipsDirectory({
       {/* Medical Newsletter Subscription Strip */}
       <section className="border-t border-slate-200 bg-white py-14">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-[var(--brand)]">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E8ECFB] text-[var(--brand)]">
             <Heart size={24} />
           </div>
           <h2 className="mt-4 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
@@ -413,7 +413,7 @@ export default function HealthTipsDirectory({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email address..."
-                className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm placeholder-slate-400 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm placeholder-slate-400 focus:border-[var(--brand)] focus:outline-none focus:ring-2 focus:ring-[var(--brand)]/20"
               />
               <button
                 type="submit"

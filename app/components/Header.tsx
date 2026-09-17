@@ -258,7 +258,7 @@ export default function Header({ logoHref }: HeaderProps = {}) {
           {/* Refill Action Button */}
           <Link
             href="/prescription-refills"
-            className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#C01D16] to-[#a31812] px-4 py-2 text-xs font-bold text-white shadow-sm shadow-red-700/20 hover:from-[#a31812] hover:to-[#88140f] hover:shadow-md transition-all active:scale-[0.98]"
+            className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#3D5FE0] to-[#2F4BC4] px-4 py-2 text-xs font-bold text-white shadow-sm shadow-blue-700/20 hover:from-[#2F4BC4] hover:to-[#23399B] hover:shadow-md transition-all active:scale-[0.98]"
           >
             <RefreshCw size={12} className="stroke-[2.5]" />
             <span>Request Refill</span>
@@ -313,7 +313,7 @@ export default function Header({ logoHref }: HeaderProps = {}) {
                 <Link
                   href="/prescription-refills"
                   onClick={() => setMobileOpen(false)}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-[#C01D16] to-[#a31812] py-2.5 text-center text-xs font-bold text-white shadow-xs"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-[#3D5FE0] to-[#2F4BC4] py-2.5 text-center text-xs font-bold text-white shadow-xs"
                 >
                   <RefreshCw size={12} />
                   <span>Request Refill</span>

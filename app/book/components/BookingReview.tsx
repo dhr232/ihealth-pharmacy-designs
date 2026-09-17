@@ -191,7 +191,7 @@ export default function BookingReview({
       >
         {/* Ambient background decoration */}
         <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-gradient-to-br from-teal-100/30 to-emerald-100/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-gradient-to-tr from-rose-100/30 to-red-100/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-gradient-to-tr from-[#E8ECFB]/50 to-[#E8ECFB]/10 blur-3xl" />
 
         <div className="relative mx-auto max-w-2xl text-center">
           {/* Animated Glowing Icon & Rings */}
@@ -207,7 +207,7 @@ export default function BookingReview({
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="absolute inset-0 rounded-full bg-rose-200/60"
+              className="absolute inset-0 rounded-full bg-[#C7D2F7]/60"
             />
 
             {/* Inner pulsing ring */}
@@ -222,7 +222,7 @@ export default function BookingReview({
                 ease: "easeInOut",
                 delay: 0.2,
               }}
-              className="absolute inset-1 rounded-full bg-rose-100"
+              className="absolute inset-1 rounded-full bg-[#E8ECFB]"
             />
 
             {/* Main Spring Pop Icon */}
@@ -235,7 +235,7 @@ export default function BookingReview({
                 damping: 18,
                 delay: 0.1,
               }}
-              className="relative flex h-18 w-18 items-center justify-center rounded-full bg-gradient-to-br from-rose-100 to-rose-200 text-[var(--brand)] shadow-md shadow-red-900/15"
+              className="relative flex h-18 w-18 items-center justify-center rounded-full bg-gradient-to-br from-[#E8ECFB] to-[#C7D2F7] text-[var(--brand)] shadow-md shadow-[#2F4BC4]/15"
             >
               <motion.div
                 initial={{ scale: 0, opacity: 0 }}
@@ -259,7 +259,7 @@ export default function BookingReview({
             transition={{ duration: 0.4, delay: 0.25 }}
             className="mt-4"
           >
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-4 py-1 text-xs font-bold uppercase tracking-wider text-red-900 border border-rose-200/80 shadow-2xs">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E8ECFB] px-4 py-1 text-xs font-bold uppercase tracking-wider text-[#1E2A44] border border-[#C7D2F7] shadow-2xs">
               <span className="h-2 w-2 rounded-full bg-[var(--brand)] animate-pulse" />
               Booking Confirmed
             </span>
@@ -288,13 +288,13 @@ export default function BookingReview({
             initial={{ opacity: 0, y: 16, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.45, delay: 0.45 }}
-            className="mt-6 rounded-2xl border border-rose-200/80 bg-gradient-to-b from-rose-50/70 via-rose-50/40 to-white p-6 text-center shadow-xs"
+            className="mt-6 rounded-2xl border border-[#C7D2F7] bg-gradient-to-b from-[#E8ECFB]/70 via-[#E8ECFB]/40 to-white p-6 text-center shadow-xs"
           >
-            <p className="text-xs font-bold uppercase tracking-wider text-red-900">
+            <p className="text-xs font-bold uppercase tracking-wider text-[#1E2A44]">
               Official Confirmation Reference
             </p>
             <div className="mt-2 flex items-center justify-center gap-3">
-              <p className="font-mono text-3xl sm:text-4xl font-black tracking-widest text-red-950">
+              <p className="font-mono text-3xl sm:text-4xl font-black tracking-widest text-[#1E2A44]">
                 {successResult.confirmationCode}
               </p>
               <motion.button
@@ -306,7 +306,7 @@ export default function BookingReview({
                   setCopiedCode(true);
                   setTimeout(() => setCopiedCode(false), 2500);
                 }}
-                className="inline-flex items-center gap-1 rounded-xl border border-rose-300/80 bg-white px-3 py-1.5 text-xs font-bold text-red-900 hover:bg-rose-100/60 transition-colors shadow-2xs cursor-pointer"
+                className="inline-flex items-center gap-1 rounded-xl border border-[#C7D2F7] bg-white px-3 py-1.5 text-xs font-bold text-[#1E2A44] hover:bg-[#E8ECFB] transition-colors shadow-2xs cursor-pointer"
                 title="Copy confirmation code"
               >
                 {copiedCode ? (
@@ -322,7 +322,7 @@ export default function BookingReview({
                 )}
               </motion.button>
             </div>
-            <p className="mt-2 text-xs text-red-900/80">
+            <p className="mt-2 text-xs text-[#1E2A44]/80">
               Please present this reference ID or your BC Services Card when checking in at our dispensary.
             </p>
           </motion.div>
@@ -478,7 +478,7 @@ export default function BookingReview({
     >
       <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-xs">
         <div>
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-red-900 border border-rose-200/80 mb-2">
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-[#E8ECFB] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-[#1E2A44] border border-[#C7D2F7] mb-2">
             <ShieldCheck size={12} className="text-[var(--brand)]" />
             <span>Review & Verify</span>
           </div>

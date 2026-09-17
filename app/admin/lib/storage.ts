@@ -93,6 +93,51 @@ export function clearAuth(): void {
 
 /* ---------------- Pharmacists ---------------- */
 
+export async function syncPharmacistToServer(item: Pharmacist): Promise<boolean> {
+  if (typeof fetch === "undefined") return false;
+  try {
+    const res = await fetch("/api/admin/pharmacists", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(item),
+    });
+    return res.ok;
+  } catch (err) {
+    console.warn("Failed to persist pharmacist to database:", err);
+    return false;
+  }
+}
+
+export async function deletePharmacistFromServer(id: string): Promise<boolean> {
+  if (typeof fetch === "undefined") return false;
+  try {
+    const res = await fetch(`/api/admin/pharmacists?id=${encodeURIComponent(id)}`, {
+      method: "DELETE",
+    });
+    return res.ok;
+  } catch (err) {
+    console.warn("Failed to delete pharmacist on database:", err);
+    return false;
+  }
+}
+
+export async function fetchPharmacistsFromServer(): Promise<Pharmacist[]> {
+  if (typeof fetch === "undefined") return getPharmacists();
+  try {
+    const res = await fetch("/api/admin/pharmacists", { cache: "no-store" });
+    if (!res.ok) return getPharmacists();
+    const data = await res.json();
+    const list = Array.isArray(data) ? data : data.pharmacists;
+    if (Array.isArray(list) && list.length > 0) {
+      savePharmacists(list);
+      return list;
+    }
+  } catch (err) {
+    console.warn("Failed to fetch pharmacists from server:", err);
+  }
+  return getPharmacists();
+}
+
 export function getPharmacists(): Pharmacist[] {
   const stored = readJSON<Pharmacist[] | null>(KEY_PHARMACISTS, null);
   if (stored === null) {
@@ -116,12 +161,18 @@ export function upsertPharmacist(item: Pharmacist): Pharmacist[] {
   if (idx >= 0) list[idx] = item;
   else list.push(item);
   savePharmacists(list);
+  syncPharmacistToServer(item).catch(() => {
+    /* ignore background sync error */
+  });
   return list;
 }
 
 export function deletePharmacist(id: string): Pharmacist[] {
   const list = getPharmacists().filter((p) => p.id !== id);
   savePharmacists(list);
+  deletePharmacistFromServer(id).catch(() => {
+    /* ignore background sync error */
+  });
   return list;
 }
 
@@ -135,6 +186,8 @@ export function reorderPharmacist(id: string, direction: "up" | "down"): Pharmac
   list[idx].displayOrder = list[swap].displayOrder;
   list[swap].displayOrder = tmp;
   savePharmacists(list);
+  syncPharmacistToServer(list[idx]).catch(() => {});
+  syncPharmacistToServer(list[swap]).catch(() => {});
   return list;
 }
 

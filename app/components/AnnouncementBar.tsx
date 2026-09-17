@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import {
   AlertCircle,
@@ -26,16 +26,22 @@ const ICON_MAP: Record<AnnouncementIcon, typeof Megaphone> = {
   heart: Heart,
 };
 
-export default function AnnouncementBar() {
-  const [items, setItems] = useState<AnnouncementItem[]>(() => {
-    if (typeof window === "undefined") return SEED_ANNOUNCEMENTS;
-    return getAnnouncements();
-  });
+const subscribeReducedMotion = (callback: () => void) => {
+  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  mq.addEventListener?.("change", callback);
+  return () => mq.removeEventListener?.("change", callback);
+};
 
-  const [reduced, setReduced] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  });
+export default function AnnouncementBar() {
+  // Always start from the server-rendered seed so hydration matches; the
+  // real (possibly admin-edited) announcements are pulled in post-mount.
+  const [items, setItems] = useState<AnnouncementItem[]>(SEED_ANNOUNCEMENTS);
+
+  const reduced = useSyncExternalStore(
+    subscribeReducedMotion,
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    () => false
+  );
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -43,18 +49,14 @@ export default function AnnouncementBar() {
     const sync = () => {
       setItems(getAnnouncements());
     };
+    sync();
 
     window.addEventListener("storage", sync);
     window.addEventListener("ihealth_announcements_updated", sync);
 
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const handler = () => setReduced(mq.matches);
-    mq.addEventListener?.("change", handler);
-
     return () => {
       window.removeEventListener("storage", sync);
       window.removeEventListener("ihealth_announcements_updated", sync);
-      mq.removeEventListener?.("change", handler);
     };
   }, []);
 
@@ -97,7 +99,7 @@ export default function AnnouncementBar() {
               key={`${a.id}-${i}`}
               className="flex shrink-0 items-center gap-1.5 font-medium tracking-tight"
             >
-              <IconComp size={13} className="text-red-400 shrink-0" />
+              <IconComp size={13} className="text-blue-400 shrink-0" />
               {a.urgent && (
                 <span className="rounded bg-rose-500/25 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-rose-300 border border-rose-500/40 shrink-0">
                   Notice

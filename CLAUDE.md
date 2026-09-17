@@ -22,9 +22,10 @@ Multi-page full-stack website for **iHealth Pharmacy** (Chilliwack, BC).
 - **lucide-react** icons -- emojis are banned everywhere in code, commits, and responses
 - **Config:** `next.config.mjs` (plain ES module -- NOT `.ts`)
 
-## Brand Tokens (do not change)
+## Brand Tokens (do not change without explicit user request)
 
-- Brand red `#C01D16` (`--brand`), hover `#a31812`; foreground `#1f2328`; muted `#5a6270`; surface `#f6f7f9`; border `#d8dce2`
+- Primary blue `#3D5FE0` (`--brand`), hover `#2F4BC4`, subtle tint `#e8ecfb`; secondary leaf green `#4CAF7D` (`--brand-secondary`), hover `#3D9468`, subtle tint `#e6f7ec`; foreground `#1e2a44`; muted `#5a6270`; surface `#f6f7f9`; border `#d8dce2`
+  - Swapped from the original brand red (`#C01D16`) on 2026-09-17 per explicit user request -- red read as alarming/clinical to older patients. Red is kept as a selectable "Pharmacy Red" option in the admin theme picker only; it is no longer the site's rendered default (see `app/globals.css` `:root`).
 - Inter font (default). 9 alternate pairings selectable via admin theme picker.
 - Voice: warm, professional, Chilliwack-community, Canadian English
 

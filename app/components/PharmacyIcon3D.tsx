@@ -40,17 +40,17 @@ export default function PharmacyIcon3D() {
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
     dirLight.position.set(3, 4, 5);
     scene.add(dirLight);
-    const backLight = new THREE.DirectionalLight(0xc01d16, 0.4);
+    const backLight = new THREE.DirectionalLight(0x3d5fe0, 0.4);
     backLight.position.set(-3, -2, -4);
     scene.add(backLight);
 
-    const redMaterial = new THREE.MeshStandardMaterial({
-      color: 0xc01d16,
+    const accentMaterial = new THREE.MeshStandardMaterial({
+      color: 0x3d5fe0,
       roughness: 0.3,
       metalness: 0.1,
     });
     const darkMaterial = new THREE.MeshStandardMaterial({
-      color: 0x1f2328,
+      color: 0x1e2a44,
       roughness: 0.4,
       metalness: 0.1,
     });
@@ -64,7 +64,7 @@ export default function PharmacyIcon3D() {
 
     const topSphere = new THREE.Mesh(
       new THREE.SphereGeometry(0.5, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2),
-      redMaterial
+      accentMaterial
     );
     topSphere.position.y = 1;
 
@@ -76,7 +76,7 @@ export default function PharmacyIcon3D() {
 
     const middleCyl = new THREE.Mesh(
       new THREE.CylinderGeometry(0.5, 0.5, 1, 32),
-      redMaterial
+      accentMaterial
     );
     middleCyl.position.y = 0.5;
 

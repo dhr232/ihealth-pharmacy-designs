@@ -201,7 +201,7 @@ export function AnnouncementEditor({
                     onClick={() => setIcon(opt.id)}
                     className={`flex items-center gap-2.5 rounded-lg border p-2.5 text-left text-xs font-medium transition-all ${
                       isSelected
-                        ? "border-red-600 bg-red-50/50 text-red-950 ring-1 ring-red-600 shadow-sm"
+                        ? "border-[#3D5FE0] bg-[#E8ECFB]/50 text-[#1E2A44] ring-1 ring-[#3D5FE0] shadow-sm"
                         : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
                     }`}
                   >
@@ -238,7 +238,7 @@ export function AnnouncementEditor({
                 type="checkbox"
                 checked={urgent}
                 onChange={(e) => setUrgent(e.target.checked)}
-                className="mt-0.5 h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-red-500"
+                className="mt-0.5 h-4 w-4 rounded border-slate-300 text-[var(--brand)] focus:ring-[var(--brand)]"
               />
               <div className="text-xs">
                 <span className="font-semibold text-slate-900 block">Urgent Notice</span>
@@ -253,7 +253,7 @@ export function AnnouncementEditor({
                 type="checkbox"
                 checked={enabled}
                 onChange={(e) => setEnabled(e.target.checked)}
-                className="mt-0.5 h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-red-500"
+                className="mt-0.5 h-4 w-4 rounded border-slate-300 text-[var(--brand)] focus:ring-[var(--brand)]"
               />
               <div className="text-xs">
                 <span className="font-semibold text-slate-900 block">Active Status</span>
@@ -276,7 +276,7 @@ export function AnnouncementEditor({
             </div>
             <div className="rounded-lg border border-slate-800 bg-slate-950 p-3 text-slate-200 shadow-inner">
               <div className="flex items-center gap-2 text-xs">
-                <SelectedIcon size={14} className="text-red-400 shrink-0" />
+                <SelectedIcon size={14} className="text-blue-400 shrink-0" />
                 {urgent && (
                   <span className="rounded bg-rose-500/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-rose-300 border border-rose-500/30 shrink-0">
                     Urgent
