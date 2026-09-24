@@ -21,7 +21,7 @@ const SERVICES: Record<
     title: "Minor Ailments Clinic",
     tagline: "Walk-in care for common health conditions",
     description:
-      "Under British Columbia's expanded clinical pharmacist prescribing authority, our licensed pharmacists can assess your symptoms and prescribe prescription medications directly for 21 common minor ailments and contraception — no doctor's appointment or walk-in clinic wait times needed.",
+      "Under British Columbia's expanded clinical pharmacist prescribing authority, our licensed pharmacists can assess your symptoms and prescribe prescription medications directly for common minor ailments and contraception — no doctor's appointment or walk-in clinic wait times needed.",
     image: "/services/minor-ailments.jpg",
     points: [
       "Uncomplicated Urinary Tract Infections (UTIs)",
@@ -37,7 +37,7 @@ const SERVICES: Record<
       "Musculoskeletal Sprains, Strains & Joint Aches",
       "Contraceptive Management & Emergency Contraception",
     ],
-    cta: { label: "Book Assessment Online", href: "/book?service=minor_ailments" },
+    cta: { label: "Book Assessment on Platform", href: "/book?category=minor_ailments" },
   },
   compounding: {
     title: "Custom Compounding",
@@ -69,7 +69,7 @@ const SERVICES: Record<
       "Vaccines for adults and seniors",
       "Vaccination records and reminders",
     ],
-    cta: { label: "Book a Vaccination Online", href: "/book?service=annual-influenza-immunization" },
+    cta: { label: "Book Vaccination on Platform", href: "/book?category=vaccines" },
   },
   myhealthpack: {
     title: "MyHealthPack Blister Packs",
@@ -183,8 +183,8 @@ export default async function ServicePage({ params }: { params: Params }) {
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2 rounded-xl bg-[var(--brand)] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--brand-hover)]"
+                  href={service.cta.href}
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/20 transition-all duration-200"
                 >
                   {service.cta.label}
                 </Link>

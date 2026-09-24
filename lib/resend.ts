@@ -6,6 +6,10 @@ import {
   BookingConfirmationEmailProps,
 } from "../app/components/emails/BookingConfirmationEmail";
 import {
+  PrescriptionConfirmationEmail,
+  PrescriptionConfirmationEmailProps,
+} from "../app/components/emails/PrescriptionConfirmationEmail";
+import {
   RefillConfirmationEmail,
   RefillConfirmationEmailProps,
 } from "../app/components/emails/RefillConfirmationEmail";
@@ -597,6 +601,80 @@ export async function syncResendSubscriber({
     const message =
       err instanceof Error ? err.message : "Unknown error syncing subscriber to Resend.";
     console.warn("[Resend Warning] syncResendSubscriber exception handled gracefully:", message);
+    return {
+      success: false,
+      error: message,
+    };
+  }
+}
+
+export interface PrescriptionConfirmationData extends PrescriptionConfirmationEmailProps {
+  email: string;
+  from?: string;
+}
+
+/**
+ * Send branded prescription confirmation email to the customer.
+ */
+export async function sendPrescriptionConfirmationEmail(
+  prescriptionData: PrescriptionConfirmationData
+): Promise<SendEmailResult> {
+  const {
+    email,
+    from = DEFAULT_FROM_EMAIL,
+    referenceNumber = "RX-2026-1001",
+    type = "REFILL",
+  } = prescriptionData;
+
+  const typeSubjectPrefix =
+    type === "NEW_PRESCRIPTION"
+      ? "New Prescription Received"
+      : type === "TRANSFER"
+      ? "Prescription Transfer Request Received"
+      : "Prescription Refill Request Received";
+
+  const subject = `${typeSubjectPrefix} [${referenceNumber}] - iHealth Pharmacy`;
+  const client = getResendClient();
+
+  if (!client) {
+    console.log(
+      `[Resend Mock] sendPrescriptionConfirmationEmail -> To: ${email} | Subject: ${subject} | Ref: ${referenceNumber}`
+    );
+    return {
+      success: true,
+      id: `mock_rx_${Date.now()}`,
+      mock: true,
+    };
+  }
+
+  try {
+    const html = await renderEmailHtml(
+      React.createElement(PrescriptionConfirmationEmail, prescriptionData)
+    );
+
+    const { data, error } = await client.emails.send({
+      from,
+      to: email,
+      subject,
+      html,
+    });
+
+    if (error) {
+      console.error("[Resend Error] sendPrescriptionConfirmationEmail failed:", error);
+      return {
+        success: false,
+        error: error.message || "Failed to send prescription confirmation email.",
+      };
+    }
+
+    return {
+      success: true,
+      id: data?.id,
+    };
+  } catch (err) {
+    const message =
+      err instanceof Error ? err.message : "Unknown error sending prescription confirmation email.";
+    console.error("[Resend Exception] sendPrescriptionConfirmationEmail exception:", message);
     return {
       success: false,
       error: message,

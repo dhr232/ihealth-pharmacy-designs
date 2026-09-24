@@ -172,7 +172,7 @@ If you have questions about whether the flu shot is right for you, talk to one o
 
 BC Pharmacare is the provincial program that helps residents pay for prescription medications, some medical supplies, and certain pharmacy services. It's funded by the Ministry of Health and administered through PharmaCare, which sets the rules for what is covered and at what cost to the patient.
 
-Most BC residents are automatically registered for Fair PharmaCare when they enroll in the Medical Services Plan (MSP). Fair PharmaCare is income-based: the less you earn, the more the province helps with prescription costs. Your deductible and co-payment are calculated based on your net income from two years prior.
+Most BC residents are automatically registered for Fair PharmaCare through the province. Fair PharmaCare is income-based: the less you earn, the more the province helps with prescription costs. Your deductible and co-payment are calculated based on your net income from two years prior.
 
 If you registered with Fair PharmaCare for the first time, you may not have received a confirmation. That's normal. Coverage begins automatically when you fill a prescription at a BC pharmacy, and your pharmacist can check your enrolment in real time.
 
@@ -837,7 +837,7 @@ If you're just outside city limits, give us a call and we'll let you know if we 
 
 ## Same-day delivery cutoff
 
-For same-day delivery, request your prescription by 2pm on weekdays. Orders placed after 2pm typically deliver the next business day. Saturday delivery is available for orders placed before noon.
+For same-day delivery, request your prescription by 2pm on weekdays (Monday to Friday). Orders placed after 2pm deliver the next business day.
 
 If you need urgent medication outside these windows, call us directly. We have arrangements for urgent cases and will do our best to accommodate.
 

@@ -12,13 +12,34 @@ import {
   HeartPulse,
   Truck,
   ArrowRight,
+  FileText,
+  Pill,
 } from "lucide-react";
 
 const ALL_SERVICES = [
   {
+    title: "Submit New Prescription",
+    slug: "new-prescription",
+    href: "/new-prescription",
+    desc: "Upload a photo of your doctor's paper prescription or hospital discharge form for prompt same-day preparation and pickup or free delivery.",
+    icon: FileText,
+    badge: "Fast Online Upload",
+    image: "/services/delivery.jpg",
+  },
+  {
+    title: "Prescription Refills & Transfers",
+    slug: "prescription-refills",
+    href: "/prescription-refills",
+    desc: "Order prescription refills online in under 60 seconds or easily transfer existing medications to iHealth Pharmacy from any Canadian pharmacy.",
+    icon: Pill,
+    badge: "Quick 30-Min Pickup",
+    image: "/services/delivery.jpg",
+  },
+  {
     title: "Minor Ailments Clinic",
     slug: "minor-ailments",
-    desc: "Direct assessment and prescription for 21 common ailments including UTIs, shingles, cold sores, acid reflux, allergies, and conjunctivitis without needing a doctor appointment.",
+    href: "/services/minor-ailments",
+    desc: "Direct assessment and prescription for common ailments including UTIs, shingles, cold sores, acid reflux, allergies, and conjunctivitis without needing a doctor appointment.",
     icon: Stethoscope,
     badge: "Walk-ins Welcome",
     image: "/services/minor-ailments.jpg",
@@ -26,6 +47,7 @@ const ALL_SERVICES = [
   {
     title: "Custom Compounding",
     slug: "compounding",
+    href: "/services/compounding",
     desc: "Customized medication formulations tailored to your exact strength, allergy-free excipients, paediatric liquids, veterinary meds, and topical pain creams.",
     icon: FlaskConical,
     badge: "Custom Lab",
@@ -34,6 +56,7 @@ const ALL_SERVICES = [
   {
     title: "Vaccinations & Injections",
     slug: "vaccinations",
+    href: "/services/vaccinations",
     desc: "Publicly funded flu shots, COVID-19 boosters, shingles, pneumonia, HPV, and travel vaccines administered safely by certified pharmacists.",
     icon: Syringe,
     badge: "Walk-ins & Booking",
@@ -42,6 +65,7 @@ const ALL_SERVICES = [
   {
     title: "MyHealthPack Blister Packaging",
     slug: "myhealthpack",
+    href: "/services/myhealthpack",
     desc: "Pre-sorted medication blister cards organized by date and time (morning, noon, evening, bedtime) to make managing daily medications effortless and safe.",
     icon: Package,
     badge: "Complimentary Service",
@@ -50,6 +74,7 @@ const ALL_SERVICES = [
   {
     title: "Medication Review & Injections",
     slug: "med-review",
+    href: "/services/med-review",
     desc: "Comprehensive one-on-one review of all your prescription drugs, over-the-counter supplements, and chronic condition management under BC PharmaCare.",
     icon: HeartPulse,
     badge: "1-on-1 Consult",
@@ -58,6 +83,7 @@ const ALL_SERVICES = [
   {
     title: "Free Prescription Delivery",
     slug: "delivery",
+    href: "/services/delivery",
     desc: "Fast, reliable same-day prescription delivery anywhere in Chilliwack for orders over $25. Place requests before 2:00 PM for afternoon delivery.",
     icon: Truck,
     badge: "Free over $25",
@@ -125,10 +151,10 @@ export default function ServicesPage() {
 
                       <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
                         <Link
-                          href={`/services/${s.slug}`}
+                          href={s.href || `/services/${s.slug}`}
                           className="inline-flex items-center gap-1.5 text-xs font-bold text-[var(--brand)] hover:underline"
                         >
-                          <span>Learn details & clinical criteria</span>
+                          <span>{s.href ? "Access service online" : "Learn details & clinical criteria"}</span>
                           <ArrowRight size={14} />
                         </Link>
                       </div>

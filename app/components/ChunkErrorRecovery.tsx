@@ -30,6 +30,14 @@ function recoverOnce() {
 export default function ChunkErrorRecovery() {
   useEffect(() => {
     const handleError = (event: ErrorEvent) => {
+      const target = event.target as (HTMLScriptElement | HTMLLinkElement | null);
+      if (target && target !== (window as unknown)) {
+        const url = (target as HTMLScriptElement).src || (target as HTMLLinkElement).href || "";
+        if (url.includes("/_next/static/")) {
+          recoverOnce();
+          return;
+        }
+      }
       if (isChunkLoadFailure(event.message || String(event.error || ""))) {
         recoverOnce();
       }
@@ -43,10 +51,10 @@ export default function ChunkErrorRecovery() {
       }
     };
 
-    window.addEventListener("error", handleError);
+    window.addEventListener("error", handleError, true);
     window.addEventListener("unhandledrejection", handleRejection);
     return () => {
-      window.removeEventListener("error", handleError);
+      window.removeEventListener("error", handleError, true);
       window.removeEventListener("unhandledrejection", handleRejection);
     };
   }, []);

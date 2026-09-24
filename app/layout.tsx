@@ -109,7 +109,7 @@ export const metadata: Metadata = {
     template: "%s | iHealth Pharmacy",
   },
   description:
-    "Independent community pharmacy in Chilliwack, BC. Fast prescription refills, walk-in 21 minor ailments prescribing covered by BC MSP, custom compounding, and free same-day local delivery.",
+    "Independent community pharmacy in Chilliwack, BC. Fast prescription refills, walk-in minor ailments prescribing, custom compounding, and free same-day local delivery.",
   keywords: [
     "Pharmacy Chilliwack",
     "Independent pharmacy Chilliwack",
@@ -137,7 +137,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "iHealth Pharmacy — Independent Pharmacy in Chilliwack, BC",
     description:
-      "Your neighbourhood independent pharmacy in Chilliwack. Fast refills, walk-in 21 minor ailments prescribing, compliance packaging, and free same-day delivery.",
+      "Your neighbourhood independent pharmacy in Chilliwack. Fast refills, walk-in minor ailments prescribing, compliance packaging, and free same-day delivery.",
     url: "https://ihealthpharmacy.ca",
     siteName: "iHealth Pharmacy",
     locale: "en_CA",
@@ -155,7 +155,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "iHealth Pharmacy — Independent Pharmacy in Chilliwack, BC",
     description:
-      "Your neighbourhood independent pharmacy in Chilliwack. Fast refills, walk-in 21 minor ailments prescribing, compliance packaging, and free same-day delivery.",
+      "Your neighbourhood independent pharmacy in Chilliwack. Fast refills, walk-in minor ailments prescribing, compliance packaging, and free same-day delivery.",
     images: ["/services/all-services.jpg"],
   },
   robots: {
@@ -217,13 +217,7 @@ const jsonLd = {
       "@type": "OpeningHoursSpecification",
       dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
       opens: "09:00",
-      closes: "18:00",
-    },
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Saturday"],
-      opens: "10:00",
-      closes: "15:00",
+      closes: "17:00",
     },
   ],
   hasOfferCatalog: {
@@ -234,8 +228,8 @@ const jsonLd = {
         "@type": "Offer",
         itemOffered: {
           "@type": "MedicalProcedure",
-          name: "21 Minor Ailments Pharmacist Prescribing",
-          description: "Assessment and prescribing for common conditions, 100% covered by BC MSP.",
+          name: "Minor Ailments Pharmacist Prescribing",
+          description: "Assessment and prescribing for common minor ailment conditions.",
         },
       },
       {
@@ -293,29 +287,6 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        {/* A redeploy replaces /_next/static with freshly hashed files. A tab
-            that already has this page's HTML open can then request a script
-            or stylesheet that no longer exists. Catch that resource failure
-            here, inline and outside the app bundle, so it still runs even
-            when the main JS chunk itself is the one that 404s. */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){
-              var KEY = "ihealth_asset_reload_at";
-              var COOLDOWN = 10000;
-              window.addEventListener("error", function (event) {
-                var target = event.target;
-                if (!target || target === window) return;
-                var url = target.src || target.href || "";
-                if (url.indexOf("/_next/static/") === -1) return;
-                var last = Number(sessionStorage.getItem(KEY) || 0);
-                if (Date.now() - last < COOLDOWN) return;
-                sessionStorage.setItem(KEY, String(Date.now()));
-                window.location.reload();
-              }, true);
-            })();`,
-          }}
         />
       </head>
       <body className="min-h-full flex flex-col font-sans font-inter-tight">

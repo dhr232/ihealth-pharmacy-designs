@@ -31,10 +31,9 @@ function generateClinicSlots(): Omit<TimeSlotItem, "available">[] {
     }
   }
 
-  // Afternoon: 13:00 to 17:30
-  for (let hour = 13; hour <= 17; hour++) {
+  // Afternoon: 13:00 to 16:45 (closing at 17:00 / 5:00 PM)
+  for (let hour = 13; hour <= 16; hour++) {
     for (let minute = 0; minute < 60; minute += 15) {
-      if (hour === 17 && minute > 30) break;
 
       const timeStr = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
       const hour12 = hour - 12;
@@ -69,13 +68,13 @@ export async function GET(request: NextRequest) {
     const targetDate = new Date(year, month - 1, day);
     const dayOfWeek = targetDate.getDay(); // 0 is Sunday, 6 is Saturday
 
-    // Check if Sunday (Pharmacy is closed on Sundays)
-    if (dayOfWeek === 0) {
+    // Check if weekend (Pharmacy is closed on Saturdays and Sundays)
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
       return NextResponse.json({
         success: true,
         date: dateParam,
         isClosed: true,
-        closedReason: "iHealth Pharmacy clinic is closed on Sundays.",
+        closedReason: "iHealth Pharmacy clinic is closed on weekends.",
         slots: [],
       });
     }

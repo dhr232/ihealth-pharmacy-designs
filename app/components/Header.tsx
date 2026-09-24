@@ -11,17 +11,20 @@ import {
   FileText,
   HeartPulse,
   Syringe,
-  ShieldCheck,
   Sparkles,
   Paperclip,
   CheckCircle2,
   Truck,
   MapPin,
   MessageCircle,
+  CreditCard,
+  UserCheck,
+  Languages,
+  HeartHandshake,
+  ShieldCheck,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import LanguageSwitcher from "./LanguageSwitcher";
-import { LiquidMetalButton } from "./ui/LiquidMetalButton";
 import { MegaMenu, MegaMenuItem } from "@/components/ui/mega-menu";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 import { getBookingUrl, getMainSiteUrl } from "@/lib/routes";
@@ -29,51 +32,53 @@ import { getBookingUrl, getMainSiteUrl } from "@/lib/routes";
 const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
   {
     id: 1,
-    label: "Clinical Services",
+    label: "Prescriptions",
+    featureCard: {
+      badge: "Free Home Delivery",
+      title: "Medications Delivered to Your Door",
+      description: "Prescriptions and weekly blister packs delivered free across Chilliwack and Sardis.",
+      image: "/services/delivery.jpg",
+      ctaText: "Request home delivery",
+      href: "/services/delivery",
+    },
     subMenus: [
       {
-        title: "Pharmacist Prescribing",
+        title: "Prescription Services",
         items: [
           {
-            label: "21 Minor Ailments",
-            description: "Direct BC MSP prescribing for UTI, shingles, allergies & more",
-            icon: Stethoscope,
-            href: "/services/minor-ailments",
-          },
-          {
-            label: "Medication Reviews",
-            description: "Comprehensive review of all your prescriptions & vitamins",
+            label: "Submit New Prescription",
+            description: "Upload a photo or enter doctor script",
             icon: FileText,
-            href: "/services/med-review",
+            iconClass: "border-blue-200/80 bg-blue-100 text-[#3D5FE0] group-hover:bg-[#3D5FE0] group-hover:text-white group-hover:border-[#3D5FE0]",
+            href: "/new-prescription",
           },
           {
-            label: "Chronic Disease Care",
-            description: "Dedicated monitoring for diabetes, blood pressure & asthma",
-            icon: HeartPulse,
-            href: "/care-program",
-          },
-        ],
-      },
-      {
-        title: "Vaccines & Injections",
-        items: [
-          {
-            label: "Shingles (Shingrix)",
-            description: "Now in stock with certified clinical pharmacist administration",
-            icon: Syringe,
-            href: "/vaccinations",
+            label: "Refill a Prescription",
+            description: "Ready in 30 mins for counter pickup",
+            icon: RefreshCw,
+            iconClass: "border-teal-200/80 bg-teal-100 text-teal-700 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600",
+            href: "/prescription-refills",
           },
           {
-            label: "Flu & COVID-19",
-            description: "Routine seasonal immunization for individuals and families",
-            icon: ShieldCheck,
-            href: "/vaccinations",
+            label: "Transfer to iHealth",
+            description: "We coordinate with your former pharmacy",
+            icon: Paperclip,
+            iconClass: "border-purple-200/80 bg-purple-100 text-purple-700 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600",
+            href: "/transfer",
           },
           {
-            label: "Custom Compounding",
-            description: "Custom dosages, liquid suspensions & hypoallergenic formulas",
-            icon: Sparkles,
-            href: "/services/compounding",
+            label: "Free Home Delivery",
+            description: "Same-day across Chilliwack & Sardis",
+            icon: Truck,
+            iconClass: "border-emerald-200/80 bg-emerald-100 text-emerald-700 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600",
+            href: "/services/delivery",
+          },
+          {
+            label: "Blister Packaging",
+            description: "Pre-sorted weekly medication cards",
+            icon: CheckCircle2,
+            iconClass: "border-purple-200/80 bg-purple-100 text-purple-700 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600",
+            href: "/services/myhealthpack",
           },
         ],
       },
@@ -81,45 +86,46 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
   },
   {
     id: 2,
-    label: "Refills & Care",
+    label: "Clinical Services",
+    featureCard: {
+      badge: "Walk-In Prescribing",
+      title: "No Doctor Appointment Required",
+      description: "Consult directly with our licensed prescribing pharmacists for common minor ailments with prescriptions on-site.",
+      image: "/services/minor-ailments.jpg",
+      ctaText: "Explore prescribing care",
+      href: "/services/minor-ailments",
+    },
     subMenus: [
       {
-        title: "Fast Prescription Tools",
+        title: "Walk-In & Prescribing Care",
         items: [
           {
-            label: "Online Refill Request",
-            description: "30-second submission for quick dispensary pickup",
-            icon: RefreshCw,
-            href: "/prescription-refills",
+            label: "Minor Ailments Clinic",
+            description: "Walk-in assessment & on-site prescribing",
+            icon: Stethoscope,
+            iconClass: "border-blue-200/80 bg-blue-100 text-[#3D5FE0] group-hover:bg-[#3D5FE0] group-hover:text-white group-hover:border-[#3D5FE0]",
+            href: "/services/minor-ailments",
           },
           {
-            label: "Transfer to iHealth",
-            description: "We coordinate with your previous pharmacy for seamless switch",
-            icon: Paperclip,
-            href: "/transfer",
-          },
-        ],
-      },
-      {
-        title: "Care Programs",
-        items: [
-          {
-            label: "Senior & Caregiver Care",
-            description: "Personalized follow-ups, large print & WhatsApp assistance",
-            icon: HeartPulse,
-            href: "/care-program",
+            label: "Vaccines & Flu Shots",
+            description: "Flu, COVID-19, Shingrix & travel",
+            icon: Syringe,
+            iconClass: "border-teal-200/80 bg-teal-100 text-teal-700 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600",
+            href: "/vaccinations",
           },
           {
-            label: "MyHealthPack Blister Packs",
-            description: "Weekly pre-sorted medication blister packaging",
-            icon: CheckCircle2,
-            href: "/services/myhealthpack",
+            label: "Medication Reviews",
+            description: "1-on-1 pharmacist checkup",
+            icon: FileText,
+            iconClass: "border-amber-200/80 bg-amber-100 text-amber-700 group-hover:bg-amber-600 group-hover:text-white group-hover:border-amber-600",
+            href: "/services/med-review",
           },
           {
-            label: "Free Chilliwack Delivery",
-            description: "Same-day home delivery for orders over $25",
-            icon: Truck,
-            href: "/care-program",
+            label: "Custom Compounding",
+            description: "Custom doses & special formulas",
+            icon: Sparkles,
+            iconClass: "border-purple-200/80 bg-purple-100 text-purple-700 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600",
+            href: "/services/compounding",
           },
         ],
       },
@@ -127,45 +133,71 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
   },
   {
     id: 3,
-    label: "About & Advice",
+    label: "About",
+    featureCard: {
+      badge: "Local Dispensary",
+      title: "Your Independent Chilliwack Pharmacy",
+      description: "Serving Chilliwack and Sardis with personalized clinical care, direct billing, and free parking.",
+      image: "/pharmacy-storefront.jpg",
+      ctaText: "Meet our clinical team",
+      href: "/about",
+    },
     subMenus: [
       {
-        title: "Our Dispensary",
+        title: "Practice & Team",
         items: [
           {
-            label: "About Our Pharmacists",
-            description: "Certified British Columbia clinical pharmacists in Chilliwack",
-            icon: Stethoscope,
-            href: "/about",
+            label: "Our Story & Independence",
+            description: "Family-owned local care with zero chain quotas",
+            icon: HeartHandshake,
+            iconClass: "border-blue-200/80 bg-blue-100 text-[#3D5FE0] group-hover:bg-[#3D5FE0] group-hover:text-white group-hover:border-[#3D5FE0]",
+            href: "/about#story",
           },
           {
-            label: "Hours & Location",
-            description: "45619 Yale Rd #101, Chilliwack, BC (Open 7 Days)",
-            icon: MapPin,
-            href: "/contact",
+            label: "Meet Dev Patel & Team",
+            description: "Experienced licensed clinical pharmacists",
+            icon: UserCheck,
+            iconClass: "border-teal-200/80 bg-teal-100 text-teal-700 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600",
+            href: "/about#team",
+          },
+          {
+            label: "Multilingual Care",
+            description: "English • ਪੰਜਾਬੀ (Punjabi) • हिन्दी (Hindi)",
+            icon: Languages,
+            iconClass: "border-purple-200/80 bg-purple-100 text-purple-700 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600",
+            href: "/about#multilingual",
           },
         ],
       },
       {
-        title: "Patient Resources",
+        title: "Coverage & Plans",
         items: [
           {
-            label: "Health Tips & Blog",
-            description: "Pharmacist-written articles on BC Pharmacare and wellness",
-            icon: FileText,
-            href: "/health-tips",
+            label: "Direct Billing & Plans",
+            description: "Fair PharmaCare, Blue Cross, Sun Life & NIHB",
+            icon: CreditCard,
+            iconClass: "border-blue-200/80 bg-blue-100 text-[#3D5FE0] group-hover:bg-[#3D5FE0] group-hover:text-white group-hover:border-[#3D5FE0]",
+            href: "/about#billing",
           },
           {
-            label: "WhatsApp Dispensary Chat",
-            description: "Chat directly with on-duty staff at 604-392-8393",
-            icon: MessageCircle,
-            href: "https://wa.me/16043928393",
+            label: "College Accreditation & Standards",
+            description: "Licensed with College of Pharmacists of BC",
+            icon: ShieldCheck,
+            iconClass: "border-emerald-200/80 bg-emerald-100 text-emerald-700 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600",
+            href: "/about#accreditation",
+          },
+          {
+            label: "Patient Health Tips",
+            description: "Pharmacist-written articles and healthcare advice",
+            icon: FileText,
+            iconClass: "border-amber-200/80 bg-amber-100 text-amber-700 group-hover:bg-amber-600 group-hover:text-white group-hover:border-amber-600",
+            href: "/health-tips",
           },
         ],
       },
     ],
   },
-  { id: 4, label: "Contact", link: "/contact" },
+  { id: 4, label: "Hours & Location", link: "/contact" },
 ];
 
 interface HeaderProps {
@@ -231,37 +263,30 @@ export default function Header({ logoHref }: HeaderProps = {}) {
           <MegaMenu items={IHEALTH_NAV_ITEMS} theme="light" />
         </div>
 
-        {/* Desktop Enterprise Action Bar */}
-        <div className="hidden items-center gap-2.5 lg:flex shrink-0">
-          {/* Language Switcher */}
-          <div className="hidden xl:block">
-            <LanguageSwitcher />
-          </div>
-
-          {/* Call Dispensary Compact Icon Button */}
+        {/* Desktop Senior-Optimized Action Bar */}
+        <div className="hidden items-center gap-3 lg:flex shrink-0">
+          {/* Direct Phone Call Badge - High Priority for Seniors */}
           <a
             href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200/90 bg-slate-50/80 text-slate-700 shadow-2xs hover:border-teal-500 hover:text-teal-700 hover:bg-teal-50/50 hover:shadow-xs transition-all active:scale-95"
+            className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-50 hover:bg-teal-50 text-slate-800 hover:text-teal-800 transition border border-slate-200/90 shadow-2xs group"
             title={`Call Dispensary: ${PHARMACY_INFO.phoneDisplay}`}
-            aria-label={`Call Dispensary: ${PHARMACY_INFO.phoneDisplay}`}
           >
-            <Phone size={15} className="stroke-[2.2]" />
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-white shadow-2xs group-hover:scale-105 transition-transform">
+              <Phone size={13} className="stroke-[2.5]" />
+            </div>
+            <div className="text-left leading-none pr-1">
+              <span className="text-[9px] uppercase font-bold text-slate-400 block">Call Dispensary</span>
+              <span className="text-xs font-extrabold text-slate-900 tracking-tight">{PHARMACY_INFO.phoneDisplay}</span>
+            </div>
           </a>
 
-          {/* Animated Teal Liquid Metal Button */}
-          <LiquidMetalButton
-            href={getBookingUrl()}
-            label="Book Online"
-            size="sm"
-          />
-
-          {/* Refill Action Button */}
+          {/* High-Contrast Primary Refill Button with Fade Gradient */}
           <Link
             href="/prescription-refills"
-            className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#3D5FE0] to-[#2F4BC4] px-4 py-2 text-xs font-bold text-white shadow-sm shadow-blue-700/20 hover:from-[#2F4BC4] hover:to-[#23399B] hover:shadow-md transition-all active:scale-[0.98]"
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-400 hover:from-teal-600 hover:via-teal-500 hover:to-emerald-300 px-4 py-2 text-xs font-bold text-white shadow-md shadow-teal-700/20 transition-all duration-200 active:scale-[0.98]"
           >
-            <RefreshCw size={12} className="stroke-[2.5]" />
-            <span>Request Refill</span>
+            <RefreshCw size={13} className="stroke-[2.5]" />
+            <span>Refill Prescription</span>
           </Link>
         </div>
 
@@ -306,14 +331,14 @@ export default function Header({ logoHref }: HeaderProps = {}) {
                 <Link
                   href={getBookingUrl()}
                   onClick={() => setMobileOpen(false)}
-                  className="inline-flex items-center justify-center rounded-xl bg-teal-600 py-2.5 text-center text-xs font-bold text-white shadow-xs hover:bg-teal-700 transition-colors"
+                  className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-400 hover:from-teal-600 hover:via-teal-500 hover:to-emerald-300 py-2.5 text-center text-xs font-bold text-white shadow-xs transition-all duration-200"
                 >
                   Book Online
                 </Link>
                 <Link
                   href="/prescription-refills"
                   onClick={() => setMobileOpen(false)}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-[#3D5FE0] to-[#2F4BC4] py-2.5 text-center text-xs font-bold text-white shadow-xs"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 py-2.5 text-center text-xs font-bold text-white shadow-xs transition-all duration-200"
                 >
                   <RefreshCw size={12} />
                   <span>Request Refill</span>
@@ -347,9 +372,31 @@ export default function Header({ logoHref }: HeaderProps = {}) {
                     </Link>
                   ) : (
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-wider text-teal-800 py-1">
-                        {item.label}
-                      </p>
+                      <div className="flex items-center justify-between py-1">
+                        <p className="text-xs font-bold uppercase tracking-wider text-teal-800">
+                          {item.label}
+                        </p>
+                        {item.badge && (
+                          <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-[#3D5FE0]">
+                            {item.badge}
+                          </span>
+                        )}
+                      </div>
+                      {item.featureCard && (
+                        <Link
+                          href={item.featureCard.href}
+                          onClick={() => setMobileOpen(false)}
+                          className="mt-1 mb-2 flex items-center justify-between rounded-xl bg-gradient-to-r from-blue-50/70 to-indigo-50/40 p-2.5 border border-blue-100/80 text-xs font-medium text-slate-800 hover:bg-blue-100/50 transition-colors"
+                        >
+                          <div className="flex items-center gap-2 truncate pr-2">
+                            <span className="inline-flex shrink-0 items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-[#3D5FE0] text-white">
+                              {item.featureCard.badge}
+                            </span>
+                            <span className="font-bold text-xs text-slate-900 truncate">{item.featureCard.title}</span>
+                          </div>
+                          <span className="text-[#3D5FE0] font-bold text-xs shrink-0">&rarr;</span>
+                        </Link>
+                      )}
                       <div className="mt-1 space-y-1 pl-2">
                         {item.subMenus?.map((sub) => (
                           <div key={sub.title} className="mb-2">

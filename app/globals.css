@@ -368,20 +368,70 @@ select:focus-visible,
 /* Primary button — uses the new accent vars so themes recolor it
    automatically. Existing legacy pages that hardcode `bg-[var(--brand)]`
    keep rendering in brand-red; this class is for new components. */
+/* Luminous Gradient with Fading / Getting Lighter Effect */
+.btn-fade-blue,
+.btn-fade-primary {
+  background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 50%, #60a5fa 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.4);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-fade-blue:hover,
+.btn-fade-primary:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #60a5fa 55%, #93c5fd 100%);
+  box-shadow: 0 6px 20px -2px rgba(37, 99, 235, 0.55);
+  transform: translateY(-1px);
+}
+
+.btn-fade-blue:active,
+.btn-fade-primary:active {
+  transform: translateY(0);
+}
+
+.btn-fade-teal {
+  background: linear-gradient(135deg, #0d766e 0%, #0f9688 50%, #2dd4bf 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px -2px rgba(15, 150, 136, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-fade-teal:hover {
+  background: linear-gradient(135deg, #11827a 0%, #14b8a6 55%, #5eead4 100%);
+  box-shadow: 0 6px 20px -2px rgba(15, 150, 136, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-fade-emerald {
+  background: linear-gradient(135deg, #15803d 0%, #16a34a 50%, #4ade80 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px -2px rgba(22, 163, 74, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-fade-emerald:hover {
+  background: linear-gradient(135deg, #16a34a 0%, #22c55e 55%, #86efac 100%);
+  box-shadow: 0 6px 20px -2px rgba(22, 163, 74, 0.5);
+  transform: translateY(-1px);
+}
+
 .btn-primary {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  border-radius: 0.5rem;
-  background: var(--color-accent);
-  color: var(--color-accent-fg);
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 50%, #60a5fa 100%);
+  color: #ffffff;
   padding: 0.875rem 1.5rem;
-  font-weight: 600;
-  transition: background-color 0.15s ease, transform 0.15s ease;
+  font-weight: 700;
+  box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.4);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-primary:hover {
-  filter: brightness(0.92);
+  background: linear-gradient(135deg, #2563eb 0%, #60a5fa 55%, #93c5fd 100%);
+  box-shadow: 0 6px 20px -2px rgba(37, 99, 235, 0.55);
+  transform: translateY(-1px);
 }
 
 .btn-primary:focus-visible {

@@ -8,12 +8,22 @@ import Link from "next/link";
 export type MegaMenuItem = {
   id: number;
   label: string;
+  badge?: string;
+  featureCard?: {
+    badge: string;
+    title: string;
+    description: string;
+    image?: string;
+    ctaText: string;
+    href: string;
+  };
   subMenus?: {
     title: string;
     items: {
       label: string;
       description: string;
       icon: React.ComponentType<{ className?: string }>;
+      iconClass?: string;
       href?: string;
     }[];
   }[];
@@ -131,10 +141,15 @@ const MegaMenu = React.forwardRef<HTMLUListElement, MegaMenuProps>(
                   }`}
                 >
                   <span className="relative z-10">{navItem.label}</span>
+                  {navItem.badge && (
+                    <span className="relative z-10 hidden xl:inline-flex items-center rounded-full bg-blue-100/90 text-[#3D5FE0] px-2 py-0.5 text-[9px] font-bold">
+                      {navItem.badge}
+                    </span>
+                  )}
                   {hasSub && (
                     <ChevronDown
                       className={`relative z-10 h-3.5 w-3.5 transition-transform duration-200 ${
-                        openMenu === navItem.label ? "rotate-180 text-teal-700" : ""
+                        openMenu === navItem.label ? "rotate-180 text-[#3D5FE0]" : ""
                       } ${isLight ? "text-slate-400" : "text-white/50"}`}
                     />
                   )}
@@ -171,7 +186,51 @@ const MegaMenu = React.forwardRef<HTMLUListElement, MegaMenuProps>(
                         borderRadius: 24,
                       }}
                     >
-                      <div className="flex w-fit shrink-0 space-x-10">
+                      <div className="flex w-fit shrink-0 space-x-8">
+                        {/* Left Side Feature Card if configured */}
+                        {navItem.featureCard && (
+                          <div className="w-64 shrink-0 rounded-2xl bg-gradient-to-br from-[#EDF3FF] via-[#F8FAFF] to-[#E2EDFF] border border-[#C5D5F9] p-4 flex flex-col justify-between overflow-hidden shadow-2xs">
+                            <div>
+                              {navItem.featureCard.image && (
+                                <div className="relative h-28 w-full rounded-xl overflow-hidden mb-3 bg-slate-100 shadow-2xs">
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                                  <img
+                                    src={navItem.featureCard.image}
+                                    alt={navItem.featureCard.title}
+                                    className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                                  />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                                  <div className="absolute bottom-2 left-2">
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#3D5FE0] text-white shadow-2xs">
+                                      {navItem.featureCard.badge}
+                                    </span>
+                                  </div>
+                                </div>
+                              )}
+                              {!navItem.featureCard.image && (
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#3D5FE0] text-white mb-2 shadow-2xs">
+                                  {navItem.featureCard.badge}
+                                </span>
+                              )}
+                              <h4 className="text-sm font-bold text-[#1E2A44] leading-snug">
+                                {navItem.featureCard.title}
+                              </h4>
+                              <p className="mt-1.5 text-xs leading-relaxed text-slate-600">
+                                {navItem.featureCard.description}
+                              </p>
+                            </div>
+
+                            <Link
+                              href={navItem.featureCard.href}
+                              onClick={() => setOpenMenu(null)}
+                              className="mt-3.5 inline-flex items-center gap-1.5 text-xs font-bold text-[#3D5FE0] hover:text-[#2846BA] transition group/cta"
+                            >
+                              <span>{navItem.featureCard.ctaText}</span>
+                              <span className="transition-transform group-hover/cta:translate-x-1">&rarr;</span>
+                            </Link>
+                          </div>
+                        )}
+
                         {navItem.subMenus.map((sub) => (
                           <div className="w-full min-w-[210px]" key={sub.title}>
                             <h3
@@ -193,13 +252,15 @@ const MegaMenu = React.forwardRef<HTMLUListElement, MegaMenuProps>(
                                       className="flex items-start space-x-3.5 group rounded-2xl p-2 -m-2 transition-all duration-150 hover:bg-slate-50"
                                     >
                                       <div
-                                        className={`flex size-9 shrink-0 items-center justify-center rounded-xl border transition-all duration-150 ${
-                                          isLight
-                                            ? "border-teal-200/80 bg-teal-50/70 text-teal-700 group-hover:bg-[#0D9488] group-hover:text-white group-hover:border-[#0D9488] shadow-2xs"
+                                        className={`flex size-10 shrink-0 items-center justify-center rounded-xl border transition-all duration-150 shadow-2xs ${
+                                          item.iconClass
+                                            ? item.iconClass
+                                            : isLight
+                                            ? "border-teal-200/80 bg-teal-50/70 text-teal-700 group-hover:bg-[#0D9488] group-hover:text-white group-hover:border-[#0D9488]"
                                             : "border-white/30 text-white group-hover:bg-white group-hover:text-[#0A0A0A]"
                                         }`}
                                       >
-                                        <Icon className="h-4 w-4 flex-none" />
+                                        <Icon className="h-5 w-5 flex-none" />
                                       </div>
                                       <div className="w-max leading-snug">
                                         <p

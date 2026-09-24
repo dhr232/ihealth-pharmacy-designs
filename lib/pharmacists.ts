@@ -13,6 +13,8 @@ export interface PrismaPharmacistLike {
   languages?: string[];
   yearsExperience?: number;
   displayOrder?: number;
+  directPhone?: string;
+  directPhoneRaw?: string;
 }
 
 export function mapPrismaToPharmacist(
@@ -52,5 +54,7 @@ export function mapPrismaToPharmacist(
       typeof item.displayOrder === "number"
         ? item.displayOrder
         : seed?.displayOrder ?? index + 1,
+    directPhone: item.directPhone || seed?.directPhone,
+    directPhoneRaw: item.directPhoneRaw || seed?.directPhoneRaw,
   };
 }

@@ -264,7 +264,7 @@ export const BC_MINOR_AILMENTS_CONDITIONS = [
     description:
       "Comprehensive consultation and prescription for BC covered oral contraceptives, injections, rings, patches, and emergency pills.",
     preparationNotes:
-      "BC Fair PharmaCare covers many prescription contraceptives for BC residents with active MSP coverage.",
+      "BC Fair PharmaCare covers many prescription contraceptives for eligible BC residents.",
   },
 ];
 
@@ -329,11 +329,11 @@ export const OTHER_CANONICAL_SERVICES = [
 
 export const PHARMACISTS = [
   {
-    name: "Dr. Rutu Patel",
-    title: "Pharmacy Manager & Owner",
+    name: "Dev Patel",
+    title: "Primary Pharmacist & Pharmacy Manager",
     licenseNumber: "BC-PHARM-20184",
-    bio: "Rutu has been serving Chilliwack families for over 15 years. She specialises in geriatric care and medication reviews, and is passionate about making sure every patient feels heard.",
-    avatarUrl: "/pharmacists/anika.jpg",
+    bio: "Dev became a Pharmacist because of his love and passion for medicine paired with the opportunity to make a direct impact in patient care. His mission is to improve an individual's quality of life by giving excellent personal care using the best of his knowledge and skills.",
+    avatarUrl: "/pharmacists/dev-patel.png",
     acceptsAppointments: true,
     active: true,
     schedules: [

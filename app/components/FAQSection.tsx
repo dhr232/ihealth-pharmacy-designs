@@ -21,7 +21,7 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     question: "Can an iHealth pharmacist prescribe medications without me visiting a doctor or walk-in clinic?",
     answer:
-      "Yes! Under BC's PPRAC regulations, our licensed pharmacists can assess and directly prescribe medications for 21 minor ailments (such as urinary tract infections (UTIs), shingles, cold sores, acid reflux/GERD, allergies, impetigo, and conjunctivitis) as well as prescribe and renew contraceptives on-site.",
+      "Yes! Under BC's PPRAC regulations, our licensed pharmacists can assess and directly prescribe medications for common minor ailments (such as urinary tract infections (UTIs), shingles, cold sores, acid reflux/GERD, allergies, impetigo, and conjunctivitis) as well as prescribe and renew contraceptives on-site.",
     category: "Minor Ailments",
   },
   {

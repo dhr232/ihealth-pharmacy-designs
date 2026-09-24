@@ -10,6 +10,7 @@ export const PHARMACY_INFO = {
   // Contact numbers
   phone: process.env.NEXT_PUBLIC_PHARMACY_PHONE || "604-392-8393",
   phoneRaw: process.env.NEXT_PUBLIC_PHARMACY_PHONE_RAW || "6043928393",
+  phoneClean: "6043928393",
   phoneDisplay: "604-392-8393",
   fax: "(604) 392-8394",
   email: "info@ihealthpharmacy.ca",
@@ -37,26 +38,37 @@ export const PHARMACY_INFO = {
     },
   },
 
+  // Primary Pharmacist Dev Patel direct mobile contact
+  devPatel: {
+    name: "Dev Patel",
+    title: "Primary Pharmacist & Pharmacy Manager",
+    phoneDisplay: "+1 (778) 714-2307",
+    phoneRaw: "+17787142307",
+  },
+
   // Address and location
   address: {
     street: "45619 Yale Rd #101",
     city: "Chilliwack",
     province: "BC",
-    postalCode: "V2P 0B1",
+    postalCode: "V2P 2N1",
     country: "Canada",
-    full: "45619 Yale Rd #101, Chilliwack, BC V2P 0B1",
+    full: "45619 Yale Rd #101, Chilliwack, BC V2P 2N1",
     mapUrl:
-      "https://www.google.com/maps/search/?api=1&query=iHealth+Pharmacy+45619+Yale+Rd+%23101+Chilliwack+BC+V2P+0B1",
+      "https://www.google.com/maps/place/IHealth+Pharmacy/@49.1543464,-121.96252,15z/data=!4m15!1m8!3m7!1s0x54843f277357382f:0x450b007856108ecd!2sIHealth+Pharmacy!8m2!3d49.1543712!4d-121.9625737!10e5!16s%2Fg%2F11lf4ld660!3m5!1s0x54843f277357382f:0x450b007856108ecd!8m2!3d49.1543712!4d-121.9625737!16s%2Fg%2F11lf4ld660?entry=ttu&g_ep=EgoyMDI2MDkyMC4wIKXMDSoASAFQAw%3D%3D",
+    googleListingUrl:
+      "https://www.google.com/maps/place/IHealth+Pharmacy/@49.1543464,-121.96252,15z/data=!4m15!1m8!3m7!1s0x54843f277357382f:0x450b007856108ecd!2sIHealth+Pharmacy!8m2!3d49.1543712!4d-121.9625737!10e5!16s%2Fg%2F11lf4ld660!3m5!1s0x54843f277357382f:0x450b007856108ecd!8m2!3d49.1543712!4d-121.9625737!16s%2Fg%2F11lf4ld660?entry=ttu&g_ep=EgoyMDI2MDkyMC4wIKXMDSoASAFQAw%3D%3D",
     parkingNotes: "Free customer parking available directly in front of the pharmacy on Yale Road.",
   },
 
   // Operating hours
   hours: [
-    { days: "Monday – Friday", time: "8:00 am – 9:00 pm" },
-    { days: "Saturday – Sunday", time: "9:00 am – 6:00 pm" },
-    { days: "Holidays", time: "10:00 am – 5:00 pm" },
+    { days: "Monday – Friday", time: "9:00 am – 5:00 pm" },
+    { days: "Saturday", time: "Closed" },
+    { days: "Sunday", time: "Closed" },
+    { days: "Holidays", time: "Closed" },
   ],
-  hoursSummary: "Mon–Fri 8am–9pm, Sat–Sun 9am–6pm",
+  hoursSummary: "Mon–Fri 9:00 am – 5:00 pm, Sat–Sun Closed",
 
   // Supported languages
   languages: ["English", "Punjabi (ਪੰਜਾਬੀ)", "Hindi (हिन्दी)"],
@@ -93,3 +105,14 @@ export function getWhatsAppUrl(customMessage?: string): string {
   const msg = customMessage || PHARMACY_INFO.whatsapp.defaultMessage;
   return `https://wa.me/${PHARMACY_INFO.whatsapp.number}?text=${encodeURIComponent(msg)}`;
 }
+
+/**
+ * Helper to build mobile SMS link to open native messaging app on phone
+ */
+export function getSmsUrl(phoneRaw: string = PHARMACY_INFO.devPatel.phoneRaw, customMessage?: string): string {
+  const cleanNumber = phoneRaw.startsWith("+") ? phoneRaw : `+${phoneRaw}`;
+  const defaultMsg = "Hello Dev, I have a question regarding my prescription.";
+  const msg = customMessage || defaultMsg;
+  return `sms:${cleanNumber}?body=${encodeURIComponent(msg)}`;
+}
+

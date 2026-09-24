@@ -7,10 +7,9 @@ import Footer from "./components/Footer";
 import NewsletterForm from "./components/NewsletterForm";
 import HomeBlogSection from "./components/HomeBlogSection";
 import TrustMetricsBar from "./components/TrustMetricsBar";
-import PatientCareProgramSection from "./components/PatientCareProgramSection";
 import PharmacistTeamSection from "./components/PharmacistTeamSection";
 import FAQSection from "./components/FAQSection";
-import FloatingPills3D from "./components/FloatingPills3D";
+import PharmacyLocationHeroCard from "./components/PharmacyLocationHeroCard";
 import SectionWaveDivider from "./components/SectionWaveDivider";
 import {
   BlurReveal,
@@ -26,13 +25,11 @@ import {
   Mail,
   Syringe,
   Package,
-  Thermometer,
   Truck,
   Phone,
   Clock,
   MapPin,
   FlaskConical,
-  ClipboardCheck,
   ArrowUpRight,
   ArrowRight,
   MessageCircle,
@@ -42,73 +39,84 @@ import {
   Eye,
   ShieldCheck,
   Star,
+  Thermometer,
+  ClipboardCheck,
 } from "lucide-react";
 import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
 
-const SERVICES = [
+const FEATURED_SERVICES = [
+  {
+    title: "Minor Ailments Prescribing",
+    badge: "Walk-In Clinical Care",
+    badgeStyle: "bg-[#EDF3FF] text-[#3D5FE0] border-[#C5D5F9]",
+    statusPill: "No Wait Required",
+    desc: "Skip long walk-in clinic waits. Consult directly with our certified prescribing pharmacists for common minor ailments with prescriptions written on-site.",
+    highlights: ["Zero Doctor Wait", "Walk-Ins Welcome", "On-Site Prescriptions"],
+    href: "/services/minor-ailments",
+    cta: "Consult Pharmacist",
+    image: "/services/minor-ailments.jpg",
+    icon: Thermometer,
+    theme: {
+      card: "border-[#D9E4FA] bg-gradient-to-br from-white via-[#F8FAFF] to-[#EDF3FF] hover:border-[#B8CEF8]",
+      btn: "bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 text-white shadow-md shadow-blue-500/20",
+      accent: "text-[var(--brand)]",
+    },
+  },
+  {
+    title: "Free Same-Day Delivery",
+    badge: "Free Chilliwack & Sardis Delivery",
+    badgeStyle: "bg-[#EAF8F1] text-[#238150] border-[#CEEEDC]",
+    statusPill: "Same-Day Dispatch",
+    desc: "Prescriptions, recurring refills, and compliance blister packs delivered free directly to your door in temperature-monitored packaging across Chilliwack.",
+    highlights: ["Chilliwack & Sardis", "Blister Packs & Refills", "Free Over $25"],
+    href: "/services/delivery",
+    cta: "Request Delivery",
+    image: "/services/delivery.jpg",
+    icon: Truck,
+    theme: {
+      card: "border-[#D3EEDF] bg-gradient-to-br from-white via-[#F6FCF8] to-[#EAF8F1] hover:border-[#AEE1C7]",
+      btn: "bg-gradient-to-r from-emerald-700 via-emerald-600 to-teal-400 hover:from-emerald-600 hover:via-emerald-500 hover:to-teal-300 text-white shadow-md shadow-emerald-500/20",
+      accent: "text-[#238150]",
+    },
+  },
+];
+
+const QUICK_SERVICES = [
   {
     title: "Prescription Refills",
-    desc: "Ready within the hour, or delivered free to your Chilliwack doorstep.",
+    desc: "Ready in 30 minutes for counter pickup, or requested online.",
+    badge: "Ready in 30m",
     href: "/prescription-refills",
     icon: Pill,
-    image: "/services/refills.jpg",
-    badge: "Fast Refills",
+    iconColor: "text-[var(--brand)]",
+    iconBg: "bg-[#EDF3FF]",
   },
   {
-    title: "Transfer to iHealth",
-    desc: "Switch pharmacies in 1 simple step — our team handles all former pharmacy records.",
+    title: "1-Step Transfer",
+    desc: "Switch pharmacies in 1 step — our team handles all prior files.",
+    badge: "Zero Hassle",
     href: "/transfer",
     icon: ArrowLeftRight,
-    image: "/services/transfer.jpg",
-    badge: "1-Step Transfer",
+    iconColor: "text-[#238150]",
+    iconBg: "bg-[#EAF8F1]",
   },
   {
-    title: "Minor Ailments Clinic",
-    desc: "Walk-in assessment and on-site prescribing for 21 conditions without seeing a doctor.",
-    href: "/services/minor-ailments",
-    icon: Thermometer,
-    image: "/services/minor-ailments.jpg",
-    badge: "Walk-in Prescribing",
-  },
-  {
-    title: "Vaccinations & Flu Shots",
-    desc: "COVID-19 boosters, shingles, pneumonia, and travel vaccines administered on-site.",
+    title: "Vaccines & Boosters",
+    desc: "Walk-in COVID-19, Shingrix, flu shots, and travel vaccines.",
+    badge: "Walk-In Ready",
     href: "/vaccinations",
     icon: Syringe,
-    image: "/services/vaccinations.jpg",
-    badge: "Certified Injections",
+    iconColor: "text-indigo-600",
+    iconBg: "bg-indigo-50",
   },
   {
-    title: "MyHealthPack Blister Packs",
-    desc: "Pre-sorted medication cards organized by day and time to avoid missed doses.",
+    title: "Blister Compliance Packs",
+    desc: "Pre-sorted weekly medication cards organized by day and time.",
+    badge: "Complimentary",
     href: "/services/myhealthpack",
     icon: Package,
-    image: "/services/blister-packs.jpg",
-    badge: "Complimentary Care",
-  },
-  {
-    title: "Custom Compounding",
-    desc: "Specialized dosages, paediatric liquids, veterinary meds, and allergen-free formulas.",
-    href: "/services/compounding",
-    icon: FlaskConical,
-    image: "/services/compounding.jpg",
-    badge: "Custom Lab",
-  },
-  {
-    title: "Medication Reviews",
-    desc: "In-depth one-on-one consultation, free for eligible BC Fair PharmaCare patients.",
-    href: "/services/med-review",
-    icon: ClipboardCheck,
-    image: "/services/med-review.jpg",
-    badge: "1-on-1 Consult",
-  },
-  {
-    title: "Free Prescription Delivery",
-    desc: "Complimentary same-day home delivery across Chilliwack for orders over $25.",
-    href: "/services/delivery",
-    icon: Truck,
-    image: "/services/delivery.jpg",
-    badge: "Free over $25",
+    iconColor: "text-teal-700",
+    iconBg: "bg-teal-50",
   },
 ];
 
@@ -145,9 +153,19 @@ export default function HomePage() {
         {/* 1. Hero Section */}
         <section
           id="hero"
-          className="relative overflow-hidden bg-gradient-to-b from-slate-50/80 via-white to-white"
+          className="relative overflow-hidden bg-gradient-to-b from-[#F2F6FC] via-[#F8FAFD] to-white"
           aria-labelledby="hero-heading"
         >
+          {/* Subtle Geometric Grid Atmosphere */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-60"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, rgba(61, 95, 224, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(61, 95, 224, 0.04) 1px, transparent 1px)",
+              backgroundSize: "32px 32px",
+            }}
+            aria-hidden="true"
+          />
           <div className="relative z-10 mx-auto grid max-w-7xl gap-12 px-5 pt-20 pb-16 md:grid-cols-2 md:items-center md:pt-24 md:pb-24 lg:px-8">
             <BlurReveal className="flex flex-col items-start">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--brand-subtle)] px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[var(--brand)]">
@@ -165,7 +183,7 @@ export default function HomePage() {
               </h1>
 
               <p className="mt-4 max-w-lg text-base leading-relaxed text-slate-600 sm:text-lg">
-                Your neighborhood independent pharmacy in Chilliwack. Fast prescription refills, 21 prescribable minor ailments on walk-in, and free same-day local delivery.
+                Skip the clinic wait. Walk in to consult directly with our prescribing pharmacists for everyday ailments, manage refills in minutes, and enjoy free same-day delivery across Chilliwack.
               </p>
 
               {/* Dual Action Buttons */}
@@ -173,7 +191,7 @@ export default function HomePage() {
                 <MagneticButton>
                   <Link
                     href="/prescription-refills"
-                    className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--brand-hover)] active:scale-[0.98]"
+                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-6 py-3.5 text-sm font-bold text-white shadow-md shadow-blue-500/25 transition-all duration-200 active:scale-[0.98]"
                   >
                     Request Refill
                   </Link>
@@ -181,7 +199,7 @@ export default function HomePage() {
                 <MagneticButton>
                   <Link
                     href="/transfer"
-                    className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-6 py-3.5 text-sm font-semibold text-slate-800 shadow-2xs transition hover:border-[var(--brand)] hover:text-[var(--brand)]"
+                    className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 hover:border-blue-400 hover:text-blue-700 px-6 py-3.5 text-sm font-bold text-slate-800 shadow-2xs transition-all duration-200 active:scale-[0.98]"
                   >
                     Transfer to iHealth
                   </Link>
@@ -207,9 +225,9 @@ export default function HomePage() {
               </div>
             </BlurReveal>
 
-            {/* Hero 3D Graphic & Happy Customer Float */}
+            {/* Hero Modern Pharmacy Location Card */}
             <SectionReveal className="relative mx-auto w-full max-w-lg md:mx-0">
-              <FloatingPills3D showHappyCustomerCard />
+              <PharmacyLocationHeroCard />
             </SectionReveal>
           </div>
         </section>
@@ -227,64 +245,129 @@ export default function HomePage() {
                 </span>
               </div>
               <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl lg:text-5xl">
-                Reliable Medicine, Expert Guidance
+                Care Tailored to Your Everyday Life
               </h2>
               <p className="mt-3 text-base text-slate-600 sm:text-lg">
-                Clinical assessments, specialized compounding, vaccinations, and free Chilliwack delivery — explore our full suite of pharmacy services.
+                Direct pharmacist access, walk-in prescribing, and complimentary same-day delivery across Chilliwack.
               </p>
             </SectionReveal>
 
-            <StaggerContainer className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {SERVICES.map((s) => {
+            {/* Top Row: 2 Featured Bento Hero Cards */}
+            <div className="mt-12 grid gap-6 lg:grid-cols-2">
+              {FEATURED_SERVICES.map((item) => (
+                <SectionReveal key={item.title}>
+                  <div
+                    className={`group relative flex flex-col justify-between overflow-hidden rounded-3xl border ${item.theme.card} p-6 sm:p-7 shadow-xs transition duration-300 hover:shadow-xl`}
+                  >
+                    <div>
+                      {/* Image Preview Banner */}
+                      <div className="relative h-48 sm:h-52 w-full overflow-hidden rounded-2xl bg-slate-100">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          loading="lazy"
+                          className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
+
+                        {/* Top Badges */}
+                        <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2">
+                          <span
+                            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold border backdrop-blur-xs ${item.badgeStyle}`}
+                          >
+                            <item.icon size={13} />
+                            <span>{item.badge}</span>
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-black/50 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-xs">
+                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                            {item.statusPill}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Content Header */}
+                      <div className="mt-5">
+                        <h3 className="text-xl sm:text-2xl font-bold text-slate-900 transition group-hover:text-[var(--brand)]">
+                          {item.title}
+                        </h3>
+                        <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                          {item.desc}
+                        </p>
+                      </div>
+
+                      {/* Highlights / Quick Chips */}
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {item.highlights.map((h) => (
+                          <span
+                            key={h}
+                            className="inline-flex items-center rounded-lg border border-slate-200/90 bg-white/90 px-2.5 py-1 text-xs font-semibold text-slate-700 shadow-2xs"
+                          >
+                            {h}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Action Bar */}
+                    <div className="mt-6 pt-4 border-t border-slate-200/70 flex items-center justify-between gap-3">
+                      <Link
+                        href={item.href}
+                        className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold transition duration-200 ${item.theme.btn}`}
+                      >
+                        <span>{item.cta}</span>
+                        <ArrowRight size={14} className="transition group-hover:translate-x-1" />
+                      </Link>
+                      <Link
+                        href={item.href}
+                        className="text-xs font-semibold text-slate-500 hover:text-slate-900 transition flex items-center gap-1"
+                      >
+                        <span>Service details</span>
+                        <ArrowUpRight size={13} />
+                      </Link>
+                    </div>
+                  </div>
+                </SectionReveal>
+              ))}
+            </div>
+
+            {/* Bottom Row: 4 Fast-Action Bento Tiles */}
+            <StaggerContainer className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {QUICK_SERVICES.map((s) => {
                 const Icon = s.icon;
                 return (
                   <StaggerItem key={s.title}>
                     <HoverCard className="h-full">
                       <Link
                         href={s.href}
-                        className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-xs transition duration-200 hover:-translate-y-1 hover:border-slate-300 hover:shadow-md"
+                        className="group relative flex h-full flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-5 shadow-xs transition duration-200 hover:-translate-y-1 hover:border-slate-300 hover:shadow-md"
                       >
-                        {/* Featured Service Image */}
-                        <div className="relative h-44 w-full overflow-hidden bg-slate-100">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={s.image}
-                            alt={s.title}
-                            loading="lazy"
-                            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-
-                          {/* Floating Category Icon */}
-                          <div className="absolute top-3 left-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white/95 text-[var(--brand)] shadow-sm backdrop-blur-xs transition duration-300 group-hover:scale-110 group-hover:bg-[var(--brand)] group-hover:text-white">
-                            <Icon size={18} />
-                          </div>
-
-                          {/* Feature Badge */}
-                          <div className="absolute bottom-2.5 left-3">
-                            <span className="inline-flex items-center rounded-md bg-white/95 px-2.5 py-0.5 text-[10px] font-bold text-slate-800 shadow-2xs backdrop-blur-xs">
+                        <div>
+                          {/* Top Row: Icon + Badge */}
+                          <div className="flex items-center justify-between gap-2 mb-3.5">
+                            <div
+                              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${s.iconBg} ${s.iconColor} transition duration-200 group-hover:scale-105`}
+                            >
+                              <Icon size={20} />
+                            </div>
+                            <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-semibold text-slate-600">
                               {s.badge}
                             </span>
                           </div>
 
-                          {/* Hover Arrow */}
-                          <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-0 shadow-sm backdrop-blur-xs transition duration-300 group-hover:opacity-100 group-hover:bg-[var(--brand)] group-hover:text-white">
-                            <ArrowUpRight size={16} />
-                          </span>
-                        </div>
-
-                        {/* Body */}
-                        <div className="flex flex-1 flex-col p-5">
-                          <h3 className="text-base font-bold text-slate-900 transition group-hover:text-[var(--brand)]">
+                          {/* Title & Desc */}
+                          <h4 className="text-sm font-bold text-slate-900 transition group-hover:text-[var(--brand)]">
                             {s.title}
-                          </h3>
-                          <p className="mt-1.5 flex-1 text-xs leading-relaxed text-slate-600">
+                          </h4>
+                          <p className="mt-1.5 text-xs leading-relaxed text-slate-600">
                             {s.desc}
                           </p>
-                          <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-[var(--brand)]">
-                            Learn more
-                            <span className="transition group-hover:translate-x-0.5">→</span>
-                          </span>
+                        </div>
+
+                        {/* Text Link */}
+                        <div className="mt-4 flex items-center gap-1 text-xs font-semibold text-[var(--brand)]">
+                          <span>Get started</span>
+                          <ArrowRight size={13} className="transition group-hover:translate-x-1" />
                         </div>
                       </Link>
                     </HoverCard>
@@ -292,6 +375,39 @@ export default function HomePage() {
                 );
               })}
             </StaggerContainer>
+
+            {/* Utility Strip: Specialized Services */}
+            <SectionReveal className="mt-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl border border-slate-200/90 bg-white px-5 py-4 shadow-xs">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
+                    <FlaskConical size={18} />
+                  </div>
+                  <div className="text-xs text-slate-700">
+                    <span className="font-bold text-slate-900">Looking for specialized clinical care?</span>{" "}
+                    We also formulate custom compounded therapies and perform comprehensive medication reviews.
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2.5 shrink-0 w-full sm:w-auto">
+                  <Link
+                    href="/services/compounding"
+                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-800 hover:bg-slate-100 hover:border-slate-300 transition"
+                  >
+                    <span>Custom Compounding</span>
+                    <ArrowUpRight size={13} />
+                  </Link>
+                  <Link
+                    href="/services/med-review"
+                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-800 hover:bg-slate-100 hover:border-slate-300 transition"
+                  >
+                    <ClipboardCheck size={13} />
+                    <span>Medication Review</span>
+                    <ArrowUpRight size={13} />
+                  </Link>
+                </div>
+              </div>
+            </SectionReveal>
           </div>
         </section>
 
@@ -366,56 +482,93 @@ export default function HomePage() {
               {/* Right Column Graphic / Pill Dispenser Preview */}
               <div className="lg:col-span-6">
                 <SectionReveal>
-                  <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
-                    <div className="flex items-center justify-between border-b border-slate-200 pb-4">
-                      <div>
-                        <span className="text-xs font-semibold text-[var(--brand)] uppercase tracking-wider">
-                          Compliance Packaging
+                  <HoverCard className="h-full">
+                    <div className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/90 bg-gradient-to-b from-white via-slate-50/70 to-slate-100/50 p-6 sm:p-7 shadow-sm transition-all duration-300 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-900/10">
+                      {/* Top Header Row with Subtle Glow & Pulse Badge */}
+                      <div className="flex items-center justify-between border-b border-slate-200/80 pb-4">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200/80 px-2.5 py-0.5 rounded-full">
+                              Compliance Packaging
+                            </span>
+                            <span className="text-[11px] font-medium text-slate-400 hidden sm:inline">
+                              Smart Health Tech
+                            </span>
+                          </div>
+                          <h3 className="mt-1.5 text-lg sm:text-xl font-extrabold text-slate-900 transition-colors group-hover:text-blue-900">
+                            Carousel Automatic Pill Dispenser
+                          </h3>
+                        </div>
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 px-3 py-1 text-xs font-bold text-emerald-700 shadow-2xs">
+                          <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                          Senior Friendly
                         </span>
-                        <h3 className="text-lg font-bold text-slate-900">
-                          Carousel Automatic Pill Dispenser
-                        </h3>
                       </div>
-                      <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800">
-                        Senior Friendly
-                      </span>
-                    </div>
 
-                    <div className="mt-4 overflow-hidden rounded-xl bg-slate-100 border border-slate-200">
-                      <Image
-                        src="/carousel-dispenser.jpg"
-                        alt="Carousel automatic pill dispenser for senior medication safety"
-                        width={600}
-                        height={450}
-                        className="h-auto w-full object-cover"
-                      />
+                      {/* Interactive Image Container with Zoom & Floating Smart Overlays */}
+                      <div className="relative mt-5 overflow-hidden rounded-2xl border border-slate-200/90 bg-slate-100 shadow-inner group/img">
+                        <Image
+                          src="/carousel-dispenser.jpg"
+                          alt="Carousel automatic pill dispenser for senior medication safety"
+                          width={600}
+                          height={450}
+                          className="h-auto w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        />
+
+                        {/* Subtle Gradient Vignette Overlay on Hover */}
+                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-slate-900/20 opacity-60 transition-opacity duration-300 group-hover:opacity-40" />
+
+                        {/* Floating Top-Left Tag: Automated Chimes & Alert */}
+                        <div className="absolute top-3.5 left-3.5 flex items-center gap-1.5 rounded-xl bg-white/90 px-3 py-1.5 text-[11px] font-bold text-slate-800 shadow-md backdrop-blur-md transition-transform duration-300 group-hover:scale-105">
+                          <Clock size={13} className="text-blue-600" />
+                          <span>Timed Audio & Visual Alerts</span>
+                        </div>
+
+                        {/* Floating Bottom-Right Tag: Tamper-Proof Lock */}
+                        <div className="absolute bottom-3.5 right-3.5 flex items-center gap-1.5 rounded-xl bg-slate-900/85 px-3 py-1.5 text-[11px] font-bold text-white shadow-md backdrop-blur-md transition-transform duration-300 group-hover:scale-105">
+                          <ShieldCheck size={13} className="text-emerald-400" />
+                          <span>Tamper-Resistant Safety Lock</span>
+                        </div>
+                      </div>
+
+                      {/* Feature Highlights Pills */}
+                      <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+                        <div className="flex items-center gap-1.5 rounded-xl bg-white border border-slate-200/80 px-3 py-2 text-slate-700 shadow-2xs transition group-hover:border-blue-200">
+                          <span className="h-1.5 w-1.5 rounded-full bg-blue-500 shrink-0" />
+                          <span className="font-semibold text-[11px]">28 Compartments</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 rounded-xl bg-white border border-slate-200/80 px-3 py-2 text-slate-700 shadow-2xs transition group-hover:border-blue-200">
+                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" />
+                          <span className="font-semibold text-[11px]">Pharmacist Pre-Filled</span>
+                        </div>
+                        <div className="col-span-2 sm:col-span-1 flex items-center gap-1.5 rounded-xl bg-white border border-slate-200/80 px-3 py-2 text-slate-700 shadow-2xs transition group-hover:border-blue-200">
+                          <span className="h-1.5 w-1.5 rounded-full bg-purple-500 shrink-0" />
+                          <span className="font-semibold text-[11px]">Prevents Double Doses</span>
+                        </div>
+                      </div>
+
+                      {/* Action Bar with Luminous CTA Gradient */}
+                      <div className="mt-5 pt-4 border-t border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <p className="text-xs text-slate-500 leading-snug">
+                          Available for home medication management and caregiver peace of mind.
+                        </p>
+                        <Link
+                          href="/services/myhealthpack"
+                          className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-4 py-2.5 text-xs font-bold text-white shadow-sm shadow-blue-700/20 transition-all duration-200 active:scale-95 shrink-0"
+                        >
+                          <span>Learn About Packaging</span>
+                          <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+                        </Link>
+                      </div>
                     </div>
-                  </div>
+                  </HoverCard>
                 </SectionReveal>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Wave 2: Transitioning from About (white) to Patient Care Program (slate-100) */}
-        <SectionWaveDivider
-          fillColor="text-slate-100/80"
-          backgroundColor="bg-white"
-          className="h-10 sm:h-14 lg:h-18"
-          flipX={true}
-        />
-
-        {/* 5. Patient Care Program ("Membership That Cares More") */}
-        <PatientCareProgramSection />
-
-        {/* Wave 3: Transitioning from Patient Care Program (slate-100) to Team (white) */}
-        <SectionWaveDivider
-          fillColor="text-white"
-          backgroundColor="bg-slate-100/80"
-          className="h-10 sm:h-14 lg:h-18"
-        />
-
-        {/* 6. The Pharmacist ("Meet Our Caring Experts") */}
+        {/* 5. The Pharmacist ("Meet Our Caring Experts") */}
         <PharmacistTeamSection />
 
         {/* Wave 4: Transitioning from Team (white) to Why Choose Us (slate-100) */}
@@ -426,7 +579,7 @@ export default function HomePage() {
           flipX={true}
         />
 
-        {/* 7. Why Choose Us / Trust Pillars */}
+        {/* 6. Why Choose Us / Trust Pillars */}
         <section id="why-us" className="bg-slate-100/80 pt-10 pb-16 lg:pt-14 lg:pb-20">
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
             <SectionReveal className="text-center max-w-3xl mx-auto">
@@ -494,7 +647,7 @@ export default function HomePage() {
           className="h-10 sm:h-14 lg:h-18"
         />
 
-        {/* 8. Blog / Health Tips ("Stay Informed, Stay Healthy") */}
+        {/* 7. Blog / Health Tips ("Stay Informed, Stay Healthy") */}
         <HomeBlogSection />
 
         {/* Wave 6: Transitioning from Blog (white) to Testimonials (slate-100) */}
@@ -505,7 +658,7 @@ export default function HomePage() {
           flipX={true}
         />
 
-        {/* 9. Testimonials ("Healing Stories, Shared Honestly") */}
+        {/* 8. Testimonials ("Healing Stories, Shared Honestly") */}
         <section id="testimonials" className="bg-slate-100/80 pt-10 pb-16 lg:pt-14 lg:pb-20">
           <div className="mx-auto max-w-5xl px-5 lg:px-8">
             <SectionReveal className="text-center">
@@ -562,7 +715,7 @@ export default function HomePage() {
           className="h-10 sm:h-14 lg:h-18"
         />
 
-        {/* 10. FAQ Section */}
+        {/* 9. FAQ Section */}
         <FAQSection />
 
         {/* Wave 8: Transitioning from FAQ (white) to Newsletter (slate-100) */}
@@ -573,7 +726,7 @@ export default function HomePage() {
           flipX={true}
         />
 
-        {/* 11. Newsletter */}
+        {/* 10. Newsletter */}
         <section id="newsletter" className="bg-slate-100/80 pt-12 pb-16 lg:pt-16 lg:pb-20">
           <div className="mx-auto max-w-3xl px-5 text-center lg:px-8">
             <SectionReveal>
@@ -603,7 +756,7 @@ export default function HomePage() {
           className="h-10 sm:h-14 lg:h-18"
         />
 
-        {/* 12. Contact Hub & Map */}
+        {/* 11. Contact Hub & Map */}
         <section id="contact" className="bg-white pt-10 pb-20 lg:pt-14 lg:pb-28">
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
             <div className="grid gap-12 lg:grid-cols-2 lg:items-start">

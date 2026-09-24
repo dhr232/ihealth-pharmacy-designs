@@ -218,3 +218,56 @@ model Flyer {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 }
+
+enum PrescriptionType {
+  NEW_PRESCRIPTION
+  REFILL
+  TRANSFER
+}
+
+enum PrescriptionStatus {
+  PENDING
+  IN_PROGRESS
+  READY
+  COMPLETED
+  CANCELLED
+}
+
+enum FulfillmentMethod {
+  PICKUP
+  DELIVERY
+}
+
+model PrescriptionRequest {
+  id                   String             @id @default(cuid())
+  referenceNumber      String             @unique
+  type                 PrescriptionType
+  status               PrescriptionStatus @default(PENDING)
+  firstName            String
+  lastName             String
+  phone                String
+  email                String
+  dateOfBirth          DateTime?
+  submissionMode       String             // "PHOTOS" | "MANUAL"
+  itemCount            Int                @default(1)
+  items                Json?              // line-by-line medication details / rx numbers
+  photoUrls            String[]           @default([])
+  previousPharmacyName String?
+  previousPharmacyPhone String?
+  transferAll          Boolean?
+  fulfillmentMethod    FulfillmentMethod  @default(PICKUP)
+  deliveryStreet       String?
+  deliveryUnit         String?
+  deliveryCity         String?
+  deliveryPostalCode   String?
+  preferredReadyDate   String?
+  preferredReadyTime   String?
+  patientNotes         String?
+  newsletterOptIn      Boolean            @default(false)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  @@index([referenceNumber])
+  @@index([email])
+  @@index([phone])
+}

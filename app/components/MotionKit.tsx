@@ -103,7 +103,7 @@ export function StaggerContainer({
       className={className}
       initial={shouldReduceMotion ? false : "hidden"}
       whileInView={shouldReduceMotion ? undefined : "visible"}
-      viewport={{ once: true, amount: 0.15 }}
+      viewport={{ once: true, amount: 0.05 }}
       variants={staggerContainerVariants}
     >
       {children}

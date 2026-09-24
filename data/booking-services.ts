@@ -25,12 +25,88 @@ export interface BookingCategory {
 
 export const BOOKING_CATEGORIES: BookingCategory[] = [
   {
+    id: "cat_prescriptions",
+    slug: "prescriptions",
+    name: "Prescriptions",
+    badge: "Dispensary Services",
+    description:
+      "Refill, transfer, or submit new doctor prescriptions for rapid pickup or free delivery.",
+    services: [
+      {
+        id: "submit-new-prescription",
+        slug: "submit-new-prescription",
+        categoryId: "cat_prescriptions",
+        categoryName: "Prescriptions",
+        name: "Submit New Prescription",
+        shortName: "New Prescription",
+        durationMinutes: 15,
+        priceCents: 0,
+        mspCovered: true,
+        coverageBadge: "Dispensary Service",
+        description:
+          "Submit or bring in a new prescription from your family doctor, clinic, or hospital discharge for prompt fulfillment.",
+        clinicalIndications: [
+          "New prescription from doctor, walk-in clinic, or hospital",
+          "Paper prescription script or clinic discharge document",
+          "Medication counseling and drug interaction check",
+        ],
+        preparationNotes: [
+          "Bring the original paper prescription or clinic discharge document.",
+          "Bring your BC Services Card (Personal Health Number / PHN).",
+        ],
+      },
+      {
+        id: "prescription-refill",
+        slug: "prescription-refill",
+        categoryId: "cat_prescriptions",
+        categoryName: "Prescriptions",
+        name: "Prescription Refill",
+        shortName: "Refill",
+        durationMinutes: 15,
+        priceCents: 0,
+        mspCovered: true,
+        coverageBadge: "Dispensary Service",
+        description:
+          "Refill existing repeat medications on file for pickup or free home delivery across Chilliwack.",
+        clinicalIndications: [
+          "Refill authorized medications currently on file at iHealth Pharmacy",
+          "Synchronized repeat medication pickups",
+        ],
+        preparationNotes: [
+          "Provide your Rx number(s) from your existing bottle or box label.",
+        ],
+      },
+      {
+        id: "prescription-transfer",
+        slug: "prescription-transfer",
+        categoryId: "cat_prescriptions",
+        categoryName: "Prescriptions",
+        name: "Transfer Prescription from Another Pharmacy",
+        shortName: "Transfer Prescription",
+        durationMinutes: 15,
+        priceCents: 0,
+        mspCovered: true,
+        coverageBadge: "Dispensary Service",
+        description:
+          "Transfer your active prescriptions from any Canadian pharmacy to iHealth Pharmacy.",
+        clinicalIndications: [
+          "Moving medications from another pharmacy to iHealth Pharmacy",
+          "Consolidating all prescriptions under one dedicated dispensary",
+        ],
+        preparationNotes: [
+          "Have the name and phone number of your previous pharmacy handy.",
+          "List the medications you would like transferred.",
+        ],
+      },
+    ],
+  },
+  {
     id: "cat_minor_ailments",
     slug: "minor_ailments",
     name: "Minor Ailments",
-    badge: "100% Covered by BC MSP",
+    badge: "Pharmacist Prescribing",
     description:
-      "Direct pharmacist assessment and prescribing for 21 common conditions under BC PPMAC regulations without waiting for a doctor.",
+      "Direct pharmacist assessment and prescribing for common conditions under BC PPMAC regulations without waiting for a doctor.",
     services: [
       {
         id: "uncomplicated-urinary-tract-infection",
@@ -42,7 +118,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Clinical assessment and antibiotic prescribing for uncomplicated lower urinary tract infections in eligible individuals.",
         clinicalIndications: [
@@ -66,7 +142,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Assessment of seasonal and environmental allergy symptoms with prescription antihistamines or corticosteroid nasal sprays.",
         clinicalIndications: [
@@ -88,7 +164,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Prompt antiviral assessment and prescribing to reduce duration and severity of recurrent oral herpes outbreaks.",
         clinicalIndications: [
@@ -109,7 +185,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Evaluation of eye redness, discharge, and irritation to determine bacterial, viral, or allergic conjunctivitis and prescribe drops.",
         clinicalIndications: [
@@ -131,7 +207,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Assessment of heartburn and acid reflux symptoms with prescription proton pump inhibitors or H2 blockers.",
         clinicalIndications: [
@@ -152,7 +228,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 20,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Rapid clinical evaluation for localized painful blistering rash and initiation of targeted oral antivirals within the 72-hour window.",
         clinicalIndications: [
@@ -173,7 +249,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Skin assessment and tailored topical prescription regimens including retinoids, benzoyl peroxide, and topical antibiotics.",
         clinicalIndications: [
@@ -194,7 +270,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Evaluation of dry, itchy, inflamed skin flares with prescription topical corticosteroids or calcineurin inhibitors.",
         clinicalIndications: [
@@ -215,7 +291,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Diagnosis and management of localized skin inflammation caused by allergens, chemicals, cosmetics, or plants.",
         clinicalIndications: [
@@ -235,7 +311,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Assessment of tinea pedis, cruris, or corporis with prescription topical or oral antifungal therapies.",
         clinicalIndications: [
@@ -256,7 +332,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Confidential evaluation of itching, burning, and discharge with prescription oral or vaginal antifungal therapies.",
         clinicalIndications: [
@@ -277,7 +353,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Management of painful menstruation with targeted prescription NSAIDs or hormonal symptom support.",
         clinicalIndications: [
@@ -297,7 +373,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Evaluation of persistent upper abdominal discomfort, bloating, and early fullness with medical therapy recommendations.",
         clinicalIndications: [
@@ -317,7 +393,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Private consultation and prescription for topical corticosteroid, local anesthetic, and anti-inflammatory formulations.",
         clinicalIndications: [
@@ -337,7 +413,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Identification of superficial honey-crusted bacterial skin sores and prescription of targeted topical or oral antibiotics.",
         clinicalIndications: [
@@ -357,7 +433,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Relief of localized bite reactions, severe itching, and allergic hive eruptions using prescription antihistamines and topicals.",
         clinicalIndications: [
@@ -378,7 +454,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Assessment of acute soft tissue injuries, tendon strains, and joint sprains with prescription anti-inflammatories.",
         clinicalIndications: [
@@ -399,7 +475,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 20,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Personalized quit smoking planning, BC Smoking Cessation Program enrollment, and prescription cessation therapies.",
         clinicalIndications: [
@@ -419,7 +495,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Assessment of painful inner oral ulcers with prescription topical anti-inflammatory pastes and protective coatings.",
         clinicalIndications: [
@@ -439,7 +515,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Assessment of creamy white oral mucosal patches and prescribing of oral antifungal suspensions or lozenges.",
         clinicalIndications: [
@@ -459,7 +535,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 20,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Comprehensive consultation and prescription for BC covered oral contraceptives, injections, rings, patches, and emergency pills.",
         clinicalIndications: [
@@ -468,6 +544,194 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         ],
         preparationNotes: [
           "Many prescription contraceptives are 100% covered under BC PharmaCare.",
+        ],
+      },
+      {
+        id: "pinworms-and-threadworms",
+        slug: "pinworms-and-threadworms",
+        categoryId: "cat_minor_ailments",
+        categoryName: "Minor Ailments",
+        name: "Pinworms & Threadworms",
+        shortName: "Pinworms Treatment",
+        durationMinutes: 15,
+        priceCents: 0,
+        mspCovered: true,
+        coverageBadge: "Pharmacist Assessment",
+        description:
+          "Clinical evaluation for nocturnal anal itching and prescribing of oral anthelmintics (e.g. Pyrantel Pamoate or Mebendazole) for patient and household.",
+        clinicalIndications: [
+          "Nocturnal or early morning intense perianal itching",
+          "Visible tiny thread-like worms or suspected classroom exposure",
+        ],
+        preparationNotes: [
+          "Whole household may require simultaneous single-dose treatment.",
+        ],
+      },
+      {
+        id: "jock-itch-tinea-cruris",
+        slug: "jock-itch-tinea-cruris",
+        categoryId: "cat_minor_ailments",
+        categoryName: "Minor Ailments",
+        name: "Jock Itch (Tinea Cruris)",
+        shortName: "Jock Itch Relief",
+        durationMinutes: 15,
+        priceCents: 0,
+        mspCovered: true,
+        coverageBadge: "Pharmacist Assessment",
+        description:
+          "Targeted fungal assessment for groin and upper thigh chafing, itching, and scaling with prescription topical antifungals.",
+        clinicalIndications: [
+          "Pruritic, well-demarcated reddish-brown scaling rash in groin folds",
+          "Burning or stinging exacerbated by sweat or friction",
+        ],
+        preparationNotes: [
+          "Keep the affected groin area clean and thoroughly dried.",
+        ],
+      },
+      {
+        id: "athletes-foot-tinea-pedis",
+        slug: "athletes-foot-tinea-pedis",
+        categoryId: "cat_minor_ailments",
+        categoryName: "Minor Ailments",
+        name: "Athlete's Foot (Tinea Pedis)",
+        shortName: "Athlete's Foot",
+        durationMinutes: 15,
+        priceCents: 0,
+        mspCovered: true,
+        coverageBadge: "Pharmacist Assessment",
+        description:
+          "Evaluation of interdigital peeling, maceration, and stinging on feet with prescription topical antifungal formulations.",
+        clinicalIndications: [
+          "Itchy, cracked, or peeling skin between toes",
+          "Burning soles or scaling along lateral edges of feet",
+        ],
+        preparationNotes: [
+          "Ensure feet are clean and dry prior to assessment.",
+        ],
+      },
+      {
+        id: "seborrheic-dermatitis",
+        slug: "seborrheic-dermatitis",
+        categoryId: "cat_minor_ailments",
+        categoryName: "Minor Ailments",
+        name: "Dandruff & Seborrheic Dermatitis",
+        shortName: "Dandruff & Scalp Care",
+        durationMinutes: 15,
+        priceCents: 0,
+        mspCovered: true,
+        coverageBadge: "Pharmacist Assessment",
+        description:
+          "Clinical assessment of stubborn scalp flaking, greasy crusts, and eyebrow erythema with medical shampoos and anti-inflammatory lotions.",
+        clinicalIndications: [
+          "Stubborn yellowish or white greasy flakes on scalp or facial hair",
+          "Redness and persistent itching unresponsive to standard shampoos",
+        ],
+        preparationNotes: [
+          "Avoid washing hair with strong medicated products on the morning of your visit.",
+        ],
+      },
+      {
+        id: "onychomycosis-nail-fungus",
+        slug: "onychomycosis-nail-fungus",
+        categoryId: "cat_minor_ailments",
+        categoryName: "Minor Ailments",
+        name: "Fungal Nail Infections (Onychomycosis)",
+        shortName: "Fungal Nail Assessment",
+        durationMinutes: 15,
+        priceCents: 0,
+        mspCovered: true,
+        coverageBadge: "Pharmacist Assessment",
+        description:
+          "Evaluation of yellowed, thickened, or brittle toenails and fingernails with targeted topical antifungal lacquers or treatment referrals.",
+        clinicalIndications: [
+          "Thickened, discoloured yellow or brownish nail plate",
+          "Brittle, crumbly nail edges with subungual debris",
+        ],
+        preparationNotes: [
+          "Remove any cosmetic nail polish before your appointment.",
+        ],
+      },
+      {
+        id: "diaper-dermatitis",
+        slug: "diaper-dermatitis",
+        categoryId: "cat_minor_ailments",
+        categoryName: "Minor Ailments",
+        name: "Diaper Rash (Diaper Dermatitis)",
+        shortName: "Diaper Rash Relief",
+        durationMinutes: 15,
+        priceCents: 0,
+        mspCovered: true,
+        coverageBadge: "Pharmacist Assessment",
+        description:
+          "Evaluation of infant or toddler perineal redness, chafing, or candida satellite lesions with barrier pastes and mild antifungal creams.",
+        clinicalIndications: [
+          "Confluent erythematous patches in diaper contact areas",
+          "Pustules or red satellite lesions suggestive of secondary candidiasis",
+        ],
+        preparationNotes: [
+          "Bring child's BC CareCard and note current diaper creams tried.",
+        ],
+      },
+      {
+        id: "ringworm-tinea-corporis",
+        slug: "ringworm-tinea-corporis",
+        categoryId: "cat_minor_ailments",
+        categoryName: "Minor Ailments",
+        name: "Ringworm (Tinea Corporis)",
+        shortName: "Ringworm Assessment",
+        durationMinutes: 15,
+        priceCents: 0,
+        mspCovered: true,
+        coverageBadge: "Pharmacist Assessment",
+        description:
+          "Identification of circular ring-shaped rashes with raised scaly edges on arms, legs, or torso with prescription topical antifungals.",
+        clinicalIndications: [
+          "Circular red scaly plaque with clear central skin",
+          "Expanding itchy border following contact with pets or gym mats",
+        ],
+        preparationNotes: [
+          "Avoid applying occlusive cosmetic ointments right before visit.",
+        ],
+      },
+      {
+        id: "emergency-contraception",
+        slug: "emergency-contraception",
+        categoryId: "cat_minor_ailments",
+        categoryName: "Minor Ailments",
+        name: "Emergency Contraception",
+        shortName: "Emergency Contraception",
+        durationMinutes: 15,
+        priceCents: 0,
+        mspCovered: true,
+        coverageBadge: "Confidential Care",
+        description:
+          "Private, time-sensitive pharmacist consultation for morning-after contraception (Levonorgestrel or Ulipristal acetate) covered under BC PharmaCare.",
+        clinicalIndications: [
+          "Unprotected intercourse or contraceptive failure within the last 5 days (120h)",
+        ],
+        preparationNotes: [
+          "Best efficacy when taken as soon as possible after intercourse. Confidential private consultation room.",
+        ],
+      },
+      {
+        id: "headache-assessment",
+        slug: "headache-assessment",
+        categoryId: "cat_minor_ailments",
+        categoryName: "Minor Ailments",
+        name: "Mild Migraine & Tension Headache",
+        shortName: "Headache Assessment",
+        durationMinutes: 15,
+        priceCents: 0,
+        mspCovered: true,
+        coverageBadge: "Pharmacist Assessment",
+        description:
+          "Evaluation of recurrent throbbing tension headaches and mild migraines with prescription triptans or anti-emetics.",
+        clinicalIndications: [
+          "Unilateral pulsating pain, light sensitivity, or band-like head pressure",
+          "Known migraine history without sudden neurological deficits",
+        ],
+        preparationNotes: [
+          "Bring notes on trigger factors and pain relief medications tried.",
         ],
       },
     ],
@@ -490,7 +754,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "Publicly Funded by BC MSP",
+        coverageBadge: "Publicly Funded",
         description:
           "BC publicly funded seasonal influenza immunization for individuals 6 months of age and older.",
         clinicalIndications: [
@@ -511,7 +775,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "Publicly Funded by BC MSP",
+        coverageBadge: "Publicly Funded",
         description:
           "Updated COVID-19 mRNA immunization administered according to current BC provincial health guidelines.",
         clinicalIndications: [
@@ -572,7 +836,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "Publicly Funded by BC MSP",
+        coverageBadge: "Publicly Funded",
         description:
           "10-year booster vaccination or post-wound exposure immunization for adults and pregnant individuals.",
         clinicalIndications: [
@@ -703,7 +967,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMinutes: 15,
         priceCents: 0,
         mspCovered: true,
-        coverageBadge: "100% Covered by BC MSP",
+        coverageBadge: "Pharmacist Assessment",
         description:
           "Pharmacist clinical assessment to renew an expired maintenance prescription or adapt dosage formulations to prevent therapy interruption.",
         clinicalIndications: [
@@ -721,8 +985,78 @@ export const ALL_BOOKING_SERVICES: BookingService[] = BOOKING_CATEGORIES.flatMap
   (c) => c.services
 );
 
+const SLUG_ALIASES: Record<string, string> = {
+  // Minor ailments slug aliases
+  "minor-ailments": "uncomplicated-urinary-tract-infection",
+  "minor_ailments": "uncomplicated-urinary-tract-infection",
+  "gastroesophageal-reflux-disease-gerd": "gerd-acid-reflux",
+  "heartburn": "gerd-acid-reflux",
+  "canker-sores-aphthous-ulcers": "aphthous-ulcers-canker-sores",
+  "oral-thrush-candidiasis": "oral-fungal-infection-thrush",
+  "uncomplicated-vulvovaginal-candidiasis": "vaginal-candidiasis-yeast-infection",
+  "yeast-infection": "vaginal-candidiasis-yeast-infection",
+  "dysmenorrhea": "dysmenorrhea-menstrual-cramps",
+  "menstrual-cramps": "dysmenorrhea-menstrual-cramps",
+  "insect-bites-and-urticaria": "insect-bites-urticaria-hives",
+  "musculoskeletal-sprains-and-strains": "musculoskeletal-sprains-strains",
+  "smoking-cessation": "nicotine-dependence-smoking-cessation",
+  "uti": "uncomplicated-urinary-tract-infection",
+  "cold-sores": "herpes-labialis-cold-sores",
+  "cold-sores-herpes-labialis": "herpes-labialis-cold-sores",
+  "pink-eye": "conjunctivitis-pink-eye",
+  "shingles": "shingles-herpes-zoster",
+  "acne": "mild-acne",
+  "eczema": "atopic-dermatitis-eczema",
+
+  // Vaccine slug aliases
+  "vaccine": "annual-influenza-immunization",
+  "vaccines": "annual-influenza-immunization",
+  "vaccinations": "annual-influenza-immunization",
+  "flu": "annual-influenza-immunization",
+  "flu-shot": "annual-influenza-immunization",
+  "covid": "covid-19-vaccination",
+  "covid-19": "covid-19-vaccination",
+  "shingrix": "shingles-immunization-shingrix",
+  "travel": "travel-immunizations-consult",
+  "travel-vaccines": "travel-immunizations-consult",
+  "tdap": "tetanus-diphtheria-pertussis-tdap",
+  "pneumonia": "pneumococcal-immunization",
+  // Prescription slug aliases
+  "new-prescription": "submit-new-prescription",
+  "new_prescription": "submit-new-prescription",
+  "submit-prescription": "submit-new-prescription",
+  "upload-prescription": "submit-new-prescription",
+  "new-rx": "submit-new-prescription",
+  "prescription-refills": "prescription-refill",
+  "refill": "prescription-refill",
+  "refills": "prescription-refill",
+  "prescription-transfer": "prescription-transfer",
+  "transfer": "prescription-transfer",
+  "transfers": "prescription-transfer",
+};
+
 export function getServiceByIdOrSlug(idOrSlug: string): BookingService | undefined {
+  if (!idOrSlug) return undefined;
+  const normalized = idOrSlug.trim().toLowerCase();
+
+  // 1. Direct match by id or slug
+  const directMatch = ALL_BOOKING_SERVICES.find(
+    (s) => s.id.toLowerCase() === normalized || s.slug.toLowerCase() === normalized
+  );
+  if (directMatch) return directMatch;
+
+  // 2. Check slug alias table
+  const aliasTarget = SLUG_ALIASES[normalized];
+  if (aliasTarget) {
+    const aliasMatch = ALL_BOOKING_SERVICES.find(
+      (s) => s.id.toLowerCase() === aliasTarget || s.slug.toLowerCase() === aliasTarget
+    );
+    if (aliasMatch) return aliasMatch;
+  }
+
+  // 3. Fallback substring match
   return ALL_BOOKING_SERVICES.find(
-    (s) => s.id === idOrSlug || s.slug === idOrSlug
+    (s) => s.slug.toLowerCase().includes(normalized) || normalized.includes(s.slug.toLowerCase())
   );
 }
+

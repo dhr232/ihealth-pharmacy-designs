@@ -22,6 +22,7 @@ import {
 import Link from "next/link";
 import { motion } from "motion/react";
 import { getMainSiteUrl } from "@/lib/routes";
+import PhipaBadge from "@/app/components/PhipaBadge";
 
 interface BookingReviewProps {
   service: BookingService;
@@ -547,9 +548,12 @@ export default function BookingReview({
 
           {/* Card 2: Patient Demographics */}
           <div className="rounded-2xl border border-slate-200/80 bg-slate-50/60 p-6 space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              Patient Identification
-            </h3>
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                Patient Identification
+              </h3>
+              <PhipaBadge variant="inline" />
+            </div>
 
             <div className="space-y-3 text-xs">
               <div className="flex items-center justify-between border-b border-slate-200/70 pb-2.5">
@@ -616,7 +620,7 @@ export default function BookingReview({
       </div>
 
       {/* Navigation & Submit Action */}
-      <div className="sticky bottom-4 z-20 flex items-center justify-between gap-4 rounded-3xl border border-slate-200/90 bg-white/95 backdrop-blur-md p-4 sm:px-6 sm:py-4 shadow-xl shadow-slate-900/10">
+      <div className="sticky bottom-4 z-20 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-slate-200/90 bg-white/95 backdrop-blur-md p-4 sm:px-6 sm:py-4 shadow-xl shadow-slate-900/10">
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
@@ -629,26 +633,29 @@ export default function BookingReview({
           <span>Back to Date & Time</span>
         </motion.button>
 
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          type="button"
-          disabled={isSubmitting}
-          onClick={handleConfirmBooking}
-          className="inline-flex items-center gap-2 rounded-2xl bg-teal-600 px-6 py-3 text-sm font-bold text-white shadow-md shadow-teal-700/20 transition-all duration-150 hover:bg-teal-700 hover:shadow-lg cursor-pointer disabled:opacity-50"
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 size={16} className="animate-spin" />
-              <span>Confirming Booking...</span>
-            </>
-          ) : (
-            <>
-              <CheckCircle2 size={16} />
-              <span>Confirm & Book Appointment</span>
-            </>
-          )}
-        </motion.button>
+        <div className="flex items-center gap-3">
+          <PhipaBadge variant="badge" className="hidden sm:inline-flex" />
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            type="button"
+            disabled={isSubmitting}
+            onClick={handleConfirmBooking}
+            className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-6 py-3 text-sm font-bold text-white shadow-md shadow-blue-900/20 transition-all duration-150 cursor-pointer disabled:opacity-50"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 size={16} className="animate-spin" />
+                <span>Confirming Booking...</span>
+              </>
+            ) : (
+              <>
+                <CheckCircle2 size={16} />
+                <span>Confirm & Book Appointment</span>
+              </>
+            )}
+          </motion.button>
+        </div>
       </div>
     </motion.div>
   );

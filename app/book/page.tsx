@@ -11,6 +11,7 @@ import AppointmentCalendar from "./components/AppointmentCalendar";
 import BookingReview from "./components/BookingReview";
 import {
   BookingService,
+  BOOKING_CATEGORIES,
   ALL_BOOKING_SERVICES,
   getServiceByIdOrSlug,
 } from "@/data/booking-services";
@@ -23,6 +24,7 @@ import {
 } from "lucide-react";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 import { getMainSiteUrl } from "@/lib/routes";
+import PhipaBadge from "../components/PhipaBadge";
 
 const STEPS = [
   { id: 1, title: "Select Service", icon: Stethoscope },
@@ -35,9 +37,7 @@ function BookingWizard() {
   const searchParams = useSearchParams();
 
   const [currentStep, setCurrentStep] = useState<number>(1);
-  const [selectedService, setSelectedService] = useState<BookingService | null>(
-    () => ALL_BOOKING_SERVICES[0] || null
-  );
+  const [selectedService, setSelectedService] = useState<BookingService | null>(null);
   const partySize = 1;
 
   const [patientData, setPatientData] = useState<PatientFormData>({
@@ -56,14 +56,29 @@ function BookingWizard() {
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [selectedTimeLabel, setSelectedTimeLabel] = useState<string>("");
 
-  // Read URL params (e.g. ?service=uncomplicated-urinary-tract-infection)
+  // Read URL params (e.g. ?service=uncomplicated-urinary-tract-infection or ?category=vaccines)
   useEffect(() => {
     const serviceParam = searchParams.get("service") || searchParams.get("serviceId");
+    const categoryParam = searchParams.get("category");
+
     if (serviceParam) {
       const match = getServiceByIdOrSlug(serviceParam);
       if (match) {
         queueMicrotask(() => {
           setSelectedService(match);
+        });
+      }
+    } else if (categoryParam) {
+      const normalizedCat = categoryParam.toLowerCase().replace("-", "_");
+      const categoryObj = BOOKING_CATEGORIES.find(
+        (c) =>
+          c.slug.toLowerCase() === normalizedCat ||
+          c.id.toLowerCase() === normalizedCat ||
+          c.slug.toLowerCase() === categoryParam.toLowerCase()
+      );
+      if (categoryObj && categoryObj.services.length > 0) {
+        queueMicrotask(() => {
+          setSelectedService(categoryObj.services[0]);
         });
       }
     }
@@ -101,23 +116,27 @@ function BookingWizard() {
                   Book Your Pharmacy Appointment
                 </h1>
                 <p className="hidden sm:block mt-0.5 text-xs text-slate-600">
-                  Assessments for 21 minor ailments, seasonal vaccines, and medication reviews in Chilliwack.
+                  Assessments for minor ailments, seasonal vaccines, and medication reviews in Chilliwack.
                 </p>
               </div>
 
-              {/* Dispensary Phone Quick Badge */}
-              <div className="hidden sm:flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-1.5 text-xs">
-                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--brand)] text-white shadow-xs">
-                  <Phone size={14} />
-                </div>
-                <div>
-                  <p className="text-[10px] font-semibold text-slate-500">Book by phone:</p>
-                  <a
-                    href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
-                    className="font-bold text-slate-900 hover:text-[var(--brand)] transition-colors"
-                  >
-                    {PHARMACY_INFO.phoneDisplay}
-                  </a>
+              <div className="flex items-center gap-3">
+                <PhipaBadge />
+
+                {/* Dispensary Phone Quick Badge */}
+                <div className="hidden sm:flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-1.5 text-xs">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--brand)] text-white shadow-xs">
+                    <Phone size={14} />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-semibold text-slate-500">Book by phone:</p>
+                    <a
+                      href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
+                      className="font-bold text-slate-900 hover:text-[var(--brand)] transition-colors"
+                    >
+                      {PHARMACY_INFO.phoneDisplay}
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>

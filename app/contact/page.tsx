@@ -30,13 +30,13 @@ import { isValidEmail, isValidPhone, formatPhoneNumber } from "@/lib/validation"
 // (Next.js will use the layout's title; this keeps things simple for static export.)
 
 const HOURS = [
-  { day: "Monday", hours: "8:00 am – 9:00 pm" },
-  { day: "Tuesday", hours: "8:00 am – 9:00 pm" },
-  { day: "Wednesday", hours: "8:00 am – 9:00 pm" },
-  { day: "Thursday", hours: "8:00 am – 9:00 pm" },
-  { day: "Friday", hours: "8:00 am – 9:00 pm" },
-  { day: "Saturday", hours: "9:00 am – 6:00 pm" },
-  { day: "Sunday", hours: "9:00 am – 6:00 pm" },
+  { day: "Monday", hours: "9:00 am – 5:00 pm" },
+  { day: "Tuesday", hours: "9:00 am – 5:00 pm" },
+  { day: "Wednesday", hours: "9:00 am – 5:00 pm" },
+  { day: "Thursday", hours: "9:00 am – 5:00 pm" },
+  { day: "Friday", hours: "9:00 am – 5:00 pm" },
+  { day: "Saturday", hours: "Closed" },
+  { day: "Sunday", hours: "Closed" },
 ];
 
 const FAQ = [
@@ -152,7 +152,10 @@ export default function ContactPage() {
 
     try {
       const formData = new FormData(e.currentTarget);
-      formData.append("access_key", "YOUR_WEB3FORMS_KEY_HERE");
+      formData.append(
+        "access_key",
+        process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "YOUR_WEB3FORMS_KEY_HERE",
+      );
       formData.append("from_name", "iHealth Pharmacy Website");
       formData.append("subject", `Contact form: ${form.subject}`);
 
@@ -173,7 +176,7 @@ export default function ContactPage() {
       }
     } catch {
       setStatus("error");
-      setErrorMsg("Network error. Please call us at (604) 555-0199.");
+      setErrorMsg(`Network error. Please call us at ${PHARMACY_INFO.phoneDisplay}.`);
     }
   }
 
@@ -329,10 +332,10 @@ export default function ContactPage() {
                       <p className="mt-1 text-sm text-[var(--muted)]">
                         If it&apos;s urgent, please call us at{" "}
                         <a
-                          href="tel:+160****0199"
+                          href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
                           className="font-medium text-[var(--brand)] underline-offset-2 hover:underline"
                         >
-                          (604) 555-0199
+                          {PHARMACY_INFO.phoneDisplay}
                         </a>
                         .
                       </p>

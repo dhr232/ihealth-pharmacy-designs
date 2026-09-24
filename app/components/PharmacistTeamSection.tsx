@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Languages, MessageCircle, PhoneCall, UserCheck } from "lucide-react";
+import { Languages, MessageCircle, MessageSquare, PhoneCall, UserCheck } from "lucide-react";
 import { SectionReveal, HoverCard, StaggerContainer, StaggerItem } from "./MotionKit";
 import { SEED_PHARMACISTS, type Pharmacist } from "@/app/admin/lib/types";
-import { getWhatsAppUrl, PHARMACY_INFO } from "@/data/pharmacy-info";
+import { getWhatsAppUrl, getSmsUrl, PHARMACY_INFO } from "@/data/pharmacy-info";
 
 const STORAGE_KEY = "ihealth_admin_pharmacists";
 
@@ -88,14 +88,17 @@ export default function PharmacistTeamSection() {
             href={getWhatsAppUrl(PHARMACY_INFO.whatsapp.presets.question)}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 self-start rounded-lg bg-[var(--brand)] px-4 py-2.5 text-sm font-semibold text-white shadow-2xs transition hover:bg-[var(--brand-hover)]"
+            className="inline-flex items-center gap-2 self-start rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-blue-700/20 transition-all duration-200 active:scale-95 shrink-0"
           >
             <MessageCircle size={16} />
             <span>Ask a Pharmacist</span>
           </a>
         </SectionReveal>
 
-        <StaggerContainer className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <StaggerContainer
+          key={pharmacists.map((p) => p.id).join("-")}
+          className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+        >
           {pharmacists.map((p) => (
             <StaggerItem key={p.id} className="flex flex-col">
               <HoverCard className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs transition duration-200 hover:border-slate-300 hover:shadow-md">
@@ -108,6 +111,11 @@ export default function PharmacistTeamSection() {
                     loading="lazy"
                     className="h-full w-full object-cover object-top transition duration-300 hover:scale-105"
                   />
+                  {p.role.toLowerCase().includes("primary") && (
+                    <div className="absolute top-2.5 left-2.5 inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-blue-700 to-blue-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-2xs">
+                      Primary Pharmacist
+                    </div>
+                  )}
                   <div className="absolute bottom-2.5 left-2.5 inline-flex items-center gap-1 rounded-md bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-slate-800 shadow-2xs backdrop-blur-xs">
                     <UserCheck size={12} className="text-[var(--brand)]" />
                     <span>{p.yearsExperience}+ Yrs Experience</span>
@@ -128,32 +136,61 @@ export default function PharmacistTeamSection() {
                   </div>
 
                   <h3 className="mt-2 text-base font-bold text-slate-900">{p.name}</h3>
-                  <p className="text-xs font-medium text-[var(--brand)]">{p.role}</p>
+                  <p className="text-xs font-semibold text-[var(--brand)]">{p.role}</p>
 
                   <p className="mt-2.5 line-clamp-3 text-xs leading-relaxed text-slate-600">
                     {p.bio}
                   </p>
 
-                  {/* Languages */}
+                  {/* Languages & Direct Contact */}
                   <div className="mt-auto pt-4 border-t border-slate-100">
-                    <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
-                      <Languages size={13} className="text-slate-400" />
-                      <span>{p.languages.join(", ")}</span>
+                    <div className="flex items-center justify-between gap-1.5 text-[11px] text-slate-500">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <Languages size={13} className="text-slate-400 shrink-0" />
+                        <span className="truncate">{p.languages.join(", ")}</span>
+                      </div>
+                      {p.directPhone && (
+                        <span className="text-[10px] font-semibold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200/60 shrink-0">
+                          {p.directPhone}
+                        </span>
+                      )}
                     </div>
 
                     <div className="mt-3 flex items-center justify-between gap-2">
                       <a
-                        href={getWhatsAppUrl(`Hello ${p.name}! I would like to ask a question regarding my prescription.`)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex flex-1 items-center justify-center gap-1 rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-1.5 text-[11px] font-semibold text-emerald-800 hover:bg-emerald-100 transition"
+                        href={
+                          p.directPhoneRaw
+                            ? getSmsUrl(p.directPhoneRaw, `Hello ${p.name}! I would like to ask a question regarding my prescription.`)
+                            : getWhatsAppUrl(`Hello ${p.name}! I would like to ask a question regarding my prescription.`)
+                        }
+                        target={p.directPhoneRaw ? undefined : "_blank"}
+                        rel={p.directPhoneRaw ? undefined : "noopener noreferrer"}
+                        className={`inline-flex flex-1 items-center justify-center gap-1 rounded-md border px-2.5 py-1.5 text-[11px] font-semibold transition ${
+                          p.directPhoneRaw
+                            ? "border-blue-200 bg-blue-50 text-blue-800 hover:bg-blue-100"
+                            : "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
+                        }`}
+                        title={
+                          p.directPhone
+                            ? `Open message app to text ${p.name} (${p.directPhone})`
+                            : `Chat with ${p.name} on WhatsApp`
+                        }
                       >
-                        <MessageCircle size={12} className="text-emerald-600" />
-                        <span>Chat</span>
+                        {p.directPhoneRaw ? (
+                          <MessageSquare size={12} className="text-blue-600" />
+                        ) : (
+                          <MessageCircle size={12} className="text-emerald-600" />
+                        )}
+                        <span>{p.directPhoneRaw ? "Message" : "Chat"}</span>
                       </a>
                       <a
-                        href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
+                        href={`tel:${p.directPhoneRaw || `+1${PHARMACY_INFO.phoneRaw}`}`}
                         className="inline-flex flex-1 items-center justify-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium text-slate-700 hover:bg-slate-100 transition"
+                        title={
+                          p.directPhone
+                            ? `Call ${p.name} (${p.directPhone})`
+                            : `Call Dispensary (${PHARMACY_INFO.phoneDisplay})`
+                        }
                       >
                         <PhoneCall size={12} className="text-slate-500" />
                         <span>Call</span>

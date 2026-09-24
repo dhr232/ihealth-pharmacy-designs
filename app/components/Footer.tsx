@@ -1,5 +1,19 @@
+"use client";
+
 import Link from "next/link";
-import { Phone, Mail, MapPin, Clock, MessageCircle, ShieldCheck } from "lucide-react";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Clock,
+  MessageCircle,
+  ShieldCheck,
+  Languages,
+  ArrowRight,
+  ArrowUp,
+  Calendar,
+  Lock,
+} from "lucide-react";
 import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
 
 interface FooterProps {
@@ -7,59 +21,145 @@ interface FooterProps {
 }
 
 export default function Footer({ logoHref = "/" }: FooterProps = {}) {
+  // Live dispensary status calculator (Mon-Fri 9:00 AM - 5:00 PM Pacific Time)
+  const getDispensaryStatus = () => {
+    try {
+      const now = new Date();
+      // Format to Vancouver/Pacific time
+      const pacificTimeStr = now.toLocaleString("en-US", {
+        timeZone: "America/Vancouver",
+        hour12: false,
+        hour: "numeric",
+        minute: "numeric",
+        weekday: "short",
+      });
+      const day = now.toLocaleDateString("en-US", { timeZone: "America/Vancouver", weekday: "short" });
+      const hour = parseInt(now.toLocaleTimeString("en-US", { timeZone: "America/Vancouver", hour12: false, hour: "numeric" }), 10);
+      const isWeekday = day !== "Sat" && day !== "Sun";
+      const isOpen = isWeekday && hour >= 9 && hour < 17;
+
+      if (isOpen) {
+        return {
+          isOpen: true,
+          label: "Dispensary Open Now",
+          detail: "Open until 5:00 PM",
+          badgeColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+          dotColor: "bg-emerald-400",
+        };
+      }
+      return {
+        isOpen: false,
+        label: "Dispensary Closed",
+        detail: "Opens Mon at 9:00 AM",
+        badgeColor: "bg-slate-800 text-slate-400 border-slate-700/80",
+        dotColor: "bg-slate-500",
+      };
+    } catch {
+      return {
+        isOpen: true,
+        label: "Mon–Fri 9am–5pm",
+        detail: "Weekends Closed",
+        badgeColor: "bg-slate-800 text-slate-300 border-slate-700",
+        dotColor: "bg-blue-400",
+      };
+    }
+  };
+
+  const status = getDispensaryStatus();
+
+  const scrollToTop = () => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
-    <footer id="contact" className="border-t border-[var(--border)] bg-[#1a1e23] text-white">
-      <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
+    <footer id="contact" className="border-t border-slate-800/80 bg-[#0B1120] text-white">
+      <div className="mx-auto max-w-7xl px-5 py-14 lg:px-8">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
-          {/* Col 1: Identity & Multilingual */}
-          <div>
+          
+          {/* Col 1: Identity, PHIPA & Multilingual */}
+          <div className="space-y-4">
             <Link href={logoHref} className="flex items-center gap-3 group">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/ihealth-logo-main.jpeg"
                 alt="iHealth Pharmacy logo"
-                width={36}
-                height={36}
-                className="h-9 w-9 rounded-full object-contain bg-white ring-1 ring-white/20 transition group-hover:ring-white/40"
+                width={40}
+                height={40}
+                className="h-10 w-10 rounded-full object-contain bg-white p-0.5 ring-2 ring-white/10 transition group-hover:ring-blue-500/50"
               />
-              <span className="text-lg font-semibold transition group-hover:text-white/90">{PHARMACY_INFO.name}</span>
+              <div>
+                <span className="text-lg font-bold tracking-tight text-white transition group-hover:text-blue-400">
+                  {PHARMACY_INFO.name}
+                </span>
+                <span className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                  Community Dispensary
+                </span>
+              </div>
             </Link>
-            <p className="mt-3 text-sm leading-relaxed text-white/70">
+
+            <p className="text-xs leading-relaxed text-slate-400">
               Independent, community pharmacy in Chilliwack, BC. Personalized
               medication reviews, blister packaging, minor ailments prescribing,
-              and free local delivery.
+              and free local delivery across Chilliwack and Sardis.
             </p>
-            <div className="mt-4 rounded-xl border border-white/10 bg-white/5 p-3">
-              <p className="text-xs font-medium text-white/90">Multilingual Care</p>
-              <p className="mt-0.5 text-xs text-white/60">
+
+            {/* Multilingual Support Card */}
+            <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 shadow-inner">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-200">
+                <Languages size={14} className="text-blue-400" />
+                <span>Multilingual Care</span>
+              </div>
+              <p className="mt-1 text-xs text-slate-400">
                 English • ਪੰਜਾਬੀ (Punjabi) • हिन्दी (Hindi)
               </p>
             </div>
+
+            {/* PHIPA / PIPEDA Privacy Guarantee */}
+            <div className="inline-flex items-center gap-2 rounded-xl border border-sky-900/60 bg-sky-950/40 px-3 py-1.5 text-xs text-sky-300">
+              <Lock size={12} className="text-sky-400 shrink-0" />
+              <span className="text-[11px] font-semibold">
+                PHIPA / PIPA Compliant • 256-Bit Encrypted
+              </span>
+            </div>
           </div>
 
-          {/* Col 2: Direct Contact & WhatsApp */}
+          {/* Col 2: Direct Contact, Location & Hours */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-white/50">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
               Get in Touch
             </h3>
-            <ul className="mt-4 space-y-3 text-sm">
+
+            {/* Live Dispensary Status Indicator */}
+            <div className="mt-3">
+              <div
+                className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold ${status.badgeColor}`}
+              >
+                <span className={`h-2 w-2 rounded-full ${status.dotColor} ${status.isOpen ? "animate-pulse" : ""}`} />
+                <span>{status.label}</span>
+                <span className="text-[10px] opacity-75">({status.detail})</span>
+              </div>
+            </div>
+
+            <ul className="mt-4 space-y-3 text-xs sm:text-sm">
               <li>
                 <a
                   href={PHARMACY_INFO.address.mapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-start gap-2 text-white/80 transition hover:text-white"
+                  className="flex items-start gap-2.5 text-slate-300 transition hover:text-blue-400"
                 >
-                  <MapPin size={16} className="mt-0.5 shrink-0 text-[var(--brand)]" />
-                  <span>{PHARMACY_INFO.address.full}</span>
+                  <MapPin size={16} className="mt-0.5 shrink-0 text-blue-400" />
+                  <span className="leading-snug">{PHARMACY_INFO.address.full}</span>
                 </a>
               </li>
               <li>
                 <a
                   href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
-                  className="flex items-center gap-2 text-white/80 transition hover:text-white"
+                  className="flex items-center gap-2.5 text-slate-300 transition hover:text-blue-400 font-semibold"
                 >
-                  <Phone size={16} className="shrink-0 text-[var(--brand)]" />
+                  <Phone size={16} className="shrink-0 text-blue-400" />
                   <span>{PHARMACY_INFO.phoneDisplay}</span>
                 </a>
               </li>
@@ -68,38 +168,49 @@ export default function Footer({ logoHref = "/" }: FooterProps = {}) {
                   href={getWhatsAppUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-[#25D366] transition hover:text-green-300"
+                  className="flex items-center gap-2.5 text-emerald-400 transition hover:text-emerald-300 font-semibold"
                 >
-                  <MessageCircle size={16} className="shrink-0" />
+                  <MessageCircle size={16} className="shrink-0 text-[#25D366]" />
                   <span>WhatsApp: {PHARMACY_INFO.whatsapp.displayNumber}</span>
                 </a>
               </li>
               <li>
                 <a
                   href={`mailto:${PHARMACY_INFO.email}`}
-                  className="flex items-center gap-2 text-white/80 transition hover:text-white"
+                  className="flex items-center gap-2.5 text-slate-300 transition hover:text-blue-400"
                 >
-                  <Mail size={16} className="shrink-0 text-[var(--brand)]" />
+                  <Mail size={16} className="shrink-0 text-blue-400" />
                   <span>{PHARMACY_INFO.email}</span>
                 </a>
               </li>
-              <li className="flex items-start gap-2 text-white/80">
-                <Clock size={16} className="mt-0.5 shrink-0 text-[var(--brand)]" />
-                <span>{PHARMACY_INFO.hoursSummary}</span>
+              <li className="flex items-start gap-2.5 text-slate-400 pt-1 border-t border-slate-800/60">
+                <Clock size={16} className="mt-0.5 shrink-0 text-slate-500" />
+                <span className="text-xs leading-relaxed">{PHARMACY_INFO.hoursSummary}</span>
               </li>
             </ul>
           </div>
 
-          {/* Col 3: Services & Patient Care */}
+          {/* Col 3: Services & Fast Actions */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-white/50">
-              Services
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              Pharmacy Services
             </h3>
-            <ul className="mt-4 space-y-2 text-sm">
+            <ul className="mt-4 space-y-2.5 text-xs sm:text-sm">
+              <li>
+                <Link
+                  href="/new-prescription"
+                  className="group flex items-center justify-between text-blue-400 font-semibold hover:text-blue-300 transition"
+                >
+                  <span>Submit New Prescription</span>
+                  <span className="text-[10px] uppercase font-bold bg-blue-900/60 text-blue-300 border border-blue-700/60 px-1.5 py-0.5 rounded">
+                    Upload
+                  </span>
+                </Link>
+              </li>
               <li>
                 <Link
                   href="/prescription-refills"
-                  className="text-white/80 transition hover:text-white"
+                  className="text-slate-300 transition hover:text-blue-400"
                 >
                   Prescription Refills
                 </Link>
@@ -107,65 +218,92 @@ export default function Footer({ logoHref = "/" }: FooterProps = {}) {
               <li>
                 <Link
                   href="/transfer"
-                  className="text-white/80 transition hover:text-white"
+                  className="text-slate-300 transition hover:text-blue-400"
                 >
                   Transfer Prescription
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/services/myhealthpack"
-                  className="text-white/80 transition hover:text-white"
-                >
-                  MyHealthPack Blister Packs
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/services/minor-ailments"
-                  className="text-white/80 transition hover:text-white"
+                  className="text-slate-300 transition hover:text-blue-400"
                 >
-                  Minor Ailments Clinic
+                  Minor Ailments Clinic (BC MSP)
                 </Link>
               </li>
               <li>
                 <Link
                   href="/vaccinations"
-                  className="text-white/80 transition hover:text-white"
+                  className="text-slate-300 transition hover:text-blue-400"
                 >
                   Vaccinations & Injections
                 </Link>
               </li>
               <li>
                 <Link
+                  href="/services/myhealthpack"
+                  className="text-slate-300 transition hover:text-blue-400"
+                >
+                  MyHealthPack Blister Packs
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/services/compounding"
-                  className="text-white/80 transition hover:text-white"
+                  className="text-slate-300 transition hover:text-blue-400"
                 >
                   Custom Compounding
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services/delivery"
+                  className="text-slate-300 transition hover:text-blue-400"
+                >
+                  Free Prescription Delivery
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Col 4: Accreditation & Direct Billing */}
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-white/50">
-              Accreditation & Direct Billing
-            </h3>
-            <p className="mt-4 text-xs leading-relaxed text-white/70">
-              Licensed community pharmacy with the{" "}
-              <strong className="text-white/90">
-                {PHARMACY_INFO.accreditation.college}
-              </strong>
-              .
-            </p>
-            <div className="mt-3">
-              <p className="text-xs font-semibold text-white/80">Direct billing for:</p>
+          {/* Col 4: Accreditation, Direct Billing & Booking */}
+          <div className="space-y-4">
+            <div>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                Book & Portals
+              </h3>
+              <div className="mt-3">
+                <Link
+                  href="/book"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 py-2.5 px-4 text-xs font-bold text-white shadow-md shadow-blue-700/25 transition-all duration-200 active:scale-95"
+                >
+                  <Calendar size={14} />
+                  <span>Book Appointment Online</span>
+                  <ArrowRight size={13} />
+                </Link>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                Accreditation
+              </h4>
+              <p className="mt-2 text-xs leading-relaxed text-slate-300">
+                Licensed community pharmacy with the{" "}
+                <strong className="text-white font-semibold">
+                  {PHARMACY_INFO.accreditation.college}
+                </strong>
+                .
+              </p>
+            </div>
+
+            <div className="pt-1">
+              <p className="text-xs font-semibold text-slate-300">Direct billing accepted for:</p>
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {PHARMACY_INFO.accreditation.directBilling.map((insurer) => (
                   <span
                     key={insurer}
-                    className="rounded bg-white/10 px-2 py-0.5 text-[11px] text-white/80"
+                    className="rounded-lg border border-slate-700/80 bg-slate-800/80 px-2.5 py-1 text-[11px] font-medium text-slate-300 shadow-2xs"
                   >
                     {insurer}
                   </span>
@@ -173,26 +311,51 @@ export default function Footer({ logoHref = "/" }: FooterProps = {}) {
               </div>
             </div>
           </div>
+
         </div>
 
-        {/* Emergency Notice */}
-        <div className="mt-12 rounded-xl border border-white/10 bg-white/5 p-4 text-xs leading-relaxed text-white/70">
-          <div className="flex items-start gap-2">
-            <ShieldCheck size={16} className="mt-0.5 shrink-0 text-[var(--brand)]" />
+        {/* Emergency Medical Advisory */}
+        <div className="mt-12 rounded-2xl border border-blue-900/40 bg-blue-950/30 p-4 sm:p-5 text-xs leading-relaxed text-slate-300 shadow-inner">
+          <div className="flex items-start gap-3">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-xs mt-0.5">
+              <ShieldCheck size={16} />
+            </div>
             <div>
-              <span className="font-semibold text-white/90">Medical Advisory: </span>
-              {PHARMACY_INFO.disclaimers.emergency} {PHARMACY_INFO.disclaimers.telehealth811}
+              <span className="font-bold text-white text-xs sm:text-sm block mb-0.5">
+                Provincial Medical Advisory & Emergency Notice:
+              </span>
+              <span>
+                {PHARMACY_INFO.disclaimers.emergency} {PHARMACY_INFO.disclaimers.telehealth811}
+              </span>
             </div>
           </div>
         </div>
 
         {/* Legal Bottom Bar */}
-        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-xs text-white/50 sm:flex-row">
+        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-slate-800/80 pt-8 text-xs text-slate-400 sm:flex-row">
           <p>© {new Date().getFullYear()} {PHARMACY_INFO.legalName}. All rights reserved.</p>
-          <div className="flex flex-wrap gap-4">
-            <Link href="/privacy" className="hover:text-white">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white">Terms of Service</Link>
-            <Link href="/cookies" className="hover:text-white">Cookie Policy</Link>
+          
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+            <Link href="/privacy" className="hover:text-blue-400 transition">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-blue-400 transition">
+              Terms of Service
+            </Link>
+            <Link href="/cookies" className="hover:text-blue-400 transition">
+              Cookie Policy
+            </Link>
+
+            {/* Back to top button */}
+            <button
+              type="button"
+              onClick={scrollToTop}
+              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition cursor-pointer pl-2 border-l border-slate-700/80"
+              title="Back to top"
+            >
+              <span>Back to top</span>
+              <ArrowUp size={13} />
+            </button>
           </div>
         </div>
       </div>

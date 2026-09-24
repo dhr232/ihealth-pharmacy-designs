@@ -19,6 +19,7 @@ import {
   formatPhoneNumber,
   isValidOptionalPhn,
 } from "@/lib/validation";
+import PhipaBadge from "@/app/components/PhipaBadge";
 
 export interface PatientFormData {
   firstName: string;
@@ -363,9 +364,12 @@ export default function PatientForm({
 
           {/* Section 2: BC Health Card PHN */}
           <div className="border-t border-slate-100 pt-6">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
-              British Columbia Healthcare Coverage
-            </h3>
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                British Columbia Healthcare Coverage
+              </h3>
+              <PhipaBadge variant="inline" />
+            </div>
 
             <div>
               <label
@@ -396,11 +400,14 @@ export default function PatientForm({
                   }`}
                 />
               </div>
-              <div className="mt-1.5 flex items-start gap-1.5 text-[11px] text-slate-500">
-                <ShieldCheck size={14} className="shrink-0 mt-0.5 text-[var(--brand)]" />
-                <span>
-                  If you have your 10-digit BC Services Card handy, enter it here. Not required to complete your booking.
-                </span>
+              <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-sky-100 bg-sky-50/60 p-2.5">
+                <div className="flex items-start gap-1.5 text-[11px] text-slate-600">
+                  <ShieldCheck size={14} className="shrink-0 mt-0.5 text-sky-600" />
+                  <span>
+                    If you have your 10-digit BC Services Card handy, enter it here. Not required to complete your booking.
+                  </span>
+                </div>
+                <PhipaBadge variant="pill" />
               </div>
               {errors.phn && (
                 <p className="mt-1.5 flex items-center gap-1 text-xs text-red-600">
@@ -467,13 +474,16 @@ export default function PatientForm({
           <span>Back to Services</span>
         </button>
 
-        <button
-          type="submit"
-          className="inline-flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-6 py-3 text-sm font-bold text-white shadow-md shadow-[#2F4BC4]/20 transition-all duration-150 hover:bg-[var(--brand-hover)] hover:shadow-lg active:scale-[0.98]"
-        >
-          <span>Select Date & Time</span>
-          <ChevronRight size={16} />
-        </button>
+        <div className="flex items-center gap-3">
+          <PhipaBadge variant="pill" className="hidden sm:inline-flex" />
+          <button
+            type="submit"
+            className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-6 py-3 text-sm font-bold text-white shadow-md shadow-blue-900/20 transition-all duration-150 active:scale-[0.98]"
+          >
+            <span>Select Date & Time</span>
+            <ChevronRight size={16} />
+          </button>
+        </div>
       </div>
     </form>
   );
