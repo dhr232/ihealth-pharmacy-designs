@@ -1,17 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import {
-  Inter,
-  Playfair_Display,
-  Outfit,
-  IBM_Plex_Sans,
-  JetBrains_Mono,
-  Quicksand,
-  Plus_Jakarta_Sans,
-  Roboto,
-  Space_Grotesk,
-  Manrope,
-  Lora,
-} from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import ThemeApplier from "./components/ThemeApplier";
 import ChunkErrorRecovery from "./components/ChunkErrorRecovery";
@@ -23,83 +11,126 @@ import { PHARMACY_INFO } from "@/data/pharmacy-info";
 
 /* All 10 font families loaded once at build time so the admin's theme/font
    picker can switch between them on the live site via a CSS class.
-   We keep the weight arrays small (one weight per family) — additional
-   weights can be added later if a pairing needs them. */
-const inter = Inter({
+   Self-hosted as static WOFF2 files under public/fonts/ (latin subset,
+   fetched from Google Fonts' CSS2 API once) via next/font/local instead of
+   next/font/google, so `next build` no longer depends on a live network
+   call to Google at build time — a dependency that has failed
+   intermittently on CI/hosting runners. */
+const inter = localFont({
   variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   display: "swap",
+  src: [
+    { path: "../public/fonts/inter-400.woff2", weight: "400", style: "normal" },
+    { path: "../public/fonts/inter-500.woff2", weight: "500", style: "normal" },
+    { path: "../public/fonts/inter-600.woff2", weight: "600", style: "normal" },
+    { path: "../public/fonts/inter-700.woff2", weight: "700", style: "normal" },
+  ],
 });
 
-const playfair = Playfair_Display({
+const playfair = localFont({
   variable: "--font-playfair",
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
   display: "swap",
+  src: [
+    { path: "../public/fonts/playfair-400.woff2", weight: "400", style: "normal" },
+    { path: "../public/fonts/playfair-600.woff2", weight: "600", style: "normal" },
+    { path: "../public/fonts/playfair-700.woff2", weight: "700", style: "normal" },
+  ],
 });
 
-const outfit = Outfit({
+const outfit = localFont({
   variable: "--font-outfit",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   display: "swap",
+  src: [
+    { path: "../public/fonts/outfit-400.woff2", weight: "400", style: "normal" },
+    { path: "../public/fonts/outfit-500.woff2", weight: "500", style: "normal" },
+    { path: "../public/fonts/outfit-600.woff2", weight: "600", style: "normal" },
+    { path: "../public/fonts/outfit-700.woff2", weight: "700", style: "normal" },
+  ],
 });
 
-const ibmPlexSans = IBM_Plex_Sans({
+const ibmPlexSans = localFont({
   variable: "--font-ibm-plex-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   display: "swap",
+  src: [
+    { path: "../public/fonts/ibm-plex-sans-400.woff2", weight: "400", style: "normal" },
+    { path: "../public/fonts/ibm-plex-sans-500.woff2", weight: "500", style: "normal" },
+    { path: "../public/fonts/ibm-plex-sans-600.woff2", weight: "600", style: "normal" },
+    { path: "../public/fonts/ibm-plex-sans-700.woff2", weight: "700", style: "normal" },
+  ],
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const jetbrainsMono = localFont({
   variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
   display: "swap",
+  src: [
+    { path: "../public/fonts/jetbrains-mono-400.woff2", weight: "400", style: "normal" },
+    { path: "../public/fonts/jetbrains-mono-500.woff2", weight: "500", style: "normal" },
+  ],
 });
 
-const quicksand = Quicksand({
+const quicksand = localFont({
   variable: "--font-quicksand",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   display: "swap",
+  src: [
+    { path: "../public/fonts/quicksand-400.woff2", weight: "400", style: "normal" },
+    { path: "../public/fonts/quicksand-500.woff2", weight: "500", style: "normal" },
+    { path: "../public/fonts/quicksand-600.woff2", weight: "600", style: "normal" },
+    { path: "../public/fonts/quicksand-700.woff2", weight: "700", style: "normal" },
+  ],
 });
 
-const plusJakarta = Plus_Jakarta_Sans({
+const plusJakarta = localFont({
   variable: "--font-plus-jakarta",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
+  src: [
+    { path: "../public/fonts/plus-jakarta-400.woff2", weight: "400", style: "normal" },
+    { path: "../public/fonts/plus-jakarta-500.woff2", weight: "500", style: "normal" },
+    { path: "../public/fonts/plus-jakarta-600.woff2", weight: "600", style: "normal" },
+    { path: "../public/fonts/plus-jakarta-700.woff2", weight: "700", style: "normal" },
+    { path: "../public/fonts/plus-jakarta-800.woff2", weight: "800", style: "normal" },
+  ],
 });
 
-const roboto = Roboto({
+const roboto = localFont({
   variable: "--font-roboto",
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
   display: "swap",
+  src: [
+    { path: "../public/fonts/roboto-400.woff2", weight: "400", style: "normal" },
+    { path: "../public/fonts/roboto-500.woff2", weight: "500", style: "normal" },
+    { path: "../public/fonts/roboto-700.woff2", weight: "700", style: "normal" },
+  ],
 });
 
-const spaceGrotesk = Space_Grotesk({
+const spaceGrotesk = localFont({
   variable: "--font-space-grotesk",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   display: "swap",
+  src: [
+    { path: "../public/fonts/space-grotesk-400.woff2", weight: "400", style: "normal" },
+    { path: "../public/fonts/space-grotesk-500.woff2", weight: "500", style: "normal" },
+    { path: "../public/fonts/space-grotesk-600.woff2", weight: "600", style: "normal" },
+    { path: "../public/fonts/space-grotesk-700.woff2", weight: "700", style: "normal" },
+  ],
 });
 
-const manrope = Manrope({
+const manrope = localFont({
   variable: "--font-manrope",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   display: "swap",
+  src: [
+    { path: "../public/fonts/manrope-400.woff2", weight: "400", style: "normal" },
+    { path: "../public/fonts/manrope-500.woff2", weight: "500", style: "normal" },
+    { path: "../public/fonts/manrope-600.woff2", weight: "600", style: "normal" },
+    { path: "../public/fonts/manrope-700.woff2", weight: "700", style: "normal" },
+  ],
 });
 
-const lora = Lora({
+const lora = localFont({
   variable: "--font-lora",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
   display: "swap",
+  src: [
+    { path: "../public/fonts/lora-400.woff2", weight: "400", style: "normal" },
+    { path: "../public/fonts/lora-500.woff2", weight: "500", style: "normal" },
+    { path: "../public/fonts/lora-600.woff2", weight: "600", style: "normal" },
+  ],
 });
 
 export const metadata: Metadata = {
