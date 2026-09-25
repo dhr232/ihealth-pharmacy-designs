@@ -222,7 +222,7 @@ html[data-text-scale="xlarge"] {
 /* ===========================================================
    Font pairings (10)
    Applied via .font-* classes on <body>. The actual font files
-   are loaded via next/font/google in app/layout.tsx and exposed
+   are self-hosted via next/font/local in app/layout.tsx and exposed
    as --font-* CSS variables; we just remap --font-display /
    --font-body here.
    =========================================================== */
