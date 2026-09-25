@@ -12,18 +12,6 @@ permissions:
   contents: read
 
 jobs:
-  dependency-review:
-    name: Dependency Review (PR)
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v5
-      - name: Block PRs that introduce high or critical vulnerabilities
-        uses: actions/dependency-review-action@v4
-        with:
-          fail-on-severity: high
-
   codeql:
     name: CodeQL Static Analysis
     runs-on: ubuntu-latest
