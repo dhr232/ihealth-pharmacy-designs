@@ -12,6 +12,7 @@ import {
   isValidPhone,
   isValidOptionalPhn,
 } from "@/lib/validation";
+import { getCurrentStaffSession, encryptPhn } from "@/lib/auth";
 
 // Active in-memory lock to prevent race conditions for concurrent bookings at the exact same timeslot
 const activeBookingLocks = new Set<string>();
@@ -201,7 +202,7 @@ export async function POST(request: NextRequest) {
           ? `***-***-${cleanPhnDigits.slice(-4)}`
           : null;
       const phnEncrypted =
-        cleanPhnDigits && cleanPhnDigits.length === 10 ? cleanPhnDigits : null;
+        cleanPhnDigits && cleanPhnDigits.length === 10 ? encryptPhn(cleanPhnDigits) : null;
 
       // Database operation (with resilient fallback if DB is not reachable)
       let dbSuccess = false;
@@ -440,6 +441,14 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    const session = await getCurrentStaffSession();
+    if (!session) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized. Staff authentication required." },
+        { status: 401 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const dateParam = searchParams.get("date"); // YYYY-MM-DD
     const statusParam = searchParams.get("status");

@@ -92,7 +92,7 @@ export default async function Image() {
               fontWeight: "700",
             }}
           >
-            BC MSP Covered Prescribing
+            Minor Ailments Prescribing
           </div>
         </div>
 
@@ -114,12 +114,12 @@ export default async function Image() {
           </div>
 
           <p style={{ fontSize: "20px", color: "#94a3b8", margin: 0, maxWidth: "850px", lineHeight: 1.4 }}>
-            Independent community healthcare in Chilliwack. Fast refills, 21 prescribable minor ailments on walk-in, and free same-day delivery.
+            Skip the clinic wait in Chilliwack. Consult directly with our prescribing pharmacists, manage fast refills, and enjoy free same-day delivery.
           </p>
 
           {/* Service Feature Badges */}
           <div style={{ display: "flex", gap: "12px", marginTop: "12px", flexWrap: "wrap" }}>
-            {["21 Minor Ailments", "Fast Prescription Refills", "Free Local Delivery", "Blister Packaging"].map(
+            {["Minor Ailments Prescribing", "Fast Prescription Refills", "Free Local Delivery", "Blister Packaging"].map(
               (service) => (
                 <div
                   key={service}

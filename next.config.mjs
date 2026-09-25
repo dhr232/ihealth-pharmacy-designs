@@ -2,8 +2,19 @@
 const nextConfig = {
   ...(process.env.STATIC_EXPORT === 'true' ? { output: 'export' } : {}),
   trailingSlash: true,
+  skipTrailingSlashRedirect: true,
   images: { unoptimized: true },
   async headers() {
+    if (process.env.NODE_ENV === 'development') {
+      return [
+        {
+          source: "/:path*",
+          headers: [
+            { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
+          ],
+        },
+      ];
+    }
     return [
       {
         // Every redeploy replaces /_next/static with freshly content-hashed
@@ -19,7 +30,7 @@ const nextConfig = {
         ],
       },
       {
-        // Hashed build assets are safe to cache forever -- a new build
+        // Hashed build assets are safe to cache forever in production -- a new build
         // always ships under a new filename.
         source: "/_next/static/:path*",
         headers: [

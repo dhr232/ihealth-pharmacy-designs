@@ -20,7 +20,8 @@ import { Label } from "@/app/components/ui/label";
 const MAX_IMAGE_BYTES = 800 * 1024;
 
 export const TEAM_STOCK_PRESETS = [
-  { name: "Dr. Anika", url: "/pharmacists/anika.jpg" },
+  { name: "Dev Patel", url: "/pharmacists/dev-patel.png" },
+  { name: "Dr. Rutu", url: "/pharmacists/anika.jpg" },
   { name: "Marcus", url: "/pharmacists/marcus.jpg" },
   { name: "Priya", url: "/pharmacists/priya.jpg" },
   { name: "Daniel", url: "/pharmacists/daniel.jpg" },

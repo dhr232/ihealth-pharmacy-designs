@@ -303,9 +303,9 @@ export function WelcomeNewsletterEmail({
                     color: "#047857",
                   }}
                 >
-                  45619 Yale Rd #101, Chilliwack, BC V2P 0B1
+                  45619 Yale Rd #101, Chilliwack, BC V2P 2N1
                   <br />
-                  Open Monday to Friday 8:00 AM - 9:00 PM | Saturday - Sunday 9:00 AM - 6:00 PM
+                  Open Monday to Friday 9:00 AM - 5:00 PM | Saturday - Sunday Closed
                   <br />
                   Phone: 604-392-8393 | Fax: (604) 392-8394
                 </div>

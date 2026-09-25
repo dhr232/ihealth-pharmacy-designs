@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import RefillForm from "../components/RefillForm";
-import { SectionReveal } from "../components/MotionKit";
+import PrescriptionFlow from "../components/prescriptions/PrescriptionFlow";
+import PhipaBadge from "../components/PhipaBadge";
 import {
-  CheckCircle,
   Clock,
-  ShieldCheck,
   Truck,
-  Camera,
-  MessageCircle,
+  ShieldCheck,
+  CheckCircle,
   Phone,
+  MessageCircle,
+  Camera,
+  ChevronRight,
   ArrowRight,
 } from "lucide-react";
 import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
@@ -18,21 +20,21 @@ import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
 export const metadata: Metadata = {
   title: "Prescription Refills — iHealth Pharmacy Chilliwack",
   description:
-    "Request a prescription refill online in 30 seconds or send a photo via WhatsApp. Usually ready within the hour, with free delivery across Chilliwack.",
+    "Request your prescription refill online with direct email confirmation. Usually ready within the hour, with free delivery across Chilliwack.",
 };
 
 const STEPS = [
   {
-    title: "Send it in",
-    body: "Use the online form, send a photo on WhatsApp, call, or walk in.",
+    title: "1. Submit Refill Request",
+    body: "Enter your Rx numbers or upload a photo of your pill bottle label.",
   },
   {
-    title: "We fill it fast",
-    body: "A licensed pharmacist checks every detail — usually ready within the hour.",
+    title: "2. Pharmacist Review",
+    body: "Our licensed pharmacist checks dosages, repeats, and safety in BC PharmaNet.",
   },
   {
-    title: "Pick up or free delivery",
-    body: "We text you the moment it's ready. Free prescription delivery across Chilliwack.",
+    title: "3. Pick Up or Free Delivery",
+    body: "Receive an email confirmation when packaged. Free delivery across Chilliwack.",
   },
 ];
 
@@ -40,7 +42,7 @@ const PERKS = [
   { icon: Clock, text: "Usually ready within the hour" },
   { icon: Truck, text: "Free delivery across Chilliwack" },
   { icon: ShieldCheck, text: "Pharmacist reviews every prescription" },
-  { icon: CheckCircle, text: "Blister packs / auto-refill available" },
+  { icon: CheckCircle, text: "Blister packaging available upon request" },
 ];
 
 export default function PrescriptionRefillsPage() {
@@ -49,122 +51,117 @@ export default function PrescriptionRefillsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-white text-[var(--foreground)] antialiased">
+    <div className="min-h-screen bg-slate-50 text-slate-900 antialiased">
       <Header />
 
-      <main>
-        <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
-          <div className="grid items-start gap-12 lg:grid-cols-2">
-            {/* Left: copy + senior WhatsApp callout + pharmacist image */}
-            <SectionReveal>
-              <span className="inline-block rounded-full bg-[var(--brand-subtle)] px-4 py-1.5 text-sm font-semibold text-[var(--brand)]">
-                Prescription Refills
-              </span>
-              <h1 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
-                Refills in 3 easy steps.
-              </h1>
-              <p className="mt-4 text-lg text-[var(--muted)]">
-                No app to download, no password to remember. Send your refill
-                request and our Chilliwack pharmacy team will have it ready —
-                usually within the hour.
-              </p>
+      <main className="py-10 lg:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* Breadcrumb Navigation */}
+          <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-sm text-slate-500">
+            <Link href="/" className="hover:text-blue-600 transition">
+              Home
+            </Link>
+            <ChevronRight className="h-4 w-4" />
+            <span className="font-semibold text-slate-900">Prescription Refills</span>
+          </nav>
+
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 items-start">
+            {/* Main Interactive Refill Flow */}
+            <div className="lg:col-span-8">
+              <PrescriptionFlow mode="refill" />
+            </div>
+
+            {/* Sidebar with Senior Reassurance, WhatsApp & Pharmacist Contact */}
+            <aside className="lg:col-span-4 space-y-6">
+              {/* PHIPA Compliant Privacy Card */}
+              <PhipaBadge variant="card" />
 
               {/* Senior / Caregiver WhatsApp Photo Refill Callout */}
-              <div className="mt-8 rounded-2xl border-2 border-green-500/40 bg-green-50/60 p-6 shadow-sm">
+              <div className="rounded-2xl border-2 border-emerald-500/30 bg-emerald-50/60 p-6 shadow-sm">
                 <div className="flex items-center gap-3">
                   <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#25D366] text-white shadow-md">
-                    <Camera size={22} />
+                    <Camera className="h-5 w-5" />
                   </span>
                   <div>
-                    <h2 className="text-lg font-bold text-[var(--foreground)]">
-                      Refill by Photo on WhatsApp
+                    <h2 className="text-base font-bold text-slate-900">
+                      Need Help? Send Photo on WhatsApp
                     </h2>
+                    <span className="text-xs text-slate-600">English &bull; Punjabi &bull; Hindi</span>
                   </div>
                 </div>
 
-                <p className="mt-3 text-sm leading-relaxed text-[var(--foreground)]">
-                  Don&apos;t want to type your Rx number? Just take a clear photo
-                  of your medication bottle label or paper prescription, and send
-                  it directly to our pharmacist on WhatsApp.
+                <p className="mt-3 text-xs leading-relaxed text-slate-700">
+                  Prefer messaging? Snap a clear photo of your prescription bottle label and text it directly to our dispensary staff on WhatsApp.
                 </p>
 
-                <div className="mt-4 flex flex-wrap items-center gap-3">
+                <div className="mt-4">
                   <a
                     href={photoRefillUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-5 py-3 text-sm font-bold text-white shadow-md transition hover:bg-[#1ea952]"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-bold text-white shadow-md transition hover:bg-[#1ea952]"
                   >
-                    <MessageCircle size={18} />
-                    Send Prescription Photo
-                    <ArrowRight size={16} />
+                    <MessageCircle className="h-4 w-4" />
+                    Open WhatsApp Dispensary
+                    <ArrowRight className="h-4 w-4" />
                   </a>
-                  <span className="text-xs text-[var(--muted)]">
-                    English • ਪੰਜਾਬੀ • Hindi
-                  </span>
                 </div>
               </div>
 
-              <ol className="mt-8 space-y-6">
-                {STEPS.map((step, idx) => (
-                  <li key={step.title} className="flex gap-4">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--border)] bg-white text-sm font-semibold text-[var(--brand)]">
-                      {idx + 1}
-                    </span>
-                    <div>
-                      <h3 className="font-semibold">{step.title}</h3>
-                      <p className="text-[var(--muted)]">{step.body}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
+              {/* How it works */}
+              <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <h3 className="text-base font-bold text-slate-900 mb-4">
+                  How Refills Work
+                </h3>
+                <ol className="space-y-4">
+                  {STEPS.map((step) => (
+                    <li key={step.title} className="text-sm">
+                      <div className="font-bold text-slate-900">{step.title}</div>
+                      <div className="text-xs text-slate-600 mt-0.5 leading-relaxed">
+                        {step.body}
+                      </div>
+                    </li>
+                  ))}
+                </ol>
 
-              <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-                {PERKS.map((perk) => (
-                  <li
-                    key={perk.text}
-                    className="flex items-center gap-2.5 text-sm text-[var(--foreground)]"
-                  >
-                    <perk.icon
-                      size={18}
-                      className="shrink-0 text-[var(--brand)]"
-                    />
-                    {perk.text}
-                  </li>
-                ))}
-              </ul>
+                <div className="mt-6 pt-5 border-t border-slate-100 space-y-2.5">
+                  {PERKS.map((perk) => {
+                    const Icon = perk.icon;
+                    return (
+                      <div key={perk.text} className="flex items-center gap-2.5 text-xs text-slate-700 font-medium">
+                        <Icon className="h-4 w-4 text-blue-600 shrink-0" />
+                        <span>{perk.text}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
 
-              {/* Pharmacist consultation callout with real avatar */}
-              <div className="mt-10 flex items-center gap-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
+              {/* Pharmacist Consultation Card */}
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm flex items-center gap-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/pharmacists/anika.jpg"
-                  alt="Dr. Anika Sharma - Pharmacy Manager & Clinical Specialist"
-                  className="h-20 w-20 rounded-xl border border-[var(--border)] object-cover bg-white shadow-xs"
+                  alt="Dr. Anika Sharma - Pharmacy Manager"
+                  className="h-16 w-16 rounded-xl border border-slate-200 object-cover bg-slate-100 shrink-0"
                 />
                 <div>
-                  <p className="font-semibold">Questions about your medication?</p>
-                  <p className="mt-1 text-sm text-[var(--muted)]">
-                    Our pharmacists review every request. Call{" "}
-                    <a
-                      href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
-                      className="inline-flex items-center font-semibold text-[var(--brand)] hover:underline"
-                    >
-                      <Phone size={14} className="mr-1" />
-                      {PHARMACY_INFO.phoneDisplay}
-                    </a>{" "}
-                    or chat with us on WhatsApp.
-                  </p>
+                  <div className="text-sm font-bold text-slate-900">Questions about your refill?</div>
+                  <div className="text-xs text-slate-500 mt-0.5">
+                    Our pharmacists review every request before dispensing.
+                  </div>
+                  <a
+                    href={`tel:${PHARMACY_INFO.phoneClean}`}
+                    className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800"
+                  >
+                    <Phone className="h-3.5 w-3.5" />
+                    Call {PHARMACY_INFO.phone}
+                  </a>
                 </div>
               </div>
-            </SectionReveal>
-
-            {/* Right: form */}
-            <SectionReveal className="lg:sticky lg:top-24">
-              <RefillForm variant="refill" />
-            </SectionReveal>
+            </aside>
           </div>
-        </section>
+        </div>
       </main>
 
       <Footer />

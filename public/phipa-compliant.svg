@@ -1,0 +1,10 @@
+<svg width="120" height="34" viewBox="0 0 120 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield with Maple Leaf -->
+  <g transform="translate(4, 3)">
+    <path d="M12 1L3 4.5V12C3 18.5 7 24.5 12 27C17 24.5 21 18.5 21 12V4.5L12 1Z" fill="#38BDF8" stroke="#0284C7" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M12 6.5L12.7 8.8L14.8 8.1L14.2 10.3L16.5 11.1L15 12.5L16.2 14.8L13.8 14.4L12.9 17L12.5 20.5H11.5L11.1 17L10.2 14.4L7.8 14.8L9 12.5L7.5 11.1L9.8 10.3L9.2 8.1L11.3 8.8L12 6.5Z" fill="#FFFFFF"/>
+  </g>
+  <!-- Text -->
+  <text x="34" y="17" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="900" fill="#0F172A" letter-spacing="-0.3">PHIPA</text>
+  <text x="34" y="27" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="8" font-weight="700" fill="#64748B" letter-spacing="0.8">COMPLIANT</text>
+</svg>

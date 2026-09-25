@@ -89,7 +89,7 @@ export default function AppointmentCalendar({
       const d = new Date(baseDate);
       d.setDate(baseDate.getDate() + i);
       const isPast = d < today;
-      const isSunday = d.getDay() === 0;
+      const isClosed = d.getDay() === 0 || d.getDay() === 6;
       const dateStr = toDateString(d);
 
       days.push({
@@ -99,9 +99,10 @@ export default function AppointmentCalendar({
         dayNumber: d.getDate(),
         monthShort: d.toLocaleDateString("en-CA", { month: "short" }),
         isToday: d.getTime() === today.getTime(),
-        isSunday,
+        isSunday: d.getDay() === 0,
+        isSaturday: d.getDay() === 6,
         isPast,
-        isDisabled: isPast || isSunday,
+        isDisabled: isPast || isClosed,
       });
     }
     return days;
@@ -127,7 +128,7 @@ export default function AppointmentCalendar({
     for (let d = 1; d <= lastDay.getDate(); d++) {
       const current = new Date(year, month, d);
       const isPast = current < today;
-      const isSunday = current.getDay() === 0;
+      const isClosed = current.getDay() === 0 || current.getDay() === 6;
       const dateStr = toDateString(current);
 
       matrix.push({
@@ -135,9 +136,10 @@ export default function AppointmentCalendar({
         dateStr,
         dayNumber: d,
         isToday: current.getTime() === today.getTime(),
-        isSunday,
+        isSunday: current.getDay() === 0,
+        isSaturday: current.getDay() === 6,
         isPast,
-        isDisabled: isPast || isSunday,
+        isDisabled: isPast || isClosed,
       });
     }
 
@@ -279,7 +281,7 @@ export default function AppointmentCalendar({
           <div className="mt-6">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                Select Day (Monday &ndash; Saturday)
+                Select Day (Monday &ndash; Friday)
               </span>
               <div className="flex items-center gap-1.5">
                 <button
@@ -624,7 +626,7 @@ export default function AppointmentCalendar({
           type="button"
           disabled={!selectedDate || !selectedTime}
           onClick={onProceed}
-          className="inline-flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-6 py-3 text-sm font-bold text-white shadow-md shadow-[#2F4BC4]/20 transition-all duration-150 hover:bg-[var(--brand-hover)] hover:shadow-lg active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+          className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-6 py-3 text-sm font-bold text-white shadow-md shadow-blue-900/20 transition-all duration-150 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
         >
           <span>Review & Confirm</span>
           <ChevronRight size={16} />

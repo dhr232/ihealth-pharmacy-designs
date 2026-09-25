@@ -19,6 +19,7 @@ export async function GET() {
 
     if (pharmacists && pharmacists.length > 0) {
       const mapped = pharmacists.map((p, index) => mapPrismaToPharmacist(p, index));
+      mapped.sort((a, b) => a.displayOrder - b.displayOrder);
       return NextResponse.json({ success: true, pharmacists: mapped });
     }
   } catch (error) {
