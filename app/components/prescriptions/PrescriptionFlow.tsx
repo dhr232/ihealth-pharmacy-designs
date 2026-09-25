@@ -25,6 +25,8 @@ import { PHARMACY_INFO } from "@/data/pharmacy-info";
 import { isValidEmail, isValidPhone, formatPhoneNumber } from "@/lib/validation";
 import PhipaBadge from "../PhipaBadge";
 
+type TimingOption = "asap" | "today" | "tomorrow" | "custom";
+
 export type PrescriptionWorkflowMode = "new" | "refill" | "transfer";
 
 interface PrescriptionItem {
@@ -67,7 +69,7 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
   const [deliveryPostalCode, setDeliveryPostalCode] = useState("");
 
   // Timing
-  const [timingOption, setTimingOption] = useState<"asap" | "today" | "tomorrow" | "custom">("asap");
+  const [timingOption, setTimingOption] = useState<TimingOption>("asap");
   const [customDate, setCustomDate] = useState("");
   const [customTime, setCustomTime] = useState("");
 
@@ -259,6 +261,39 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
     setSubmitting(true);
 
     try {
+      // Upload photos as real files instead of embedding base64 blobs in the
+      // JSON payload / database — keeps prescription images out of Postgres.
+      let uploadedPhotoUrls: string[] = [];
+      if (submissionTab === "photos" && photos.length > 0) {
+        try {
+          uploadedPhotoUrls = await Promise.all(
+            photos.map(async (photo) => {
+              const blob = await (await fetch(photo.dataUrl)).blob();
+              const uploadForm = new FormData();
+              uploadForm.append("file", blob, photo.name);
+
+              const uploadRes = await fetch("/api/prescriptions/upload-photo", {
+                method: "POST",
+                body: uploadForm,
+              });
+              const uploadData = await uploadRes.json();
+              if (!uploadRes.ok || !uploadData.success) {
+                throw new Error(uploadData.error || `Failed to upload ${photo.name}.`);
+              }
+              return uploadData.url as string;
+            })
+          );
+        } catch (uploadErr) {
+          setErrorMessage(
+            uploadErr instanceof Error
+              ? uploadErr.message
+              : "Failed to upload one of your photos. Please try again."
+          );
+          setSubmitting(false);
+          return;
+        }
+      }
+
       const payload = {
         type: pageDetails.typeEnum,
         firstName: firstName.trim(),
@@ -271,8 +306,7 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
           submissionTab === "manual"
             ? items.filter((i) => i.rxNumber?.trim() || i.medicationName?.trim())
             : [],
-        photoUrls:
-          submissionTab === "photos" ? photos.map((p) => p.dataUrl) : [],
+        photoUrls: uploadedPhotoUrls,
         previousPharmacyName: mode === "transfer" ? previousPharmacyName.trim() : undefined,
         previousPharmacyPhone: mode === "transfer" ? previousPharmacyPhone.trim() : undefined,
         transferAll: mode === "transfer" ? transferAll : undefined,
@@ -914,7 +948,7 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
               <button
                 key={option.id}
                 type="button"
-                onClick={() => setTimingOption(option.id as any)}
+                onClick={() => setTimingOption(option.id as TimingOption)}
                 className={`rounded-xl border p-3.5 text-center text-sm font-bold transition min-h-[48px] ${
                   timingOption === option.id
                     ? "border-blue-600 bg-blue-50 text-blue-900 ring-2 ring-blue-600"

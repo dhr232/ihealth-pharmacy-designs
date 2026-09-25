@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import {
   Search,
@@ -62,19 +62,18 @@ export default function ServiceSelector({
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   // Only auto-open a category when selectedService ID changes from outside (e.g. URL param)
-  const prevSelectedId = useRef<string | undefined>(selectedService?.id);
-  useEffect(() => {
-    if (selectedService?.id && selectedService.id !== prevSelectedId.current) {
-      prevSelectedId.current = selectedService.id;
-      if (selectedService.categoryId === "cat_minor_ailments") {
-        setOpenCategories((prev) => ({ ...prev, minor_ailments: true }));
-      } else if (selectedService.categoryId === "cat_vaccines") {
-        setOpenCategories((prev) => ({ ...prev, vaccines: true }));
-      } else if (selectedService.categoryId === "cat_consultations") {
-        setOpenCategories((prev) => ({ ...prev, consultations: true }));
-      }
+  // Adjusted during render (not in an effect) to avoid cascading renders.
+  const [prevSelectedId, setPrevSelectedId] = useState<string | undefined>(selectedService?.id);
+  if (selectedService?.id && selectedService.id !== prevSelectedId) {
+    setPrevSelectedId(selectedService.id);
+    if (selectedService.categoryId === "cat_minor_ailments") {
+      setOpenCategories((prev) => ({ ...prev, minor_ailments: true }));
+    } else if (selectedService.categoryId === "cat_vaccines") {
+      setOpenCategories((prev) => ({ ...prev, vaccines: true }));
+    } else if (selectedService.categoryId === "cat_consultations") {
+      setOpenCategories((prev) => ({ ...prev, consultations: true }));
     }
-  }, [selectedService]);
+  }
 
   // Robust category toggle function: user can toggle ANY category open or closed independently
   const toggleCategory = (catKey: string) => {

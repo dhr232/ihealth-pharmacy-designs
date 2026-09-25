@@ -35,6 +35,7 @@ import {
   MapPin,
   FileText,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 import { getBookingUrl } from "@/lib/routes";
 import { getConditionIconPath } from "@/data/condition-registry";
@@ -44,7 +45,7 @@ interface ConditionItem {
   name: string;
   category: "digestive" | "ent" | "skin" | "urinary" | "other";
   categoryTitle: string;
-  icon: any;
+  icon: LucideIcon;
   iconBg: string;
   iconColor: string;
   badge: string;

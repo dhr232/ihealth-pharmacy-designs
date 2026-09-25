@@ -97,6 +97,50 @@ export function decryptSessionToken(token: string): SessionPayload | null {
 }
 
 /**
+ * Encrypt a patient's Personal Health Number (PHN) for at-rest storage.
+ * Uses the same AES-256-GCM scheme as session tokens.
+ */
+export function encryptPhn(phn: string): string {
+  const key = getEncryptionKey();
+  const iv = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv("aes-256-gcm", key, iv);
+
+  const encrypted = Buffer.concat([cipher.update(phn, "utf8"), cipher.final()]);
+  const tag = cipher.getAuthTag();
+
+  return [
+    iv.toString("base64url"),
+    tag.toString("base64url"),
+    encrypted.toString("base64url"),
+  ].join(".");
+}
+
+/**
+ * Decrypt a PHN previously encrypted with encryptPhn. Returns null if the
+ * token is malformed or fails authentication.
+ */
+export function decryptPhn(token: string): string | null {
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+
+    const [ivB64, tagB64, dataB64] = parts;
+    const iv = Buffer.from(ivB64, "base64url");
+    const tag = Buffer.from(tagB64, "base64url");
+    const encrypted = Buffer.from(dataB64, "base64url");
+    const key = getEncryptionKey();
+
+    const decipher = crypto.createDecipheriv("aes-256-gcm", key, iv);
+    decipher.setAuthTag(tag);
+
+    const decrypted = Buffer.concat([decipher.update(encrypted), decipher.final()]);
+    return decrypted.toString("utf8");
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Hash a plain text password using bcrypt.
  */
 export async function hashPassword(password: string): Promise<string> {

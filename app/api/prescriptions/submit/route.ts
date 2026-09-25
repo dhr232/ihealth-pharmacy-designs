@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+import type { Prisma } from "@prisma/client";
 import { prisma, withPrismaFallback } from "@/lib/prisma";
 import { sendPrescriptionConfirmationEmail } from "@/lib/resend";
 import { isValidEmail } from "@/lib/validation";
@@ -156,7 +157,7 @@ export async function POST(request: NextRequest) {
           return await prisma.prescriptionRequest.create({
             data: {
               referenceNumber,
-              type: type as any,
+              type,
               status: "PENDING",
               firstName: firstName.trim(),
               lastName: lastName.trim(),
@@ -165,12 +166,12 @@ export async function POST(request: NextRequest) {
               dateOfBirth: parsedDob,
               submissionMode,
               itemCount: submissionMode === "PHOTOS" ? photoUrls.length : (items.length || 1),
-              items: items && items.length > 0 ? (items as any) : undefined,
+              items: items && items.length > 0 ? (items as Prisma.InputJsonValue) : undefined,
               photoUrls: photoUrls || [],
               previousPharmacyName: previousPharmacyName?.trim() || null,
               previousPharmacyPhone: previousPharmacyPhone?.trim() || null,
               transferAll: transferAll ?? null,
-              fulfillmentMethod: fulfillmentMethod as any,
+              fulfillmentMethod,
               deliveryStreet: deliveryStreet?.trim() || null,
               deliveryUnit: deliveryUnit?.trim() || null,
               deliveryCity: deliveryCity?.trim() || null,

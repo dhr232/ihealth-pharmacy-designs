@@ -15,7 +15,7 @@ export default function PhipaBadge({
     return (
       <div
         className={`flex items-center gap-3 rounded-2xl border border-sky-200/90 bg-sky-50/70 p-3.5 shadow-2xs ${className}`}
-        title="PHIPA Compliant: Personal health information is encrypted and protected in accordance with Canadian healthcare privacy standards."
+        title="Your personal health information is handled in accordance with PIPEDA and BC's Personal Information Protection Act (PIPA)."
       >
         <div className="flex h-10 w-9 shrink-0 items-center justify-center">
           <svg
@@ -41,11 +41,11 @@ export default function PhipaBadge({
         </div>
         <div>
           <div className="flex items-baseline gap-1.5 leading-tight">
-            <span className="font-extrabold tracking-tight text-slate-900 text-sm">PHIPA</span>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-sky-800">COMPLIANT</span>
+            <span className="font-extrabold tracking-tight text-slate-900 text-sm">PIPEDA</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-sky-800">& BC PIPA ALIGNED</span>
           </div>
           <p className="mt-0.5 text-[11px] text-slate-600 leading-snug">
-            Canadian health data privacy and 256-bit encryption standard.
+            Handled under Canadian federal and BC privacy law.
           </p>
         </div>
       </div>
@@ -56,7 +56,7 @@ export default function PhipaBadge({
     return (
       <span
         className={`inline-flex items-center gap-1.5 ${className}`}
-        title="PHIPA Compliant Canadian Healthcare Data"
+        title="PIPEDA & BC PIPA Aligned Canadian Healthcare Data"
       >
         <svg
           width="18"
@@ -80,8 +80,8 @@ export default function PhipaBadge({
         </svg>
         {showText && (
           <span className="flex items-center gap-1 text-xs">
-            <strong className="font-extrabold text-slate-900">PHIPA</strong>
-            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">COMPLIANT</span>
+            <strong className="font-extrabold text-slate-900">PIPEDA</strong>
+            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">& BC PIPA ALIGNED</span>
           </span>
         )}
       </span>
@@ -92,7 +92,7 @@ export default function PhipaBadge({
   return (
     <div
       className={`inline-flex items-center gap-2 rounded-xl border border-sky-200/80 bg-white px-2.5 py-1 shadow-2xs transition hover:border-sky-300 ${className}`}
-      title="PHIPA / PIPEDA Compliant: Personal health information is encrypted and securely handled."
+      title="PIPEDA & BC PIPA Aligned: Personal health information is handled in accordance with Canadian federal and BC privacy law."
     >
       <svg
         width="20"
@@ -116,8 +116,8 @@ export default function PhipaBadge({
       </svg>
       {showText && (
         <div className="flex flex-col leading-none text-left">
-          <span className="text-[11px] font-black tracking-tight text-slate-900">PHIPA</span>
-          <span className="text-[8px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">COMPLIANT</span>
+          <span className="text-[11px] font-black tracking-tight text-slate-900">PIPEDA</span>
+          <span className="text-[8px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">& BC PIPA</span>
         </div>
       )}
     </div>
