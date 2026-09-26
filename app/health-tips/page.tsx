@@ -3,7 +3,10 @@ import type { Metadata } from "next";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import HealthTipsDirectory from "./HealthTipsDirectory";
-import { MKT_01_POSTS, isPostPublished } from "../../data/blog-posts";
+import { getPublishedPosts } from "@/lib/content";
+
+// Refreshed on save from the admin panel, and every 5 minutes for scheduled posts.
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Health Tips & Clinical Guides — iHealth Pharmacy Chilliwack",
@@ -11,8 +14,8 @@ export const metadata: Metadata = {
     "Evidence-based health advice, BC PharmaCare guidance, vaccine updates, and senior care recommendations from your local Chilliwack pharmacists.",
 };
 
-export default function HealthTipsPage() {
-  const publishedPosts = MKT_01_POSTS.filter((p) => isPostPublished(p));
+export default async function HealthTipsPage() {
+  const publishedPosts = await getPublishedPosts();
 
   return (
     <div className="min-h-screen bg-white text-[var(--foreground)] antialiased">

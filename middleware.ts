@@ -26,7 +26,10 @@ export function middleware(request: NextRequest) {
   }
 
   const response = NextResponse.next();
-  response.headers.set("Cache-Control", "public, max-age=0, must-revalidate");
+  // Uploaded media has unique filenames and sets its own long-lived cache header.
+  if (!url.pathname.startsWith("/media/")) {
+    response.headers.set("Cache-Control", "public, max-age=0, must-revalidate");
+  }
   return response;
 }
 

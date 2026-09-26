@@ -42,6 +42,7 @@ Multi-page full-stack website for **iHealth Pharmacy** (Chilliwack, BC).
 | `ADMIN_INITIAL_PASSWORD` | Override default admin password (default: `Admin2026!`) |
 | `PHARMACIST_INITIAL_PASSWORD` | Override default pharmacist password (default: `Pharmacist2026!`) |
 | `RUN_MIGRATIONS` | Set to `true` in Hostinger ONLY. Makes `npm run build` apply pending Prisma migrations. Never set locally or in CI. |
+| `UPLOAD_DIR` | Absolute folder for admin uploads (blog covers, flyer PDFs/images), OUTSIDE the app so deploys don't wipe it: `/home/u491263438/domains/ihealthpharmacy.ca/uploads`. Served at `/media/<category>/<file>`. Production refuses uploads if unset. |
 
 ## Seeded Staff Accounts
 
@@ -118,6 +119,8 @@ committed SQL migrations and are applied automatically by the Hostinger build.
 - `lib/auth.ts` -- session encryption, 2FA, seeded staff constants
 - `lib/prisma.ts` -- Prisma global singleton
 - `lib/resend.ts` -- Resend email helpers
+- `lib/content.ts` -- blog posts + announcements: DB reads/writes, one-time import of the code-file seed, code-file fallback
+- `lib/uploads.ts` + `app/media/[...path]/route.ts` -- save uploads to `UPLOAD_DIR` and serve them at `/media/...`
 - `lib/appointment-store.ts` -- shared in-memory fallback Map for appointment status (dev/demo mode)
 - `prisma/schema.prisma` -- full normalized DB schema
 - `next.config.mjs` -- Next.js config (plain JS ES module)

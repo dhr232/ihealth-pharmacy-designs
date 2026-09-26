@@ -18,7 +18,6 @@ import type { LucideIcon } from "lucide-react";
 import { MKT_01_POSTS, isPostPublished, type BlogPost } from "../../data/blog-posts";
 import { SectionReveal, StaggerContainer, StaggerItem, HoverCard } from "./MotionKit";
 
-const STORAGE_KEY = "ihealth_admin_posts";
 
 const CATEGORY_ICON_MAP: Record<string, LucideIcon> = {
   Vaccinations: Syringe,
@@ -53,40 +52,23 @@ export default function HomeBlogSection() {
     return MKT_01_POSTS.filter((p) => isPostPublished(p)).slice(0, 3);
   });
 
+  // Code-file posts render first (no layout shift); the database list replaces
+  // them once loaded, so admin edits show on the homepage for every visitor.
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    function loadPublishedPosts() {
-      try {
-        const raw = window.localStorage.getItem(STORAGE_KEY);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            const published = parsed.filter(
-              (p: BlogPost) => p && isPostPublished(p)
-            );
-            if (published.length > 0) {
-              setPosts(published.slice(0, 3));
-              return;
-            }
-          }
+    let cancelled = false;
+    fetch("/api/posts?limit=3")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!cancelled && data && Array.isArray(data.posts) && data.posts.length > 0) {
+          setPosts(data.posts as BlogPost[]);
         }
-      } catch {
-        /* ignore localStorage parsing issues */
-      }
-      setPosts(MKT_01_POSTS.filter((p) => isPostPublished(p)).slice(0, 3));
-    }
-
-    loadPublishedPosts();
-
-    function onStorage(e: StorageEvent) {
-      if (e.key === STORAGE_KEY) {
-        loadPublishedPosts();
-      }
-    }
-
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
+      })
+      .catch(() => {
+        /* keep the code-file fallback */
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   if (posts.length === 0) return null;

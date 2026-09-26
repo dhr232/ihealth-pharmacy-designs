@@ -67,6 +67,19 @@ announcement seed (see below).
   displayOrder/directPhone which were previously never persisted).
 - Windows: stop `npm run dev` before `npx prisma generate` (EPERM on the engine DLL otherwise).
 
+## Content storage (2026-09-26)
+
+- Blog posts and announcements are stored in Neon Postgres (`BlogPost`, `Announcement`), managed in `/admin`
+  through `/api/admin/posts` and `/api/admin/announcements`. Browser localStorage is only a cache.
+  First admin load imports `data/blog-posts.ts` / `SEED_ANNOUNCEMENTS` into an empty table; after that the
+  code files are only a read fallback if the DB is unreachable.
+- Saving a post calls `revalidatePath`, so public pages update within seconds; pages also revalidate every 5 min
+  (so scheduled posts go live).
+- Blog cover images and flyer files (PDF or image) are saved on the Hostinger server in `UPLOAD_DIR`
+  (`/home/u491263438/domains/ihealthpharmacy.ca/uploads`, outside the app folder that each deploy rebuilds) and
+  served at `/media/<category>/<file>` (visible in hPanel File Manager). Unique filenames, so they cache forever.
+  Neon Object Storage was considered but dropped: not available in the DB project's region (us-west-2).
+
 ## Gotchas
 
 - **Announcements are per-browser localStorage**, seeded from `SEED_ANNOUNCEMENTS` in
