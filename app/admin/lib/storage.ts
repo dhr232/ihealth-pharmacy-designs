@@ -12,6 +12,7 @@ import type {
 } from "./types";
 import { SEED_ANNOUNCEMENTS, SEED_PHARMACISTS } from "./types";
 import { SEED_POSTS } from "./seed-posts";
+import { MKT_01_POSTS } from "@/data/blog-posts";
 
 const KEY_AUTH = "ihealth_admin_auth";
 const KEY_PHARMACISTS = "ihealth_admin_pharmacists";
@@ -250,9 +251,28 @@ export function getPosts(): BlogPost[] {
     // to localStorage so subsequent edits/deletions take over and the seed
     // does not re-run.
     writeJSON(KEY_POSTS, SEED_POSTS);
-    return [...SEED_POSTS];
+    return withLiveContent([...SEED_POSTS]);
   }
-  return Array.isArray(stored) ? stored : [];
+  return Array.isArray(stored) ? withLiveContent(stored) : [];
+}
+
+/**
+ * The admin seed posts carry metadata only (empty `content`), so the editor and
+ * its Preview tab showed blank articles. Fill any empty post from the published
+ * article in data/blog-posts.ts (matched by slug). Posts the admin has written
+ * content for are left untouched.
+ */
+function withLiveContent(posts: BlogPost[]): BlogPost[] {
+  return posts.map((p) => {
+    if (p.content && p.content.trim()) return p;
+    const live = MKT_01_POSTS.find((m) => m.slug === p.slug);
+    if (!live) return p;
+    return {
+      ...p,
+      content: live.content,
+      keyTakeaways: p.keyTakeaways?.length ? p.keyTakeaways : live.keyTakeaways,
+    };
+  });
 }
 
 /**

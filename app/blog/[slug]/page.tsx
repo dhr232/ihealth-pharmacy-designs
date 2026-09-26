@@ -320,6 +320,18 @@ export default async function BlogPostPage({
                   <Clock size={14} /> {post.readTimeMinutes} min read
                 </span>
               </div>
+
+              {/* Cover image (the editorial layout has its own hero banner) */}
+              {post.imageUrl && (
+                <div className="mt-8 overflow-hidden rounded-2xl border border-[var(--border)]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={post.imageUrl}
+                    alt=""
+                    className="w-full max-h-[400px] object-cover object-center"
+                  />
+                </div>
+              )}
             </SectionReveal>
 
             <div className="mt-8 border-t border-[var(--border)] pt-6 text-[15px]">
