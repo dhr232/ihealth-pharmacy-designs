@@ -365,18 +365,6 @@ export default function ServiceSelector({
                   </div>
                 </div>
 
-                <div className="mt-4 rounded-xl border border-teal-200 bg-teal-50/80 p-3 text-xs text-slate-700 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                  <span>
-                    <strong>Note:</strong> Prescription refills, transfers, and new prescription submissions do not require an appointment booking. We process them same-day!
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => handleItemClick("prescription-adaptation-renewal")}
-                    className="font-bold text-blue-700 hover:underline shrink-0 cursor-pointer"
-                  >
-                    Or book consultation &rarr;
-                  </button>
-                </div>
               </div>
             )}
           </div>

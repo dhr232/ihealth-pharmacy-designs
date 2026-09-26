@@ -9,6 +9,8 @@ import {
   ArrowUp,
   Download,
   ExternalLink,
+  Eye,
+  EyeOff,
   LogOut,
   Pill,
   Plus,
@@ -1278,23 +1280,18 @@ function AnnouncementSection({
                               Urgent Notice
                             </Badge>
                           )}
-                          <button
-                            type="button"
-                            onClick={() => onToggle(a.id, !a.enabled)}
-                            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors ${
-                              a.enabled
-                                ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200"
-                                : "bg-slate-200 text-slate-600 hover:bg-slate-300"
+                          <span
+                            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                              a.enabled ? "bg-emerald-100 text-emerald-800" : "bg-slate-200 text-slate-600"
                             }`}
-                            title="Click to toggle live display status"
                           >
                             <span
                               className={`h-1.5 w-1.5 rounded-full ${
                                 a.enabled ? "bg-emerald-600" : "bg-slate-400"
                               }`}
                             />
-                            {a.enabled ? "Active on site" : "Paused (Hidden)"}
-                          </button>
+                            {a.enabled ? "Active on site" : "Disabled (hidden)"}
+                          </span>
                           {a.link && (
                             <span className="text-slate-500 font-mono text-[11px] bg-slate-100 px-2 py-0.5 rounded">
                               Link: {a.link}
@@ -1332,6 +1329,21 @@ function AnnouncementSection({
 
                       {/* Action buttons */}
                       <div className="flex items-center gap-2 border-slate-100 sm:border-l sm:pl-3">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onToggle(a.id, !a.enabled)}
+                          aria-pressed={a.enabled}
+                          className={`w-24 gap-1.5 text-xs font-medium ${
+                            a.enabled
+                              ? "text-slate-700"
+                              : "border-emerald-300 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
+                          }`}
+                        >
+                          {a.enabled ? <EyeOff size={14} /> : <Eye size={14} />}
+                          {a.enabled ? "Disable" : "Enable"}
+                        </Button>
+
                         <Button
                           variant="outline"
                           size="sm"
