@@ -9,12 +9,14 @@ export interface PrismaPharmacistLike {
   licenseNumber?: string | null;
   active?: boolean;
   acceptsAppointments?: boolean;
-  credentials?: string[];
-  languages?: string[];
-  yearsExperience?: number;
-  displayOrder?: number;
-  directPhone?: string;
-  directPhoneRaw?: string;
+  // DB columns are nullable / default-empty; treat null, [] and 0 as "not set" and
+  // fall back to the code seed so existing rows keep their current display.
+  credentials?: string[] | null;
+  languages?: string[] | null;
+  yearsExperience?: number | null;
+  displayOrder?: number | null;
+  directPhone?: string | null;
+  directPhoneRaw?: string | null;
 }
 
 export function mapPrismaToPharmacist(
@@ -51,10 +53,10 @@ export function mapPrismaToPharmacist(
         ? item.yearsExperience
         : seed?.yearsExperience ?? 5,
     displayOrder:
-      typeof item.displayOrder === "number"
+      typeof item.displayOrder === "number" && item.displayOrder > 0
         ? item.displayOrder
         : seed?.displayOrder ?? index + 1,
-    directPhone: item.directPhone || seed?.directPhone,
-    directPhoneRaw: item.directPhoneRaw || seed?.directPhoneRaw,
+    directPhone: item.directPhone || seed?.directPhone || undefined,
+    directPhoneRaw: item.directPhoneRaw || seed?.directPhoneRaw || undefined,
   };
 }
