@@ -6,6 +6,7 @@ import {
   X,
   Camera,
   Pill,
+  FilePlus,
   Package,
   HelpCircle,
   Phone,
@@ -44,6 +45,13 @@ export default function WhatsAppButton() {
       desc: "Ready for pickup or free delivery",
       icon: Pill,
       url: getWhatsAppUrl(PHARMACY_INFO.whatsapp.presets.refill),
+    },
+    {
+      id: "new-prescription",
+      title: "Submit New Prescription",
+      desc: "From your doctor, clinic, or hospital",
+      icon: FilePlus,
+      url: getWhatsAppUrl(PHARMACY_INFO.whatsapp.presets.newPrescription),
     },
     {
       id: "status",

@@ -9,14 +9,11 @@ import {
   RefreshCw,
   Stethoscope,
   FileText,
-  HeartPulse,
   Syringe,
   Sparkles,
   Paperclip,
   CheckCircle2,
   Truck,
-  MapPin,
-  MessageCircle,
   CreditCard,
   UserCheck,
   Languages,
@@ -37,7 +34,7 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
       badge: "Free Home Delivery",
       title: "Medications Delivered to Your Door",
       description: "Prescriptions and weekly blister packs delivered free across Chilliwack and Sardis.",
-      image: "/services/delivery.jpg",
+      image: "/services/delivery-doorstep.jpg",
       ctaText: "Request home delivery",
       href: "/services/delivery",
     },
@@ -174,13 +171,13 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
         items: [
           {
             label: "Direct Billing & Plans",
-            description: "Fair PharmaCare, Blue Cross, Sun Life & NIHB",
+            description: "Fair PharmaCare, Blue Cross, Sun Life & more",
             icon: CreditCard,
             iconClass: "border-blue-200/80 bg-blue-100 text-[#3D5FE0] group-hover:bg-[#3D5FE0] group-hover:text-white group-hover:border-[#3D5FE0]",
             href: "/about#billing",
           },
           {
-            label: "College Accreditation & Standards",
+            label: "Licensing & Privacy",
             description: "Licensed with College of Pharmacists of BC",
             icon: ShieldCheck,
             iconClass: "border-emerald-200/80 bg-emerald-100 text-emerald-700 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600",
@@ -197,6 +194,8 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
       },
     ],
   },
+  // Off-site doctor booking (avee.health); opens in a new tab
+  { id: 5, label: "Book a Doctor", link: "https://booking.avee.health/MQX39", external: true },
   { id: 4, label: "Hours & Location", link: "/contact" },
 ];
 
@@ -366,9 +365,10 @@ export default function Header({ logoHref }: HeaderProps = {}) {
                     <Link
                       href={item.link}
                       onClick={() => setMobileOpen(false)}
+                      {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                       className="block text-sm font-bold text-slate-900 py-1"
                     >
-                      {item.label}
+                      {item.external ? "Book a Doctor Appointment" : item.label}
                     </Link>
                   ) : (
                     <div>
@@ -409,10 +409,11 @@ export default function Header({ logoHref }: HeaderProps = {}) {
                                   key={subItem.label}
                                   href={subItem.href || "#"}
                                   onClick={() => setMobileOpen(false)}
+                                  {...(subItem.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                                   className="flex items-center justify-between rounded-lg py-1.5 px-2 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-teal-700"
                                 >
                                   <span>{subItem.label}</span>
-                                  <span className="text-[10px] text-slate-400">View</span>
+                                  <span className="text-[10px] text-slate-400">{subItem.external ? "Opens site" : "View"}</span>
                                 </Link>
                               ))}
                             </div>

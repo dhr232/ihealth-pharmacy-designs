@@ -30,12 +30,12 @@ import { isValidEmail, isValidPhone, formatPhoneNumber } from "@/lib/validation"
 // (Next.js will use the layout's title; this keeps things simple for static export.)
 
 const HOURS = [
-  { day: "Monday", hours: "9:00 am – 5:00 pm" },
-  { day: "Tuesday", hours: "9:00 am – 5:00 pm" },
-  { day: "Wednesday", hours: "9:00 am – 5:00 pm" },
-  { day: "Thursday", hours: "9:00 am – 5:00 pm" },
-  { day: "Friday", hours: "9:00 am – 5:00 pm" },
-  { day: "Saturday", hours: "Closed" },
+  { day: "Monday", hours: "8:30 am – 5:00 pm" },
+  { day: "Tuesday", hours: "8:30 am – 5:00 pm" },
+  { day: "Wednesday", hours: "8:30 am – 5:00 pm" },
+  { day: "Thursday", hours: "8:30 am – 5:00 pm" },
+  { day: "Friday", hours: "8:30 am – 5:00 pm" },
+  { day: "Saturday", hours: "9:00 am – 12:00 pm" },
   { day: "Sunday", hours: "Closed" },
 ];
 

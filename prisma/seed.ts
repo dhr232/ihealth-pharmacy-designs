@@ -402,14 +402,14 @@ export const INITIAL_ANNOUNCEMENTS = [
     displayOrder: 1,
   },
   {
-    text: "Free prescription delivery in Chilliwack for orders over $25",
+    text: "Free prescription delivery anywhere in Chilliwack",
     icon: "truck",
     urgent: false,
     enabled: true,
     displayOrder: 2,
   },
   {
-    text: "Open 7 days a week: Mon–Fri 8am–9pm, Sat–Sun 9am–6pm",
+    text: "Open Mon–Fri 8:30am–5pm and Sat 9am–12pm",
     icon: "clock",
     urgent: false,
     enabled: true,

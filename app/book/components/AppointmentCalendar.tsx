@@ -322,7 +322,7 @@ export default function AppointmentCalendar({
                         {d.dayNumber}
                       </span>
                       <span className="mt-1 text-[9px] sm:text-[10px] uppercase font-bold text-slate-400">
-                        {d.isSunday ? "Closed" : d.monthShort}
+                        {d.isSunday ? "Closed" : d.isSaturday ? "Walk-in" : d.monthShort}
                       </span>
                     </div>
                   );
@@ -422,9 +422,9 @@ export default function AppointmentCalendar({
                       className="flex h-10 flex-col items-center justify-center rounded-lg text-xs font-semibold text-slate-300 opacity-40 cursor-not-allowed"
                     >
                       <span>{item.dayNumber}</span>
-                      {item.isSunday && (
+                      {(item.isSunday || item.isSaturday) && (
                         <span className="text-[9px] uppercase tracking-tighter text-slate-400">
-                          Closed
+                          {item.isSunday ? "Closed" : "Walk-in"}
                         </span>
                       )}
                     </div>
@@ -452,7 +452,7 @@ export default function AppointmentCalendar({
             </div>
 
             <div className="mt-3 flex items-center justify-between border-t border-slate-200 pt-3 text-[11px] text-slate-500">
-              <span>* Sundays are closed. Walk-ins are also welcome Mon&ndash;Sat.</span>
+              <span>* Online booking: Mon&ndash;Fri 9:00 AM &ndash; 2:30 PM. Walk-ins welcome during store hours, including Saturday mornings.</span>
               <button
                 type="button"
                 onClick={() => setCalendarMode("strip")}
@@ -568,7 +568,7 @@ export default function AppointmentCalendar({
                           <Sunset size={15} />
                         </div>
                         <span className="text-xs font-bold uppercase tracking-wider text-slate-800">
-                          Afternoon (1:00 PM &ndash; 5:30 PM)
+                          Afternoon (1:00 PM &ndash; 2:30 PM)
                         </span>
                         <span className="ml-auto text-[11px] font-semibold text-slate-400">
                           {afternoonSlots.filter(s => s.available).length} open

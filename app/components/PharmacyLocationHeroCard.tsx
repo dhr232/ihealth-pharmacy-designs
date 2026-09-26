@@ -169,16 +169,16 @@ export default function PharmacyLocationHeroCard() {
           </div>
 
           <a
-            href={PHARMACY_INFO.address.mapUrl}
+            href={PHARMACY_INFO.address.googleReviewsUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 bg-[#F8FAFD] border border-slate-200 hover:border-amber-300 hover:bg-amber-50/50 px-3 py-1.5 rounded-xl shadow-2xs shrink-0 transition"
-            title="View 5.0 Google Reviews on Google Maps"
+            title={`Rated ${PHARMACY_INFO.address.googleRating} on Google. Read our reviews`}
           >
             <div className="flex text-amber-400">
               <Star size={13} fill="currentColor" />
             </div>
-            <div className="text-xs font-bold text-[#1E2A44]">5.0</div>
+            <div className="text-xs font-bold text-[#1E2A44]">{PHARMACY_INFO.address.googleRating}</div>
             <span className="text-[10px] text-[#5A6270] hidden sm:inline">&bull; Google</span>
           </a>
         </div>

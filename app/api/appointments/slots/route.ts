@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma, withPrismaFallback } from "@/lib/prisma";
+import { PHARMACY_INFO, formatHour } from "@/data/pharmacy-info";
 
 export interface TimeSlotItem {
   time: string; // "09:00"
@@ -9,42 +10,24 @@ export interface TimeSlotItem {
   reason?: string;
 }
 
-// Generate the canonical clinic schedule (09:00 - 17:30 in 15-minute increments)
+// Generate bookable slots from PHARMACY_INFO.onlineBooking (e.g. 09:00 - 14:30, 15-minute steps)
 function generateClinicSlots(): Omit<TimeSlotItem, "available">[] {
+  const { firstSlot, lastSlot, slotMinutes } = PHARMACY_INFO.onlineBooking;
+  const toMinutes = (hhmm: string) => {
+    const [h, m] = hhmm.split(":").map(Number);
+    return h * 60 + m;
+  };
   const slots: Omit<TimeSlotItem, "available">[] = [];
 
-  // Morning: 09:00 to 12:45
-  for (let hour = 9; hour <= 12; hour++) {
-    for (let minute = 0; minute < 60; minute += 15) {
-      if (hour === 12 && minute > 45) break;
-
-      const timeStr = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
-      const hour12 = hour > 12 ? hour - 12 : hour;
-      const ampm = hour >= 12 ? "PM" : "AM";
-      const label = `${hour12}:${String(minute).padStart(2, "0")} ${ampm}`;
-
-      slots.push({
-        time: timeStr,
-        label,
-        period: "morning",
-      });
-    }
-  }
-
-  // Afternoon: 13:00 to 16:45 (closing at 17:00 / 5:00 PM)
-  for (let hour = 13; hour <= 16; hour++) {
-    for (let minute = 0; minute < 60; minute += 15) {
-
-      const timeStr = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
-      const hour12 = hour - 12;
-      const label = `${hour12}:${String(minute).padStart(2, "0")} PM`;
-
-      slots.push({
-        time: timeStr,
-        label,
-        period: "afternoon",
-      });
-    }
+  for (let t = toMinutes(firstSlot); t <= toMinutes(lastSlot); t += slotMinutes) {
+    const hour = Math.floor(t / 60);
+    const minute = t % 60;
+    const timeStr = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+    slots.push({
+      time: timeStr,
+      label: formatHour(timeStr),
+      period: hour < 13 ? "morning" : "afternoon",
+    });
   }
 
   return slots;
@@ -68,13 +51,13 @@ export async function GET(request: NextRequest) {
     const targetDate = new Date(year, month - 1, day);
     const dayOfWeek = targetDate.getDay(); // 0 is Sunday, 6 is Saturday
 
-    // Check if weekend (Pharmacy is closed on Saturdays and Sundays)
-    if (dayOfWeek === 0 || dayOfWeek === 6) {
+    // Online booking is weekdays only (see PHARMACY_INFO.onlineBooking)
+    if (!(PHARMACY_INFO.onlineBooking.weekdays as readonly number[]).includes(dayOfWeek)) {
       return NextResponse.json({
         success: true,
         date: dateParam,
         isClosed: true,
-        closedReason: "iHealth Pharmacy clinic is closed on weekends.",
+        closedReason: `Online booking is available ${PHARMACY_INFO.onlineBooking.summary}.`,
         slots: [],
       });
     }

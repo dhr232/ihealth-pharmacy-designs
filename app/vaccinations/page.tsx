@@ -280,7 +280,7 @@ export default function VaccinationsPage() {
                   </div>
                   <div className="text-xs text-slate-300 leading-relaxed">
                     {PHARMACY_INFO.address.street}, Chilliwack, BC {PHARMACY_INFO.address.postalCode}<br />
-                    <strong>Hours:</strong> Mon–Fri 9:00 AM – 5:00 PM (Sat & Sun Closed)<br />
+                    <strong>Hours:</strong> {PHARMACY_INFO.hoursSummary}<br />
                     <strong>Direct line:</strong> {PHARMACY_INFO.phone}
                   </div>
                 </div>

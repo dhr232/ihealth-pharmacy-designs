@@ -247,8 +247,14 @@ const jsonLd = {
     {
       "@type": "OpeningHoursSpecification",
       dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      opens: "09:00",
+      opens: "08:30",
       closes: "17:00",
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: "Saturday",
+      opens: "09:00",
+      closes: "12:00",
     },
   ],
   hasOfferCatalog: {
@@ -284,7 +290,7 @@ const jsonLd = {
         itemOffered: {
           "@type": "DeliveryService",
           name: "Free Same-Day Prescription Delivery",
-          description: "Free prescription and medication delivery in Chilliwack for orders over $25.",
+          description: "Free prescription and medication delivery anywhere in Chilliwack.",
         },
       },
     ],

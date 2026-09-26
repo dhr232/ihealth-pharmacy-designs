@@ -13,9 +13,17 @@ e2e-screenshots
 playwright-report
 .git
 .vercel/
-scripts/
+scripts/*
+!scripts/migrate-deploy.mjs
+!scripts/new-migration.mjs
+# Skill tooling (was covered by the old blanket scripts/ rule)
+.agents/skills/*/scripts/
+__pycache__/
 next-env.d.ts
 *.tsbuildinfo
 .DS_Store
 .neon
 .claude
+
+# Production env for importing into Hostinger hPanel -- contains secrets, never commit
+hostinger.env

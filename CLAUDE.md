@@ -7,8 +7,8 @@
 Multi-page full-stack website for **iHealth Pharmacy** (Chilliwack, BC).
 - **Repo:** `dhr232/ihealth-pharmacy-designs` at `C:\Users\Dhruvil\pharmacy-website`
 - **Production host:** Hostinger Node.js Cloud Hosting -- auto-deploys from `main` via GitHub OAuth
-- **Temp live URL:** `https://lightslategrey-eel-264716.hostingersite.com`
-- **Domain:** `ihealthpharmacy.ca` on GoDaddy -- to be pointed to Hostinger via DNS A record later
+- **Live domain:** `ihealthpharmacy.ca` -- DNS A record on GoDaddy now points to Hostinger; this is the production URL
+- **Temp live URL:** `https://lightslategrey-eel-264716.hostingersite.com` -- legacy pre-DNS-cutover URL, may be stale/unreachable now that the custom domain is live
 
 ## Stack
 
@@ -28,6 +28,7 @@ Multi-page full-stack website for **iHealth Pharmacy** (Chilliwack, BC).
   - Swapped from the original brand red (`#C01D16`) on 2026-09-17 per explicit user request -- red read as alarming/clinical to older patients. Red is kept as a selectable "Pharmacy Red" option in the admin theme picker only; it is no longer the site's rendered default (see `app/globals.css` `:root`).
 - Inter font (default). 9 alternate pairings selectable via admin theme picker.
 - Voice: warm, professional, Chilliwack-community, Canadian English
+- **Brand strategy, audience, and verified/banned claims:** `.agents/product-marketing.md` -- read before writing any customer-facing copy
 
 ## Environment Variables (Hostinger hPanel)
 
@@ -40,6 +41,7 @@ Multi-page full-stack website for **iHealth Pharmacy** (Chilliwack, BC).
 | `SESSION_SECRET` | AES-256-GCM session token encryption key |
 | `ADMIN_INITIAL_PASSWORD` | Override default admin password (default: `Admin2026!`) |
 | `PHARMACIST_INITIAL_PASSWORD` | Override default pharmacist password (default: `Pharmacist2026!`) |
+| `RUN_MIGRATIONS` | Set to `true` in Hostinger ONLY. Makes `npm run build` apply pending Prisma migrations. Never set locally or in CI. |
 
 ## Seeded Staff Accounts
 
@@ -70,7 +72,8 @@ API routes under `/api/` -- all dynamic server-rendered.
 
 Hostinger auto-deploys on every push to `main` via GitHub OAuth. No manual steps, no webhook, no SSH secrets required.
 
-Build command run by Hostinger: `npm run build` -> `prisma generate && next build --webpack`
+Build command run by Hostinger: `npm run build` -> `prisma generate && node scripts/migrate-deploy.mjs && next build --webpack`
+(`migrate-deploy.mjs` applies pending migrations only when `RUN_MIGRATIONS=true`; a failed migration fails the build, so code never ships ahead of its schema.)
 Start command: `npm start`
 
 **Never manually push to any Hostinger branch -- push to `main` only.**
@@ -92,7 +95,20 @@ Schema: `prisma/schema.prisma`
 Seed: `prisma/seed.ts`
 Client singleton: `lib/prisma.ts` (global singleton pattern for Next.js hot-reload safety)
 
-Run `npx prisma generate` after any schema change. Run `npx prisma db push` to apply schema to Neon DB.
+Migrations: `prisma/migrations/` (baseline `0_init` = schema as of 2026-09-25). Schema changes ship as
+committed SQL migrations and are applied automatically by the Hostinger build.
+
+**Local `.env` points at the PRODUCTION Neon database** (solo project, no dev branch yet). Therefore:
+
+- **Never** run `prisma db push`, `prisma migrate dev`, `prisma migrate reset`, or `prisma db seed` locally.
+- To change the schema:
+  1. Edit `prisma/schema.prisma`
+  2. `npm run db:migration -- <snake_case_name>` -- read-only diff of live DB vs schema; writes
+     `prisma/migrations/<timestamp>_<name>/migration.sql` (refuses if earlier migrations are unapplied)
+  3. Review the SQL (prefer additive changes: new nullable/defaulted columns; no drops)
+  4. Stop `npm run dev` (Windows locks the Prisma engine DLL -> EPERM), run `npx prisma generate`, restart
+  5. Commit and push to `main`; Hostinger applies it via `prisma migrate deploy`
+- `npm run db:status` shows applied vs pending migrations (read-only).
 
 ## Key Files
 

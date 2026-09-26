@@ -25,9 +25,13 @@ export type MegaMenuItem = {
       icon: React.ComponentType<{ className?: string }>;
       iconClass?: string;
       href?: string;
+      /** Off-site link: opens in a new tab so patients keep the pharmacy site open */
+      external?: boolean;
     }[];
   }[];
   link?: string;
+  /** Top-level off-site link: opens in a new tab */
+  external?: boolean;
 };
 
 export interface MegaMenuProps extends React.HTMLAttributes<HTMLUListElement> {
@@ -105,6 +109,7 @@ const MegaMenu = React.forwardRef<HTMLUListElement, MegaMenuProps>(
               {navItem.link && !hasSub ? (
                 <Link
                   href={navItem.link}
+                  {...(navItem.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                   className={`relative flex cursor-pointer items-center justify-center gap-1.5 py-2 px-4 text-sm font-semibold transition-colors duration-150 rounded-full select-none ${
                     isLight
                       ? isItemActive
@@ -249,6 +254,7 @@ const MegaMenu = React.forwardRef<HTMLUListElement, MegaMenuProps>(
                                     <Link
                                       href={href}
                                       onClick={() => setOpenMenu(null)}
+                                      {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                                       className="flex items-start space-x-3.5 group rounded-2xl p-2 -m-2 transition-all duration-150 hover:bg-slate-50"
                                     >
                                       <div

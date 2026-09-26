@@ -93,7 +93,7 @@ export const SEED_ANNOUNCEMENTS: AnnouncementItem[] = [
   },
   {
     id: "ann-002",
-    text: "Free prescription delivery in Chilliwack for orders over $25",
+    text: "Free prescription delivery anywhere in Chilliwack",
     icon: "truck",
     enabled: true,
     urgent: false,
@@ -101,7 +101,7 @@ export const SEED_ANNOUNCEMENTS: AnnouncementItem[] = [
   },
   {
     id: "ann-003",
-    text: "Open 7 days a week: Mon–Fri 8am–9pm, Sat–Sun 9am–6pm",
+    text: "Open Mon–Fri 8:30am–5pm and Sat 9am–12pm",
     icon: "clock",
     enabled: true,
     urgent: false,

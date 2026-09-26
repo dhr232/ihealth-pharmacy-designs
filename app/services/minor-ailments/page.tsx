@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import {
@@ -11,6 +12,7 @@ import {
   CheckCircle2,
   Phone,
   ChevronRight,
+  ChevronDown,
   ArrowRight,
   ExternalLink,
   Flame,
@@ -37,7 +39,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
-import { getBookingUrl } from "@/lib/routes";
+import { useBookingUrl } from "@/lib/use-booking-url";
 import { getConditionIconPath } from "@/data/condition-registry";
 
 interface ConditionItem {
@@ -693,9 +695,19 @@ const CONDITIONS_DATA: ConditionItem[] = [
 
 export default function MinorAilmentsPage() {
   const [selectedConditionId, setSelectedConditionId] = useState<string>("uti");
+  // Categories start collapsed except the one holding the default selection
+  const [openCategories, setOpenCategories] = useState<string[]>(["urinary"]);
+  const prefersReducedMotion = useReducedMotion();
 
   const selectedCondition =
     CONDITIONS_DATA.find((c) => c.id === selectedConditionId) || CONDITIONS_DATA[0];
+  const bookingUrl = useBookingUrl(`?service=${selectedCondition.slug}`);
+
+  const toggleCategory = (key: string) => {
+    setOpenCategories((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+    );
+  };
 
   // Group conditions by category
   const categories = [
@@ -738,7 +750,7 @@ export default function MinorAilmentsPage() {
                   Minor Ailments and Conditions
                 </h1>
                 <p className="text-base text-slate-600 leading-relaxed">
-                  Our licensed pharmacists in Chilliwack are certified to assess your symptoms and prescribe prescription medications directly on-site for 21 common conditions — with zero walk-in clinic wait times.
+                  Our licensed pharmacists in Chilliwack are certified to assess your symptoms and prescribe prescription medications directly on-site for {CONDITIONS_DATA.length} common conditions — with zero walk-in clinic wait times.
                 </p>
                 <div className="pt-1 flex flex-wrap items-center gap-4 text-xs font-bold text-slate-700">
                   <span className="flex items-center gap-1.5 text-teal-800 bg-teal-50 border border-teal-200 px-3 py-1.5 rounded-lg">
@@ -747,7 +759,7 @@ export default function MinorAilmentsPage() {
                   </span>
                   <span className="flex items-center gap-1.5 text-blue-800 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-lg">
                     <Clock className="h-4 w-4 text-blue-600" />
-                    Walk-Ins Welcome &bull; Mon–Fri 9am–5pm
+                    Walk-Ins Welcome &bull; {PHARMACY_INFO.hoursShort}
                   </span>
                 </div>
               </div>
@@ -828,7 +840,7 @@ export default function MinorAilmentsPage() {
                   Select a Condition to View Details
                 </h2>
                 <span className="text-xs text-slate-500">
-                  21 Prescribable Conditions
+                  {CONDITIONS_DATA.length} Prescribable Conditions
                 </span>
               </div>
 
@@ -836,21 +848,61 @@ export default function MinorAilmentsPage() {
                 const itemsInCat = CONDITIONS_DATA.filter((c) => c.category === cat.key);
                 if (itemsInCat.length === 0) return null;
 
+                const isOpen = openCategories.includes(cat.key);
+                const selectedInCat = itemsInCat.find((c) => c.id === selectedConditionId);
+                const panelId = `category-panel-${cat.key}`;
+
                 return (
                   <div
                     key={cat.key}
-                    className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs space-y-3"
+                    className={`rounded-2xl border bg-white shadow-xs transition-colors ${
+                      isOpen ? "border-slate-300" : "border-slate-200 hover:border-slate-300"
+                    }`}
                   >
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-                      <h3 className="font-extrabold text-sm text-slate-900 tracking-tight">
-                        {cat.title}
-                      </h3>
-                      <span className="text-xs text-slate-400 font-medium">
-                        {itemsInCat.length} conditions
-                      </span>
-                    </div>
+                    <h3>
+                      <button
+                        type="button"
+                        onClick={() => toggleCategory(cat.key)}
+                        aria-expanded={isOpen}
+                        aria-controls={panelId}
+                        className="flex w-full items-center justify-between gap-3 rounded-2xl px-5 py-4 text-left cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/40"
+                      >
+                        <span className="min-w-0">
+                          <span className="block font-extrabold text-sm text-slate-900 tracking-tight">
+                            {cat.title}
+                          </span>
+                          {!isOpen && selectedInCat && (
+                            <span className="mt-0.5 block truncate text-xs font-semibold text-blue-700">
+                              Selected: {selectedInCat.name}
+                            </span>
+                          )}
+                        </span>
+                        <span className="flex shrink-0 items-center gap-3">
+                          <span className="text-xs text-slate-400 font-medium">
+                            {itemsInCat.length} conditions
+                          </span>
+                          <ChevronDown
+                            className={`h-5 w-5 text-slate-500 transition-transform duration-200 ${
+                              isOpen ? "rotate-180" : ""
+                            }`}
+                            aria-hidden="true"
+                          />
+                        </span>
+                      </button>
+                    </h3>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                    <motion.div
+                      id={panelId}
+                      key="panel"
+                      initial={prefersReducedMotion ? false : { height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+                      transition={{ duration: prefersReducedMotion ? 0 : 0.3, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden"
+                    >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 border-t border-slate-100 px-5 pb-5 pt-3">
                       {itemsInCat.map((item) => {
                         const isSelected = selectedConditionId === item.id;
                         const ItemIcon = item.icon;
@@ -897,6 +949,9 @@ export default function MinorAilmentsPage() {
                         );
                       })}
                     </div>
+                    </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 );
               })}
@@ -971,7 +1026,7 @@ export default function MinorAilmentsPage() {
                 {/* Action Buttons with Fade-to-Light Gradient */}
                 <div className="space-y-2.5 pt-2">
                   <Link
-                    href={getBookingUrl(`?service=${selectedCondition.slug}`)}
+                    href={bookingUrl}
                     className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition-all duration-200"
                   >
                     <span>Book Appointment for This Condition</span>
@@ -997,7 +1052,7 @@ export default function MinorAilmentsPage() {
                 </div>
                 <div className="text-xs text-slate-300 leading-relaxed">
                   #101 - 45619 Yale Rd, Chilliwack, BC V2P 2N1<br />
-                  <strong>Hours:</strong> Mon–Fri 9:00 AM – 5:00 PM (Weekends Closed)
+                  <strong>Hours:</strong> {PHARMACY_INFO.hoursSummary}
                 </div>
               </div>
 

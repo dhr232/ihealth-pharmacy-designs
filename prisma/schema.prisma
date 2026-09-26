@@ -84,6 +84,21 @@ model Pharmacist {
   avatarUrl           String?
   acceptsAppointments Boolean              @default(true)
   active              Boolean              @default(true)
+  // Card details (previously only in the code seed, never persisted)
+  credentials         String[]             @default([])
+  languages           String[]             @default([])
+  yearsExperience     Int?
+  displayOrder        Int                  @default(0)
+  directPhone         String?
+  // Public profile page at /team/[slug] -- hidden until profilePublished is true
+  slug                String?              @unique
+  profilePublished    Boolean              @default(false)
+  tagline             String?
+  story               String?
+  specialties         String[]             @default([])
+  education           String[]             @default([])
+  affiliations        String[]             @default([])
+  personalNote        String?
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
   user                User?                @relation(fields: [userId], references: [id], onDelete: SetNull)

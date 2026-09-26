@@ -73,9 +73,6 @@ export default function PrescriptionRefillsPage() {
 
             {/* Sidebar with Senior Reassurance, WhatsApp & Pharmacist Contact */}
             <aside className="lg:col-span-4 space-y-6">
-              {/* PHIPA Compliant Privacy Card */}
-              <PhipaBadge variant="card" />
-
               {/* Senior / Caregiver WhatsApp Photo Refill Callout */}
               <div className="rounded-2xl border-2 border-emerald-500/30 bg-emerald-50/60 p-6 shadow-sm">
                 <div className="flex items-center gap-3">
@@ -159,6 +156,9 @@ export default function PrescriptionRefillsPage() {
                   </a>
                 </div>
               </div>
+
+              {/* Low-key privacy note -- intentionally last, not highlighted */}
+              <PhipaBadge variant="card" />
             </aside>
           </div>
         </div>

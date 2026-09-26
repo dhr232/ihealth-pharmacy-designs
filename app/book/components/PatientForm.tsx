@@ -407,7 +407,6 @@ export default function PatientForm({
                     If you have your 10-digit BC Services Card handy, enter it here. Not required to complete your booking.
                   </span>
                 </div>
-                <PhipaBadge variant="pill" />
               </div>
               {errors.phn && (
                 <p className="mt-1.5 flex items-center gap-1 text-xs text-red-600">
@@ -475,7 +474,6 @@ export default function PatientForm({
         </button>
 
         <div className="flex items-center gap-3">
-          <PhipaBadge variant="pill" className="hidden sm:inline-flex" />
           <button
             type="submit"
             className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-6 py-3 text-sm font-bold text-white shadow-md shadow-blue-900/20 transition-all duration-150 active:scale-[0.98]"

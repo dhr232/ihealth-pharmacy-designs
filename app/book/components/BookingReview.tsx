@@ -634,7 +634,6 @@ export default function BookingReview({
         </motion.button>
 
         <div className="flex items-center gap-3">
-          <PhipaBadge variant="badge" className="hidden sm:inline-flex" />
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
