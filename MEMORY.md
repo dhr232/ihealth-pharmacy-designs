@@ -1,191 +1,99 @@
 # Project Memory — iHealth Pharmacy Website
 
-> Read this FIRST when resuming work on this project. Captures the state at the last
-> working session so future agents don't have to rebuild context from scratch.
+> Read this FIRST when resuming work. Technical runbook (stack, env vars, deploy, CI,
+> lint rules) lives in `CLAUDE.md`. Brand strategy and claim rules live in
+> `.agents/product-marketing.md`. This file captures business facts, decisions, and
+> gotchas that are not obvious from the code. Last updated: 2026-09-25.
 
-## Identity
+## Who this is for
 
-- **Client**: iHealth Pharmacy, Chilliwack, BC, Canada
-- **Brand**: red `#C01D16`, Inter font, white/light neutral palette, no emojis
-- **Domain**: `ihealthpharmacy.ca` (transfer planned, not yet done)
-- **Live (production)**: https://honeydew-coyote-883999.hostingersite.com/
-- **GitHub**: https://github.com/dhr232/ihealth-pharmacy-designs (public)
-- **Repo path**: `C:\Users\Dhruvil\pharmacy-website`
+- **Solo developer** (the owner-operator, dhr232) -- no team, no reviewers. Keep process light: CI green
+  on `main` is the gate. Do not propose team processes (PR reviews, staging, approval workflows).
+- **Solo-pharmacist pharmacy** (confirmed 2026-09-25): one pharmacist serves patients. Copy should say
+  "your pharmacist", not "our team of pharmacists". Which person (Dev Patel vs Dr. Rutu Patel) is still
+  being confirmed -- see Pending.
 
-## Stack (frozen — don't change without explicit user request)
+## Business facts (source of truth: `data/pharmacy-info.ts`)
 
-- Next.js 15 (App Router) + TypeScript + Tailwind CSS v4 + Turbopack
-- Static export: `output: "export"`, `trailingSlash: true`, `images: { unoptimized: true }`
-  - **No `basePath`** — Hostinger serves at `/`, not `/ihealth-pharmacy-designs/`
-  - If you set `basePath`, CSS/JS will 0-byte because URLs point to `/ihealth-pharmacy-designs/_next/...` which doesn't exist on Hostinger
-- `motion/react` for animations (NOT `framer-motion`), EASE_OUT_EXPO = `[0.16, 1, 0.3, 1]`
-- `lucide-react` for icons (NO emojis anywhere)
-- `three` + `@react-three/fiber` for 3D — but most 3D replaced with reference PNGs
+- **iHealth Pharmacy Ltd.**, independent and family-run
+- **Address:** 45619 Yale Rd #101, Chilliwack, BC V2P 2N1
+- **Phone / WhatsApp:** 604-392-8393 · **Email:** info@ihealthpharmacy.ca
+- **Hours (matches Google Business Profile):** Mon–Fri 8:30 am – 5:00 pm, Sat 9:00 am – 12:00 pm,
+  Sun closed; statutory holidays may differ
+- **Languages:** English, Punjabi, Hindi
+- **Online booking window:** Mon–Fri 9:00 am – 2:30 pm (last start 2:30), 15-min slots -- `PHARMACY_INFO.onlineBooking`,
+  enforced in both the slots API and the booking POST via `isBookableSlot()`
+- **Delivery:** free anywhere in Chilliwack, no minimum order
+- **Google rating:** 4.7 (`PHARMACY_INFO.address.googleRating` / `googleReviewsUrl`)
+- **Lead pharmacist:** Dr. Rutu Patel (pharmacist records live in PostgreSQL, managed in `/admin`)
+- **Domain:** `ihealthpharmacy.ca` (live on Hostinger); booking also served at `booking.` subdomain
 
-## Routes (14 total)
+Never hardcode hours, phone, or address in components -- import `PHARMACY_INFO`
+(`hours`, `hoursSummary`, `hoursShort`, `schedule`) and `getOpenStatus()` for live
+open/closed status. If hours change, update `schedule` + `hours*` there, plus the
+schema.org block in `app/layout.tsx`, email templates in `app/components/emails/`, and the
+announcement seed (see below).
 
-- `/` — Friendly variant homepage (was `/variants/friendly`, now promoted)
-- `/about`, `/contact`, `/cookies`, `/health-tips`, `/privacy`, `/subscribe`, `/terms`
-- `/services/[slug]` × 6: `minor-ailments`, `compounding`, `vaccinations`, `myhealthpack`, `med-review`, `delivery`
-- `/admin` — PIN-protected (default `2026`), localStorage CRUD for pharmacists + blog posts
+## Brand and positioning
 
-## Layout (root)
+- "The friendly neighbourhood pharmacy that knows you by name." Audience: seniors and caregivers.
+- Conversions: 1) prescription transfer (`/transfer`), 2) book a clinical service.
+- Colours: primary blue `#3D5FE0`, leaf green `#4CAF7D`, Inter. Red `#C01D16` was retired as
+  the default on 2026-09-17 (read as alarming to older patients); still selectable in the admin theme picker.
+- Full voice, verified claims, and banned claims: `.agents/product-marketing.md`.
 
-`app/layout.tsx` imports ThemeApplier + AnnouncementBar + CookieBanner. The
-ThemeApplier reads `ihealth_admin_theme` + `ihealth_admin_font` from
-localStorage and applies `[data-theme="..."]` to `<html>` + font class to `<body>`.
-Inter + 9 other Google Fonts loaded at build time.
+## Legal / claims decisions (owner is sensitive to regulatory risk)
 
-## Admin Panel (`/admin`)
+- No "accredited", "fully compliant", "certified", encryption-strength claims, or seal/badge
+  styling. `PhipaBadge` is intentionally a quiet grey note linking to `/privacy`.
+- PIPEDA removed from marketing copy (kept in `/privacy`, where it states patient access rights).
+- PHIPA wording left as-is on the About page per owner instruction (2026-09-25).
+- "BC PharmaNet Integration" marketing card removed from About (2026-09-25).
+- Verified claims: family-run, many refills under 30 min, free same-day delivery in Chilliwack.
+  Not accurate / do not use: sterile compounding, "5.0"/"5-star"/"top rated", NIHB billing, "$25 minimum".
 
-PIN: `2026` (env var `NEXT_PUBLIC_ADMIN_PIN` to override). 24h session via
-localStorage. Tabs: Pharmacists (4 seeded), Blog Posts (0 seeded; can import
-from `public/blog/seed-posts.json`), Theme Selector (10 themes + 10 fonts),
-Export JSON for both lists. Image upload via FileReader → base64 → localStorage
-(500KB warning). Files: `app/admin/page.tsx` + `app/admin/components/*` +
-`app/admin/lib/{storage,types}.ts`.
+## Database and migrations (set up 2026-09-25)
 
-## Themes & Fonts (CSS variables)
+- Local `.env` points at the **production** Neon DB. Never `db push` / `migrate dev` / `migrate reset` /
+  `db seed` locally. Workflow is in `CLAUDE.md` > Prisma (`npm run db:migration -- <name>`).
+- `RUN_MIGRATIONS=true` must be set in Hostinger hPanel env vars; the build then runs
+  `prisma migrate deploy`. Local and CI builds skip migrations.
+- Baseline `0_init` matches production exactly (verified with a read-only `migrate diff`). It must be
+  marked applied once with `npx prisma migrate resolve --applied 0_init` before the first deploy that
+  includes `prisma/migrations/` -- otherwise `migrate deploy` tries to re-create existing tables and the
+  build fails.
+- Pharmacist model gained profile fields on 2026-09-25 (slug, profilePublished, tagline, story,
+  specialties, education, affiliations, personalNote, plus credentials/languages/yearsExperience/
+  displayOrder/directPhone which were previously never persisted).
+- Windows: stop `npm run dev` before `npx prisma generate` (EPERM on the engine DLL otherwise).
 
-10 themes: pharmacy-red (default), sage-care, ocean-calm, sunset-wellness,
-forest-pharmacy, lavender-trust, citrus-vitality, slate-professional,
-berry-warmth, midnight-modern. Defined in `app/globals.css` under
-`[data-theme="..."]` selectors.
+## Gotchas
 
-10 font pairings: inter-tight, editorial-serif, geometric-humanist,
-medical-mono, friendly-sans, bold-display, clean-roboto, charcoal-grotesk,
-warm-manrope, classic-plus-jakarta. Class `font-{name}` on `<body>`.
+- **Announcements are per-browser localStorage**, seeded from `SEED_ANNOUNCEMENTS` in
+  `app/admin/lib/types.ts` (also mirrored in `prisma/seed.ts`). Admin edits do NOT reach other
+  visitors. When changing seed text, bump the `KEY_ANNOUNCEMENTS` version suffix in
+  `app/admin/lib/storage.ts` so returning visitors re-seed.
+- **Hydration:** never read `window` during render. `getBookingUrl()` in `lib/routes.ts` accepts a
+  hostname; in client components use `useBookingUrl()` / `useClientHostname()` from
+  `lib/use-booking-url.ts`. Server components can call `getBookingUrl()` directly.
+- **Booking window is intentionally narrower than store hours** (owner decision 2026-09-25). Saturday shows
+  as "Walk-in" in the booking calendar.
+- **Playwright** has no bundled browser installed; launch with `chromium.launch({ channel: "msedge" })`
+  for screenshots. Full-page screenshots show blank gaps where `SectionReveal` scroll animations
+  haven't fired -- screenshot each section after `scrollIntoView` instead.
+- The `ui-ux-pro-max` and `content-strategy` skills live in `.agents/skills/`; brand colours and Inter
+  override any palette/font the design skill suggests.
 
-Note: legacy `--brand` CSS vars (red `#C01D16`) preserved as default so existing
-components that hardcode `bg-[var(--brand)]` keep their look. To make themes
-swap colors too, refactor components to use `var(--color-accent)`.
+## Pending / open questions
 
-## Forms — Real Submission (Web3Forms)
+- **Fictional staff on the live site** (confirmed not real 2026-09-25): Marcus Chen, Priya Patel, Daniel
+  Okafor -- DB rows (deactivate in `/admin`), `SEED_PHARMACISTS` in `app/admin/lib/types.ts`,
+  `prisma/seed.ts`, `/transfer` page ("Priya Patel reviews every transfer"), admin appointment mock data.
+  Also check the homepage "Daniel O." entry (possibly a fabricated testimonial).
+- Which single pharmacist is the public face, and is Dr. Rutu Patel's photo (`anika.jpg`) really her?
+- Pharmacist profile page (`/team/[slug]`), owner note, community section, and BC-structured privacy
+  policy are planned but not built; they need real content from the pharmacist.
 
-`RefillForm` and `NewsletterForm` POST to `https://api.web3forms.com/submit` with
-access key from `process.env.NEXT_PUBLIC_WEB3FORMS_KEY` (currently placeholder).
-On failure, falls back to local success state so UX never blocks.
-Honeypot `botcheck` field included.
-
-## Deploy Flow (Hostinger via Git integration)
-
-Hostinger `honeydew-coyote-883999.hostingersite.com` pulls `gh-pages` branch →
-`public_html`. Build locally, push to `gh-pages`:
-
-```bash
-npx next build && \
-rm -rf out/.git out/.nojekyll && \
-touch out/.nojekyll && \
-cd out && \
-git init -b gh-pages 2>/dev/null && \
-git add . && \
-git commit -m "Deploy: <message>" && \
-git push "https://x-access-token:$(gh auth token)@github.com/dhr232/ihealth-pharmacy-designs.git" HEAD:gh-pages --force
-```
-
-`gh-pages` is force-pushed from local (Bash); main branch never force-pushed.
-GitHub Pages ALSO auto-deploys from `gh-pages` to
-`dhr232.github.io/ihealth-pharmacy-designs/` — that's a noise workflow the user
-opted to keep (skip disabling).
-
-## CI
-
-`.github/workflows/ci.yml` runs on push to `main`. Jobs:
-- `build-and-test`: `npm ci` → `npm run lint` → `npx tsc --noEmit` → `npx next build` → smoke test served at port 8080
-- `deploy-hostinger`: downloads `out/` artifact, force-pushes to `gh-pages`
-
-**User requirement: lint must be 0 errors before any deploy.**
-Last known clean state: `npm run lint` exits 0, 0 errors / 0 warnings.
-
-## Lint House Rules (enforced by ESLint config + AGENTS.md)
-
-- NO emojis anywhere
-- NO `Math.random()` in render (impure-function warning)
-- NO `setState()` directly inside `useEffect()` (cascading-render warning) — use lazy initializers or derived-state pattern instead
-- NO `<img>` without `eslint-disable-next-line @next/next/no-img-element` (intentional for static-export compat)
-- `scripts/**` is ignored by ESLint (standalone Node scripts use `require()`)
-- `package.json` has `overrides: { picomatch: "^4.0.7" }` (resolves peer-dep conflict with eslint-config-next 16)
-
-## Files Inventory (key paths)
-
-- `app/layout.tsx` — Inter + 9 alternates + ThemeApplier/AnnouncementBar/CookieBanner
-- `app/page.tsx` — Friendly homepage (~500 lines)
-- `app/globals.css` — 10 themes + 10 fonts + Tailwind v4 @theme
-- `app/admin/{page.tsx,components/*,lib/{storage,types}.ts}` — PIN login, editors, storage
-- `app/components/*` — Header, Footer, RefillForm, NewsletterForm, MotionKit, CountUp, FloatingPills3D, HappyCustomerCard, LanguageSwitcher (10 BC langs), CookieBanner, AnnouncementBar, WhatsAppButton, ThemeApplier
-- `public/` — ihealth-logo-main.jpeg, carousel-dispenser.png, pills-*.png, avatar1-4.webp, blog/seed-posts.json
-- `data/blog-posts.ts` — 10 production posts (~25K words)
-- `scripts/` — Playwright QA (qa-paths.js, qa-e2e.js, qa-final.js, check-styles.js)
-- `.github/workflows/ci.yml` — lint + tsc + build + deploy-hostinger
-
-## Pending User Input (blockers)
-
-- **Web3Forms access key**: replace `YOUR_WEB3FORMS_KEY_HERE` env var
-- **WhatsApp phone**: replace `16045550199` placeholder
-- **Domain transfer**: `ihealthpharmacy.ca` to Hostinger (user said "later")
-
-## What NOT To Do
-
-- Don't re-add `basePath: "/ihealth-pharmacy-designs"` to next.config.ts (root cause of 0-byte CSS)
-- Don't introduce a server runtime dependency (static export only)
-- Don't deploy without `npm run lint` exiting 0
-- Don't replace Inter or the brand red color
-- Don't add emojis
-- Don't touch AGENTS.md block (auto-managed by Next.js dev)
-- Don't force-push `main` (only `gh-pages`)
-- Don't use `<Image>` from `next/image` for static assets (causes basePath resolution issues — use plain `<img>` with `eslint-disable`)
-
-## Recent Wins
-
-basePath removed · lint 0/0 via lazy-init + derived-state pattern · Web3Forms with fallback · all 10 themes + 10 fonts live · admin PIN `2026` E2E verified.
-
-## E2E Verification (end of Language Switcher session)
-
-- Live: `https://honeydew-coyote-883999.hostingersite.com/` — full styled site
-- All 14 routes return HTTP 200 from Hostinger
-- Home page: 0 console errors, 0 failed requests, H1 present
-- Theme switching: `data-theme=ocean-calm` + `font-editorial-serif` applied live
-- Admin login: PIN `2026` → dashboard (Pharmacist Team 4 / Blog Posts 0)
-- Announcement bar + cookie banner present; cookie Accept dismisses correctly
-- LanguageSwitcher: widget loads, 10 BC langs selectable (linguistic E2E pending)
-
-## Session Workflow Conventions (learned this session)
-
-- **Deploy gate is BOTH** `npm run lint` AND `npx tsc --noEmit` — both must exit 0. CI runs both.
-- **Multi-agent fan-out preferred** when 3+ independent tasks remain: spawn parallel task agents, then a single QA agent validates E2E after all complete. Don't serialize.
-- **E2E validation is a separate phase** — one QA agent runs after task agents finish, never interleaved with build work.
-
-## Recent Session Learnings — Language Switcher
-
-`app/components/LanguageSwitcher.tsx` — 10 BC languages via Google Translate.
-
-### How it works
-- Script: `https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit`, injected once with `data-ihealth-gtranslate="1"` marker so route navigations don't re-inject.
-- Hidden host `#google_translate_element` positioned offscreen (`left:-9999px`, `1×1`, `overflow:hidden`) so users never see Google's native banner.
-- Language change writes `googtrans=/en/{code}` cookie + sets `.goog-te-combo` value + dispatches `change` event (belt-and-braces — cookie alone isn't always enough).
-- `window.__iHealthGTEInitialized` flag prevents re-init across Next.js route navigations.
-- SSR-safe: `active` state starts as `"en"` server-side; persisted value restored in post-mount `useEffect` AFTER the Google widget is ready, avoiding hydration mismatches.
-- `LANGUAGES` (10 BC langs, ranked by speaker pop): `en`, `pa`, `zh-CN`, `zh-TW`, `hi`, `fr`, `tl`, `ko`, `fa`, `es`.
-- Persistence: `localStorage["ihealth_lang"]`. Cookie: `googtrans=/en/{code}` (shape is `/source/target`; clear with `max-age=0` to revert to English).
-- Banner / skiptranslate / tooltip chrome hidden via CSS rules in `app/globals.css`.
-
-### Past fixes (already landed — don't reintroduce)
-- **React #418 hydration error**: when state init read `localStorage` synchronously, server vs first-client renders diverged. Fixed by always starting `active="en"` and restoring in a post-mount `useEffect`.
-- **"Maximum call stack size exceeded"**: a hidden fallback `<select>` mirroring the combo was driving itself in an infinite change-event loop. Fallback select removed entirely; we now drive `.goog-te-combo` only when present (one-shot).
-
-### ️ Active bugs in latest refactor (NOT yet fixed — blocks `npm run lint` deploy gate)
-1. `setScriptReady(true)` called synchronously inside `useEffect` (lines ~90 and ~103). Violates project house rule "no `setState()` directly inside `useEffect()`" → cascading-render lint warning.
-2. `applyGTranslate` referenced inside the mount `useEffect` (line ~107) BEFORE its `const` declaration (line ~125). Runtime works because the callback fires after commit, but ESLint flags `no-use-before-define` / hoisting. Source order matters here.
-3. `scriptReady` state is assigned but never read anywhere — dead state. Delete it (and its two `setScriptReady` calls become no-ops, which collapses bug #1 too).
-4. `applyGTranslate` `useCallback` flagged for immutability. Body is pure (no state/props refs) so empty `[]` deps is technically correct, but the lint rule still complains. Consider a plain `function` or restructure to silence it.
-
-### Gotchas to remember
-- HTTPS required for `translate.google.com` script — HTTP pages silently fail to load the widget.
-- Google Translate applies asynchronously; UI shows a brief `Loader2` spinner via the `translating` state, cleared after a 1200ms `setTimeout` (we don't actually wait for completion).
-- Hidden widget div is `aria-hidden="true"`; the switcher root wrapper has `className="notranslate" translate="no"` so the switcher UI itself is never translated.
-- `useReducedMotion()` drives the menu animation; reduced-motion users get opacity fade only.
-- Outside-click + Escape-to-close handled by a second `useEffect`, only attached while `open` is true.
-- The `window.google.translate.TranslateElement.InlineLayout.SIMPLE` flag suppresses the top banner inside the widget itself (we still hide the banner via CSS as a belt-and-braces fallback).
-
-### Deploy gate reminder
-`npm run lint` must exit 0 before any deploy (CI enforces). The 4 bugs above block that gate. Suggested fix order: drop the dead `scriptReady` state (collapses bugs #1 + #3) → move `applyGTranslate` declaration above its consumer in the `useEffect`, OR hoist the body into a `useRef` callback → re-evaluate the `useCallback` on `applyGTranslate` (bug #4).
+- Homepage `TrustMetricsBar` "Zero Wait" card promises "zero clinic wait" -- outcome claim the brand file
+  discourages; not yet changed.
+- Footer live open/closed status ignores statutory holidays.
