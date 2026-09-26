@@ -16,7 +16,8 @@ import { SEED_POSTS } from "./seed-posts";
 const KEY_AUTH = "ihealth_admin_auth";
 const KEY_PHARMACISTS = "ihealth_admin_pharmacists";
 const KEY_POSTS = "ihealth_admin_posts";
-const KEY_ANNOUNCEMENTS = "ihealth_admin_announcements";
+// Bump the version suffix whenever SEED_ANNOUNCEMENTS changes so returning visitors re-seed
+const KEY_ANNOUNCEMENTS = "ihealth_admin_announcements_v2";
 const KEY_THEME = "ihealth_admin_theme";
 const KEY_FONT = "ihealth_admin_font";
 

@@ -62,7 +62,7 @@ Once everything is transferred, you have three options:
 
 **Pick up in store.** Pop in, grab your prescriptions, and ask the pharmacist any questions. Most refills are ready within 15 minutes of arriving.
 
-**Free delivery.** If you're in Chilliwack and your order totals over $25, we deliver to your door at no charge. Same-day delivery is available for most requests placed before 2pm on weekdays.
+**Free delivery.** If you're in Chilliwack, we deliver to your door at no charge, with no minimum order. Same-day delivery is available for most requests placed before 2pm on weekdays.
 
 **Automatic refills.** For ongoing medications, we can enroll you in our auto-refill program. Your prescriptions are filled a few days before you run out, and we text you when they're ready. You can pause or cancel anytime.
 
@@ -72,7 +72,7 @@ Chilliwack residents switch to us for a few common reasons. Some are looking for
 
 A few things that set us apart:
 
-- Open 7 days a week with extended hours
+- Open Monday to Saturday, including Saturday mornings
 - Free delivery within Chilliwack
 - Multilingual staff
 - No-cost medication reviews for BC Pharmacare patients
@@ -648,7 +648,7 @@ We work around these by keeping them as separate fills alongside your MyHealthPa
 
 ## Free delivery in Chilliwack
 
-Picking up a blister card every week or two is straightforward, but for many families it's an inconvenience. We offer free prescription delivery anywhere in Chilliwack for orders over $25. We'll bring your MyHealthPack card straight to your door — and if you have questions, the delivery driver can connect you with a pharmacist by phone.
+Picking up a blister card every week or two is straightforward, but for many families it's an inconvenience. We offer free prescription delivery anywhere in Chilliwack, with no minimum order. We'll bring your MyHealthPack card straight to your door — and if you have questions, the delivery driver can connect you with a pharmacist by phone.
 
 ## Safety benefits
 
@@ -808,9 +808,9 @@ That's exactly why we offer free prescription delivery in Chilliwack. Same-day f
 
 ## Who qualifies for free delivery
 
-Free delivery applies to anyone in Chilliwack with a prescription order totaling $25 or more. The threshold is intentionally low — it covers most prescription fills. If you're picking up a single refill that costs less than $25, we'll still deliver it; we just have a small $5 delivery fee in that case.
+Free delivery is available to anyone in Chilliwack, with no minimum order and no delivery fee. Whether it's a single refill or a full month of blister packs, we'll bring it to your door at no charge.
 
-There's no minimum for seniors, patients with mobility challenges, or anyone enrolled in our auto-refill program. We want to make medication access easy for everyone.
+We want to make medication access easy for everyone, especially seniors, patients with mobility challenges, and families managing care for a loved one.
 
 ## How to request delivery
 

@@ -68,7 +68,7 @@ const FEATURED_SERVICES = [
     badgeStyle: "bg-[#EAF8F1] text-[#238150] border-[#CEEEDC]",
     statusPill: "Same-Day Dispatch",
     desc: "Prescriptions, recurring refills, and compliance blister packs delivered free directly to your door in temperature-monitored packaging across Chilliwack.",
-    highlights: ["Chilliwack & Sardis", "Blister Packs & Refills", "Free Over $25"],
+    highlights: ["Chilliwack & Sardis", "Blister Packs & Refills", "Always Free"],
     href: "/services/delivery",
     cta: "Request Delivery",
     image: "/services/delivery.jpg",
@@ -210,7 +210,7 @@ export default function HomePage() {
               <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-500">
                 <div className="flex items-center gap-1.5 font-medium text-slate-700">
                   <Clock size={14} className="text-[var(--brand)]" />
-                  <span>Open Mon–Fri 9am–6pm · Sat 10am–3pm</span>
+                  <span>Open {PHARMACY_INFO.hoursShort}</span>
                 </div>
                 <span className="text-slate-300 hidden sm:inline">•</span>
                 <a
@@ -633,7 +633,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="text-base font-bold text-slate-900">Free Home Delivery</h3>
                 <p className="mt-1.5 text-xs text-slate-600 leading-relaxed">
-                  Free prescription delivery across Chilliwack for orders over $25. Same-day service on weekdays.
+                  Free prescription delivery across Chilliwack, with no minimum order. Same-day service on weekdays.
                 </p>
               </div>
             </div>

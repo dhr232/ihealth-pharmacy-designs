@@ -24,7 +24,6 @@ import {
 } from "lucide-react";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 import { getMainSiteUrl } from "@/lib/routes";
-import PhipaBadge from "../components/PhipaBadge";
 
 const STEPS = [
   { id: 1, title: "Select Service", icon: Stethoscope },
@@ -121,8 +120,6 @@ function BookingWizard() {
               </div>
 
               <div className="flex items-center gap-3">
-                <PhipaBadge />
-
                 {/* Dispensary Phone Quick Badge */}
                 <div className="hidden sm:flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-1.5 text-xs">
                   <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--brand)] text-white shadow-xs">

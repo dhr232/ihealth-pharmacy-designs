@@ -84,9 +84,9 @@ const ALL_SERVICES = [
     title: "Free Prescription Delivery",
     slug: "delivery",
     href: "/services/delivery",
-    desc: "Fast, reliable same-day prescription delivery anywhere in Chilliwack for orders over $25. Place requests before 2:00 PM for afternoon delivery.",
+    desc: "Fast, reliable same-day prescription delivery anywhere in Chilliwack, always free. Place requests before 2:00 PM for afternoon delivery.",
     icon: Truck,
-    badge: "Free over $25",
+    badge: "Always free",
     image: "/services/delivery.jpg",
   },
 ];

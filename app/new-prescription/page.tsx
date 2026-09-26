@@ -59,9 +59,6 @@ export default function NewPrescriptionPage() {
 
             {/* Sidebar Reassurance & Information */}
             <aside className="lg:col-span-4 space-y-6">
-              {/* PHIPA Compliant Privacy Card */}
-              <PhipaBadge variant="card" />
-
               {/* Important Legal Notice for New Scripts */}
               <div className="rounded-2xl border border-amber-200 bg-amber-50/80 p-5 text-amber-900">
                 <div className="flex items-center gap-2 font-bold text-sm text-amber-950 mb-1.5">
@@ -104,7 +101,7 @@ export default function NewPrescriptionPage() {
                   Prefer to Order by Phone?
                 </h3>
                 <p className="text-xs text-slate-300 mb-4">
-                  Our pharmacists in Chilliwack are here Monday to Friday from 9:00 AM to 5:00 PM.
+                  Our pharmacists in Chilliwack are here Monday to Friday from 8:30 AM to 5:00 PM, and Saturday from 9:00 AM to 12:00 PM.
                 </p>
                 <a
                   href={`tel:${PHARMACY_INFO.phoneClean}`}
@@ -114,6 +111,9 @@ export default function NewPrescriptionPage() {
                   Call {PHARMACY_INFO.phone}
                 </a>
               </div>
+
+              {/* Low-key privacy note -- intentionally last, not highlighted */}
+              <PhipaBadge variant="card" />
             </aside>
           </div>
         </div>

@@ -705,8 +705,9 @@ export function PrescriptionConfirmationEmail({
                         }}
                       >
                         <strong>Dispensary Hours:</strong><br />
-                        Monday – Friday: 9:00 AM – 5:00 PM<br />
-                        Saturday &amp; Sunday: Closed
+                        Monday – Friday: 8:30 AM – 5:00 PM<br />
+                        Saturday: 9:00 AM – 12:00 PM<br />
+                        Sunday: Closed
                       </div>
                     </td>
                     <td align="right" style={{ verticalAlign: "middle" }}>

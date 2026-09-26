@@ -12,57 +12,32 @@ import {
   ArrowRight,
   ArrowUp,
   Calendar,
-  Lock,
 } from "lucide-react";
-import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
+import { PHARMACY_INFO, getOpenStatus, getWhatsAppUrl } from "@/data/pharmacy-info";
 
 interface FooterProps {
   logoHref?: string;
 }
 
 export default function Footer({ logoHref = "/" }: FooterProps = {}) {
-  // Live dispensary status calculator (Mon-Fri 9:00 AM - 5:00 PM Pacific Time)
+  // Live dispensary status, derived from PHARMACY_INFO.schedule (Pacific time)
   const getDispensaryStatus = () => {
-    try {
-      const now = new Date();
-      // Format to Vancouver/Pacific time
-      const pacificTimeStr = now.toLocaleString("en-US", {
-        timeZone: "America/Vancouver",
-        hour12: false,
-        hour: "numeric",
-        minute: "numeric",
-        weekday: "short",
-      });
-      const day = now.toLocaleDateString("en-US", { timeZone: "America/Vancouver", weekday: "short" });
-      const hour = parseInt(now.toLocaleTimeString("en-US", { timeZone: "America/Vancouver", hour12: false, hour: "numeric" }), 10);
-      const isWeekday = day !== "Sat" && day !== "Sun";
-      const isOpen = isWeekday && hour >= 9 && hour < 17;
-
-      if (isOpen) {
-        return {
+    const { isOpen, detail } = getOpenStatus();
+    return isOpen
+      ? {
           isOpen: true,
           label: "Dispensary Open Now",
-          detail: "Open until 5:00 PM",
+          detail,
           badgeColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
           dotColor: "bg-emerald-400",
+        }
+      : {
+          isOpen: false,
+          label: "Dispensary Closed",
+          detail,
+          badgeColor: "bg-slate-800 text-slate-400 border-slate-700/80",
+          dotColor: "bg-slate-500",
         };
-      }
-      return {
-        isOpen: false,
-        label: "Dispensary Closed",
-        detail: "Opens Mon at 9:00 AM",
-        badgeColor: "bg-slate-800 text-slate-400 border-slate-700/80",
-        dotColor: "bg-slate-500",
-      };
-    } catch {
-      return {
-        isOpen: true,
-        label: "Mon–Fri 9am–5pm",
-        detail: "Weekends Closed",
-        badgeColor: "bg-slate-800 text-slate-300 border-slate-700",
-        dotColor: "bg-blue-400",
-      };
-    }
   };
 
   const status = getDispensaryStatus();
@@ -116,13 +91,6 @@ export default function Footer({ logoHref = "/" }: FooterProps = {}) {
               </p>
             </div>
 
-            {/* PHIPA / PIPEDA Privacy Guarantee */}
-            <div className="inline-flex items-center gap-2 rounded-xl border border-sky-900/60 bg-sky-950/40 px-3 py-1.5 text-xs text-sky-300">
-              <Lock size={12} className="text-sky-400 shrink-0" />
-              <span className="text-[11px] font-semibold">
-                PHIPA / PIPA Compliant • 256-Bit Encrypted
-              </span>
-            </div>
           </div>
 
           {/* Col 2: Direct Contact, Location & Hours */}

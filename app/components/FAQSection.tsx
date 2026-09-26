@@ -27,13 +27,13 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     question: "How does BC Fair PharmaCare and direct insurance billing work?",
     answer:
-      "We bill directly to BC Fair PharmaCare and all major private insurers (Pacific Blue Cross, Sun Life, Manulife, Canada Life, Green Shield, and NIHB). You only pay your eligible plan co-pay (if any), eliminating paperwork and out-of-pocket delays.",
+      "We bill directly to BC Fair PharmaCare and most major private insurers (Pacific Blue Cross, Sun Life, Manulife, Canada Life, and GreenShield). You only pay your eligible plan co-pay (if any), eliminating paperwork and out-of-pocket delays.",
     category: "Coverage & Billing",
   },
   {
     question: "Is prescription delivery free anywhere in Chilliwack?",
     answer:
-      "Yes! We provide complimentary same-day prescription delivery across Chilliwack for all medication orders over $25. Orders placed before 2:00 PM on weekdays are typically delivered straight to your door that afternoon.",
+      "Yes! We provide complimentary same-day prescription delivery across Chilliwack, with no minimum order. Orders placed before 2:00 PM on weekdays are typically delivered straight to your door that afternoon.",
     category: "Delivery",
   },
   {

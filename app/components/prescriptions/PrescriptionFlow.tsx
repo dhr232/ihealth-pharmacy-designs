@@ -434,7 +434,7 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
                 <div className="font-bold text-white">iHealth Pharmacy Chilliwack</div>
                 <div className="text-xs text-slate-400">#101 - 45619 Yale Rd, Chilliwack, BC V2P 2N1</div>
                 <div className="mt-2 text-xs text-slate-300">
-                  <strong>Dispensary Hours:</strong> Mon–Fri 9:00 AM – 5:00 PM | Sat &amp; Sun Closed
+                  <strong>Dispensary Hours:</strong> Mon–Fri 8:30 AM – 5:00 PM | Sat 9:00 AM – 12:00 PM | Sun Closed
                 </div>
               </div>
               <a
@@ -482,9 +482,6 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
           <p className="mt-3 text-base text-slate-600 sm:text-lg">
             {pageDetails.subtitle}
           </p>
-        </div>
-        <div className="shrink-0 pt-1 sm:pt-0">
-          <PhipaBadge />
         </div>
       </div>
 
@@ -934,7 +931,7 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
             </div>
             <div className="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-3 py-1.5 text-xs text-slate-600 font-medium">
               <Clock className="h-3.5 w-3.5 text-blue-600" />
-              Hours: Mon–Fri 9:00 AM – 5:00 PM
+              Hours: Mon–Fri 8:30 AM – 5:00 PM, Sat 9:00 AM – 12:00 PM
             </div>
           </div>
 

@@ -174,7 +174,7 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
         items: [
           {
             label: "Direct Billing & Plans",
-            description: "Fair PharmaCare, Blue Cross, Sun Life & NIHB",
+            description: "Fair PharmaCare, Blue Cross, Sun Life & more",
             icon: CreditCard,
             iconClass: "border-blue-200/80 bg-blue-100 text-[#3D5FE0] group-hover:bg-[#3D5FE0] group-hover:text-white group-hover:border-[#3D5FE0]",
             href: "/about#billing",
