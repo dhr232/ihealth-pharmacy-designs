@@ -1,11 +1,18 @@
 export const MAIN_SITE_BASE = "https://ihealthpharmacy.ca";
 export const BOOKING_SUBDOMAIN_BASE = "https://booking.ihealthpharmacy.ca";
 
-export function getBookingUrl(path: string = ""): string {
+/**
+ * Resolves the booking URL for the current host. Pass `hostname` explicitly when
+ * rendering (see `useBookingUrl`) -- reading `window` during render causes hydration
+ * mismatches. Omitting it falls back to `window`, which is safe in event handlers.
+ */
+export function getBookingUrl(
+  path: string = "",
+  hostname: string | null = typeof window !== "undefined" ? window.location.hostname : null
+): string {
   const formattedPath = path.startsWith("?") || path.startsWith("/") ? path : `/${path}`;
 
-  if (typeof window !== "undefined") {
-    const hostname = window.location.hostname;
+  if (hostname) {
     if (hostname.includes("localhost") || hostname.includes("127.0.0.1")) {
       return `/book${formattedPath === "/" ? "" : formattedPath}`;
     }

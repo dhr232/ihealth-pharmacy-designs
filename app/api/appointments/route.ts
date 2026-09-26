@@ -7,6 +7,7 @@ import {
   syncResendSubscriber,
 } from "@/lib/resend";
 import { getServiceByIdOrSlug } from "@/data/booking-services";
+import { PHARMACY_INFO, isBookableSlot } from "@/data/pharmacy-info";
 import {
   isValidEmail,
   isValidPhone,
@@ -170,6 +171,17 @@ export async function POST(request: NextRequest) {
       if (isPm && hNum < 12) hNum += 12;
       if (!isPm && hNum === 12) hNum = 0;
       time24 = `${String(hNum).padStart(2, "0")}:${mStr}`;
+    }
+
+    // Reject times outside the online booking window, even if the client was bypassed
+    if (!isBookableSlot(date, time24)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Online appointments are available ${PHARMACY_INFO.onlineBooking.summary}. Please choose another time.`,
+        },
+        { status: 400 }
+      );
     }
 
     const [slotHour, slotMinute] = time24.split(":").map(Number);
