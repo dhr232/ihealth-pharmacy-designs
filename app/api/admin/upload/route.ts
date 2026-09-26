@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
-import crypto from "crypto";
 import { getCurrentStaffSession } from "@/lib/auth";
+import { getUploadRoot, saveUpload, type UploadCategory } from "@/lib/uploads";
 
 const MAX_FILE_SIZE_BYTES = 15 * 1024 * 1024; // 15MB
 
+export const dynamic = "force-dynamic";
+
 const ALLOWED_MIME_TYPES: Record<string, string[]> = {
-  flyers: ["application/pdf"],
+  flyers: ["application/pdf", "image/png", "image/jpeg", "image/webp"],
   blog: ["image/png", "image/jpeg", "image/webp"],
 };
 
@@ -62,7 +62,7 @@ export async function POST(request: Request) {
     const mimeType = file.type.toLowerCase();
     if (!validMimes.includes(mimeType)) {
       const allowedDescription =
-        category === "flyers" ? "PDF documents" : "PNG, JPEG, or WEBP images";
+        category === "flyers" ? "PDF documents or PNG, JPEG, WEBP images" : "PNG, JPEG, or WEBP images";
       return NextResponse.json(
         {
           success: false,
@@ -72,36 +72,31 @@ export async function POST(request: Request) {
       );
     }
 
-    // 5. Generate collision-safe filename
-    const originalExt = path.extname(file.name).toLowerCase() || (category === "flyers" ? ".pdf" : ".png");
-    const rawBaseName = path.basename(file.name, originalExt);
-    const sanitizedBase = rawBaseName
-      .toLowerCase()
-      .replace(/[^a-z0-9_-]/g, "-")
-      .slice(0, 40)
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "") || "upload";
+    // 5. Refuse if there is nowhere persistent to write. Hostinger rebuilds the
+    //    app folder on every deploy, so writing inside it would silently lose files.
+    if (!getUploadRoot()) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "File storage is not configured. Set UPLOAD_DIR in Hostinger to a folder outside the app, e.g. /home/u491263438/domains/ihealthpharmacy.ca/uploads",
+        },
+        { status: 503 }
+      );
+    }
 
-    const randomSuffix = crypto.randomBytes(4).toString("hex");
-    const timestamp = Date.now();
-    const collisionSafeName = `${sanitizedBase}-${timestamp}-${randomSuffix}${originalExt}`;
-
-    // 6. Ensure target directory exists
-    const targetDir = path.join(process.cwd(), "public", "uploads", category);
-    await fs.mkdir(targetDir, { recursive: true });
-
-    // 7. Write file directly to persistent directory
-    const filePath = path.join(targetDir, collisionSafeName);
-    const arrayBuffer = await file.arrayBuffer();
-    await fs.writeFile(filePath, Buffer.from(arrayBuffer));
-
-    // 8. Return public URL
-    const publicUrl = `/uploads/${category}/${collisionSafeName}`;
+    // 6. Save under a unique name in UPLOAD_DIR; served back at /media/<category>/<file>
+    const publicUrl = await saveUpload(
+      category as UploadCategory,
+      Buffer.from(await file.arrayBuffer()),
+      mimeType,
+      file.name
+    );
 
     return NextResponse.json({
       success: true,
       url: publicUrl,
-      filename: collisionSafeName,
+      filename: publicUrl.split("/").pop(),
       size: file.size,
       mimeType: file.type,
       category,

@@ -6,6 +6,7 @@ import ChunkErrorRecovery from "./components/ChunkErrorRecovery";
 import AnnouncementBar from "./components/AnnouncementBar";
 import CookieBanner from "./components/CookieBanner";
 import WhatsAppButton from "./components/WhatsAppButton";
+import PublicOnly from "./components/PublicOnly";
 import TextSizeAdjuster from "./components/TextSizeAdjuster";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 
@@ -329,11 +330,15 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-sans font-inter-tight">
         <ChunkErrorRecovery />
         <ThemeApplier />
-        <AnnouncementBar />
+        <PublicOnly>
+          <AnnouncementBar />
+        </PublicOnly>
         {children}
-        <CookieBanner />
-        <WhatsAppButton />
-        <TextSizeAdjuster />
+        <PublicOnly>
+          <CookieBanner />
+          <WhatsAppButton />
+          <TextSizeAdjuster />
+        </PublicOnly>
         <div id="google_translate_element" aria-hidden="true" style={{ display: "none" }} />
       </body>
     </html>

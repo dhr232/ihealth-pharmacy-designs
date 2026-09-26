@@ -40,6 +40,12 @@ export interface FlyerItem {
   createdAt: string;
 }
 
+
+/** Flyers can be PDFs or images; the stored URL's extension tells them apart. */
+function isImageUrl(url: string): boolean {
+  return /\.(png|jpe?g|webp)(\?|$)/i.test(url);
+}
+
 interface FlyersSectionProps {
   onToast: (kind: "success" | "error" | "info", message: string) => void;
 }
@@ -89,14 +95,14 @@ export function FlyersSection({ onToast }: FlyersSectionProps) {
   async function handleCreateFlyer(e: React.FormEvent) {
     e.preventDefault();
     if (!title.trim() || !selectedFile) {
-      onToast("error", "Flyer title and PDF file are required.");
+      onToast("error", "Flyer title and a PDF or image file are required.");
       return;
     }
 
     try {
       setUploading(true);
 
-      // 1. Upload PDF to persistent Hostinger storage
+      // 1. Upload the PDF/image to the persistent upload folder (UPLOAD_DIR on Hostinger)
       const formData = new FormData();
       formData.append("file", selectedFile);
       formData.append("category", "flyers");
@@ -175,7 +181,7 @@ export function FlyersSection({ onToast }: FlyersSectionProps) {
           <FileText size={32} className="mx-auto text-slate-400 mb-2" />
           <h3 className="font-semibold text-slate-800 text-sm">No promotional flyers published</h3>
           <p className="text-xs text-slate-500 mt-1">
-            Upload a PDF flyer to make it available for local Chilliwack patients.
+            Upload a PDF or image flyer to make it available for local Chilliwack patients.
           </p>
         </Card>
       ) : (
@@ -193,7 +199,9 @@ export function FlyersSection({ onToast }: FlyersSectionProps) {
                   >
                     {flyer.active ? "ACTIVE" : "ARCHIVED"}
                   </Badge>
-                  <span className="text-xs text-slate-400 font-mono">PDF Document</span>
+                  <span className="text-xs text-slate-400 font-mono">
+                    {isImageUrl(flyer.pdfUrl) ? "Image" : "PDF Document"}
+                  </span>
                 </div>
                 <CardTitle className="text-base font-semibold text-slate-900 leading-snug">
                   {flyer.title}
@@ -201,6 +209,15 @@ export function FlyersSection({ onToast }: FlyersSectionProps) {
               </CardHeader>
 
               <CardContent className="p-4 pt-2 space-y-3">
+                {isImageUrl(flyer.pdfUrl) && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={flyer.pdfUrl}
+                    alt=""
+                    loading="lazy"
+                    className="h-36 w-full rounded-lg border border-slate-200 object-cover"
+                  />
+                )}
                 {(flyer.validFrom || flyer.validTo) && (
                   <div className="flex items-center gap-1.5 text-xs text-slate-500">
                     <Calendar size={13} className="shrink-0 text-slate-400" />
@@ -219,7 +236,7 @@ export function FlyersSection({ onToast }: FlyersSectionProps) {
                     className="inline-flex items-center gap-1.5 text-xs font-medium text-teal-700 hover:text-teal-800 hover:underline"
                   >
                     <ExternalLink size={13} />
-                    <span>View PDF Flyer</span>
+                    <span>{isImageUrl(flyer.pdfUrl) ? "View Flyer Image" : "View PDF Flyer"}</span>
                   </a>
 
                   <span className="text-xs text-slate-400">
@@ -238,7 +255,7 @@ export function FlyersSection({ onToast }: FlyersSectionProps) {
           <DialogHeader>
             <DialogTitle>Upload Promotional Flyer</DialogTitle>
             <DialogDescription>
-              Select a PDF flyer (max 15MB) to upload directly to persistent storage.
+              Select a PDF or image flyer (PNG, JPEG, WEBP; max 15MB). Files are kept on the server and survive redeploys.
             </DialogDescription>
           </DialogHeader>
 
@@ -286,11 +303,11 @@ export function FlyersSection({ onToast }: FlyersSectionProps) {
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-slate-700">PDF Document</Label>
+              <Label className="text-xs font-semibold text-slate-700">Flyer file (PDF or image)</Label>
               <input
                 type="file"
                 ref={fileInputRef}
-                accept="application/pdf"
+                accept="application/pdf,image/png,image/jpeg,image/webp"
                 className="hidden"
                 onChange={(e) => {
                   const f = e.target.files?.[0];
@@ -309,7 +326,7 @@ export function FlyersSection({ onToast }: FlyersSectionProps) {
                 ) : (
                   <div className="space-y-1 text-xs text-slate-500">
                     <Upload size={20} className="mx-auto text-slate-400" />
-                    <p className="font-medium text-slate-700">Click to choose PDF file</p>
+                    <p className="font-medium text-slate-700">Click to choose a PDF or image</p>
                     <p className="text-slate-400">Maximum file size: 15MB</p>
                   </div>
                 )}
