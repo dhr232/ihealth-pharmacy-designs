@@ -1,7 +1,9 @@
 import { MetadataRoute } from "next";
-import { MKT_01_POSTS, isPostPublished } from "@/data/blog-posts";
+import { getPublishedPosts } from "@/lib/content";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const revalidate = 3600;
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ihealthpharmacy.ca";
   const now = new Date();
 
@@ -106,7 +108,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   // 2. Published Clinical Blog Guides & Patient Advice
-  const publishedPosts = MKT_01_POSTS.filter((p) => isPostPublished(p));
+  const publishedPosts = await getPublishedPosts();
   const blogRoutes: MetadataRoute.Sitemap = publishedPosts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
     lastModified: new Date(post.publishedAt || now),

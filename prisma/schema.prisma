@@ -194,9 +194,15 @@ model BlogPost {
   slug            String       @unique
   title           String
   excerpt         String
+  // Holds the post's markdown source (the name predates the admin editor)
   contentHtml     String
   categoryId      String
   authorId        String?
+  authorName      String?
+  tags            String[]     @default([])
+  keyTakeaways    String[]     @default([])
+  layoutVariant   String       @default("standard")
+  themeUsed       String?
   coverImageUrl   String?
   readTimeMinutes Int          @default(5)
   publishedAt     DateTime?

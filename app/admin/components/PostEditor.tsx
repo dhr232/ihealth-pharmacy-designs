@@ -7,7 +7,7 @@ import type { BlogPost, PostStatus, BlogLayoutVariant } from "../lib/types";
 import { slugify, uuid } from "../lib/storage";
 
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
-const MAX_IMAGE_BYTES = 500 * 1024;
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 
 function emptyPost(): BlogPost {
   return {
@@ -163,24 +163,39 @@ export function PostEditor({
     });
   }
 
-  function handleFile(event: React.ChangeEvent<HTMLInputElement>) {
+  const [uploading, setUploading] = useState(false);
+
+  // Uploads the cover to the persistent upload folder via the admin upload route and
+  // stores the returned public URL on the post.
+  async function handleFile(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
+    event.target.value = ""; // allow re-selecting the same file
     if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      onError("Please choose an image file.");
+    if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
+      onError("Please choose a PNG, JPEG or WEBP image.");
       return;
     }
     if (file.size > MAX_IMAGE_BYTES) {
-      onError(
-        `Image is ${(file.size / 1024).toFixed(0)}KB. Compression recommended before upload.`,
-      );
+      onError(`Image is ${(file.size / 1024 / 1024).toFixed(1)}MB. Please use one under ${MAX_IMAGE_BYTES / 1024 / 1024}MB.`);
+      return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result;
-      if (typeof result === "string") update("imageUrl", result);
-    };
-    reader.readAsDataURL(file);
+    setUploading(true);
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      form.append("category", "blog");
+      const res = await fetch("/api/admin/upload", { method: "POST", body: form });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.url) {
+        onError(data?.error || "Image upload failed.");
+        return;
+      }
+      update("imageUrl", data.url);
+    } catch {
+      onError("Network error: the image was not uploaded.");
+    } finally {
+      setUploading(false);
+    }
   }
 
   function handleSave() {
@@ -397,17 +412,22 @@ export function PostEditor({
 
                   <Field
                     label="Cover image"
-                    hint="Upload an image (max 500KB) or paste a URL/path."
+                    hint="Upload a PNG, JPEG or WEBP image (max 5MB), or paste an image URL/path."
                   >
                     <div className="flex flex-col gap-3">
                       <div className="flex items-center gap-2">
-                        <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--surface)]">
+                        <label
+                          className={`inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--surface)] ${
+                            uploading ? "cursor-wait opacity-60" : "cursor-pointer"
+                          }`}
+                        >
                           <Upload size={14} />
-                          Upload image
+                          {uploading ? "Uploading..." : "Upload image"}
                           <input
                             type="file"
-                            accept="image/*"
+                            accept="image/png,image/jpeg,image/webp"
                             onChange={handleFile}
+                            disabled={uploading}
                             className="hidden"
                           />
                         </label>
@@ -415,7 +435,7 @@ export function PostEditor({
                           type="text"
                           value={draft.imageUrl}
                           onChange={(e) => update("imageUrl", e.target.value)}
-                          placeholder="/blog/cover.jpg or data:image/..."
+                          placeholder="/blog/cover.jpg or https://..."
                           className={`${inputClass} flex-1`}
                         />
                       </div>
