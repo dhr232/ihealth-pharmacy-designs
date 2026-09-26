@@ -108,7 +108,7 @@ const SERVICES: Record<
     tagline: "Your medications delivered to your door",
     description:
       "Can’t make it in? We offer free same-day delivery across Chilliwack for qualifying prescriptions. We text you when your order is on its way.",
-    image: "/services/delivery.jpg",
+    image: "/services/delivery-doorstep.jpg",
     points: [
       "Free same-day local delivery",
       "Real-time delivery notifications",

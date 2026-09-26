@@ -71,7 +71,7 @@ const FEATURED_SERVICES = [
     highlights: ["Chilliwack & Sardis", "Blister Packs & Refills", "Always Free"],
     href: "/services/delivery",
     cta: "Request Delivery",
-    image: "/services/delivery.jpg",
+    image: "/services/delivery-doorstep.jpg",
     icon: Truck,
     theme: {
       card: "border-[#D3EEDF] bg-gradient-to-br from-white via-[#F6FCF8] to-[#EAF8F1] hover:border-[#AEE1C7]",

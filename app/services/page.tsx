@@ -24,7 +24,7 @@ const ALL_SERVICES = [
     desc: "Upload a photo of your doctor's paper prescription or hospital discharge form for prompt same-day preparation and pickup or free delivery.",
     icon: FileText,
     badge: "Fast Online Upload",
-    image: "/services/delivery.jpg",
+    image: "/services/delivery-doorstep.jpg",
   },
   {
     title: "Prescription Refills & Transfers",
@@ -33,7 +33,7 @@ const ALL_SERVICES = [
     desc: "Order prescription refills online in under 60 seconds or easily transfer existing medications to iHealth Pharmacy from any Canadian pharmacy.",
     icon: Pill,
     badge: "Quick 30-Min Pickup",
-    image: "/services/delivery.jpg",
+    image: "/services/delivery-doorstep.jpg",
   },
   {
     title: "Minor Ailments Clinic",
@@ -87,7 +87,7 @@ const ALL_SERVICES = [
     desc: "Fast, reliable same-day prescription delivery anywhere in Chilliwack, always free. Place requests before 2:00 PM for afternoon delivery.",
     icon: Truck,
     badge: "Always free",
-    image: "/services/delivery.jpg",
+    image: "/services/delivery-doorstep.jpg",
   },
 ];
 
