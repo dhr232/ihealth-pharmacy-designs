@@ -22,7 +22,7 @@ const SERVICES: Record<
     tagline: "Walk-in care for common health conditions",
     description:
       "Under British Columbia's expanded clinical pharmacist prescribing authority, our licensed pharmacists can assess your symptoms and prescribe prescription medications directly for common minor ailments and contraception — no doctor's appointment or walk-in clinic wait times needed.",
-    image: "/services/minor-ailments.jpg?v=20261004",
+    image: "/services/minor-ailments.jpg?v=20261004_fresh",
     points: [
       "Uncomplicated Urinary Tract Infections (UTIs)",
       "Allergies, Hay Fever & Allergic Rhinitis",

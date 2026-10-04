@@ -766,12 +766,12 @@ export default function MinorAilmentsPage() {
               </div>
 
               {/* Consultation Clinic Photo Card */}
-              <div className="lg:col-span-5 relative overflow-hidden rounded-2xl border border-slate-200 shadow-sm aspect-4/3">
+              <div className="lg:col-span-5 relative overflow-hidden rounded-2xl border border-slate-200 shadow-sm aspect-[16/9] bg-[#E5ECF2]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/services/minor-ailments.jpg?v=20261004"
+                  src="/services/minor-ailments.jpg?v=20261004_fresh"
                   alt="Pharmacist consulting patient for minor ailments"
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-contain"
                 />
               </div>
 

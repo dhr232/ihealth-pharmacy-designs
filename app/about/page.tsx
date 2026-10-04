@@ -3,7 +3,13 @@ import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PharmacistTeamSection from "../components/PharmacistTeamSection";
-import { SectionReveal, BlurReveal } from "../components/MotionKit";
+import {
+  SectionReveal,
+  BlurReveal,
+  StaggerContainer,
+  StaggerItem,
+  HoverCard,
+} from "../components/MotionKit";
 import {
   HeartHandshake,
   Truck,
@@ -138,36 +144,40 @@ export default function AboutPage() {
             </div>
 
             <BlurReveal className="lg:col-span-5">
-              <figure className="overflow-hidden rounded-3xl border border-white bg-white shadow-xl shadow-slate-900/10">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/pharmacy-storefront.jpg"
-                  alt="The iHealth Pharmacy storefront on Yale Road in Chilliwack"
-                  width={800}
-                  height={600}
-                  className="aspect-4/3 h-full w-full object-cover"
-                />
-                <figcaption className="flex items-center gap-2 px-5 py-4 text-base text-slate-700">
-                  <MapPin size={18} className="shrink-0 text-[var(--brand)]" aria-hidden="true" />
-                  {PHARMACY_INFO.address.full}
-                </figcaption>
-              </figure>
+              <HoverCard>
+                <figure className="overflow-hidden rounded-3xl border border-white bg-white shadow-xl shadow-slate-900/10 transition-shadow duration-300 hover:shadow-2xl">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/pharmacy-storefront.jpg"
+                    alt="The iHealth Pharmacy storefront on Yale Road in Chilliwack"
+                    width={800}
+                    height={600}
+                    className="aspect-4/3 h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                  />
+                  <figcaption className="flex items-center gap-2 px-5 py-4 text-base text-slate-700">
+                    <MapPin size={18} className="shrink-0 text-[var(--brand)]" aria-hidden="true" />
+                    {PHARMACY_INFO.address.full}
+                  </figcaption>
+                </figure>
+              </HoverCard>
             </BlurReveal>
           </div>
 
           {/* Verified facts only -- see .agents/product-marketing.md */}
           <div className="border-t border-white/70 bg-white/60">
-            <ul className="mx-auto grid max-w-7xl grid-cols-1 gap-x-8 gap-y-3 px-5 py-6 sm:grid-cols-2 lg:grid-cols-4 lg:px-8">
+            <StaggerContainer className="mx-auto grid max-w-7xl grid-cols-1 gap-x-8 gap-y-3 px-5 py-6 sm:grid-cols-2 lg:grid-cols-4 lg:px-8">
               {PROOF_POINTS.map((point) => {
                 const Icon = point.icon;
                 return (
-                  <li key={point.text} className="flex items-center gap-3 text-base font-medium text-slate-800">
-                    <Icon size={20} className="shrink-0 text-[var(--brand)]" aria-hidden="true" />
-                    {point.text}
-                  </li>
+                  <StaggerItem key={point.text}>
+                    <div className="flex items-center gap-3 text-base font-medium text-slate-800 transition-transform duration-200 hover:translate-x-1">
+                      <Icon size={20} className="shrink-0 text-[var(--brand)]" aria-hidden="true" />
+                      {point.text}
+                    </div>
+                  </StaggerItem>
                 );
               })}
-            </ul>
+            </StaggerContainer>
           </div>
         </section>
 
@@ -232,23 +242,24 @@ export default function AboutPage() {
                   The personal touch of a neighbourhood pharmacy, with the conveniences you need.
                 </p>
               </div>
-              <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <StaggerContainer className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {WHY_US.map((item) => {
                   const Icon = item.icon;
                   return (
-                    <div
-                      key={item.title}
-                      className="flex flex-col rounded-2xl border border-[var(--border)] bg-white p-6"
-                    >
-                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--brand-subtle)] text-[var(--brand)]">
-                        <Icon size={22} />
-                      </div>
-                      <h3 className="mt-4 text-lg font-semibold">{item.title}</h3>
-                      <p className="mt-2 text-base leading-relaxed text-[var(--muted)]">{item.body}</p>
-                    </div>
+                    <StaggerItem key={item.title} className="h-full">
+                      <HoverCard className="h-full">
+                        <div className="flex h-full flex-col rounded-2xl border border-[var(--border)] bg-white p-6 shadow-xs transition-shadow duration-300 hover:shadow-md hover:border-[var(--brand)]/40">
+                          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--brand-subtle)] text-[var(--brand)]">
+                            <Icon size={22} />
+                          </div>
+                          <h3 className="mt-4 text-lg font-semibold text-slate-900">{item.title}</h3>
+                          <p className="mt-2 text-base leading-relaxed text-slate-600">{item.body}</p>
+                        </div>
+                      </HoverCard>
+                    </StaggerItem>
                   );
                 })}
-              </div>
+              </StaggerContainer>
             </div>
           </SectionReveal>
         </section>
@@ -285,19 +296,23 @@ export default function AboutPage() {
                   </Link>
                 </div>
               </div>
-              <ul className="space-y-4 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 sm:p-8">
+              <StaggerContainer className="space-y-4 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 sm:p-8">
                 {CAREGIVER_POINTS.map((point) => {
                   const Icon = point.icon;
                   return (
-                    <li key={point.text} className="flex items-start gap-4">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[var(--brand)] shadow-2xs">
-                        <Icon size={20} />
-                      </span>
-                      <span className="pt-2 text-base leading-relaxed text-slate-700">{point.text}</span>
-                    </li>
+                    <StaggerItem key={point.text}>
+                      <HoverCard>
+                        <div className="flex items-start gap-4 rounded-2xl bg-white/60 p-3 shadow-2xs border border-slate-200/50 transition-colors hover:bg-white hover:border-[var(--brand)]/30">
+                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[var(--brand)] shadow-2xs border border-slate-100">
+                            <Icon size={20} />
+                          </span>
+                          <span className="pt-2 text-base leading-relaxed text-slate-700">{point.text}</span>
+                        </div>
+                      </HoverCard>
+                    </StaggerItem>
                   );
                 })}
-              </ul>
+              </StaggerContainer>
             </div>
           </SectionReveal>
         </section>
@@ -322,31 +337,35 @@ export default function AboutPage() {
                 </p>
 
                 <div className="space-y-4 pt-2">
-                  <div className="rounded-2xl border border-slate-200 bg-white p-5 flex items-start gap-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-subtle)] text-[var(--brand)]">
-                      <CreditCard size={20} />
+                  <HoverCard>
+                    <div className="rounded-2xl border border-slate-200 bg-white p-5 flex items-start gap-4 shadow-xs transition-shadow hover:shadow-md">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-subtle)] text-[var(--brand)]">
+                        <CreditCard size={20} />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-semibold text-slate-900">No claims to file</h3>
+                        <p className="mt-1 text-base text-slate-600 leading-relaxed">
+                          We send your claim to your insurer electronically. You only pay any remaining
+                          co-pay or deductible.
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-base font-semibold text-slate-900">No claims to file</h3>
-                      <p className="mt-1 text-base text-slate-600 leading-relaxed">
-                        We send your claim to your insurer electronically. You only pay any remaining
-                        co-pay or deductible.
-                      </p>
-                    </div>
-                  </div>
+                  </HoverCard>
 
-                  <div className="rounded-2xl border border-slate-200 bg-white p-5 flex items-start gap-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-subtle)] text-[var(--brand)]">
-                      <ShieldCheck size={20} />
+                  <HoverCard>
+                    <div className="rounded-2xl border border-slate-200 bg-white p-5 flex items-start gap-4 shadow-xs transition-shadow hover:shadow-md">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-subtle)] text-[var(--brand)]">
+                        <ShieldCheck size={20} />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-semibold text-slate-900">Help with BC Fair PharmaCare</h3>
+                        <p className="mt-1 text-base text-slate-600 leading-relaxed">
+                          We can help you and your family understand your PharmaCare deductible and which
+                          plans may apply to you.
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-base font-semibold text-slate-900">Help with BC Fair PharmaCare</h3>
-                      <p className="mt-1 text-base text-slate-600 leading-relaxed">
-                        We can help you and your family understand your PharmaCare deductible and which
-                        plans may apply to you.
-                      </p>
-                    </div>
-                  </div>
+                  </HoverCard>
                 </div>
               </div>
 
@@ -355,17 +374,20 @@ export default function AboutPage() {
                   <h3 className="text-lg font-semibold text-slate-900">Plans we bill directly</h3>
                   <p className="text-base text-slate-500 mt-1">Including, but not limited to:</p>
 
-                  <ul className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <StaggerContainer className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {PHARMACY_INFO.accreditation.directBilling.map((plan) => (
-                      <li
-                        key={plan}
-                        className="flex items-center gap-2.5 rounded-xl bg-[var(--surface)] p-3.5 border border-slate-200/80 text-slate-800"
-                      >
-                        <CheckCircle2 size={18} className="shrink-0 text-[var(--brand)]" />
-                        <span className="text-base font-medium leading-tight">{plan}</span>
-                      </li>
+                      <StaggerItem key={plan}>
+                        <HoverCard>
+                          <div
+                            className="flex items-center gap-2.5 rounded-xl bg-[var(--surface)] p-3.5 border border-slate-200/80 text-slate-800 transition-colors hover:border-[var(--brand)]/50 hover:bg-white"
+                          >
+                            <CheckCircle2 size={18} className="shrink-0 text-[var(--brand)]" />
+                            <span className="text-base font-medium leading-tight">{plan}</span>
+                          </div>
+                        </HoverCard>
+                      </StaggerItem>
                     ))}
-                  </ul>
+                  </StaggerContainer>
 
                   <div className="mt-6 rounded-2xl bg-[var(--brand-subtle)] p-5">
                     <p className="text-base text-slate-700 leading-relaxed">
