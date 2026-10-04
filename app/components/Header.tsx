@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
+  ArrowLeftRight,
   Menu,
   X,
   Phone,
@@ -303,13 +304,13 @@ export default function Header({ logoHref }: HeaderProps = {}) {
             </div>
           </a>
 
-          {/* High-Contrast Primary Refill Button with Fade Gradient */}
+          {/* Primary action: transfer a prescription to iHealth */}
           <Link
-            href="/prescription-refills"
+            href="/transfer"
             className="bg-[var(--brand-secondary)] hover:bg-[var(--brand-secondary-hover)] inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold text-white transition"
           >
-            <RefreshCw size={13} className="stroke-[2.5]" />
-            <span>Refill Prescription</span>
+            <ArrowLeftRight size={13} className="stroke-[2.5]" />
+            <span>Transfer Prescription</span>
           </Link>
         </div>
 
