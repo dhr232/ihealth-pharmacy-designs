@@ -30,13 +30,11 @@ export const PHARMACY_INFO = {
       newPrescription:
         "Hi iHealth Pharmacy, I have a new prescription from my doctor and would like to submit it for fulfillment. I can send a photo or my doctor's details.",
       transfer:
-        "Hi iHealth Pharmacy, I would like to transfer my prescriptions from my current pharmacy.",
+        "Hi iHealth Pharmacy, I would like to transfer my prescriptions from my previous pharmacy.",
       delivery:
         "Hi iHealth Pharmacy, I would like to check on the status of my medication delivery.",
       question:
         "Hi iHealth Pharmacy, I have a question for the pharmacist on duty.",
-      blisterPack:
-        "Hi iHealth Pharmacy, I would like more information about your MyHealthPack blister / compliance packaging for seniors.",
     },
   },
 
@@ -91,10 +89,10 @@ export const PHARMACY_INFO = {
   // `lastSlot` is the latest bookable start time.
   onlineBooking: {
     weekdays: [1, 2, 3, 4, 5], // 0 = Sunday
-    firstSlot: "09:00",
-    lastSlot: "14:30",
-    slotMinutes: 15,
-    summary: "Mon–Fri 9:00 am – 2:30 pm",
+    firstSlot: "10:00",
+    lastSlot: "14:30", // 30-minute visit, so the last one finishes at 3:00 pm
+    slotMinutes: 30,
+    summary: "Mon–Fri 10:00 am – 3:00 pm",
   },
 
   // Supported languages

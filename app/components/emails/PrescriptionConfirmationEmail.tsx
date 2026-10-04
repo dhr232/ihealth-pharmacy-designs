@@ -24,6 +24,7 @@ export interface PrescriptionConfirmationEmailProps {
   deliveryAddress?: string;
   preferredReadyDate?: string;
   preferredReadyTime?: string;
+  notificationMethod?: "CALL" | "SMS";
   patientNotes?: string;
   submittedAt?: string;
   pharmacyName?: string;
@@ -49,6 +50,7 @@ export function PrescriptionConfirmationEmail({
   deliveryAddress,
   preferredReadyDate,
   preferredReadyTime,
+  notificationMethod = "CALL",
   patientNotes,
   submittedAt,
   pharmacyName = "iHealth Pharmacy Chilliwack",
@@ -585,6 +587,28 @@ export function PrescriptionConfirmationEmail({
                       }}
                     >
                       {readyTimingDisplay}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td
+                      style={{
+                        padding: "6px 20px 12px 20px",
+                        fontSize: "13px",
+                        color: "#64748b",
+                      }}
+                    >
+                      Ready Notification:
+                    </td>
+                    <td
+                      style={{
+                        padding: "6px 20px 12px 0px",
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        color: "#0f172a",
+                      }}
+                    >
+                      {notificationMethod === "SMS" ? `Text message to ${phone}` : `Phone call to ${phone}`}
                     </td>
                   </tr>
 

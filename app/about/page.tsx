@@ -81,7 +81,7 @@ const WHY_US = [
 const CAREGIVER_POINTS = [
   {
     icon: Package,
-    text: "MyHealthPack blister packs that sort each day's medications by time of day",
+    text: "A pharmacist who reviews every medication with you, in plain language",
   },
   {
     icon: MessageCircle,
@@ -114,7 +114,7 @@ export default function AboutPage() {
               </BlurReveal>
               <BlurReveal className="mt-5">
                 <h1 className="text-4xl font-semibold tracking-tight text-balance md:text-5xl lg:text-6xl">
-                  Your neighbourhood pharmacist, who knows you by name.
+                  Your Neighbourhood Pharmacist, Who Knows You By Name.
                 </h1>
               </BlurReveal>
               <BlurReveal className="mt-5">
@@ -171,28 +171,33 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Story */}
-        <section id="story" className="scroll-mt-24">
-          <SectionReveal className="mx-auto max-w-3xl px-5 py-16 lg:px-8 lg:py-20">
-            <h2 className="text-3xl font-semibold tracking-tight md:text-4xl text-slate-900">Our story</h2>
-            <div className="mt-6 space-y-5 text-lg leading-relaxed text-slate-700">
-              <p>
-                We opened iHealth Pharmacy because we believe a pharmacy should feel like part of the
-                family. When you walk in, you should be greeted by name, by a pharmacist who already
-                knows your medications and remembers to ask how your knee is healing or how your mom
-                is settling in.
-              </p>
-              <p>
-                As an independent, family-run pharmacy, we get to work the way we think care should
-                work. We slow down and explain your medications in plain language. We call your doctor
-                when something doesn&apos;t look right. And we recommend what is best for you, not
-                what a head office wants sold this month.
-              </p>
-              <p>
-                Many of the people we look after are seniors managing several medications, and the
-                sons, daughters, and spouses who help them. We are here for all of you. Our job
-                doesn&apos;t end at the counter. It ends when you feel confident about your health.
-              </p>
+        {/* Story: full-width band with a large photo */}
+        <section id="story" className="scroll-mt-24 bg-gradient-to-br from-[#F4F8FF] via-white to-[#F3FBF6]">
+          <SectionReveal className="mx-auto max-w-6xl">
+            <div className="flex flex-col justify-center px-5 py-16 sm:px-10 lg:px-16 lg:py-24">
+              <span className="inline-block w-fit rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-[var(--brand)] shadow-sm ring-1 ring-black/5">
+                Who we are
+              </span>
+              <h2 className="mt-5 text-4xl font-semibold tracking-tight text-slate-900 md:text-5xl">Our story</h2>
+              <div className="mt-7 space-y-6 text-lg leading-relaxed text-slate-700 xl:text-xl xl:leading-relaxed">
+                <p>
+                  We opened iHealth Pharmacy because we believe a pharmacy should feel like part of the
+                  family. When you walk in, you should be greeted by name, by a pharmacist who already
+                  knows your medications and remembers to ask how your knee is healing or how your mom
+                  is settling in.
+                </p>
+                <p>
+                  As an independent, family-run pharmacy, we get to work the way we think care should
+                  work. We slow down and explain your medications in plain language. We call your doctor
+                  when something doesn&apos;t look right. And we recommend what is best for you, not
+                  what a head office wants sold this month.
+                </p>
+                <p>
+                  Many of the people we look after are seniors managing several medications, and the
+                  sons, daughters, and spouses who help them. We are here for all of you. Our job
+                  doesn&apos;t end at the counter. It ends when you feel confident about your health.
+                </p>
+              </div>
             </div>
           </SectionReveal>
         </section>
@@ -212,7 +217,7 @@ export default function AboutPage() {
 
         {/* Team */}
         <div id="team" className="scroll-mt-24">
-          <PharmacistTeamSection />
+          <PharmacistTeamSection variant="feature" />
         </div>
 
         {/* Why us (anchor kept as #multilingual for header menu links) */}
@@ -273,10 +278,10 @@ export default function AboutPage() {
                     <ArrowRight size={18} />
                   </Link>
                   <Link
-                    href="/services/myhealthpack"
+                    href="/services/med-review"
                     className={`${BTN_SECONDARY} ${FOCUS}`}
                   >
-                    About blister packs
+                    About medication reviews
                   </Link>
                 </div>
               </div>
@@ -415,7 +420,7 @@ export default function AboutPage() {
               We&apos;d love to get to know you.
             </h2>
             <p className="mt-4 text-lg text-[var(--muted)]">
-              Switching is free and simple. We contact your current pharmacy for you, so there are no
+              Switching is free and simple. We contact your previous pharmacy for you, so there are no
               awkward phone calls.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">

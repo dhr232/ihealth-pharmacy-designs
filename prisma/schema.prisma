@@ -283,6 +283,7 @@ model PrescriptionRequest {
   deliveryPostalCode   String?
   preferredReadyDate   String?
   preferredReadyTime   String?
+  notificationMethod   String             @default("EMAIL") // "EMAIL" | "SMS" -- how to tell the patient it's ready
   patientNotes         String?
   newsletterOptIn      Boolean            @default(false)
   createdAt            DateTime           @default(now())

@@ -9,7 +9,6 @@ import {
   MessageCircle,
   ShieldCheck,
   Languages,
-  ArrowRight,
   ArrowUp,
   Calendar,
 } from "lucide-react";
@@ -76,7 +75,7 @@ export default function Footer({ logoHref = "/" }: FooterProps = {}) {
 
             <p className="text-xs leading-relaxed text-slate-400">
               Independent, community pharmacy in Chilliwack, BC. Personalized
-              medication reviews, blister packaging, minor ailments prescribing,
+              medication reviews, minor ailments prescribing,
               and free local delivery across Chilliwack and Sardis.
             </p>
 
@@ -196,7 +195,7 @@ export default function Footer({ logoHref = "/" }: FooterProps = {}) {
                   href="/services/minor-ailments"
                   className="text-slate-300 transition hover:text-blue-400"
                 >
-                  Minor Ailments Clinic (BC MSP)
+                  Minor Ailments Clinic
                 </Link>
               </li>
               <li>
@@ -205,14 +204,6 @@ export default function Footer({ logoHref = "/" }: FooterProps = {}) {
                   className="text-slate-300 transition hover:text-blue-400"
                 >
                   Vaccinations & Injections
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services/myhealthpack"
-                  className="text-slate-300 transition hover:text-blue-400"
-                >
-                  MyHealthPack Blister Packs
                 </Link>
               </li>
               <li>
@@ -243,11 +234,10 @@ export default function Footer({ logoHref = "/" }: FooterProps = {}) {
               <div className="mt-3">
                 <Link
                   href="/book"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 py-2.5 px-4 text-xs font-bold text-white shadow-md shadow-blue-700/25 transition-all duration-200 active:scale-95"
+                  className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] inline-flex w-full items-center justify-center gap-2 rounded-lg py-2.5 px-4 text-xs font-bold text-white transition"
                 >
                   <Calendar size={14} />
                   <span>Book Appointment Online</span>
-                  <ArrowRight size={13} />
                 </Link>
               </div>
             </div>

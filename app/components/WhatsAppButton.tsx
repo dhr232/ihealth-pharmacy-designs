@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
+import { usePathname } from "next/navigation";
 import {
   MessageCircle,
   X,
@@ -30,6 +31,17 @@ export default function WhatsAppButton() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [open]);
+
+  // Hidden on the booking wizard: its sticky Continue/Confirm bar sits in the same
+  // bottom-right corner, and the widget would cover (and swallow clicks on) that button.
+  // booking.ihealthpharmacy.ca serves the wizard at "/", so check the host as well.
+  const pathname = usePathname();
+  const onBookingHost = useSyncExternalStore(
+    () => () => {},
+    () => window.location.hostname.startsWith("booking."),
+    () => false
+  );
+  if (pathname?.startsWith("/book") || onBookingHost) return null;
 
   const PRESETS = [
     {

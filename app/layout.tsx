@@ -150,7 +150,6 @@ export const metadata: Metadata = {
     "Pharmacist prescribing Chilliwack",
     "Vaccinations Chilliwack",
     "Shingrix vaccine Chilliwack",
-    "Blister pack pharmacy Chilliwack",
     "Free pharmacy delivery Chilliwack",
     "Yale Rd pharmacy Chilliwack",
     "iHealth Pharmacy",
@@ -223,7 +222,7 @@ const jsonLd = {
   name: PHARMACY_INFO.name,
   legalName: PHARMACY_INFO.legalName,
   description:
-    "Independent community pharmacy in Chilliwack, BC offering prescription refills, minor ailments prescribing, custom compounding, MyHealthPack blister packs, and free same-day local delivery.",
+    "Independent community pharmacy in Chilliwack, BC offering prescription refills, minor ailments prescribing, custom compounding, medication reviews, and free same-day local delivery.",
   url: "https://ihealthpharmacy.ca",
   telephone: `+1-${PHARMACY_INFO.phoneRaw}`,
   currenciesAccepted: "CAD",
@@ -276,14 +275,6 @@ const jsonLd = {
           "@type": "MedicalProcedure",
           name: "Routine & Travel Vaccinations",
           description: "Flu shots, COVID-19, Shingrix, and routine immunizations.",
-        },
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "MedicalProcedure",
-          name: "MyHealthPack Blister Compliance Packaging",
-          description: "Complimentary pre-sorted medication blister packaging.",
         },
       },
       {

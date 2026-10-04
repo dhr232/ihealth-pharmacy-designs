@@ -53,7 +53,7 @@ const FAQ = [
   {
     icon: Syringe,
     q: "Can I walk in for a flu shot?",
-    a: "Absolutely. Walk-ins are welcome for flu and most other publicly-funded vaccines. For travel vaccines or injection services, a quick call ahead helps us prepare.",
+    a: "Absolutely. Walk-ins are welcome for flu shots and most other vaccines. For travel vaccines or injection services, a quick call ahead helps us prepare.",
   },
   {
     icon: FlaskConical,
@@ -74,10 +74,10 @@ const FAQ = [
 
 export default function ContactPage() {
   const [form, setForm] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     phone: "",
-    subject: "General",
     message: "",
   });
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
@@ -87,7 +87,7 @@ export default function ContactPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
@@ -151,23 +151,17 @@ export default function ContactPage() {
     setErrorMsg("");
 
     try {
-      const formData = new FormData(e.currentTarget);
-      formData.append(
-        "access_key",
-        process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "YOUR_WEB3FORMS_KEY_HERE",
-      );
-      formData.append("from_name", "iHealth Pharmacy Website");
-      formData.append("subject", `Contact form: ${form.subject}`);
-
-      const res = await fetch("https://api.web3forms.com/submit", {
+      const honeypot = new FormData(e.currentTarget).get("botcheck");
+      const res = await fetch("/api/contact", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, botcheck: honeypot ? String(honeypot) : "" }),
       });
       const data = (await res.json()) as { success?: boolean; message?: string };
 
       if (data.success) {
         setStatus("success");
-        setForm({ name: "", email: "", phone: "", subject: "General", message: "" });
+        setForm({ firstName: "", lastName: "", email: "", phone: "", message: "" });
         setEmailError("");
         setPhoneError("");
       } else {
@@ -316,8 +310,8 @@ export default function ContactPage() {
 
             {/* Right: form */}
             <div>
-              <div className="rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm md:p-8">
-                <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">Send a message</h2>
+              <div className="rounded-2xl border border-[var(--border)] bg-white p-5 shadow-sm md:p-6">
+                <h2 className="text-xl font-semibold tracking-tight md:text-2xl">Send a message</h2>
                 <p className="mt-2 text-sm text-[var(--muted)]">
                   We&apos;ll reply within 1 business day. For urgent requests, please call.
                 </p>
@@ -342,7 +336,7 @@ export default function ContactPage() {
                     </div>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate>
+                  <form onSubmit={handleSubmit} className="mt-4 space-y-3.5" noValidate>
                     <input
                       type="text"
                       name="botcheck"
@@ -351,46 +345,59 @@ export default function ContactPage() {
                       className="hidden"
                       aria-hidden="true"
                     />
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid gap-3.5 sm:grid-cols-2">
                       <div>
-                        <label
-                          htmlFor="name"
-                          className="mb-1.5 block text-sm font-medium text-[var(--foreground)]"
-                        >
-                          Name
+                        <label htmlFor="firstName" className="mb-1 block text-sm font-medium text-[var(--foreground)]">
+                          First name
                         </label>
                         <input
-                          id="name"
-                          name="name"
+                          id="firstName"
+                          name="first_name"
                           type="text"
+                          autoComplete="given-name"
                           required
-                          value={form.name}
-                          onChange={handleChange}
-                          className="w-full rounded-lg border border-[var(--border)] bg-white px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--brand)]"
-                          placeholder="Your full name"
+                          value={form.firstName}
+                          onChange={(e) => setForm((prev) => ({ ...prev, firstName: e.target.value }))}
+                          className="w-full rounded-lg border border-[var(--border)] bg-white px-3.5 py-2.5 text-base text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--brand)] focus:ring-2 focus:ring-[var(--brand)]/15"
                         />
                       </div>
                       <div>
-                        <label
-                          htmlFor="email"
-                          className="mb-1.5 block text-sm font-medium text-[var(--foreground)]"
-                        >
+                        <label htmlFor="lastName" className="mb-1 block text-sm font-medium text-[var(--foreground)]">
+                          Last name
+                        </label>
+                        <input
+                          id="lastName"
+                          name="last_name"
+                          type="text"
+                          autoComplete="family-name"
+                          required
+                          value={form.lastName}
+                          onChange={(e) => setForm((prev) => ({ ...prev, lastName: e.target.value }))}
+                          className="w-full rounded-lg border border-[var(--border)] bg-white px-3.5 py-2.5 text-base text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--brand)] focus:ring-2 focus:ring-[var(--brand)]/15"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid gap-3.5 sm:grid-cols-2">
+                      <div>
+                        <label htmlFor="email" className="mb-1 block text-sm font-medium text-[var(--foreground)]">
                           Email
                         </label>
                         <input
                           id="email"
                           name="email"
                           type="email"
+                          autoComplete="email"
                           required
                           value={form.email}
                           onChange={handleEmailChange}
                           onBlur={handleEmailBlur}
                           aria-invalid={!!emailError}
                           aria-describedby={emailError ? "contact-email-error" : undefined}
-                          className={`w-full rounded-lg border bg-white px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] ${
+                          className={`w-full rounded-lg border bg-white px-3.5 py-2.5 text-base text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] ${
                             emailError
                               ? "border-red-500 focus:border-red-500"
-                              : "border-[var(--border)] focus:border-[var(--brand)]"
+                              : "border-[var(--border)] focus:border-[var(--brand)] focus:ring-2 focus:ring-[var(--brand)]/15"
                           }`}
                           placeholder="you@example.com"
                         />
@@ -401,30 +408,25 @@ export default function ContactPage() {
                           </p>
                         )}
                       </div>
-                    </div>
-
-                    <div className="grid gap-4 sm:grid-cols-2">
                       <div>
-                        <label
-                          htmlFor="phone"
-                          className="mb-1.5 block text-sm font-medium text-[var(--foreground)]"
-                        >
+                        <label htmlFor="phone" className="mb-1 block text-sm font-medium text-[var(--foreground)]">
                           Phone number
                         </label>
                         <input
                           id="phone"
                           name="phone"
                           type="tel"
+                          autoComplete="tel"
                           required
                           value={form.phone}
                           onChange={handlePhoneChange}
                           onBlur={handlePhoneBlur}
                           aria-invalid={!!phoneError}
                           aria-describedby={phoneError ? "contact-phone-error" : undefined}
-                          className={`w-full rounded-lg border bg-white px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] ${
+                          className={`w-full rounded-lg border bg-white px-3.5 py-2.5 text-base text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] ${
                             phoneError
                               ? "border-red-500 focus:border-red-500"
-                              : "border-[var(--border)] focus:border-[var(--brand)]"
+                              : "border-[var(--border)] focus:border-[var(--brand)] focus:ring-2 focus:ring-[var(--brand)]/15"
                           }`}
                           placeholder="(604) 555-0000"
                         />
@@ -435,32 +437,12 @@ export default function ContactPage() {
                           </p>
                         )}
                       </div>
-                      <div>
-                        <label
-                          htmlFor="subject"
-                          className="mb-1.5 block text-sm font-medium text-[var(--foreground)]"
-                        >
-                          Subject
-                        </label>
-                        <select
-                          id="subject"
-                          name="subject"
-                          value={form.subject}
-                          onChange={handleChange}
-                          className="w-full rounded-lg border border-[var(--border)] bg-white px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--brand)]"
-                        >
-                          <option value="Refill">Refill</option>
-                          <option value="Transfer">Transfer</option>
-                          <option value="Clinical">Clinical</option>
-                          <option value="General">General</option>
-                        </select>
-                      </div>
                     </div>
 
                     <div>
                       <label
                         htmlFor="message"
-                        className="mb-1.5 block text-sm font-medium text-[var(--foreground)]"
+                        className="mb-1 block text-sm font-medium text-[var(--foreground)]"
                       >
                         Message
                       </label>
@@ -468,10 +450,10 @@ export default function ContactPage() {
                         id="message"
                         name="message"
                         required
-                        rows={5}
+                        rows={4}
                         value={form.message}
                         onChange={handleChange}
-                        className="w-full rounded-lg border border-[var(--border)] bg-white px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--brand)]"
+                        className="w-full rounded-lg border border-[var(--border)] bg-white px-3.5 py-2.5 text-base text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--brand)] focus:ring-2 focus:ring-[var(--brand)]/15"
                         placeholder="How can we help?"
                       />
                     </div>
@@ -486,7 +468,7 @@ export default function ContactPage() {
                     <button
                       type="submit"
                       disabled={status === "sending"}
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-3.5 text-base font-semibold text-white transition hover:bg-[var(--brand-hover)] disabled:opacity-60"
+                      className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-3 text-base font-semibold text-white transition hover:bg-[var(--brand-hover)] disabled:opacity-60"
                     >
                       {status === "sending" ? "Sending..." : "Send message"}
                     </button>

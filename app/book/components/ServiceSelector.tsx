@@ -9,7 +9,6 @@ import {
   ChevronRight,
   ChevronDown,
   ChevronUp,
-  ArrowRight,
   ExternalLink,
   X,
   FileText,
@@ -30,12 +29,15 @@ import {
 
 interface ServiceSelectorProps {
   selectedService: BookingService | null;
+  /** Category slug to expand on arrival, e.g. from /book?category=vaccines */
+  initialCategory?: string;
   onSelectService: (service: BookingService) => void;
   onProceed: () => void;
 }
 
 export default function ServiceSelector({
   selectedService,
+  initialCategory,
   onSelectService,
   onProceed,
 }: ServiceSelectorProps) {
@@ -48,6 +50,14 @@ export default function ServiceSelector({
         minor_ailments: selectedService.categoryId === "cat_minor_ailments",
         vaccines: selectedService.categoryId === "cat_vaccines",
         consultations: selectedService.categoryId === "cat_consultations",
+      };
+    }
+    if (initialCategory) {
+      return {
+        prescriptions: initialCategory === "prescriptions",
+        minor_ailments: initialCategory === "minor_ailments",
+        vaccines: initialCategory === "vaccines",
+        consultations: initialCategory === "consultations",
       };
     }
     // Default: minor ailments open for quick access or can be toggled
@@ -97,11 +107,16 @@ export default function ServiceSelector({
     });
   }, [searchQuery]);
 
-  // Helper to select an item
+  // One click: choosing a condition/service goes straight on to Patient Details
+  const chooseService = (service: BookingService) => {
+    onSelectService(service);
+    onProceed();
+  };
+
   const handleItemClick = (serviceId: string) => {
     const found = getServiceByIdOrSlug(serviceId);
     if (found) {
-      onSelectService(found);
+      chooseService(found);
     }
   };
 
@@ -177,7 +192,7 @@ export default function ServiceSelector({
                   <button
                     key={srv.id}
                     type="button"
-                    onClick={() => onSelectService(srv)}
+                    onClick={() => chooseService(srv)}
                     className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-all cursor-pointer ${
                       isSelected
                         ? "border-blue-600 bg-blue-50/70 shadow-2xs ring-2 ring-blue-500/20"
@@ -267,10 +282,9 @@ export default function ServiceSelector({
                     <div className="mt-4 flex flex-col gap-2">
                       <Link
                         href="/prescription-refills"
-                        className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 py-2 px-3 text-xs font-bold text-white shadow-2xs transition"
+                        className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] inline-flex items-center justify-center gap-1.5 rounded-lg py-2 px-3 text-xs font-bold text-white transition"
                       >
                         <span>Order Refill</span>
-                        <ArrowRight size={13} />
                       </Link>
                       <button
                         type="button"
@@ -308,10 +322,9 @@ export default function ServiceSelector({
                     <div className="mt-4 flex flex-col gap-2">
                       <Link
                         href="/transfer"
-                        className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 py-2 px-3 text-xs font-bold text-white shadow-2xs transition"
+                        className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] inline-flex items-center justify-center gap-1.5 rounded-lg py-2 px-3 text-xs font-bold text-white transition"
                       >
                         <span>Transfer Now</span>
-                        <ArrowRight size={13} />
                       </Link>
                       <button
                         type="button"
@@ -349,10 +362,9 @@ export default function ServiceSelector({
                     <div className="mt-4 flex flex-col gap-2">
                       <Link
                         href="/new-prescription"
-                        className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 py-2 px-3 text-xs font-bold text-white shadow-2xs transition"
+                        className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] inline-flex items-center justify-center gap-1.5 rounded-lg py-2 px-3 text-xs font-bold text-white transition"
                       >
                         <span>Upload Prescription</span>
-                        <ArrowRight size={13} />
                       </Link>
                       <button
                         type="button"
@@ -392,7 +404,7 @@ export default function ServiceSelector({
                     Minor Ailments and Conditions
                   </h2>
                   <p className="text-xs text-slate-500 font-normal">
-                    Direct pharmacist prescribing for common conditions under BC MSP
+                    Direct pharmacist prescribing for common conditions
                   </p>
                 </div>
               </div>
@@ -544,7 +556,7 @@ export default function ServiceSelector({
                     Consultations
                   </h2>
                   <p className="text-xs text-slate-500 font-normal">
-                    Medication reviews, diabetes education, chronic care, and blister packs
+                    Medication reviews, diabetes education, and chronic care
                   </p>
                 </div>
               </div>
@@ -617,9 +629,6 @@ export default function ServiceSelector({
                   <h3 className="text-lg sm:text-xl font-extrabold text-slate-900">
                     {selectedService.name}
                   </h3>
-                  <span className="rounded-full bg-teal-100 px-2.5 py-0.5 text-[11px] font-bold text-teal-800 border border-teal-200">
-                    {selectedService.coverageBadge}
-                  </span>
                 </div>
                 <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
                   <span className="flex items-center gap-1">
@@ -634,10 +643,9 @@ export default function ServiceSelector({
             <button
               type="button"
               onClick={onProceed}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-900/20 active:scale-95 transition-all cursor-pointer"
+              className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-xs sm:text-sm font-bold text-white transition-all cursor-pointer"
             >
               <span>Continue with this Service</span>
-              <ArrowRight size={14} />
             </button>
           </div>
 
@@ -714,7 +722,7 @@ export default function ServiceSelector({
           type="button"
           disabled={!selectedService}
           onClick={onProceed}
-          className="shrink-0 inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-900/20 active:scale-95 transition-all disabled:cursor-not-allowed disabled:opacity-40"
+          className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] shrink-0 inline-flex items-center justify-center gap-1.5 rounded-lg px-5 py-2.5 text-xs sm:text-sm font-bold text-white transition-all disabled:cursor-not-allowed disabled:opacity-40"
         >
           <span>Continue</span>
           <ChevronRight size={15} />

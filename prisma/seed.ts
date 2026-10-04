@@ -29,7 +29,7 @@ export const CANONICAL_CATEGORIES = [
     slug: "prescriptions",
     name: "Prescriptions & Dispensing",
     description:
-      "Prescription transfers, refills, adaptations, compliance packaging (MyHealthPack), and custom compounding.",
+      "Prescription transfers, refills, adaptations, and custom compounding.",
     sortOrder: 4,
   },
 ];
@@ -314,17 +314,6 @@ export const OTHER_CANONICAL_SERVICES = [
     preparationNotes:
       "Bring all current prescription bottles, over-the-counter products, and vitamins.",
   },
-  {
-    categorySlug: "prescriptions",
-    name: "MyHealthPack Compliance Blister Packaging",
-    slug: "myhealthpack-blister-packaging",
-    durationMinutes: 20,
-    priceCents: 0,
-    mspCovered: true,
-    description:
-      "Organized multi-dose weekly blister packaging tailored to morning, noon, evening, and bedtime dosage times.",
-    preparationNotes: "Consultation covers synchronizing all refills onto a regular schedule.",
-  },
 ];
 
 export const PHARMACISTS = [
@@ -342,53 +331,6 @@ export const PHARMACISTS = [
       { dayOfWeek: 3, startTime: "09:00", endTime: "17:00", slotIntervalMinutes: 15 },
       { dayOfWeek: 4, startTime: "09:00", endTime: "17:00", slotIntervalMinutes: 15 },
       { dayOfWeek: 5, startTime: "09:00", endTime: "17:00", slotIntervalMinutes: 15 },
-    ],
-  },
-  {
-    name: "Marcus Chen",
-    title: "Clinical Pharmacist",
-    licenseNumber: "BC-PHARM-24812",
-    bio: "Marcus focuses on minor ailment consultations and chronic disease management. He runs our travel vaccine clinic and is certified in injectable administration.",
-    avatarUrl: "/pharmacists/marcus.jpg",
-    acceptsAppointments: true,
-    active: true,
-    schedules: [
-      { dayOfWeek: 2, startTime: "10:00", endTime: "18:00", slotIntervalMinutes: 15 },
-      { dayOfWeek: 3, startTime: "10:00", endTime: "18:00", slotIntervalMinutes: 15 },
-      { dayOfWeek: 4, startTime: "10:00", endTime: "18:00", slotIntervalMinutes: 15 },
-      { dayOfWeek: 5, startTime: "10:00", endTime: "18:00", slotIntervalMinutes: 15 },
-      { dayOfWeek: 6, startTime: "09:00", endTime: "17:00", slotIntervalMinutes: 15 },
-    ],
-  },
-  {
-    name: "Priya Patel",
-    title: "Compounding & MyHealthPack Lead",
-    licenseNumber: "BC-PHARM-27351",
-    bio: "Priya runs our compounding lab and MyHealthPack compliance packaging service. She loves solving tricky prescription problems and helping caregivers manage complex regimens.",
-    avatarUrl: "/pharmacists/priya.jpg",
-    acceptsAppointments: true,
-    active: true,
-    schedules: [
-      { dayOfWeek: 1, startTime: "08:30", endTime: "16:30", slotIntervalMinutes: 15 },
-      { dayOfWeek: 2, startTime: "08:30", endTime: "16:30", slotIntervalMinutes: 15 },
-      { dayOfWeek: 3, startTime: "08:30", endTime: "16:30", slotIntervalMinutes: 15 },
-      { dayOfWeek: 4, startTime: "08:30", endTime: "16:30", slotIntervalMinutes: 15 },
-    ],
-  },
-  {
-    name: "Daniel Okafor",
-    title: "Community Pharmacist",
-    licenseNumber: "BC-PHARM-31904",
-    bio: "Daniel is the friendly face at our front counter. He oversees prescription transfers, flu-shot clinics, and delivery logistics.",
-    avatarUrl: "/pharmacists/daniel.jpg",
-    acceptsAppointments: true,
-    active: true,
-    schedules: [
-      { dayOfWeek: 3, startTime: "11:00", endTime: "19:00", slotIntervalMinutes: 15 },
-      { dayOfWeek: 4, startTime: "11:00", endTime: "19:00", slotIntervalMinutes: 15 },
-      { dayOfWeek: 5, startTime: "11:00", endTime: "19:00", slotIntervalMinutes: 15 },
-      { dayOfWeek: 6, startTime: "09:00", endTime: "17:00", slotIntervalMinutes: 15 },
-      { dayOfWeek: 0, startTime: "10:00", endTime: "16:00", slotIntervalMinutes: 15 },
     ],
   },
 ];

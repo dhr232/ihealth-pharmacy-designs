@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import prisma from "@/lib/prisma";
-import { sendWelcomeNewsletterEmail, syncResendSubscriber } from "@/lib/resend";
+import { sendStaffFormAlert, sendWelcomeNewsletterEmail, syncResendSubscriber } from "@/lib/resend";
 
 interface SubscribeRequestBody {
   email?: string;
   firstName?: string;
   source?: string;
+  interests?: string;
   caslConsent?: boolean;
 }
 
@@ -22,7 +23,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { email, firstName, source = "website", caslConsent } = body;
+    const { email, firstName, source = "website", interests, caslConsent } = body;
 
     // Validate email
     if (!email || typeof email !== "string" || !email.includes("@")) {
@@ -116,6 +117,18 @@ export async function POST(request: NextRequest) {
       email: normalizedEmail,
       firstName: firstName?.trim(),
       unsubscribeUrl,
+    });
+
+    // Let the pharmacy inbox know about the new sign-up (never blocks the subscriber)
+    await sendStaffFormAlert({
+      title: "New newsletter subscriber",
+      replyTo: normalizedEmail,
+      fields: [
+        ["Name", firstName?.trim()],
+        ["Email", normalizedEmail],
+        ["Source", source],
+        ["Interests", typeof interests === "string" ? interests.slice(0, 300) : undefined],
+      ],
     });
 
     return NextResponse.json({ success: true });

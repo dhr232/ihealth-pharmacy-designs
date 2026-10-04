@@ -15,7 +15,7 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     question: "How do I transfer my prescriptions to iHealth Pharmacy?",
     answer:
-      "Transferring is simple and takes less than 2 minutes. You don't need to contact your old pharmacy. Just give us your name, date of birth, and current pharmacy name. Our pharmacists handle the entire transfer, verify your refill history, and coordinate with your doctor if any renewals are needed.",
+      "Transferring is simple and takes less than 2 minutes. You don't need to contact your old pharmacy. Just give us your name, date of birth, and previous pharmacy name. Our pharmacists handle the entire transfer, verify your refill history, and coordinate with your doctor if any renewals are needed.",
     category: "Transfers & Refills",
   },
   {
@@ -35,12 +35,6 @@ export const FAQ_ITEMS: FAQItem[] = [
     answer:
       "Yes! We provide complimentary same-day prescription delivery across Chilliwack, with no minimum order. Orders placed before 2:00 PM on weekdays are typically delivered straight to your door that afternoon.",
     category: "Delivery",
-  },
-  {
-    question: "What is MyHealthPack blister packaging, and is it suitable for seniors?",
-    answer:
-      "MyHealthPack organizes your daily medications into clearly sealed, color-coded blister cards separated by morning, noon, evening, and bedtime. It is ideal for seniors, caregivers, and anyone managing complex multi-drug regimens to ensure you never miss a dose.",
-    category: "Services",
   },
   {
     question: "Can I speak with a pharmacist in Punjabi or Hindi?",

@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { PHARMACY_INFO } from "../data/pharmacy-info";
 import * as React from "react";
 import { render } from "@react-email/render";
 import {
@@ -45,8 +46,9 @@ export const DEFAULT_FROM_EMAIL =
   process.env.RESEND_FROM_EMAIL ||
   "iHealth Pharmacy <notifications@notifications.ihealthpharmacy.ca>";
 
-export const DEFAULT_DISPENSARY_ALERT_EMAIL =
-  process.env.DISPENSARY_ALERT_EMAIL || "dispensary@ihealthpharmacy.ca";
+// Every staff / pharmacist alert goes to the pharmacy's one public inbox. Deliberately not
+// overridable by an environment variable so no alert can be sent to another address.
+export const DEFAULT_DISPENSARY_ALERT_EMAIL = PHARMACY_INFO.email;
 
 export interface SendEmailResult {
   success: boolean;
@@ -100,8 +102,13 @@ export interface StaffRefillNotificationData {
   pickupOrDelivery?: "pickup" | "delivery" | string;
   deliveryAddress?: string;
   refillNotes?: string;
+  requestTitle?: string;
+  previousPharmacy?: string;
+  readyBy?: string;
+  notifyBy?: string;
   submittedAt?: string;
   adminPortalUrl?: string;
+  attachments?: { filename: string; content: Buffer }[];
 }
 
 export interface TwoFactorEmailData extends TwoFactorCodeEmailProps {
@@ -353,11 +360,16 @@ export async function sendStaffRefillNotification(
     pickupOrDelivery,
     deliveryAddress,
     refillNotes,
+    requestTitle,
+    previousPharmacy,
+    readyBy,
+    notifyBy,
     submittedAt,
     adminPortalUrl,
+    attachments,
   } = refillData;
 
-  const subject = `[DISPENSARY ALERT] New Refill Request: ${patientName} [${confirmationId}]`;
+  const subject = `[DISPENSARY ALERT] ${requestTitle || "New Refill Request"}: ${patientName} [${confirmationId}]`;
   const client = getResendClient();
 
   if (!client) {
@@ -386,6 +398,10 @@ export async function sendStaffRefillNotification(
       pickupOrDelivery,
       deliveryAddress,
       refillNotes,
+      requestTitle,
+      previousPharmacy,
+      readyBy,
+      notifyBy,
       submittedAt,
       adminPortalUrl,
     };
@@ -399,6 +415,7 @@ export async function sendStaffRefillNotification(
       to,
       subject,
       html,
+      ...(attachments && attachments.length > 0 ? { attachments } : {}),
     });
 
     if (error) {
@@ -679,5 +696,67 @@ export async function sendPrescriptionConfirmationEmail(
       success: false,
       error: message,
     };
+  }
+}
+
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+export interface StaffFormAlert {
+  /** Short description of the form, e.g. "Contact form message" */
+  title: string;
+  /** Label/value rows shown in the alert */
+  fields: [string, string | undefined | null][];
+  /** Patient email so staff can hit Reply */
+  replyTo?: string;
+}
+
+/**
+ * Alert the pharmacy inbox (info@) that someone submitted a website form.
+ * Used by forms that have no richer branded alert (contact, newsletter sign-up).
+ */
+export async function sendStaffFormAlert(alert: StaffFormAlert): Promise<SendEmailResult> {
+  const to = DEFAULT_DISPENSARY_ALERT_EMAIL;
+  const subject = `[WEBSITE ALERT] ${alert.title}`;
+  const client = getResendClient();
+
+  if (!client) {
+    console.log(`[Resend Mock] sendStaffFormAlert -> To: ${to} | ${alert.title}`);
+    return { success: true, mock: true };
+  }
+
+  const rows = alert.fields
+    .filter(([, value]) => value && String(value).trim())
+    .map(
+      ([label, value]) =>
+        `<tr><td style="padding:6px 12px 6px 0;color:#5a6270;vertical-align:top;white-space:nowrap">${escapeHtml(label)}</td><td style="padding:6px 0;color:#1e2a44;white-space:pre-wrap">${escapeHtml(String(value))}</td></tr>`
+    )
+    .join("");
+  const html = `<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.5;color:#1e2a44"><h2 style="margin:0 0 12px;font-size:18px">${escapeHtml(alert.title)}</h2><table style="border-collapse:collapse">${rows}</table><p style="margin-top:16px;color:#5a6270;font-size:13px">Received ${escapeHtml(new Date().toLocaleString("en-CA", { timeZone: "America/Vancouver" }))} (Pacific) from the iHealth Pharmacy website.</p></div>`;
+
+  try {
+    const { data, error } = await client.emails.send({
+      from: DEFAULT_FROM_EMAIL,
+      to,
+      subject,
+      html,
+      ...(alert.replyTo ? { replyTo: alert.replyTo } : {}),
+    });
+    if (error) {
+      console.error("[Resend Error] sendStaffFormAlert failed:", error);
+      return { success: false, error: error.message || "Failed to send staff alert." };
+    }
+    return { success: true, id: data?.id };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error sending staff alert.";
+    console.error("[Resend Exception] sendStaffFormAlert exception:", message);
+    return { success: false, error: message };
   }
 }

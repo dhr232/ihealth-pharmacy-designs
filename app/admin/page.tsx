@@ -283,11 +283,6 @@ function Dashboard({
     return Math.max(...pharmacists.map((p) => p.displayOrder)) + 1;
   }, [pharmacists]);
 
-  function openNewPharmacist() {
-    setEditingPharmacist(null);
-    setEditorOpen(true);
-  }
-
   function openEditPharmacist(item: Pharmacist) {
     setEditingPharmacist(item);
     setEditorOpen(true);
@@ -752,7 +747,6 @@ function Dashboard({
               onAskDelete={setConfirmDeleteId}
               onCancelDelete={() => setConfirmDeleteId(null)}
               onConfirmDelete={handleDeletePharmacist}
-              onAdd={openNewPharmacist}
               onEdit={openEditPharmacist}
               onMove={handleMovePharmacist}
               onExport={handleExportPharmacists}
@@ -846,7 +840,6 @@ function PharmacistSection({
   onAskDelete,
   onCancelDelete,
   onConfirmDelete,
-  onAdd,
   onEdit,
   onMove,
   onExport,
@@ -856,7 +849,6 @@ function PharmacistSection({
   onAskDelete: (id: string) => void;
   onCancelDelete: () => void;
   onConfirmDelete: (id: string) => void;
-  onAdd: () => void;
   onEdit: (item: Pharmacist) => void;
   onMove: (id: string, dir: "up" | "down") => void;
   onExport: () => void;
@@ -874,7 +866,7 @@ function PharmacistSection({
             Our Pharmacists Directory
           </h2>
           <p className="mt-1 text-sm text-slate-600">
-            Add new team members, edit credentials, or change portrait photos. Changes reflect on the homepage immediately.
+            Edit credentials, languages, or the portrait photo. Changes reflect on the About page immediately.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -882,21 +874,13 @@ function PharmacistSection({
             <Download size={14} />
             <span>Export JSON</span>
           </Button>
-          <Button
-            size="sm"
-            onClick={onAdd}
-            className="gap-1.5 bg-[var(--brand)] text-white hover:bg-[var(--brand-hover)]"
-          >
-            <Plus size={14} />
-            <span>Add Pharmacist</span>
-          </Button>
         </div>
       </div>
 
       {sorted.length === 0 ? (
         <EmptyState
           title="No pharmacists configured"
-          body="Click Add Pharmacist above to create the first team member."
+          body="No pharmacist profile is configured yet."
         />
       ) : (
         <ul className="grid grid-cols-1 gap-4">

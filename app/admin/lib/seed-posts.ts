@@ -126,23 +126,6 @@ export const SEED_POSTS: BlogPost[] = [
     category: "Vaccinations",
   },
   {
-    id: "post-007",
-    title:
-      "MyHealthPack: Simplifying Daily Medications for Busy Chilliwack Families",
-    slug: "myhealthpack-compliance-packaging",
-    excerpt:
-      "If you're juggling prescriptions for multiple family members, compliance packaging takes the mental load off. Here's how it works.",
-    content: "",
-    author: "The iHealth Pharmacy Team",
-    publishedAt: "2026-11-20",
-    tags: ["MyHealthPack", "compliance packaging", "medication management"],
-    imageUrl: "/blog/post-7.jpg",
-    status: "published",
-    themeUsed: normaliseTheme("default"),
-    readTimeMinutes: 5,
-    category: "Services",
-  },
-  {
     id: "post-008",
     title:
       "Minor Ailments: 7 Conditions Your Chilliwack Pharmacist Can Now Prescribe For",
@@ -200,7 +183,7 @@ export const SEED_POSTS: BlogPost[] = [
     content: "",
     author: "Dr. Anika Sharma, BSc Pharm, RPh",
     publishedAt: "2026-09-15",
-    tags: ["senior health", "medication safety", "flu vaccine", "chilliwack", "myhealthpack"],
+    tags: ["senior health", "medication safety", "flu vaccine", "chilliwack"],
     imageUrl: "/blog/post-3.jpg",
     status: "scheduled",
     themeUsed: normaliseTheme("default"),
@@ -210,8 +193,7 @@ export const SEED_POSTS: BlogPost[] = [
     keyTakeaways: [
       "BC seniors qualify for enhanced high-dose flu shots and COVID boosters with zero out-of-pocket costs.",
       "Over-the-counter cold medicines can interact dangerously with blood pressure and blood thinner prescriptions.",
-      "Annual medication reviews are 100% covered under BC Fair PharmaCare for eligible patients.",
-      "MyHealthPack custom blister cards eliminate missed doses and double-dosing risk with free Chilliwack delivery."
+      "Annual medication reviews are 100% covered under BC Fair PharmaCare for eligible patients."
     ],
   },
 ];

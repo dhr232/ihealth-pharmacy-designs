@@ -119,7 +119,7 @@ export default async function Image() {
 
           {/* Service Feature Badges */}
           <div style={{ display: "flex", gap: "12px", marginTop: "12px", flexWrap: "wrap" }}>
-            {["Minor Ailments Prescribing", "Fast Prescription Refills", "Free Local Delivery", "Blister Packaging"].map(
+            {["Minor Ailments Prescribing", "Fast Prescription Refills", "Free Local Delivery", "Medication Reviews"].map(
               (service) => (
                 <div
                   key={service}

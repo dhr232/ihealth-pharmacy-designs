@@ -181,7 +181,7 @@ export default function HealthTipsDirectory({
                   }}
                   className={`inline-flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition-all ${
                     isSelected
-                      ? "bg-[var(--brand)] text-white shadow-sm shadow-[#1E2A44]/10"
+                      ? "bg-[var(--brand)] text-white"
                       : "border border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-100/70"
                   }`}
                 >

@@ -512,9 +512,6 @@ export default function BookingReview({
             <div>
               <div className="flex items-center justify-between">
                 <span className="text-base font-bold text-slate-900">{service.name}</span>
-                <span className="rounded-lg bg-teal-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-teal-900 border border-teal-300">
-                  {service.coverageBadge}
-                </span>
               </div>
               <p className="mt-1.5 text-xs text-slate-600 leading-relaxed">{service.description}</p>
             </div>
@@ -640,7 +637,7 @@ export default function BookingReview({
             type="button"
             disabled={isSubmitting}
             onClick={handleConfirmBooking}
-            className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-6 py-3 text-sm font-bold text-white shadow-md shadow-blue-900/20 transition-all duration-150 cursor-pointer disabled:opacity-50"
+            className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-bold text-white transition cursor-pointer disabled:opacity-50"
           >
             {isSubmitting ? (
               <>

@@ -2,18 +2,16 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import {
-  Stethoscope,
   Clock,
   ShieldCheck,
-  CheckCircle2,
   Phone,
   ChevronRight,
   ChevronDown,
-  ArrowRight,
   ExternalLink,
   Flame,
   Droplet,
@@ -21,11 +19,9 @@ import {
   Wind,
   Smile,
   Sparkles,
-  Zap,
   Bug,
   Target,
   Pill,
-  Calendar,
   Activity,
   HeartPulse,
   CircleDot,
@@ -34,12 +30,11 @@ import {
   AlertTriangle,
   Info,
   CalendarCheck,
-  MapPin,
   FileText,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
-import { useBookingUrl } from "@/lib/use-booking-url";
+import { getBookingUrl } from "@/lib/routes";
 import { getConditionIconPath } from "@/data/condition-registry";
 
 interface ConditionItem {
@@ -70,7 +65,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-rose-50 border-rose-100",
     iconColor: "text-rose-600",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Confidential clinical evaluation and prescription of topical hydrocortisone, astringents, or anti-inflammatory suppositories.",
     symptoms: [
       "Perianal itching, irritation, or localized swelling",
@@ -93,7 +88,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-orange-50 border-orange-100",
     iconColor: "text-orange-600",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Assessment of persistent acid reflux, indigestion, and prescribing of proton pump inhibitors (e.g. Omeprazole, Pantoprazole) or H2 blockers.",
     symptoms: [
       "Burning retrosternal chest sensation after eating or when lying flat",
@@ -116,7 +111,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-amber-50 border-amber-100",
     iconColor: "text-amber-700",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Treatment plan and anthelmintic prescription dosing (e.g. Pyrantel pamoate, Mebendazole) for the patient and household contacts.",
     symptoms: [
       "Intense anal itching, especially prominent at night or during sleep",
@@ -141,7 +136,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-sky-50 border-sky-100",
     iconColor: "text-sky-600",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Evaluation of non-contagious oral ulcers with prescription topical anti-inflammatory pastes (e.g. Triamcinolone) and soothing oral rinses.",
     symptoms: [
       "Small, round, painful ulcer with white/yellow center and red border inside mouth",
@@ -164,7 +159,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-pink-50 border-pink-100",
     iconColor: "text-pink-600",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Prompt oral antiviral assessment and prescribing (e.g. Valacyclovir) to halt viral replication and accelerate blister resolution.",
     symptoms: [
       "Tingling, burning, or itchiness around the outer lip border",
@@ -187,7 +182,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-indigo-50 border-indigo-100",
     iconColor: "text-indigo-600",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Assessment of oral fungal overgrowth and prescribing of antifungal oral suspensions (e.g. Nystatin) or oral lozenges.",
     symptoms: [
       "Creamy white patches on tongue, inner cheeks, or roof of mouth",
@@ -210,7 +205,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-teal-50 border-teal-100",
     iconColor: "text-teal-700",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Comprehensive assessment of seasonal or environmental triggers with prescription steroid nasal sprays and non-drowsy antihistamines.",
     symptoms: [
       "Repetitive sneezing, clear runny nose, or persistent nasal congestion",
@@ -233,7 +228,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-cyan-50 border-cyan-100",
     iconColor: "text-cyan-700",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Differentiation between bacterial, viral, and allergic conjunctivitis with prescription antibacterial or antihistamine eye drops.",
     symptoms: [
       "Redness or pink discoloration in the sclera (white of eye)",
@@ -258,7 +253,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-emerald-50 border-emerald-100",
     iconColor: "text-emerald-700",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Targeted assessment of groin fungal dermatophyte infections and prescribing of prescription topical antifungal therapies.",
     symptoms: [
       "Red, raised, scaly rash in the groin crease and upper thighs",
@@ -281,7 +276,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-teal-50 border-teal-100",
     iconColor: "text-teal-700",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Evaluation of fungal foot infections with prescription topical antifungals (e.g. Terbinafine, Clotrimazole) and preventative foot hygiene advice.",
     symptoms: [
       "Peeling, macerated, white, or cracked skin between the toes",
@@ -304,7 +299,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-sky-50 border-sky-100",
     iconColor: "text-sky-700",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Clinical scalp and facial assessment with prescription antifungal shampoos (e.g. Ketoconazole 2%) and topical anti-inflammatories.",
     symptoms: [
       "Persistent white or greasy yellow flakes on scalp, eyebrows, or ears",
@@ -327,7 +322,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-blue-50 border-blue-100",
     iconColor: "text-blue-700",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Assessment of itchy, dry skin flareups and prescribing of potent topical corticosteroids and barrier repair emollients.",
     symptoms: [
       "Dry, red, highly itchy skin patches on hands, elbows, knees, or neck",
@@ -350,7 +345,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-indigo-50 border-indigo-100",
     iconColor: "text-indigo-700",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Assessment of fungal nail discoloration and thickness with prescription topical antifungal lacquers (e.g. Ciclopirox, Efinaconazole).",
     symptoms: [
       "Thickened, brittle, crumbly, or ragged toenails or fingernails",
@@ -373,7 +368,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-rose-50 border-rose-100",
     iconColor: "text-rose-600",
     badge: "Pharmacist Assessment",
-    duration: "20 min",
+    duration: "30 min",
     urgent: true,
     desc: "Urgent evaluation of localized burning nerve rash and immediate prescription of oral antivirals (e.g. Valacyclovir) within the crucial 72-hour window.",
     symptoms: [
@@ -397,7 +392,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-purple-50 border-purple-100",
     iconColor: "text-purple-700",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Skin type evaluation and tailored topical prescription regimens including topical retinoids (Tretinoin, Adapalene), benzoyl peroxide, and clindamycin.",
     symptoms: [
       "Blackheads, whiteheads, and small inflammatory red pimples on face or back",
@@ -420,7 +415,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-amber-50 border-amber-100",
     iconColor: "text-amber-700",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Assessment of infant and toddler diaper area inflammation with prescription barrier therapies, mild hydrocortisone, or topical antifungals.",
     symptoms: [
       "Red, irritated, warm skin confined to diaper contact zone",
@@ -443,7 +438,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-rose-50 border-rose-100",
     iconColor: "text-rose-600",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Clinical triage of swollen bug bites, localized reactions, and acute hives with prescription antihistamines and potent topical anti-itch creams.",
     symptoms: [
       "Swollen, itchy, erythematous welts from mosquito, spider, or bee stings",
@@ -466,7 +461,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-orange-50 border-orange-100",
     iconColor: "text-orange-700",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Examination of superficial bacterial skin lesions and prescribing of targeted prescription topical antibiotic ointments (e.g. Mupirocin).",
     symptoms: [
       "Red sores that quickly rupture, ooze for a few days, then form honey-coloured crusts",
@@ -489,7 +484,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-red-50 border-red-100",
     iconColor: "text-red-600",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Inspection of circular fungal rash and prescribing of prescription topical antifungals (e.g. Terbinafine, Ciclopirox).",
     symptoms: [
       "Circular or ring-shaped red rash with raised, scaly edges",
@@ -514,7 +509,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-blue-50 border-blue-100",
     iconColor: "text-blue-700",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Clinical evaluation of lower urinary symptoms and prescribing of appropriate first-line antibiotics (e.g. Nitrofurantoin) for uncomplicated cystitis.",
     symptoms: [
       "Burning sensation or sharp pain during urination (dysuria)",
@@ -537,7 +532,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-purple-50 border-purple-100",
     iconColor: "text-purple-700",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Confidential assessment of uncomplicated vulvovaginal candidiasis and prescribing of single-dose oral Fluconazole or antifungal ovules.",
     symptoms: [
       "Vulvovaginal itching, burning, and soreness",
@@ -560,7 +555,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-pink-50 border-pink-100",
     iconColor: "text-pink-700",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Assessment of primary dysmenorrhea and prescribing of high-potency prescription NSAIDs or hormonal cycle management.",
     symptoms: [
       "Severe cramping or throbbing pain in lower abdomen and pelvis",
@@ -583,13 +578,13 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-purple-50 border-purple-100",
     iconColor: "text-purple-700",
     badge: "100% PharmaCare Covered",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Initiation, renewal, and switching of oral contraceptive pills, contraceptive patch, vaginal ring, or Depo-Provera injection.",
     symptoms: [
       "Starting a new hormonal birth control method",
       "Renewing or adjusting current contraceptive prescription",
       "Experiencing unwanted side effects (spotting, nausea) and wanting to switch",
-      "Prescription contraceptives are 100% covered for all BC residents with MSP",
+      "Prescription contraceptives can be started, renewed or switched by your pharmacist",
     ],
     preparation: [
       "Bring your BC Services Card.",
@@ -606,7 +601,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-rose-50 border-rose-100",
     iconColor: "text-rose-700",
     badge: "Pharmacist Prescribed",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Immediate, non-judgmental private consultation and dispensing of emergency oral contraception (Plan B / Ella) following unprotected intercourse.",
     symptoms: [
       "Unprotected intercourse or barrier contraception failure (broken condom)",
@@ -631,7 +626,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-indigo-50 border-indigo-100",
     iconColor: "text-indigo-700",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Triage and clinical evaluation of tension-type headaches or mild migraine with targeted prescription therapies.",
     symptoms: [
       "Dull, aching head pain or tight band-like sensation across forehead",
@@ -654,7 +649,7 @@ const CONDITIONS_DATA: ConditionItem[] = [
     iconBg: "bg-teal-50 border-teal-100",
     iconColor: "text-teal-700",
     badge: "Pharmacist Assessment",
-    duration: "15 min",
+    duration: "30 min",
     desc: "Assessment of acute minor athletic or lifting injuries with prescription topical anti-inflammatories (e.g. Diclofenac gel) and joint recovery guidance.",
     symptoms: [
       "Pain, tenderness, and localized swelling following activity or lifting",
@@ -676,13 +671,13 @@ const CONDITIONS_DATA: ConditionItem[] = [
     icon: HeartPulse,
     iconBg: "bg-emerald-50 border-emerald-100",
     iconColor: "text-emerald-700",
-    badge: "100% Free Under PharmaCare",
-    duration: "20 min",
-    desc: "Enrolment in the BC Smoking Cessation Program with a 100% free 12-week supply of nicotine patches, gum, lozenges, or prescription oral medications.",
+    badge: "BC Smoking Cessation Program",
+    duration: "30 min",
+    desc: "Enrolment in the BC Smoking Cessation Program with a 12-week supply of nicotine patches, gum, lozenges, or prescription oral medications.",
     symptoms: [
       "Desire to quit or reduce smoking tobacco or commercial vaping products",
       "Active BC resident with valid Personal Health Number (PHN)",
-      "Eligible for 12 continuous weeks of 100% free nicotine replacement therapy per year",
+      "Eligible for 12 continuous weeks of nicotine replacement therapy per year",
       "One-on-one personalized craving coaching from our pharmacist",
     ],
     preparation: [
@@ -694,14 +689,24 @@ const CONDITIONS_DATA: ConditionItem[] = [
 ];
 
 export default function MinorAilmentsPage() {
-  const [selectedConditionId, setSelectedConditionId] = useState<string>("uti");
-  // Categories start collapsed except the one holding the default selection
-  const [openCategories, setOpenCategories] = useState<string[]>(["urinary"]);
+  // All groups start open so patients can scan every condition at once
+  const [openCategories, setOpenCategories] = useState<string[]>([
+    "digestive",
+    "ent",
+    "skin",
+    "urinary",
+    "other",
+  ]);
   const prefersReducedMotion = useReducedMotion();
+  const router = useRouter();
 
-  const selectedCondition =
-    CONDITIONS_DATA.find((c) => c.id === selectedConditionId) || CONDITIONS_DATA[0];
-  const bookingUrl = useBookingUrl(`?service=${selectedCondition.slug}`);
+  // One click: picking a condition opens booking straight on Patient Details for it.
+  // getBookingUrl reads the host here (event handler), so this is hydration-safe.
+  const bookCondition = (slug: string) => {
+    const url = getBookingUrl(`?service=${slug}`);
+    if (url.startsWith("/")) router.push(url);
+    else window.location.assign(url);
+  };
 
   const toggleCategory = (key: string) => {
     setOpenCategories((prev) =>
@@ -750,13 +755,9 @@ export default function MinorAilmentsPage() {
                   Minor Ailments and Conditions
                 </h1>
                 <p className="text-base text-slate-600 leading-relaxed">
-                  Our licensed pharmacists in Chilliwack are certified to assess your symptoms and prescribe prescription medications directly on-site for {CONDITIONS_DATA.length} common conditions — with zero walk-in clinic wait times.
+                  Our pharmacists in Chilliwack can assess your symptoms and, where appropriate, prescribe treatment for {CONDITIONS_DATA.length} common conditions, without waiting for a walk-in clinic.
                 </p>
                 <div className="pt-1 flex flex-wrap items-center gap-4 text-xs font-bold text-slate-700">
-                  <span className="flex items-center gap-1.5 text-teal-800 bg-teal-50 border border-teal-200 px-3 py-1.5 rounded-lg">
-                    <ShieldCheck className="h-4 w-4 text-teal-600" />
-                    Covered 100% Under BC MSP
-                  </span>
                   <span className="flex items-center gap-1.5 text-blue-800 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-lg">
                     <Clock className="h-4 w-4 text-blue-600" />
                     Walk-Ins Welcome &bull; {PHARMACY_INFO.hoursShort}
@@ -797,7 +798,7 @@ export default function MinorAilmentsPage() {
                   href="https://www.healthlinkbc.ca/find-care/pharmacy-services-bc#Self-assessment%20checklist"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-5 py-3 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-600/25 transition-all duration-200 shrink-0"
+                  className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 text-xs sm:text-sm font-bold text-white transition shrink-0"
                 >
                   <span>HealthLinkBC Self-Assessment</span>
                   <ExternalLink className="h-4 w-4" />
@@ -837,7 +838,7 @@ export default function MinorAilmentsPage() {
               
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-extrabold text-slate-900">
-                  Select a Condition to View Details
+                  Choose your condition to book
                 </h2>
                 <span className="text-xs text-slate-500">
                   {CONDITIONS_DATA.length} Prescribable Conditions
@@ -849,7 +850,6 @@ export default function MinorAilmentsPage() {
                 if (itemsInCat.length === 0) return null;
 
                 const isOpen = openCategories.includes(cat.key);
-                const selectedInCat = itemsInCat.find((c) => c.id === selectedConditionId);
                 const panelId = `category-panel-${cat.key}`;
 
                 return (
@@ -871,11 +871,6 @@ export default function MinorAilmentsPage() {
                           <span className="block font-extrabold text-sm text-slate-900 tracking-tight">
                             {cat.title}
                           </span>
-                          {!isOpen && selectedInCat && (
-                            <span className="mt-0.5 block truncate text-xs font-semibold text-blue-700">
-                              Selected: {selectedInCat.name}
-                            </span>
-                          )}
                         </span>
                         <span className="flex shrink-0 items-center gap-3">
                           <span className="text-xs text-slate-400 font-medium">
@@ -904,19 +899,14 @@ export default function MinorAilmentsPage() {
                     >
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 border-t border-slate-100 px-5 pb-5 pt-3">
                       {itemsInCat.map((item) => {
-                        const isSelected = selectedConditionId === item.id;
-                        const ItemIcon = item.icon;
 
                         return (
                           <button
                             key={item.id}
                             type="button"
-                            onClick={() => setSelectedConditionId(item.id)}
-                            className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-all min-h-[58px] cursor-pointer ${
-                              isSelected
-                                ? "border-blue-600 bg-blue-50/90 text-blue-950 font-bold ring-2 ring-blue-600/20 shadow-xs"
-                                : "border-slate-200 bg-white text-slate-800 hover:border-slate-300 hover:bg-slate-50/60"
-                            }`}
+                            onClick={() => bookCondition(item.slug)}
+                            aria-label={`Book an appointment for ${item.name}`}
+                            className="group flex min-h-[58px] cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 text-left text-slate-800 transition hover:border-[var(--brand)] hover:bg-[var(--brand-subtle)]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)]/40"
                           >
                             {/* Exact BookMyPharmacy icon */}
                             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-50 border border-slate-100 p-1">
@@ -940,11 +930,10 @@ export default function MinorAilmentsPage() {
                               )}
                             </div>
 
-                            {isSelected && (
-                              <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-600 text-white">
-                                <CheckCircle2 className="h-3.5 w-3.5" />
-                              </div>
-                            )}
+                            <ChevronRight
+                              className="h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-[var(--brand)]"
+                              aria-hidden="true"
+                            />
                           </button>
                         );
                       })}
@@ -957,107 +946,45 @@ export default function MinorAilmentsPage() {
               })}
             </div>
 
-            {/* Right Column: Sticky Clinical Inspector Card (The Client-Favorite Format) */}
-            <div className="lg:col-span-5 sticky top-24 space-y-4">
-              <div className="rounded-3xl border-2 border-blue-600 bg-white p-6 sm:p-7 shadow-xl space-y-5">
-                
-                {/* Header with Condition Icon */}
-                <div className="flex items-start gap-3.5">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-50 border border-blue-200 p-2 shadow-xs">
-                    <img
-                      src={getConditionIconPath(selectedCondition.slug || selectedCondition.id)}
-                      alt=""
-                      width={40}
-                      height={40}
-                      className="h-10 w-10 object-contain drop-shadow-2xs"
-                    />
-                  </div>
-                  <div>
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      <span className="rounded-md border border-teal-200 bg-teal-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-teal-800">
-                        {selectedCondition.badge}
+            {/* Right Column: how booking works + contact */}
+            <div className="lg:col-span-5 space-y-4 lg:sticky lg:top-24">
+              <div className="rounded-2xl border border-slate-200 bg-white p-6">
+                <h2 className="text-base font-semibold text-slate-900">How booking works</h2>
+                <ol className="mt-4 space-y-4">
+                  {[
+                    ["Choose your condition", "Click it in the list. You go straight to the booking form."],
+                    ["Add your details and a time", `Online appointments are available ${PHARMACY_INFO.onlineBooking.summary}.`],
+                    ["See the pharmacist", "We assess your symptoms and, if appropriate, prescribe treatment."],
+                  ].map(([title, body], i) => (
+                    <li key={title} className="flex gap-3">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-slate-300 text-xs font-semibold text-slate-600">
+                        {i + 1}
                       </span>
-                      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500">
-                        <Clock className="h-3 w-3 text-slate-400" />
-                        {selectedCondition.duration}
-                      </span>
-                    </div>
-                    <h3 className="mt-1.5 text-lg font-extrabold text-slate-900 leading-snug">
-                      {selectedCondition.name}
-                    </h3>
-                  </div>
-                </div>
+                      <div>
+                        <p className="text-sm font-medium text-slate-900">{title}</p>
+                        <p className="mt-0.5 text-sm leading-relaxed text-slate-600">{body}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </div>
 
-                {/* Clinical Assessment Scope */}
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  {selectedCondition.desc}
+              <div className="rounded-2xl border border-slate-200 bg-white p-6">
+                <p className="text-sm font-semibold text-slate-900">Prefer to talk first?</p>
+                <p className="mt-1 text-sm text-slate-600">
+                  {PHARMACY_INFO.address.full}
+                  <br />
+                  {PHARMACY_INFO.hoursSummary}
                 </p>
-
-                {/* Covered Symptoms Block with Blue Shield Checkmarks */}
-                <div className="rounded-2xl border border-blue-100 bg-blue-50/70 p-4 space-y-2">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-blue-900">
-                    COVERED SYMPTOMS:
-                  </div>
-                  <ul className="space-y-1.5 text-xs text-slate-700">
-                    {selectedCondition.symptoms.map((symptom, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <ShieldCheck className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
-                        <span className="leading-snug">{symptom}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Preparation & What to bring */}
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 space-y-1.5">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                    WHAT TO BRING:
-                  </div>
-                  <ul className="space-y-1 text-xs text-slate-600">
-                    {selectedCondition.preparation.map((prep, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-teal-600 shrink-0 mt-0.5" />
-                        <span>{prep}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Action Buttons with Fade-to-Light Gradient */}
-                <div className="space-y-2.5 pt-2">
-                  <Link
-                    href={bookingUrl}
-                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition-all duration-200"
-                  >
-                    <span>Book Appointment for This Condition</span>
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-
-                  <a
-                    href={`tel:${PHARMACY_INFO.phoneClean}`}
-                    className="flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-300 bg-white hover:bg-slate-50 px-5 py-2.5 text-xs font-bold text-slate-700 transition"
-                  >
-                    <Phone className="h-3.5 w-3.5 text-blue-600" />
-                    <span>Walk-In Inquiries: Call {PHARMACY_INFO.phone}</span>
-                  </a>
-                </div>
-
+                <a
+                  href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
+                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:border-[var(--brand)] hover:text-[var(--brand)]"
+                >
+                  <Phone className="h-4 w-4" />
+                  Call {PHARMACY_INFO.phoneDisplay}
+                </a>
               </div>
-
-              {/* BC Eligibility Helper Card */}
-              <div className="rounded-2xl border border-slate-200 bg-slate-900 p-5 text-white">
-                <div className="flex items-center gap-2 text-xs font-bold text-blue-400 mb-1">
-                  <MapPin className="h-3.5 w-3.5" />
-                  Chilliwack Community Dispensary
-                </div>
-                <div className="text-xs text-slate-300 leading-relaxed">
-                  #101 - 45619 Yale Rd, Chilliwack, BC V2P 2N1<br />
-                  <strong>Hours:</strong> {PHARMACY_INFO.hoursSummary}
-                </div>
-              </div>
-
             </div>
-
           </div>
 
         </div>

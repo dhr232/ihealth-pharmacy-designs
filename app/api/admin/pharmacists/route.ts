@@ -95,6 +95,13 @@ export async function POST(request: NextRequest) {
           },
         });
       } else {
+        // Only the seeded profile (Dev Patel) may be created on first edit; no new pharmacists.
+        if (!SEED_PHARMACISTS.some((seed) => seed.id === id)) {
+          return NextResponse.json(
+            { success: false, error: "Adding pharmacists is disabled." },
+            { status: 403 }
+          );
+        }
         savedRecord = await prisma.pharmacist.create({
           data: {
             id,
@@ -109,17 +116,10 @@ export async function POST(request: NextRequest) {
         });
       }
     } else {
-      savedRecord = await prisma.pharmacist.create({
-        data: {
-          name: name.trim(),
-          title: resolvedTitle,
-          licenseNumber: resolvedLicense,
-          bio: resolvedBio,
-          avatarUrl: resolvedAvatar,
-          active: resolvedActive,
-          acceptsAppointments: resolvedAccepts,
-        },
-      });
+      return NextResponse.json(
+        { success: false, error: "Adding pharmacists is disabled." },
+        { status: 403 }
+      );
     }
 
     const mapped = mapPrismaToPharmacist({

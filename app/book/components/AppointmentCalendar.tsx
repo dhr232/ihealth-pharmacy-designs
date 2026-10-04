@@ -250,7 +250,7 @@ export default function AppointmentCalendar({
               3. Date & Time Selection
             </h2>
             <p className="mt-1 text-sm text-slate-600">
-              Choose an available appointment date and 15-minute consultation window.
+              Choose an available appointment date and a 30-minute time.
             </p>
           </div>
 
@@ -333,10 +333,10 @@ export default function AppointmentCalendar({
                     key={d.dateStr}
                     type="button"
                     onClick={() => onSelectDateTime(d.dateStr, "", "")}
-                    className={`flex flex-col items-center justify-center rounded-xl sm:rounded-2xl p-1.5 sm:p-3.5 transition-all duration-150 cursor-pointer ${
+                    className={`flex flex-col items-center justify-center rounded-lg sm:rounded-lg p-1.5 sm:p-3.5 transition cursor-pointer ${
                       isSelected
-                        ? "border-2 border-[var(--brand)] bg-[var(--brand)] text-white shadow-md shadow-[#2F4BC4]/20 scale-[1.03]"
-                        : "border border-slate-200/90 bg-white text-slate-800 hover:border-[#3D5FE0] hover:bg-[#E8ECFB] hover:shadow-xs"
+                        ? "border-2 border-[var(--brand)] bg-[var(--brand)] text-white"
+                        : "border border-slate-200/90 bg-white text-slate-800 hover:border-[#3D5FE0] hover:bg-[#E8ECFB]"
                     }`}
                   >
                     <span
@@ -452,7 +452,7 @@ export default function AppointmentCalendar({
             </div>
 
             <div className="mt-3 flex items-center justify-between border-t border-slate-200 pt-3 text-[11px] text-slate-500">
-              <span>* Online booking: Mon&ndash;Fri 9:00 AM &ndash; 2:30 PM. Walk-ins welcome during store hours, including Saturday mornings.</span>
+              <span>* Online booking: Mon&ndash;Fri 10:00 AM &ndash; 3:00 PM. Walk-ins welcome during store hours, including Saturday mornings.</span>
               <button
                 type="button"
                 onClick={() => setCalendarMode("strip")}
@@ -523,7 +523,7 @@ export default function AppointmentCalendar({
                           <Sun size={15} />
                         </div>
                         <span className="text-xs font-bold uppercase tracking-wider text-slate-800">
-                          Morning (9:00 AM &ndash; 12:45 PM)
+                          Morning (10:00 AM &ndash; 11:30 AM)
                         </span>
                         <span className="ml-auto text-[11px] font-semibold text-slate-400">
                           {morningSlots.filter(s => s.available).length} open
@@ -544,12 +544,12 @@ export default function AppointmentCalendar({
                                   slot.label
                                 )
                               }
-                              className={`rounded-2xl py-2.5 px-2 text-xs font-bold transition-all duration-150 ${
+                              className={`rounded-lg py-2.5 px-2 text-xs font-bold transition ${
                                 !slot.available
                                   ? "bg-slate-50 text-slate-300 line-through cursor-not-allowed border border-slate-100 opacity-40"
                                   : isSelected
-                                  ? "bg-[var(--brand)] text-white shadow-md shadow-[#2F4BC4]/25 ring-2 ring-[#3D5FE0]/30 scale-105"
-                                  : "bg-white text-slate-800 border border-slate-200 hover:border-[#3D5FE0] hover:bg-[#E8ECFB]/50 hover:scale-[1.02] hover:shadow-2xs cursor-pointer"
+                                  ? "bg-[var(--brand)] text-white ring-2 ring-[#3D5FE0]/30"
+                                  : "bg-white text-slate-800 border border-slate-200 hover:border-[#3D5FE0] hover:bg-[#E8ECFB]/50 cursor-pointer"
                               }`}
                             >
                               {slot.label}
@@ -568,7 +568,7 @@ export default function AppointmentCalendar({
                           <Sunset size={15} />
                         </div>
                         <span className="text-xs font-bold uppercase tracking-wider text-slate-800">
-                          Afternoon (1:00 PM &ndash; 2:30 PM)
+                          Afternoon (12:00 PM &ndash; 2:30 PM)
                         </span>
                         <span className="ml-auto text-[11px] font-semibold text-slate-400">
                           {afternoonSlots.filter(s => s.available).length} open
@@ -589,12 +589,12 @@ export default function AppointmentCalendar({
                                   slot.label
                                 )
                               }
-                              className={`rounded-2xl py-2.5 px-2 text-xs font-bold transition-all duration-150 ${
+                              className={`rounded-lg py-2.5 px-2 text-xs font-bold transition ${
                                 !slot.available
                                   ? "bg-slate-50 text-slate-300 line-through cursor-not-allowed border border-slate-100 opacity-40"
                                   : isSelected
-                                  ? "bg-[var(--brand)] text-white shadow-md shadow-[#2F4BC4]/25 ring-2 ring-[#3D5FE0]/30 scale-105"
-                                  : "bg-white text-slate-800 border border-slate-200 hover:border-[#3D5FE0] hover:bg-[#E8ECFB]/50 hover:scale-[1.02] hover:shadow-2xs cursor-pointer"
+                                  ? "bg-[var(--brand)] text-white ring-2 ring-[#3D5FE0]/30"
+                                  : "bg-white text-slate-800 border border-slate-200 hover:border-[#3D5FE0] hover:bg-[#E8ECFB]/50 cursor-pointer"
                               }`}
                             >
                               {slot.label}
@@ -626,7 +626,7 @@ export default function AppointmentCalendar({
           type="button"
           disabled={!selectedDate || !selectedTime}
           onClick={onProceed}
-          className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-6 py-3 text-sm font-bold text-white shadow-md shadow-blue-900/20 transition-all duration-150 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+          className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
         >
           <span>Review & Confirm</span>
           <ChevronRight size={16} />

@@ -126,7 +126,7 @@ const MegaMenu = React.forwardRef<HTMLUListElement, MegaMenuProps>(
                       layoutId="hover-bg"
                       transition={{ type: "spring", stiffness: 450, damping: 30 }}
                       className={`absolute inset-0 size-full rounded-full ${
-                        isLight ? "bg-slate-100/90" : "bg-white/10"
+                        isLight ? "bg-[var(--brand-secondary-subtle)]" : "bg-white/10"
                       }`}
                     />
                   )}
@@ -153,9 +153,15 @@ const MegaMenu = React.forwardRef<HTMLUListElement, MegaMenuProps>(
                   )}
                   {hasSub && (
                     <ChevronDown
-                      className={`relative z-10 h-3.5 w-3.5 transition-transform duration-200 ${
-                        openMenu === navItem.label ? "rotate-180 text-[#3D5FE0]" : ""
-                      } ${isLight ? "text-slate-400" : "text-white/50"}`}
+                      className={`relative z-10 h-3.5 w-3.5 transition-[transform,color] duration-200 ${
+                        openMenu === navItem.label ? "rotate-180" : ""
+                      } ${
+                        isLight
+                          ? isItemActive
+                            ? "text-[var(--brand-secondary-hover)]"
+                            : "text-slate-400"
+                          : "text-white/50"
+                      }`}
                     />
                   )}
                   {isItemActive && (
@@ -163,7 +169,7 @@ const MegaMenu = React.forwardRef<HTMLUListElement, MegaMenuProps>(
                       layoutId="hover-bg"
                       transition={{ type: "spring", stiffness: 450, damping: 30 }}
                       className={`absolute inset-0 size-full rounded-full ${
-                        isLight ? "bg-slate-100" : "bg-white/10"
+                        isLight ? "bg-[var(--brand-secondary-subtle)]" : "bg-white/10"
                       }`}
                     />
                   )}

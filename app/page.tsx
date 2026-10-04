@@ -1,30 +1,27 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import NewsletterForm from "./components/NewsletterForm";
 import HomeBlogSection from "./components/HomeBlogSection";
-import TrustMetricsBar from "./components/TrustMetricsBar";
-import PharmacistTeamSection from "./components/PharmacistTeamSection";
+import HomeHero from "./components/HomeHero";
+import HowCanWeHelp from "./components/HowCanWeHelp";
 import FAQSection from "./components/FAQSection";
-import PharmacyLocationHeroCard from "./components/PharmacyLocationHeroCard";
 import SectionWaveDivider from "./components/SectionWaveDivider";
+import { CARD_TONES, type CardTone } from "./components/cardTones";
 import {
-  BlurReveal,
   SectionReveal,
   StaggerContainer,
   StaggerItem,
   HoverCard,
-  MagneticButton,
 } from "./components/MotionKit";
 import {
   Pill,
+  RefreshCw,
   ArrowLeftRight,
   Mail,
   Syringe,
-  Package,
   Truck,
   Phone,
   Clock,
@@ -32,92 +29,116 @@ import {
   FlaskConical,
   ArrowUpRight,
   ArrowRight,
-  MessageCircle,
-  Sparkles,
   Heart,
-  Target,
-  Eye,
+  Users,
   ShieldCheck,
   Star,
   Thermometer,
   ClipboardCheck,
 } from "lucide-react";
-import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
+import { PHARMACY_INFO } from "@/data/pharmacy-info";
 
-const FEATURED_SERVICES = [
+const SERVICE_PAIRS: {
+  title: string;
+  badge: string;
+  badgeIcon: typeof Pill;
+  status?: string;
+  desc: string;
+  highlights: string[];
+  href: string;
+  cta: string;
+  image: string;
+  imageAlt: string;
+  icon: typeof Pill;
+  tone: CardTone;
+}[] = [
   {
     title: "Minor Ailments Prescribing",
     badge: "Walk-In Clinical Care",
-    badgeStyle: "bg-[#EDF3FF] text-[#3D5FE0] border-[#C5D5F9]",
-    statusPill: "No Wait Required",
+    badgeIcon: Heart,
+    status: "No Wait Required",
     desc: "Skip long walk-in clinic waits. Consult directly with our certified prescribing pharmacists for common minor ailments with prescriptions written on-site.",
     highlights: ["Zero Doctor Wait", "Walk-Ins Welcome", "On-Site Prescriptions"],
     href: "/services/minor-ailments",
     cta: "Consult Pharmacist",
-    image: "/services/minor-ailments.jpg",
+    image: "/services/minor-ailments-consult.jpg",
+    imageAlt: "Pharmacist consulting a patient about minor ailments",
     icon: Thermometer,
-    theme: {
-      card: "border-[#D9E4FA] bg-gradient-to-br from-white via-[#F8FAFF] to-[#EDF3FF] hover:border-[#B8CEF8]",
-      btn: "bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 text-white shadow-md shadow-blue-500/20",
-      accent: "text-[var(--brand)]",
-    },
+    tone: "blue",
   },
   {
-    title: "Free Same-Day Delivery",
-    badge: "Free Chilliwack & Sardis Delivery",
-    badgeStyle: "bg-[#EAF8F1] text-[#238150] border-[#CEEEDC]",
-    statusPill: "Same-Day Dispatch",
-    desc: "Prescriptions, recurring refills, and compliance blister packs delivered free directly to your door in temperature-monitored packaging across Chilliwack.",
-    highlights: ["Chilliwack & Sardis", "Blister Packs & Refills", "Always Free"],
-    href: "/services/delivery",
-    cta: "Request Delivery",
-    image: "/services/delivery-doorstep.jpg",
-    icon: Truck,
-    theme: {
-      card: "border-[#D3EEDF] bg-gradient-to-br from-white via-[#F6FCF8] to-[#EAF8F1] hover:border-[#AEE1C7]",
-      btn: "bg-gradient-to-r from-emerald-700 via-emerald-600 to-teal-400 hover:from-emerald-600 hover:via-emerald-500 hover:to-teal-300 text-white shadow-md shadow-emerald-500/20",
-      accent: "text-[#238150]",
-    },
+    title: "Medication Review Consultation",
+    badge: "One-on-One Pharmacist Care",
+    badgeIcon: ShieldCheck,
+    status: "30-Minute Visit",
+    desc: "Sit down privately with a pharmacist to go over everything you take, check for interactions, and make sure your medications are working well together.",
+    highlights: ["Private Consultation", "Interaction Check", "Plain-Language Advice"],
+    href: "/services/med-review",
+    cta: "Learn More",
+    image: "/services/med-review.jpg",
+    imageAlt: "Pharmacist reviewing medications with a patient in a private consultation",
+    icon: ClipboardCheck,
+    tone: "green",
   },
-];
-
-const QUICK_SERVICES = [
   {
     title: "Prescription Refills",
-    desc: "Ready in 30 minutes for counter pickup, or requested online.",
     badge: "Ready in 30m",
+    badgeIcon: Clock,
+    desc: "Ready in 30 minutes for counter pickup, or requested online.",
+    highlights: ["Counter Pickup", "Online Requests", "WhatsApp Photo Refills"],
     href: "/prescription-refills",
-    icon: Pill,
-    iconColor: "text-[var(--brand)]",
-    iconBg: "bg-[#EDF3FF]",
+    cta: "Get Started",
+    image: "/services/refills.jpg",
+    imageAlt: "Pharmacist preparing a prescription refill",
+    icon: RefreshCw,
+    tone: "purple",
   },
   {
     title: "1-Step Transfer",
-    desc: "Switch pharmacies in 1 step — our team handles all prior files.",
     badge: "Zero Hassle",
+    badgeIcon: ArrowLeftRight,
+    desc: "Switch pharmacies in 1 step \u2014 our team handles all prior files.",
+    highlights: ["One Simple Step", "We Contact Your Old Pharmacy"],
     href: "/transfer",
+    cta: "Transfer Now",
+    image: "/services/transfer.jpg",
+    imageAlt: "Pharmacy team member helping a patient transfer a prescription",
     icon: ArrowLeftRight,
-    iconColor: "text-[#238150]",
-    iconBg: "bg-[#EAF8F1]",
+    tone: "peach",
   },
   {
     title: "Vaccines & Boosters",
-    desc: "Walk-in COVID-19, Shingrix, flu shots, and travel vaccines.",
     badge: "Walk-In Ready",
+    badgeIcon: Syringe,
+    desc: "Walk-in COVID-19, Shingrix, flu shots, routine vaccinations, and travel vaccines.",
+    highlights: ["Flu & COVID-19", "Routine Vaccinations", "Shingrix", "Travel Vaccines"],
     href: "/vaccinations",
+    cta: "Get Started",
+    image: "/services/vaccinations.jpg",
+    imageAlt: "Pharmacist giving a vaccine to a patient",
     icon: Syringe,
-    iconColor: "text-indigo-600",
-    iconBg: "bg-indigo-50",
+    tone: "teal",
   },
   {
-    title: "Blister Compliance Packs",
-    desc: "Pre-sorted weekly medication cards organized by day and time.",
-    badge: "Complimentary",
-    href: "/services/myhealthpack",
-    icon: Package,
-    iconColor: "text-teal-700",
-    iconBg: "bg-teal-50",
+    title: "Automatic Pill Dispenser",
+    badge: "Compliance Packaging",
+    badgeIcon: Clock,
+    status: "Senior Friendly",
+    desc: "A carousel automatic pill dispenser with timed audio and visual alerts and a tamper-resistant safety lock. Available for home medication management and caregiver peace of mind.",
+    highlights: ["28 Compartments", "Pharmacist Pre-Filled", "Prevents Double Doses"],
+    href: "/contact",
+    cta: "Ask About the Dispenser",
+    image: "/carousel-dispenser.jpg",
+    imageAlt: "Carousel automatic pill dispenser with 28 compartments on a kitchen counter",
+    icon: Pill,
+    tone: "rose",
   },
+];
+
+const ABOUT_STATS = [
+  { value: PHARMACY_INFO.address.googleRating, label: "Google Rating", star: true },
+  { value: String(PHARMACY_INFO.languages.length), label: "Languages Spoken", star: false },
+  { value: "Free", label: "Same-Day Delivery", star: false },
 ];
 
 const TESTIMONIALS = [
@@ -137,7 +158,7 @@ const TESTIMONIALS = [
   },
   {
     quote:
-      "Transferring my prescription took one quick message. They handled everything with my old clinic and delivered my blister packs the next day.",
+      "Transferring my prescription took one quick message. They handled everything with my old clinic and delivered my prescriptions the next day.",
     name: "Margaret L.",
     location: "Sardis / Chilliwack",
     rating: 5,
@@ -150,90 +171,11 @@ export default function HomePage() {
       <Header />
 
       <main>
-        {/* 1. Hero Section */}
-        <section
-          id="hero"
-          className="relative overflow-hidden bg-gradient-to-b from-[#F2F6FC] via-[#F8FAFD] to-white"
-          aria-labelledby="hero-heading"
-        >
-          {/* Subtle Geometric Grid Atmosphere */}
-          <div
-            className="absolute inset-0 pointer-events-none opacity-60"
-            style={{
-              backgroundImage:
-                "linear-gradient(to right, rgba(61, 95, 224, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(61, 95, 224, 0.04) 1px, transparent 1px)",
-              backgroundSize: "32px 32px",
-            }}
-            aria-hidden="true"
-          />
-          <div className="relative z-10 mx-auto grid max-w-7xl gap-12 px-5 pt-20 pb-16 md:grid-cols-2 md:items-center md:pt-24 md:pb-24 lg:px-8">
-            <BlurReveal className="flex flex-col items-start">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--brand-subtle)] px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[var(--brand)]">
-                <Sparkles size={14} />
-                Health Solutions, Human Touch
-              </span>
+        {/* 1. Hero */}
+        <HomeHero />
 
-              <h1
-                id="hero-heading"
-                className="mt-5 text-4xl font-bold leading-[1.08] tracking-tight text-slate-900 md:text-5xl lg:text-6xl"
-              >
-                Care that knows your name,
-                <br />
-                <span className="text-[var(--brand)]">today and tomorrow.</span>
-              </h1>
-
-              <p className="mt-4 max-w-lg text-base leading-relaxed text-slate-600 sm:text-lg">
-                Skip the clinic wait. Walk in to consult directly with our prescribing pharmacists for everyday ailments, manage refills in minutes, and enjoy free same-day delivery across Chilliwack.
-              </p>
-
-              {/* Dual Action Buttons */}
-              <div className="mt-8 flex flex-wrap gap-3.5">
-                <MagneticButton>
-                  <Link
-                    href="/prescription-refills"
-                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-6 py-3.5 text-sm font-bold text-white shadow-md shadow-blue-500/25 transition-all duration-200 active:scale-[0.98]"
-                  >
-                    Request Refill
-                  </Link>
-                </MagneticButton>
-                <MagneticButton>
-                  <Link
-                    href="/transfer"
-                    className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 hover:border-blue-400 hover:text-blue-700 px-6 py-3.5 text-sm font-bold text-slate-800 shadow-2xs transition-all duration-200 active:scale-[0.98]"
-                  >
-                    Transfer to iHealth
-                  </Link>
-                </MagneticButton>
-              </div>
-
-              {/* WhatsApp & Hours Helper */}
-              <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-500">
-                <div className="flex items-center gap-1.5 font-medium text-slate-700">
-                  <Clock size={14} className="text-[var(--brand)]" />
-                  <span>Open {PHARMACY_INFO.hoursShort}</span>
-                </div>
-                <span className="text-slate-300 hidden sm:inline">•</span>
-                <a
-                  href={getWhatsAppUrl()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 font-semibold text-[#128C7E] hover:underline"
-                >
-                  <MessageCircle size={14} className="text-[#25D366]" />
-                  Chat on WhatsApp
-                </a>
-              </div>
-            </BlurReveal>
-
-            {/* Hero Modern Pharmacy Location Card */}
-            <SectionReveal className="relative mx-auto w-full max-w-lg md:mx-0">
-              <PharmacyLocationHeroCard />
-            </SectionReveal>
-          </div>
-        </section>
-
-        {/* 2. Trust Metrics Counter Bar */}
-        <TrustMetricsBar />
+        {/* 2. How can we help */}
+        <HowCanWeHelp />
 
         {/* 3. Services Section ("What We Offer") */}
         <section id="services" className="bg-slate-100/80 pt-20 pb-12 lg:pt-28 lg:pb-16">
@@ -248,133 +190,95 @@ export default function HomePage() {
                 Care Tailored to Your Everyday Life
               </h2>
               <p className="mt-3 text-base text-slate-600 sm:text-lg">
-                Direct pharmacist access, walk-in prescribing, and complimentary same-day delivery across Chilliwack.
+                Direct pharmacist access, walk-in prescribing, and one-on-one medication reviews, right here in Chilliwack.
               </p>
             </SectionReveal>
 
-            {/* Top Row: 2 Featured Bento Hero Cards */}
-            <div className="mt-12 grid gap-6 lg:grid-cols-2">
-              {FEATURED_SERVICES.map((item) => (
-                <SectionReveal key={item.title}>
-                  <div
-                    className={`group relative flex flex-col justify-between overflow-hidden rounded-3xl border ${item.theme.card} p-6 sm:p-7 shadow-xs transition duration-300 hover:shadow-xl`}
-                  >
-                    <div>
-                      {/* Image Preview Banner */}
-                      <div className="relative h-48 sm:h-52 w-full overflow-hidden rounded-2xl bg-slate-100">
+            {/* One row per service: a photo tile and an info tile (alternating sides on desktop) */}
+            <div className="mt-10 space-y-5 lg:space-y-6">
+              {SERVICE_PAIRS.map((item, i) => {
+                const tone = CARD_TONES[item.tone];
+                const Icon = item.icon;
+                const BadgeIcon = item.badgeIcon;
+                return (
+                  <SectionReveal key={item.title}>
+                    <div className="grid gap-3 sm:gap-4 lg:grid-cols-2 lg:gap-6">
+                      {/* Tile 1: photo */}
+                      <Link
+                        href={item.href}
+                        tabIndex={-1}
+                        aria-hidden="true"
+                        className={`group relative block aspect-[16/10] overflow-hidden rounded-3xl border bg-slate-100 shadow-xs lg:aspect-auto lg:min-h-[19rem] ${tone.pill} ${
+                          i % 2 === 1 ? "lg:order-2" : ""
+                        }`}
+                      >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={item.image}
-                          alt={item.title}
+                          alt=""
                           loading="lazy"
-                          className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                          className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
-
-                        {/* Top Badges */}
-                        <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2">
-                          <span
-                            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold border backdrop-blur-xs ${item.badgeStyle}`}
-                          >
-                            <item.icon size={13} />
-                            <span>{item.badge}</span>
+                        <div className="absolute inset-x-3 top-3 flex flex-wrap items-start gap-1.5 sm:inset-x-4 sm:top-4 sm:gap-2">
+                          <span className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white/95 px-3 py-1 text-xs font-bold ${tone.badge}`}>
+                            <BadgeIcon size={13} />
+                            {item.badge}
                           </span>
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-black/50 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-xs">
-                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                            {item.statusPill}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Content Header */}
-                      <div className="mt-5">
-                        <h3 className="text-xl sm:text-2xl font-bold text-slate-900 transition group-hover:text-[var(--brand)]">
-                          {item.title}
-                        </h3>
-                        <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                          {item.desc}
-                        </p>
-                      </div>
-
-                      {/* Highlights / Quick Chips */}
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {item.highlights.map((h) => (
-                          <span
-                            key={h}
-                            className="inline-flex items-center rounded-lg border border-slate-200/90 bg-white/90 px-2.5 py-1 text-xs font-semibold text-slate-700 shadow-2xs"
-                          >
-                            {h}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Action Bar */}
-                    <div className="mt-6 pt-4 border-t border-slate-200/70 flex items-center justify-between gap-3">
-                      <Link
-                        href={item.href}
-                        className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold transition duration-200 ${item.theme.btn}`}
-                      >
-                        <span>{item.cta}</span>
-                        <ArrowRight size={14} className="transition group-hover:translate-x-1" />
-                      </Link>
-                      <Link
-                        href={item.href}
-                        className="text-xs font-semibold text-slate-500 hover:text-slate-900 transition flex items-center gap-1"
-                      >
-                        <span>Service details</span>
-                        <ArrowUpRight size={13} />
-                      </Link>
-                    </div>
-                  </div>
-                </SectionReveal>
-              ))}
-            </div>
-
-            {/* Bottom Row: 4 Fast-Action Bento Tiles */}
-            <StaggerContainer className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {QUICK_SERVICES.map((s) => {
-                const Icon = s.icon;
-                return (
-                  <StaggerItem key={s.title}>
-                    <HoverCard className="h-full">
-                      <Link
-                        href={s.href}
-                        className="group relative flex h-full flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-5 shadow-xs transition duration-200 hover:-translate-y-1 hover:border-slate-300 hover:shadow-md"
-                      >
-                        <div>
-                          {/* Top Row: Icon + Badge */}
-                          <div className="flex items-center justify-between gap-2 mb-3.5">
-                            <div
-                              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${s.iconBg} ${s.iconColor} transition duration-200 group-hover:scale-105`}
-                            >
-                              <Icon size={20} />
-                            </div>
-                            <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-semibold text-slate-600">
-                              {s.badge}
+                          {item.status && (
+                            <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-[var(--foreground)] px-3 py-1 text-xs font-bold text-white">
+                              <Clock size={13} />
+                              {item.status}
                             </span>
-                          </div>
-
-                          {/* Title & Desc */}
-                          <h4 className="text-sm font-bold text-slate-900 transition group-hover:text-[var(--brand)]">
-                            {s.title}
-                          </h4>
-                          <p className="mt-1.5 text-xs leading-relaxed text-slate-600">
-                            {s.desc}
-                          </p>
-                        </div>
-
-                        {/* Text Link */}
-                        <div className="mt-4 flex items-center gap-1 text-xs font-semibold text-[var(--brand)]">
-                          <span>Get started</span>
-                          <ArrowRight size={13} className="transition group-hover:translate-x-1" />
+                          )}
                         </div>
                       </Link>
-                    </HoverCard>
-                  </StaggerItem>
+
+                      {/* Tile 2: info */}
+                      <div className={`relative flex flex-col overflow-hidden rounded-3xl border p-5 shadow-xs sm:p-7 ${tone.card}`}>
+                        <span className={`pointer-events-none absolute -top-10 -right-8 h-28 w-28 rounded-full opacity-80 ${tone.blob}`} aria-hidden="true" />
+                        <span className={`pointer-events-none absolute -bottom-10 -left-8 h-28 w-28 rounded-full opacity-60 ${tone.blob}`} aria-hidden="true" />
+
+                        <div className="relative flex items-center gap-3">
+                          <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full shadow-sm ${tone.icon}`}>
+                            <Icon size={20} />
+                          </span>
+                          <h3 className="text-xl font-bold leading-tight text-[var(--foreground)] sm:text-2xl">{item.title}</h3>
+                        </div>
+                        <p className="relative mt-3 text-base leading-relaxed text-slate-600">{item.desc}</p>
+
+                        <div className="relative mt-4 flex flex-wrap gap-2">
+                          {item.highlights.map((h) => (
+                            <span
+                              key={h}
+                              className={`rounded-full border bg-white/80 px-3 py-1 text-xs font-semibold text-slate-600 sm:text-sm ${tone.pill}`}
+                            >
+                              {h}
+                            </span>
+                          ))}
+                        </div>
+
+                        <div className="relative mt-auto flex flex-wrap items-center gap-x-5 gap-y-2 pt-5">
+                          <Link
+                            href={item.href}
+                            className={`inline-flex min-h-11 items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white transition ${tone.btn}`}
+                          >
+                            {item.cta}
+                            <ArrowRight size={16} />
+                          </Link>
+                          <Link
+                            href={item.href}
+                            className={`inline-flex min-h-11 items-center gap-1 text-sm font-semibold ${tone.link}`}
+                          >
+                            Service details
+                            <ArrowRight size={14} />
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </SectionReveal>
                 );
               })}
-            </StaggerContainer>
+            </div>
 
             {/* Utility Strip: Specialized Services */}
             <SectionReveal className="mt-6">
@@ -383,26 +287,26 @@ export default function HomePage() {
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
                     <FlaskConical size={18} />
                   </div>
-                  <div className="text-xs text-slate-700">
+                  <div className="text-sm text-slate-700">
                     <span className="font-bold text-slate-900">Looking for specialized clinical care?</span>{" "}
-                    We also formulate custom compounded therapies and perform comprehensive medication reviews.
+                    We also formulate custom compounded therapies, and deliver prescriptions free across Chilliwack and Sardis.
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2.5 shrink-0 w-full sm:w-auto">
                   <Link
                     href="/services/compounding"
-                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-800 hover:bg-slate-100 hover:border-slate-300 transition"
+                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 bg-slate-50 min-h-11 px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-100 hover:border-slate-300 transition"
                   >
                     <span>Custom Compounding</span>
                     <ArrowUpRight size={13} />
                   </Link>
                   <Link
-                    href="/services/med-review"
-                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-800 hover:bg-slate-100 hover:border-slate-300 transition"
+                    href="/services/delivery"
+                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 min-h-11 px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-100 hover:border-slate-300 transition"
                   >
-                    <ClipboardCheck size={13} />
-                    <span>Medication Review</span>
+                    <Truck size={13} />
+                    <span>Free Delivery</span>
                     <ArrowUpRight size={13} />
                   </Link>
                 </div>
@@ -418,158 +322,74 @@ export default function HomePage() {
           className="h-10 sm:h-16 lg:h-20"
         />
 
-        {/* 4. About Us — "Committed to Quality Care" */}
-        <section id="about" className="bg-white pt-6 pb-20 lg:pt-8 lg:pb-28">
+        {/* 4. About Us: "Committed to Quality Community Care" */}
+        <section id="about" className="bg-white pt-6 pb-16 lg:pt-8 lg:pb-24">
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
-            <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
-              {/* Left Column Text */}
-              <div className="lg:col-span-6">
-                <SectionReveal>
-                  <div className="inline-flex items-center rounded-full bg-[#E8ECFB] border border-[#C7D2F7] px-3.5 py-1 mb-4 shadow-2xs">
-                    <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
-                      About Our Community Practice
-                    </span>
-                  </div>
-                  <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl lg:text-5xl">
-                    Committed to Quality Community Care
-                  </h2>
-                  <p className="mt-4 text-base text-slate-600 sm:text-lg leading-relaxed">
-                    iHealth Pharmacy is an independent community pharmacy in Chilliwack, BC. We believe healthcare is fundamentally human — where patients are recognized by name, questions are answered thoroughly, and your health comes first.
-                  </p>
+            <SectionReveal>
+              <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#F4F8FF] via-[#F8FBFF] to-[#EAF1FF] px-6 py-8 sm:px-10 lg:px-12 lg:py-12">
+                <span className="pointer-events-none absolute -top-16 -left-10 h-48 w-48 rounded-full bg-[#D9E6FF]/70" aria-hidden="true" />
+                <span className="pointer-events-none absolute bottom-0 left-1/3 h-40 w-40 rounded-full bg-[#E4EDFF]/80" aria-hidden="true" />
 
-                  <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                    {/* Vision Card */}
-                    <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-5">
-                      <div className="flex items-center gap-2 text-slate-900 font-bold text-sm">
-                        <Eye size={18} className="text-[var(--brand)]" />
-                        Our Vision
-                      </div>
-                      <p className="mt-2 text-xs leading-relaxed text-slate-600">
-                        To empower every Chilliwack resident with accessible, personalized clinical care that improves quality of life.
-                      </p>
+                <div className="relative grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
+                  <div>
+                    <div className="inline-flex items-center rounded-full bg-white border border-[#C7D2F7] px-3.5 py-1 shadow-2xs">
+                      <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
+                        About Our Community Practice
+                      </span>
                     </div>
-
-                    {/* Mission Card */}
-                    <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-5">
-                      <div className="flex items-center gap-2 text-slate-900 font-bold text-sm">
-                        <Target size={18} className="text-[var(--brand)]" />
-                        Our Mission
-                      </div>
-                      <p className="mt-2 text-xs leading-relaxed text-slate-600">
-                        Delivering accurate, timely medications, clear health education, and empathetic care in English, Punjabi, and Hindi.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mt-8 flex flex-wrap items-center gap-4">
+                    <h2 className="mt-4 text-3xl font-bold tracking-tight text-[var(--foreground)] md:text-4xl">
+                      Committed to Quality Community Care
+                    </h2>
+                    <p className="mt-4 max-w-xl text-base leading-relaxed text-slate-600">
+                      iHealth Pharmacy is an independent community pharmacy in Chilliwack, BC. We believe healthcare is fundamentally human &mdash; where patients are recognized by name, questions are answered thoroughly, and your health comes first.
+                    </p>
                     <Link
                       href="/about"
-                      className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-5 py-3 text-sm font-semibold text-white shadow-xs hover:bg-[var(--brand-hover)] transition"
+                      className="mt-6 inline-flex items-center gap-2 rounded-full bg-[var(--foreground)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#152238]"
                     >
-                      <span>Read our full story</span>
+                      <span>Learn More About Us</span>
                       <ArrowRight size={16} />
                     </Link>
-                    <Link
-                      href="#team"
-                      className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 hover:border-[var(--brand)] hover:text-[var(--brand)] transition"
-                    >
-                      <span>Meet the Pharmacists</span>
-                    </Link>
+
+                    <dl className="mt-8 grid grid-cols-3 gap-4">
+                      {ABOUT_STATS.map((stat) => (
+                        <div key={stat.label}>
+                          <dt className="flex items-center gap-1 text-2xl font-extrabold tracking-tight text-[var(--foreground)] sm:text-3xl">
+                            {stat.value}
+                            {stat.star && <Star size={20} className="text-amber-400" fill="currentColor" />}
+                          </dt>
+                          <dd className="mt-1 text-sm text-slate-600">{stat.label}</dd>
+                        </div>
+                      ))}
+                    </dl>
                   </div>
-                </SectionReveal>
-              </div>
 
-              {/* Right Column Graphic / Pill Dispenser Preview */}
-              <div className="lg:col-span-6">
-                <SectionReveal>
-                  <HoverCard className="h-full">
-                    <div className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/90 bg-gradient-to-b from-white via-slate-50/70 to-slate-100/50 p-6 sm:p-7 shadow-sm transition-all duration-300 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-900/10">
-                      {/* Top Header Row with Subtle Glow & Pulse Badge */}
-                      <div className="flex items-center justify-between border-b border-slate-200/80 pb-4">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-[11px] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200/80 px-2.5 py-0.5 rounded-full">
-                              Compliance Packaging
-                            </span>
-                            <span className="text-[11px] font-medium text-slate-400 hidden sm:inline">
-                              Smart Health Tech
-                            </span>
-                          </div>
-                          <h3 className="mt-1.5 text-lg sm:text-xl font-extrabold text-slate-900 transition-colors group-hover:text-blue-900">
-                            Carousel Automatic Pill Dispenser
-                          </h3>
-                        </div>
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 px-3 py-1 text-xs font-bold text-emerald-700 shadow-2xs">
-                          <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                          Senior Friendly
-                        </span>
-                      </div>
-
-                      {/* Interactive Image Container with Zoom & Floating Smart Overlays */}
-                      <div className="relative mt-5 overflow-hidden rounded-2xl border border-slate-200/90 bg-slate-100 shadow-inner group/img">
-                        <Image
-                          src="/carousel-dispenser.jpg"
-                          alt="Carousel automatic pill dispenser for senior medication safety"
-                          width={600}
-                          height={450}
-                          className="h-auto w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                        />
-
-                        {/* Subtle Gradient Vignette Overlay on Hover */}
-                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-slate-900/20 opacity-60 transition-opacity duration-300 group-hover:opacity-40" />
-
-                        {/* Floating Top-Left Tag: Automated Chimes & Alert */}
-                        <div className="absolute top-3.5 left-3.5 flex items-center gap-1.5 rounded-xl bg-white/90 px-3 py-1.5 text-[11px] font-bold text-slate-800 shadow-md backdrop-blur-md transition-transform duration-300 group-hover:scale-105">
-                          <Clock size={13} className="text-blue-600" />
-                          <span>Timed Audio & Visual Alerts</span>
-                        </div>
-
-                        {/* Floating Bottom-Right Tag: Tamper-Proof Lock */}
-                        <div className="absolute bottom-3.5 right-3.5 flex items-center gap-1.5 rounded-xl bg-slate-900/85 px-3 py-1.5 text-[11px] font-bold text-white shadow-md backdrop-blur-md transition-transform duration-300 group-hover:scale-105">
-                          <ShieldCheck size={13} className="text-emerald-400" />
-                          <span>Tamper-Resistant Safety Lock</span>
-                        </div>
-                      </div>
-
-                      {/* Feature Highlights Pills */}
-                      <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-                        <div className="flex items-center gap-1.5 rounded-xl bg-white border border-slate-200/80 px-3 py-2 text-slate-700 shadow-2xs transition group-hover:border-blue-200">
-                          <span className="h-1.5 w-1.5 rounded-full bg-blue-500 shrink-0" />
-                          <span className="font-semibold text-[11px]">28 Compartments</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 rounded-xl bg-white border border-slate-200/80 px-3 py-2 text-slate-700 shadow-2xs transition group-hover:border-blue-200">
-                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" />
-                          <span className="font-semibold text-[11px]">Pharmacist Pre-Filled</span>
-                        </div>
-                        <div className="col-span-2 sm:col-span-1 flex items-center gap-1.5 rounded-xl bg-white border border-slate-200/80 px-3 py-2 text-slate-700 shadow-2xs transition group-hover:border-blue-200">
-                          <span className="h-1.5 w-1.5 rounded-full bg-purple-500 shrink-0" />
-                          <span className="font-semibold text-[11px]">Prevents Double Doses</span>
-                        </div>
-                      </div>
-
-                      {/* Action Bar with Luminous CTA Gradient */}
-                      <div className="mt-5 pt-4 border-t border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <p className="text-xs text-slate-500 leading-snug">
-                          Available for home medication management and caregiver peace of mind.
-                        </p>
-                        <Link
-                          href="/services/myhealthpack"
-                          className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-4 py-2.5 text-xs font-bold text-white shadow-sm shadow-blue-700/20 transition-all duration-200 active:scale-95 shrink-0"
-                        >
-                          <span>Learn About Packaging</span>
-                          <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
-                        </Link>
-                      </div>
+                  <div className="relative">
+                    <span className="pointer-events-none absolute -top-6 -left-5 h-24 w-28 rounded-full bg-[#D5E4FF]" aria-hidden="true" />
+                    <span className="pointer-events-none absolute -right-4 -bottom-7 h-28 w-36 rounded-full bg-[#D5E4FF]" aria-hidden="true" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/community-care.jpg"
+                      alt="Pharmacist handing medication to a patient at iHealth"
+                      loading="lazy"
+                      className="relative h-72 w-full object-cover object-center sm:h-80 [border-radius:7.5rem_1.5rem_7.5rem_1.5rem]"
+                    />
+                    <div className="absolute bottom-5 left-4 flex max-w-[16rem] items-center gap-3 rounded-2xl bg-white/95 px-3 py-3 shadow-lg">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-subtle)] text-[var(--brand)]">
+                        <Users size={20} />
+                      </span>
+                      <p className="text-sm font-semibold leading-snug text-[var(--foreground)]">
+                        Your Health
+                        <span className="block text-[var(--brand)]">Stronger Communities</span>
+                        Brighter Tomorrows
+                      </p>
                     </div>
-                  </HoverCard>
-                </SectionReveal>
+                  </div>
+                </div>
               </div>
-            </div>
+            </SectionReveal>
           </div>
         </section>
-
-        {/* 5. The Pharmacist ("Meet Our Caring Experts") */}
-        <PharmacistTeamSection />
 
         {/* Wave 4: Transitioning from Team (white) to Why Choose Us (slate-100) */}
         <SectionWaveDivider
@@ -833,7 +653,7 @@ export default function HomePage() {
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <a
                   href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[var(--brand)] px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-[var(--brand-dark)] transition"
+                  className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[var(--brand-hover)] transition"
                 >
                   <Phone size={16} />
                   Call {PHARMACY_INFO.phoneDisplay}

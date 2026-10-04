@@ -4,6 +4,7 @@ import { prisma, withPrismaFallback } from "@/lib/prisma";
 import {
   sendBookingConfirmationEmail,
   sendStaffBookingNotification,
+  DEFAULT_DISPENSARY_ALERT_EMAIL,
   syncResendSubscriber,
 } from "@/lib/resend";
 import { getServiceByIdOrSlug } from "@/data/booking-services";
@@ -397,7 +398,7 @@ export async function POST(request: NextRequest) {
       }
 
       // 2. Send Alert to Dispensary Staff
-      const staffAlertEmail = process.env.DISPENSARY_ALERT_EMAIL || "dispensary@ihealthpharmacy.ca";
+      const staffAlertEmail = DEFAULT_DISPENSARY_ALERT_EMAIL;
       try {
         await sendStaffBookingNotification({
           to: staffAlertEmail,

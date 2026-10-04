@@ -74,7 +74,7 @@ export default function ScheduledGuard({
         <div className="pt-2">
           <Link
             href="/health-tips"
-            className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--brand)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[var(--brand-hover)]"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[var(--brand-hover)]"
           >
             <ArrowLeft size={16} />
             <span>Browse Active Health Tips</span>

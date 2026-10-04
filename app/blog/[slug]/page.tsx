@@ -68,7 +68,7 @@ function renderContent(content: string) {
           className="my-7 rounded-2xl border border-[#C7D2F7] bg-[#E8ECFB]/70 p-5 sm:p-6 shadow-sm"
         >
           <div className="flex items-start gap-3.5">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[var(--brand)] text-white font-bold text-sm shadow-sm">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--brand)] text-white font-bold text-sm">
               +
             </span>
             <div className="space-y-1">
@@ -252,7 +252,7 @@ export default async function BlogPostPage({
                     {post.author}
                   </h3>
                   <p className="mt-1 text-sm text-slate-600 leading-relaxed">
-                    Have questions about medication interactions, high-dose flu shots, or blister packaging in Chilliwack? Talk to our pharmacy team directly.
+                    Have questions about medication interactions, high-dose flu shots, or medication reviews in Chilliwack? Talk to our pharmacy team directly.
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">

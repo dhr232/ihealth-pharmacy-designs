@@ -69,23 +69,7 @@ const SERVICES: Record<
       "Vaccines for adults and seniors",
       "Vaccination records and reminders",
     ],
-    cta: { label: "Book Vaccination on Platform", href: "/book?category=vaccines" },
-  },
-  myhealthpack: {
-    title: "MyHealthPack Blister Packs",
-    tagline: "Medication organization made simple",
-    description:
-      "We package your daily medications and vitamins into custom blister cards organized by date and time (Morning, Noon, Evening, Bedtime). We automatically synchronize refills with your prescriber so you or your loved ones never miss a dose.",
-    image: "/services/blister-packs.jpg",
-    points: [
-      "Pills organized by Morning, Noon, Evening & Bedtime",
-      "Easy-to-open sealed blister bubbles (no tight bottle caps)",
-      "High-contrast printed schedule with medication pictures",
-      "Automatic refill synchronization with doctors",
-      "Direct billing to BC Fair PharmaCare and private insurance",
-      "Free same-day delivery across Chilliwack",
-    ],
-    cta: { label: "Set up MyHealthPack", href: "/contact" },
+    cta: { label: "Book Vaccination on Platform", href: "/book?service=routine-vaccination" },
   },
   "med-review": {
     title: "Medication Review & Injections",
@@ -117,7 +101,7 @@ const SERVICES: Record<
       "Scheduled delivery options",
       "Delivery across Chilliwack",
     ],
-    cta: { label: "Set up delivery", href: "#contact" },
+    cta: { label: "Contact us to set up delivery", href: "/contact" },
   },
 };
 
@@ -128,7 +112,6 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
     { slug: "minor-ailments" },
     { slug: "compounding" },
     { slug: "vaccinations" },
-    { slug: "myhealthpack" },
     { slug: "med-review" },
     { slug: "delivery" },
   ];
@@ -184,7 +167,7 @@ export default async function ServicePage({ params }: { params: Params }) {
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link
                   href={service.cta.href}
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/20 transition-all duration-200"
+                  className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold text-white transition"
                 >
                   {service.cta.label}
                 </Link>
