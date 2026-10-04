@@ -75,7 +75,7 @@ const SERVICE_PAIRS: {
     highlights: ["Private Consultation", "Interaction Check", "Plain-Language Advice"],
     href: "/services/med-review",
     cta: "Learn More",
-    image: "/services/med-review.jpg",
+    image: "/services/med-review.jpg?v=20261004b",
     imageAlt: "Pharmacist reviewing medications with a patient in a private consultation",
     icon: ClipboardCheck,
     tone: "green",
