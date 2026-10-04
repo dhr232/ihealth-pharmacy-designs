@@ -41,7 +41,7 @@ const ALL_SERVICES = [
     desc: "Direct assessment and prescription for common ailments including UTIs, shingles, cold sores, acid reflux, allergies, and conjunctivitis without needing a doctor appointment.",
     icon: Stethoscope,
     badge: "Walk-ins Welcome",
-    image: "/services/minor-ailments.jpg?v=20261004",
+    image: "/services/minor-ailments.jpg?v=20261004_fresh",
   },
   {
     title: "Custom Compounding",

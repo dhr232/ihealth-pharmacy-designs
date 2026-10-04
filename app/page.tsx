@@ -61,7 +61,7 @@ const SERVICE_PAIRS: {
     highlights: ["Zero Doctor Wait", "Walk-Ins Welcome", "On-Site Prescriptions"],
     href: "/services/minor-ailments",
     cta: "Consult Pharmacist",
-    image: "/services/minor-ailments-consult.jpg",
+    image: "/services/minor-ailments.jpg?v=20261004_fresh",
     imageAlt: "Pharmacist consulting a patient about minor ailments",
     icon: Thermometer,
     tone: "blue",
