@@ -90,7 +90,7 @@ Start command: `npm start`
 
 ## CI
 
-`.github/workflows/ci.yml` on push/PR to `main`:
+`.github/workflows/ci.yml` on push to `main` only (it does not run on pull requests, so run lint, tests and typecheck locally before merging):
 1. Install deps (`npm ci`)
 2. Lint (`npm run lint`)
 3. Prisma generate

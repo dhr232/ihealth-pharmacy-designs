@@ -4,10 +4,9 @@ name: ci
 # Secret scanning and vulnerable-dependency alerts come from GitHub's built-in
 # repo features (Settings > Code security), so they are not duplicated here.
 
+# Runs after merge (push to main) only; it does not run on pull requests.
 on:
   push:
-    branches: [main]
-  pull_request:
     branches: [main]
 
 concurrency:
