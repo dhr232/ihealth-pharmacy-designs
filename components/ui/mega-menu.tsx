@@ -5,18 +5,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 
+export type MegaMenuFeatureCard = {
+  badge: string;
+  title: string;
+  description: string;
+  image?: string;
+  ctaText: string;
+  href: string;
+};
+
 export type MegaMenuItem = {
   id: number;
   label: string;
   badge?: string;
-  featureCard?: {
-    badge: string;
-    title: string;
-    description: string;
-    image?: string;
-    ctaText: string;
-    href: string;
-  };
+  featureCard?: MegaMenuFeatureCard;
   subMenus?: {
     title: string;
     items: {
@@ -27,6 +29,8 @@ export type MegaMenuItem = {
       href?: string;
       /** Off-site link: opens in a new tab so patients keep the pharmacy site open */
       external?: boolean;
+      /** Optional preview feature card displayed on hover */
+      featureCard?: MegaMenuFeatureCard;
     }[];
   }[];
   link?: string;
@@ -44,6 +48,7 @@ const MegaMenu = React.forwardRef<HTMLUListElement, MegaMenuProps>(
   ({ items, className, theme = "dark", ...props }, ref) => {
     const [openMenu, setOpenMenu] = React.useState<string | null>(null);
     const [isHover, setIsHover] = React.useState<number | null>(null);
+    const [hoveredCards, setHoveredCards] = React.useState<Record<string, MegaMenuFeatureCard | undefined>>({});
     const leaveTimerRef = React.useRef<NodeJS.Timeout | null>(null);
 
     const cancelLeave = () => {
@@ -197,50 +202,58 @@ const MegaMenu = React.forwardRef<HTMLUListElement, MegaMenuProps>(
                         borderRadius: 24,
                       }}
                     >
-                      <div className="flex w-fit shrink-0 space-x-8">
+                      <div
+                        className="flex w-fit shrink-0 space-x-8"
+                        onMouseLeave={() => setHoveredCards((prev) => ({ ...prev, [navItem.label]: undefined }))}
+                      >
                         {/* Left Side Feature Card if configured */}
-                        {navItem.featureCard && (
-                          <div className="w-64 shrink-0 rounded-2xl bg-gradient-to-br from-[#EDF3FF] via-[#F8FAFF] to-[#E2EDFF] border border-[#C5D5F9] p-4 flex flex-col justify-between overflow-hidden shadow-2xs">
-                            <div>
-                              {navItem.featureCard.image && (
-                                <div className="relative h-28 w-full rounded-xl overflow-hidden mb-3 bg-slate-100 shadow-2xs">
-                                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                                  <img
-                                    src={navItem.featureCard.image}
-                                    alt={navItem.featureCard.title}
-                                    className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-                                  />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                                  <div className="absolute bottom-2 left-2">
-                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#3D5FE0] text-white shadow-2xs">
-                                      {navItem.featureCard.badge}
-                                    </span>
+                        {(() => {
+                          const activeCard = hoveredCards[navItem.label] || navItem.featureCard;
+                          if (!activeCard) return null;
+                          return (
+                            <div className="w-64 shrink-0 rounded-2xl bg-gradient-to-br from-[#EDF3FF] via-[#F8FAFF] to-[#E2EDFF] border border-[#C5D5F9] p-4 flex flex-col justify-between overflow-hidden shadow-2xs">
+                              <div>
+                                {activeCard.image && (
+                                  <div className="relative h-28 w-full rounded-xl overflow-hidden mb-3 bg-slate-100 shadow-2xs">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                      key={activeCard.image}
+                                      src={activeCard.image}
+                                      alt={activeCard.title}
+                                      className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                                    <div className="absolute bottom-2 left-2">
+                                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#3D5FE0] text-white shadow-2xs">
+                                        {activeCard.badge}
+                                      </span>
+                                    </div>
                                   </div>
-                                </div>
-                              )}
-                              {!navItem.featureCard.image && (
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#3D5FE0] text-white mb-2 shadow-2xs">
-                                  {navItem.featureCard.badge}
-                                </span>
-                              )}
-                              <h4 className="text-sm font-bold text-[#1E2A44] leading-snug">
-                                {navItem.featureCard.title}
-                              </h4>
-                              <p className="mt-1.5 text-xs leading-relaxed text-slate-600">
-                                {navItem.featureCard.description}
-                              </p>
-                            </div>
+                                )}
+                                {!activeCard.image && (
+                                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#3D5FE0] text-white mb-2 shadow-2xs">
+                                    {activeCard.badge}
+                                  </span>
+                                )}
+                                <h4 className="text-sm font-bold text-[#1E2A44] leading-snug">
+                                  {activeCard.title}
+                                </h4>
+                                <p className="mt-1.5 text-xs leading-relaxed text-slate-600 line-clamp-2">
+                                  {activeCard.description}
+                                </p>
+                              </div>
 
-                            <Link
-                              href={navItem.featureCard.href}
-                              onClick={() => setOpenMenu(null)}
-                              className="mt-3.5 inline-flex items-center gap-1.5 text-xs font-bold text-[#3D5FE0] hover:text-[#2846BA] transition group/cta"
-                            >
-                              <span>{navItem.featureCard.ctaText}</span>
-                              <span className="transition-transform group-hover/cta:translate-x-1">&rarr;</span>
-                            </Link>
-                          </div>
-                        )}
+                              <Link
+                                href={activeCard.href}
+                                onClick={() => setOpenMenu(null)}
+                                className="mt-3.5 inline-flex items-center gap-1.5 text-xs font-bold text-[#3D5FE0] hover:text-[#2846BA] transition group/cta"
+                              >
+                                <span>{activeCard.ctaText}</span>
+                                <span className="transition-transform group-hover/cta:translate-x-1">&rarr;</span>
+                              </Link>
+                            </div>
+                          );
+                        })()}
 
                         {navItem.subMenus.map((sub) => (
                           <div className="w-full min-w-[210px]" key={sub.title}>
@@ -260,6 +273,11 @@ const MegaMenu = React.forwardRef<HTMLUListElement, MegaMenuProps>(
                                     <Link
                                       href={href}
                                       onClick={() => setOpenMenu(null)}
+                                      onMouseEnter={() => {
+                                        if (item.featureCard) {
+                                          setHoveredCards((prev) => ({ ...prev, [navItem.label]: item.featureCard }));
+                                        }
+                                      }}
                                       {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                                       className="flex items-start space-x-3.5 group rounded-2xl p-2 -m-2 transition-all duration-150 hover:bg-slate-50"
                                     >
