@@ -10,7 +10,6 @@ import {
   Syringe,
   Truck,
 } from "lucide-react";
-import { getAnnouncements } from "../admin/lib/storage";
 import {
   type AnnouncementIcon,
   type AnnouncementItem,
@@ -43,20 +42,22 @@ export default function AnnouncementBar() {
     () => false
   );
 
+  // Announcements live in the database (managed in /admin) so every visitor
+  // sees the same ticker. The seed list only shows until the fetch returns.
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const sync = () => {
-      setItems(getAnnouncements());
-    };
-    sync();
-
-    window.addEventListener("storage", sync);
-    window.addEventListener("ihealth_announcements_updated", sync);
-
+    let cancelled = false;
+    fetch("/api/announcements")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!cancelled && data && Array.isArray(data.announcements)) {
+          setItems(data.announcements as AnnouncementItem[]);
+        }
+      })
+      .catch(() => {
+        /* keep the seed list */
+      });
     return () => {
-      window.removeEventListener("storage", sync);
-      window.removeEventListener("ihealth_announcements_updated", sync);
+      cancelled = true;
     };
   }, []);
 

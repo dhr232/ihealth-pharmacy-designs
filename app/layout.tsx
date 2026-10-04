@@ -6,6 +6,7 @@ import ChunkErrorRecovery from "./components/ChunkErrorRecovery";
 import AnnouncementBar from "./components/AnnouncementBar";
 import CookieBanner from "./components/CookieBanner";
 import WhatsAppButton from "./components/WhatsAppButton";
+import PublicOnly from "./components/PublicOnly";
 import TextSizeAdjuster from "./components/TextSizeAdjuster";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 
@@ -149,7 +150,6 @@ export const metadata: Metadata = {
     "Pharmacist prescribing Chilliwack",
     "Vaccinations Chilliwack",
     "Shingrix vaccine Chilliwack",
-    "Blister pack pharmacy Chilliwack",
     "Free pharmacy delivery Chilliwack",
     "Yale Rd pharmacy Chilliwack",
     "iHealth Pharmacy",
@@ -222,7 +222,7 @@ const jsonLd = {
   name: PHARMACY_INFO.name,
   legalName: PHARMACY_INFO.legalName,
   description:
-    "Independent community pharmacy in Chilliwack, BC offering prescription refills, minor ailments prescribing, custom compounding, MyHealthPack blister packs, and free same-day local delivery.",
+    "Independent community pharmacy in Chilliwack, BC offering prescription refills, minor ailments prescribing, custom compounding, medication reviews, and free same-day local delivery.",
   url: "https://ihealthpharmacy.ca",
   telephone: `+1-${PHARMACY_INFO.phoneRaw}`,
   currenciesAccepted: "CAD",
@@ -280,14 +280,6 @@ const jsonLd = {
       {
         "@type": "Offer",
         itemOffered: {
-          "@type": "MedicalProcedure",
-          name: "MyHealthPack Blister Compliance Packaging",
-          description: "Complimentary pre-sorted medication blister packaging.",
-        },
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
           "@type": "DeliveryService",
           name: "Free Same-Day Prescription Delivery",
           description: "Free prescription and medication delivery anywhere in Chilliwack.",
@@ -329,11 +321,15 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-sans font-inter-tight">
         <ChunkErrorRecovery />
         <ThemeApplier />
-        <AnnouncementBar />
+        <PublicOnly>
+          <AnnouncementBar />
+        </PublicOnly>
         {children}
-        <CookieBanner />
-        <WhatsAppButton />
-        <TextSizeAdjuster />
+        <PublicOnly>
+          <CookieBanner />
+          <WhatsAppButton />
+          <TextSizeAdjuster />
+        </PublicOnly>
         <div id="google_translate_element" aria-hidden="true" style={{ display: "none" }} />
       </body>
     </html>

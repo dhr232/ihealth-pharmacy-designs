@@ -108,7 +108,7 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
         <p>
           Email:{" "}
           <a
-            href="mailto:hello@ihealthpharmacy.ca"
+            href="mailto:info@ihealthpharmacy.ca"
             className="font-medium text-[var(--brand)] underline-offset-2 hover:underline"
           >
             info@ihealthpharmacy.ca
@@ -192,10 +192,10 @@ export default function TermsPage() {
                 <p className="mt-1 text-sm text-[var(--muted)]">
                   Email us at{" "}
                   <a
-                    href="mailto:hello@ihealthpharmacy.ca"
+                    href="mailto:info@ihealthpharmacy.ca"
                     className="font-medium text-[var(--brand)] underline-offset-2 hover:underline"
                   >
-                    hello@ihealthpharmacy.ca
+                    info@ihealthpharmacy.ca
                   </a>{" "}
                   and we&apos;ll get back to you.
                 </p>

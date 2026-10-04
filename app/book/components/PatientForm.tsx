@@ -476,7 +476,7 @@ export default function PatientForm({
         <div className="flex items-center gap-3">
           <button
             type="submit"
-            className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-6 py-3 text-sm font-bold text-white shadow-md shadow-blue-900/20 transition-all duration-150 active:scale-[0.98]"
+            className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-bold text-white transition"
           >
             <span>Select Date & Time</span>
             <ChevronRight size={16} />

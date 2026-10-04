@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, type ReactNode } from "react";
 import Link from "next/link";
 import {
   FileText,
@@ -8,24 +8,22 @@ import {
   Upload,
   Plus,
   Trash2,
-  CheckCircle,
+  CheckCircle2,
   Truck,
-  MapPin,
-  Clock,
+  Store,
   Phone,
   AlertCircle,
   Loader2,
   ArrowRight,
-  ShieldCheck,
-  Building,
   Mail,
-  Calendar,
+  MessageSquare,
+  PhoneCall,
 } from "lucide-react";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 import { isValidEmail, isValidPhone, formatPhoneNumber } from "@/lib/validation";
-import PhipaBadge from "../PhipaBadge";
 
 type TimingOption = "asap" | "today" | "tomorrow" | "custom";
+type NotificationMethod = "CALL" | "SMS";
 
 export type PrescriptionWorkflowMode = "new" | "refill" | "transfer";
 
@@ -41,13 +39,114 @@ interface PrescriptionFlowProps {
   mode: PrescriptionWorkflowMode;
 }
 
+// Shared form styles -- one input style and one label style across the whole form
+const inputClass =
+  "block min-h-12 w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-lg text-slate-900 placeholder:text-slate-400 transition focus:border-[var(--brand)] focus:outline-none focus:ring-4 focus:ring-[var(--brand)]/15";
+const labelClass = "mb-1.5 block text-base font-semibold text-slate-800";
+const hintClass = "mt-1.5 text-sm text-slate-500";
+
+const TIMING_OPTIONS: { id: TimingOption; label: string }[] = [
+  { id: "asap", label: "As soon as possible" },
+  { id: "today", label: "Later today" },
+  { id: "tomorrow", label: "Tomorrow" },
+  { id: "custom", label: "Choose a date" },
+];
+
+const TIME_WINDOWS = [
+  "Morning (8:30 am – 12:00 pm)",
+  "Early afternoon (12:00 – 2:30 pm)",
+  "Late afternoon (2:30 – 5:00 pm)",
+];
+
+function Section({
+  step,
+  title,
+  description,
+  children,
+}: {
+  step: number;
+  title: string;
+  description?: string;
+  children: ReactNode;
+}) {
+  return (
+    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs sm:p-7">
+      <div className="flex items-start gap-3.5">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--brand)] text-lg font-bold text-white">
+          {step}
+        </span>
+        <div>
+          <h2 className="text-xl font-bold leading-8 text-slate-900 sm:text-2xl">{title}</h2>
+          {description && <p className="mt-1 text-base text-slate-600">{description}</p>}
+        </div>
+      </div>
+      <div className="mt-5 sm:pl-[3.4rem]">{children}</div>
+    </section>
+  );
+}
+
+// Big selectable box used for every single-choice option: large tap area, icon, plain-language
+// detail line and an obvious "selected" state (thick border, tint and tick) for easier reading.
+function Choice({
+  selected,
+  onSelect,
+  icon: Icon,
+  title,
+  detail,
+}: {
+  selected: boolean;
+  onSelect: () => void;
+  icon?: React.ComponentType<{ className?: string }>;
+  title: string;
+  detail?: string;
+  /** kept for call-site compatibility; every choice is now a full-size box */
+  compact?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      role="radio"
+      aria-checked={selected}
+      onClick={onSelect}
+      className={`flex min-h-[4.5rem] w-full items-center gap-4 rounded-2xl border-2 px-4 py-4 text-left transition focus:outline-none focus-visible:ring-4 focus-visible:ring-[var(--brand)]/25 sm:px-5 ${
+        selected
+          ? "border-[var(--brand)] bg-[var(--brand-subtle)] shadow-sm"
+          : "border-slate-300 bg-white hover:border-slate-400 hover:bg-slate-50"
+      }`}
+    >
+      {Icon && (
+        <span
+          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${
+            selected ? "bg-white text-[var(--brand)]" : "bg-slate-100 text-slate-600"
+          }`}
+          aria-hidden="true"
+        >
+          <Icon className="h-6 w-6" />
+        </span>
+      )}
+      <span className="min-w-0 flex-1">
+        <span className="block text-lg font-semibold leading-snug text-slate-900">{title}</span>
+        {detail && <span className="mt-0.5 block text-base leading-snug text-slate-600">{detail}</span>}
+      </span>
+      <span
+        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 ${
+          selected ? "border-[var(--brand)] bg-[var(--brand)] text-white" : "border-slate-300 bg-white"
+        }`}
+        aria-hidden="true"
+      >
+        {selected && <CheckCircle2 className="h-5 w-5" />}
+      </span>
+    </button>
+  );
+}
+
 export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
-  // Mode selection & Tab state
+  // Submission method
   const [submissionTab, setSubmissionTab] = useState<"photos" | "manual">(
     mode === "new" ? "photos" : "manual"
   );
 
-  // Photos state
+  // Photos
   const [photos, setPhotos] = useState<Array<{ name: string; dataUrl: string; size: number }>>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -56,10 +155,18 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
     { id: "item-1", rxNumber: "", medicationName: "", doctorName: "", notes: "" },
   ]);
 
-  // Transfer specific state
+  // Transfer
   const [previousPharmacyName, setPreviousPharmacyName] = useState("");
   const [previousPharmacyPhone, setPreviousPharmacyPhone] = useState("");
   const [transferAll, setTransferAll] = useState(true);
+
+  // Patient
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [patientNotes, setPatientNotes] = useState("");
 
   // Fulfillment
   const [fulfillmentMethod, setFulfillmentMethod] = useState<"PICKUP" | "DELIVERY">("PICKUP");
@@ -73,42 +180,36 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
   const [customDate, setCustomDate] = useState("");
   const [customTime, setCustomTime] = useState("");
 
-  // Patient Info
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [patientNotes, setPatientNotes] = useState("");
+  // Ready notification
+  const [notificationMethod, setNotificationMethod] = useState<NotificationMethod>("CALL");
 
-  // UI States
+  // UI state
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [referenceNumber, setReferenceNumber] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [emailSentStatus, setEmailSentStatus] = useState<boolean | null>(null);
 
-  // Titles & headings based on mode
   const pageDetails = {
     new: {
-      badge: "Doctor Prescription",
-      title: "Submit a New Prescription",
+      eyebrow: "New prescription",
+      title: "Submit a new prescription",
       subtitle:
-        "Upload a photo of your new paper prescription or enter your medication information. Our licensed pharmacists will review and prepare it for dispensary pickup or free Chilliwack delivery.",
+        "Upload a photo of your prescription or enter the details. A pharmacist will review it and have it ready for pickup or free delivery in Chilliwack.",
       typeEnum: "NEW_PRESCRIPTION" as const,
     },
     refill: {
-      badge: "Easy Refill Service",
-      title: "Prescription Refills",
+      eyebrow: "Prescription refill",
+      title: "Request a refill",
       subtitle:
-        "Refill your active medications quickly without waiting in line. Enter your Rx numbers from your bottle or upload a photo of the label.",
+        "Enter the Rx number from your bottle label, or upload a photo of the label. We will let you know when it is ready.",
       typeEnum: "REFILL" as const,
     },
     transfer: {
-      badge: "Pharmacy Transfer",
-      title: "Transfer Prescriptions to iHealth",
+      eyebrow: "Prescription transfer",
+      title: "Transfer your prescriptions to iHealth",
       subtitle:
-        "Switching is fast and completely free. Provide your previous pharmacy's details and our pharmacists will handle the transfer directly with zero interruption to your care.",
+        "Tell us which pharmacy you are leaving. We contact your previous pharmacy and take care of the transfer for you.",
       typeEnum: "TRANSFER" as const,
     },
   }[mode];
@@ -118,10 +219,16 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
+    // Matches the server-side limit in /api/prescriptions/submit
+    if (photos.length + files.length > 10) {
+      setErrorMessage("You can upload up to 10 photos per request.");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
     Array.from(files).forEach((file) => {
-      // Limit to 5MB per photo
       if (file.size > 5 * 1024 * 1024) {
-        setErrorMessage("One of your photos exceeds 5MB. Please choose a smaller image.");
+        setErrorMessage("One of your photos is larger than 5 MB. Please choose a smaller image.");
         return;
       }
       const reader = new FileReader();
@@ -129,18 +236,13 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
         if (event.target?.result) {
           setPhotos((prev) => [
             ...prev,
-            {
-              name: file.name,
-              dataUrl: event.target!.result as string,
-              size: file.size,
-            },
+            { name: file.name, dataUrl: event.target!.result as string, size: file.size },
           ]);
         }
       };
       reader.readAsDataURL(file);
     });
 
-    // Reset input
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -154,13 +256,7 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
   function addItem() {
     setItems((prev) => [
       ...prev,
-      {
-        id: `item-${Date.now()}`,
-        rxNumber: "",
-        medicationName: "",
-        doctorName: "",
-        notes: "",
-      },
+      { id: `item-${Date.now()}`, rxNumber: "", medicationName: "", doctorName: "", notes: "" },
     ]);
   }
 
@@ -170,101 +266,86 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
   }
 
   function updateItem(id: string, field: keyof PrescriptionItem, val: string) {
-    setItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, [field]: val } : item))
-    );
+    setItems((prev) => prev.map((item) => (item.id === id ? { ...item, [field]: val } : item)));
   }
 
-  // Phone input formatting
-  function handlePhoneChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setPhone(formatPhoneNumber(e.target.value));
-  }
-
-  function handlePrevPharmacyPhoneChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setPreviousPharmacyPhone(formatPhoneNumber(e.target.value));
-  }
-
-  // Submission handler
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErrorMessage("");
 
-    // Validate patient essentials
-    if (!firstName.trim()) {
-      setErrorMessage("Please enter your first name.");
-      return;
-    }
-    if (!lastName.trim()) {
-      setErrorMessage("Please enter your last name.");
-      return;
-    }
-    if (!phone.trim() || !isValidPhone(phone)) {
-      setErrorMessage("Please enter a valid 10-digit phone number so our pharmacist can reach you.");
-      return;
-    }
-    if (!email.trim() || !isValidEmail(email)) {
-      setErrorMessage("Please enter a valid email address to receive your confirmation.");
-      return;
-    }
+    // "Transfer all" needs no photos or medication list, whatever tab was last open
+    const effectiveTab = mode === "transfer" && transferAll ? "manual" : submissionTab;
 
-    // Mode-specific validation
-    if (submissionTab === "photos" && photos.length === 0) {
-      setErrorMessage("Please upload at least one prescription photo, or switch to manual entry.");
+    // Section 1: prescription
+    if (effectiveTab === "photos" && photos.length === 0) {
+      setErrorMessage("Please upload at least one photo of your prescription, or switch to entering the details.");
       return;
     }
-
-    if (submissionTab === "manual") {
+    if (effectiveTab === "manual") {
       if (mode === "refill") {
-        const hasValidRx = items.some((item) => item.rxNumber?.trim() || item.medicationName?.trim());
-        if (!hasValidRx) {
-          setErrorMessage("Please enter at least one Rx number or medication name to refill.");
+        if (!items.some((item) => item.rxNumber?.trim() || item.medicationName?.trim())) {
+          setErrorMessage("Please enter at least one Rx number or medication name.");
           return;
         }
       } else if (mode === "transfer") {
         if (!previousPharmacyName.trim()) {
-          setErrorMessage("Please enter the name of your current/previous pharmacy.");
-          return;
-        }
-        if (!dateOfBirth.trim()) {
-          setErrorMessage("Date of birth is required for prescription transfers in BC PharmaNet.");
+          setErrorMessage("Please enter the name of your previous pharmacy.");
           return;
         }
       } else if (mode === "new") {
-        const hasMed = items.some((item) => item.medicationName?.trim());
-        if (!hasMed) {
-          setErrorMessage("Please enter at least one medication name or upload a photo of the script.");
+        if (!items.some((item) => item.medicationName?.trim())) {
+          setErrorMessage("Please enter at least one medication name, or upload a photo of the prescription.");
           return;
         }
       }
     }
 
-    // Delivery validation
-    if (fulfillmentMethod === "DELIVERY" && !deliveryStreet.trim()) {
-      setErrorMessage("Please enter your delivery street address.");
+    // Section 2: patient
+    if (!firstName.trim() || !lastName.trim()) {
+      setErrorMessage("Please enter the patient's first and last name.");
+      return;
+    }
+    if (!isValidPhone(phone)) {
+      setErrorMessage("Please enter a valid 10-digit phone number.");
+      return;
+    }
+    if (!isValidEmail(email)) {
+      setErrorMessage("Please enter a valid email address.");
+      return;
+    }
+    if (!dateOfBirth.trim()) {
+      setErrorMessage("Please enter the patient's date of birth. We need it to find the right file.");
       return;
     }
 
-    // Compute preferred ready date/time display
+    // Section 3: delivery
+    if (fulfillmentMethod === "DELIVERY" && !deliveryStreet.trim()) {
+      setErrorMessage("Please enter the delivery street address.");
+      return;
+    }
+
+    // Section 4: timing
     let readyDateStr = "As soon as possible";
     let readyTimeStr = "";
     if (timingOption === "today") {
-      readyDateStr = "Today";
-      readyTimeStr = "Afternoon (Before 5:00 PM)";
+      readyDateStr = "Later today";
     } else if (timingOption === "tomorrow") {
       readyDateStr = "Tomorrow";
-      readyTimeStr = "Morning";
     } else if (timingOption === "custom") {
-      readyDateStr = customDate || "Selected Date";
-      readyTimeStr = customTime || "Preferred Time";
+      if (!customDate) {
+        setErrorMessage("Please choose the date you would like your prescription ready.");
+        return;
+      }
+      readyDateStr = customDate;
+      readyTimeStr = customTime;
     }
 
     setSubmitting(true);
 
     try {
-      // Upload photos as real files instead of embedding base64 blobs in the
-      // JSON payload / database — keeps prescription images out of Postgres.
+      // Upload photos as files rather than embedding base64 in the JSON payload / database
       let uploadedPhotoUrls: string[] = [];
-      if (submissionTab === "photos" && photos.length > 0) {
+      if (effectiveTab === "photos" && photos.length > 0) {
         try {
           uploadedPhotoUrls = await Promise.all(
             photos.map(async (photo) => {
@@ -285,9 +366,7 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
           );
         } catch (uploadErr) {
           setErrorMessage(
-            uploadErr instanceof Error
-              ? uploadErr.message
-              : "Failed to upload one of your photos. Please try again."
+            uploadErr instanceof Error ? uploadErr.message : "One of your photos could not be uploaded. Please try again."
           );
           setSubmitting(false);
           return;
@@ -300,10 +379,10 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
         lastName: lastName.trim(),
         phone: phone.trim(),
         email: email.trim().toLowerCase(),
-        dateOfBirth: dateOfBirth ? dateOfBirth.trim() : undefined,
-        submissionMode: submissionTab === "photos" ? "PHOTOS" : "MANUAL",
+        dateOfBirth: dateOfBirth.trim(),
+        submissionMode: effectiveTab === "photos" ? "PHOTOS" : "MANUAL",
         items:
-          submissionTab === "manual"
+          effectiveTab === "manual"
             ? items.filter((i) => i.rxNumber?.trim() || i.medicationName?.trim())
             : [],
         photoUrls: uploadedPhotoUrls,
@@ -317,6 +396,7 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
         deliveryPostalCode: fulfillmentMethod === "DELIVERY" ? deliveryPostalCode.trim() : undefined,
         preferredReadyDate: readyDateStr,
         preferredReadyTime: readyTimeStr,
+        notificationMethod,
         patientNotes: patientNotes.trim() || undefined,
       };
 
@@ -325,11 +405,10 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        throw new Error(data.error || "Failed to submit prescription request.");
+        throw new Error(data.error || "We could not submit your request.");
       }
 
       setReferenceNumber(data.referenceNumber);
@@ -338,14 +417,15 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
       setErrorMessage(
-        err instanceof Error ? err.message : "An unexpected error occurred. Please call the dispensary directly."
+        err instanceof Error
+          ? `${err.message} Please try again, or call us at ${PHARMACY_INFO.phoneDisplay}.`
+          : `Something went wrong. Please call us at ${PHARMACY_INFO.phoneDisplay}.`
       );
     } finally {
       setSubmitting(false);
     }
   }
 
-  // Reset form to submit another request
   function handleReset() {
     setSubmitted(false);
     setPhotos([]);
@@ -354,370 +434,242 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
     setErrorMessage("");
   }
 
-  // RENDER: Success Screen
+  // ---------- Success screen ----------
   if (submitted) {
+    const summary: [string, string][] = [
+      ["Request", pageDetails.title.replace(/^./, (c) => c.toUpperCase())],
+      [
+        "Pickup or delivery",
+        fulfillmentMethod === "DELIVERY" ? `Free delivery to ${deliveryStreet}` : "Pickup at the pharmacy",
+      ],
+      [
+        "Ready",
+        timingOption === "custom"
+          ? [customDate, customTime].filter(Boolean).join(", ")
+          : TIMING_OPTIONS.find((o) => o.id === timingOption)?.label ?? "",
+      ],
+      ["We'll let you know by", notificationMethod === "SMS" ? `Text message to ${phone}` : `Phone call to ${phone}`],
+    ];
+
     return (
-      <div className="mx-auto max-w-3xl rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-10">
-        <div className="text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
-            <CheckCircle className="h-10 w-10" />
-          </div>
-
-          <span className="mt-4 inline-block rounded-full bg-emerald-100 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-emerald-800">
-            Request Received
+      <div className="rounded-xl border border-slate-200 bg-white p-6 sm:p-10">
+        <div className="flex items-start gap-4">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--brand-subtle)] text-[var(--brand)]">
+            <CheckCircle2 className="h-6 w-6" />
           </span>
-
-          <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-            Prescription Request Submitted
-          </h2>
-
-          <p className="mt-3 text-base text-slate-600">
-            Thank you, <strong className="text-slate-900">{firstName}</strong>. Our dispensary team has received your submission and is preparing your order.
-          </p>
-
-          {/* Reference Card */}
-          <div className="mt-6 rounded-2xl border border-blue-100 bg-blue-50/80 p-5 text-center">
-            <div className="text-xs font-bold uppercase tracking-wider text-blue-700">
-              Your Reference Tracking Code
-            </div>
-            <div className="mt-1 font-mono text-3xl font-extrabold tracking-tight text-blue-900">
-              {referenceNumber}
-            </div>
-            <p className="mt-2 text-xs text-blue-700">
-              Please save this reference code for dispensary check-in or phone inquiries.
+          <div>
+            <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Request received</h2>
+            <p className="mt-1 text-base text-slate-600">
+              Thank you, {firstName}. A pharmacist will review your request and we will let you know
+              as soon as it is ready.
             </p>
           </div>
+        </div>
 
-          {/* Email Notification Status */}
-          <div className="mt-5 flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4 text-left">
-            <Mail className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" />
-            <div className="text-sm text-slate-700">
-              <strong className="text-slate-900">Confirmation Email Sent:</strong> A complete summary of your request, tracking number, and dispensary pickup/delivery details has been sent to <strong className="text-slate-900">{email}</strong>.
+        <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50 px-5 py-4">
+          <p className="text-sm text-slate-500">Reference number</p>
+          <p className="mt-0.5 font-mono text-2xl font-semibold tracking-tight text-slate-900">
+            {referenceNumber}
+          </p>
+          <p className="mt-1 text-sm text-slate-500">
+            Please quote this number if you call us about your request.
+          </p>
+        </div>
+
+        <dl className="mt-6 divide-y divide-slate-100 border-y border-slate-100">
+          {summary.map(([term, value]) => (
+            <div key={term} className="flex flex-col gap-0.5 py-3 sm:flex-row sm:gap-6">
+              <dt className="w-44 shrink-0 text-sm text-slate-500">{term}</dt>
+              <dd className="text-sm font-medium text-slate-900">{value}</dd>
             </div>
-          </div>
+          ))}
+        </dl>
 
-          {/* Summary Details */}
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 text-left text-sm text-slate-700">
-            <h3 className="font-bold text-slate-900">Submission Summary</h3>
-            <dl className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-              <div>
-                <dt className="text-xs text-slate-500">Service Type</dt>
-                <dd className="font-semibold text-slate-900">{pageDetails.title}</dd>
-              </div>
-              <div>
-                <dt className="text-xs text-slate-500">Fulfillment Method</dt>
-                <dd className="font-semibold text-slate-900">
-                  {fulfillmentMethod === "DELIVERY"
-                    ? `Free Delivery to ${deliveryStreet || "Chilliwack"}`
-                    : "Dispensary Pick Up"}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs text-slate-500">Patient Phone</dt>
-                <dd className="font-semibold text-slate-900">{phone}</dd>
-              </div>
-              <div>
-                <dt className="text-xs text-slate-500">Submission Mode</dt>
-                <dd className="font-semibold text-slate-900">
-                  {submissionTab === "photos"
-                    ? `${photos.length} Photo${photos.length > 1 ? "s" : ""} Uploaded`
-                    : "Direct Form Entry"}
-                </dd>
-              </div>
-            </dl>
-          </div>
+        <p className="mt-5 flex items-start gap-2 text-sm text-slate-600">
+          <Mail className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
+          {emailSentStatus === false
+            ? "We could not send your confirmation email, but your request has been received."
+            : `A confirmation has been sent to ${email}.`}
+        </p>
 
-          {/* Dispensary Contact & Hours */}
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-900 p-5 text-left text-white">
-            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-              <div>
-                <div className="font-bold text-white">iHealth Pharmacy Chilliwack</div>
-                <div className="text-xs text-slate-400">#101 - 45619 Yale Rd, Chilliwack, BC V2P 2N1</div>
-                <div className="mt-2 text-xs text-slate-300">
-                  <strong>Dispensary Hours:</strong> Mon–Fri 8:30 AM – 5:00 PM | Sat 9:00 AM – 12:00 PM | Sun Closed
-                </div>
-              </div>
-              <a
-                href={`tel:${PHARMACY_INFO.phoneClean}`}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-5 py-3 text-sm font-bold text-white shadow-md shadow-blue-600/20 transition-all duration-200"
-              >
-                <Phone className="h-4 w-4" />
-                Call {PHARMACY_INFO.phone}
-              </a>
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <button
-              onClick={handleReset}
-              className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 transition"
-            >
-              Submit Another Request
-            </button>
-            <Link
-              href="/"
-              className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-6 py-3 text-sm font-bold text-white shadow-md shadow-blue-500/25 transition-all duration-200"
-            >
-              Return to Homepage
-            </Link>
-          </div>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <Link
+            href="/"
+            className="inline-flex items-center justify-center rounded-lg bg-[var(--brand)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--brand-hover)]"
+          >
+            Back to homepage
+          </Link>
+          <button
+            type="button"
+            onClick={handleReset}
+            className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+          >
+            Submit another request
+          </button>
+          <a
+            href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
+            className="inline-flex items-center justify-center gap-2 px-2 py-3 text-sm font-semibold text-[var(--brand)] hover:underline sm:ml-auto"
+          >
+            <Phone className="h-4 w-4" />
+            {PHARMACY_INFO.phoneDisplay}
+          </a>
         </div>
       </div>
     );
   }
 
-  // RENDER: Main Interactive Form
+  // ---------- Form ----------
+  const showItems = mode !== "transfer" || !transferAll;
+
   return (
-    <div className="mx-auto max-w-4xl">
-      {/* Header Banner */}
-      <div className="mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-        <div>
-          <span className="inline-block rounded-full bg-blue-50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
-            {pageDetails.badge}
-          </span>
-          <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-            {pageDetails.title}
-          </h1>
-          <p className="mt-3 text-base text-slate-600 sm:text-lg">
-            {pageDetails.subtitle}
-          </p>
-        </div>
-      </div>
+    <div>
+      <header className="mb-7">
+        <p className="text-sm font-semibold text-[var(--brand)]">{pageDetails.eyebrow}</p>
+        <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+          {pageDetails.title}
+        </h1>
+        <p className="mt-3 max-w-2xl text-base leading-relaxed text-slate-600">{pageDetails.subtitle}</p>
+      </header>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Error Alert */}
-        {errorMessage && (
-          <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-red-800">
-            <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-600" />
-            <div className="text-sm font-medium">{errorMessage}</div>
-          </div>
-        )}
-
-        {/* Section 1: Submission Method / Tab Selector */}
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-          <div className="flex flex-col justify-between gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-center">
-            <div>
-              <h2 className="text-xl font-bold text-slate-900">
-                1. How would you like to provide your prescription?
-              </h2>
-              <p className="text-sm text-slate-500">
-                Choose the method that is most convenient for you.
-              </p>
-            </div>
-
-            {/* Senior-friendly big tabs */}
-            <div className="flex rounded-xl bg-slate-100 p-1">
-              <button
-                type="button"
-                onClick={() => setSubmissionTab("photos")}
-                className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-bold transition min-h-[44px] ${
-                  submissionTab === "photos"
-                    ? "bg-white text-blue-700 shadow-sm"
-                    : "text-slate-600 hover:text-slate-900"
-                }`}
-              >
-                <Camera className="h-4 w-4" />
-                Upload Photos
-              </button>
-              <button
-                type="button"
-                onClick={() => setSubmissionTab("manual")}
-                className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-bold transition min-h-[44px] ${
-                  submissionTab === "manual"
-                    ? "bg-white text-blue-700 shadow-sm"
-                    : "text-slate-600 hover:text-slate-900"
-                }`}
-              >
-                <FileText className="h-4 w-4" />
-                Enter Details
-              </button>
-            </div>
-          </div>
-
-          {/* TAB A: Photo Upload */}
-          {submissionTab === "photos" && (
-            <div className="mt-6 space-y-4">
-              <div
-                onClick={() => fileInputRef.current?.click()}
-                className="group relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50/70 p-8 text-center transition hover:border-blue-500 hover:bg-blue-50/30 cursor-pointer min-h-[180px]"
-              >
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handlePhotoUpload}
-                  className="hidden"
-                />
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-blue-600 shadow-sm group-hover:scale-105 transition">
-                  <Upload className="h-6 w-6" />
+      <form onSubmit={handleSubmit} noValidate className="space-y-5">
+        {/* 1. Prescription */}
+        <Section
+          step={1}
+          title={mode === "transfer" ? "Your previous pharmacy" : "Your prescription"}
+          description={
+            mode === "transfer"
+              ? "Which pharmacy filled your prescriptions before?"
+              : "Upload a photo or enter the details, whichever is easier."
+          }
+        >
+          {mode === "transfer" && (
+            <div className="mb-6 space-y-5">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="prevPharmacy" className={labelClass}>
+                    Pharmacy name
+                  </label>
+                  <input
+                    id="prevPharmacy"
+                    type="text"
+                    value={previousPharmacyName}
+                    onChange={(e) => setPreviousPharmacyName(e.target.value)}
+                    placeholder="e.g. Shoppers Drug Mart, Luckakuck Way"
+                    className={inputClass}
+                  />
                 </div>
-                <div className="mt-3 text-base font-bold text-slate-800">
-                  Click or drag photo(s) here to upload
+                <div>
+                  <label htmlFor="prevPharmacyPhone" className={labelClass}>
+                    Pharmacy phone <span className="font-normal text-slate-400">(optional)</span>
+                  </label>
+                  <input
+                    id="prevPharmacyPhone"
+                    type="tel"
+                    value={previousPharmacyPhone}
+                    onChange={(e) => setPreviousPharmacyPhone(formatPhoneNumber(e.target.value))}
+                    placeholder="(604) 555-0199"
+                    className={inputClass}
+                  />
                 </div>
-                <p className="mt-1 text-xs text-slate-500">
-                  Take a photo of your doctor prescription paper or medication bottle label (JPG, PNG, WebP up to 5MB each).
-                </p>
               </div>
 
-              {/* Uploaded Photos Preview Grid */}
-              {photos.length > 0 && (
-                <div className="mt-4">
-                  <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-                    Attached Photos ({photos.length})
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                    {photos.map((photo, idx) => (
-                      <div
-                        key={idx}
-                        className="group relative overflow-hidden rounded-xl border border-slate-200 bg-slate-100 aspect-square"
-                      >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={photo.dataUrl}
-                          alt={`Prescription upload ${idx + 1}`}
-                          className="h-full w-full object-cover"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => removePhoto(idx)}
-                          className="absolute top-1.5 right-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-red-600 text-white shadow-md hover:bg-red-700 transition"
-                          title="Remove photo"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              <div role="radiogroup" aria-label="What to transfer" className="grid gap-3 sm:grid-cols-2">
+                <Choice
+                  selected={transferAll}
+                  onSelect={() => setTransferAll(true)}
+                  title="All my prescriptions"
+                  detail="We transfer everything on file"
+                />
+                <Choice
+                  selected={!transferAll}
+                  onSelect={() => setTransferAll(false)}
+                  title="Only some prescriptions"
+                  detail="List the medications below"
+                />
+              </div>
             </div>
           )}
 
-          {/* TAB B: Manual Form Entry */}
-          {submissionTab === "manual" && (
-            <div className="mt-6 space-y-6">
-              {/* Transfer Mode Specifics */}
-              {mode === "transfer" && (
-                <div className="rounded-2xl border border-purple-100 bg-purple-50/60 p-5 space-y-4">
-                  <div className="flex items-center gap-2 text-purple-900 font-bold text-base">
-                    <Building className="h-5 w-5 text-purple-700" />
-                    Previous Pharmacy Information
-                  </div>
+          {(mode !== "transfer" || !transferAll) && (
+            <>
+              <div role="radiogroup" aria-label="How to provide your prescription" className="grid gap-3 sm:grid-cols-2">
+                <Choice
+                  selected={submissionTab === "photos"}
+                  onSelect={() => setSubmissionTab("photos")}
+                  icon={Camera}
+                  title="Upload a photo"
+                  detail="Take a picture of the paper or bottle label"
+                />
+                <Choice
+                  selected={submissionTab === "manual"}
+                  onSelect={() => setSubmissionTab("manual")}
+                  icon={FileText}
+                  title="Type the details"
+                  detail="Write in the medication names yourself"
+                />
+              </div>
 
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                        Previous Pharmacy Name *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={previousPharmacyName}
-                        onChange={(e) => setPreviousPharmacyName(e.target.value)}
-                        placeholder="e.g. Shoppers Drug Mart (Downtown)"
-                        className="w-full rounded-xl border border-slate-300 px-4 py-3 text-base text-slate-900 placeholder-slate-400 focus:border-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-600 min-h-[48px]"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                        Previous Pharmacy Phone (Optional)
-                      </label>
-                      <input
-                        type="tel"
-                        value={previousPharmacyPhone}
-                        onChange={handlePrevPharmacyPhoneChange}
-                        placeholder="(604) 555-0199"
-                        className="w-full rounded-xl border border-slate-300 px-4 py-3 text-base text-slate-900 placeholder-slate-400 focus:border-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-600 min-h-[48px]"
-                      />
-                    </div>
-                  </div>
+              {submissionTab === "photos" && (
+                <div className="mt-5">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex min-h-40 w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-8 text-center transition hover:border-[var(--brand)] hover:bg-[var(--brand-subtle)]/40"
+                  >
+                    <Upload className="h-8 w-8 text-[var(--brand)]" />
+                    <span className="mt-2 text-lg font-semibold text-slate-900">Tap here to choose photos</span>
+                    <span className="mt-1 text-sm text-slate-600">
+                      Prescription paper or bottle label. JPG, PNG or WebP, up to 5 MB each.
+                    </span>
+                  </button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handlePhotoUpload}
+                    className="hidden"
+                  />
 
-                  {/* Transfer Scope */}
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                      What would you like to transfer?
-                    </label>
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                      <button
-                        type="button"
-                        onClick={() => setTransferAll(true)}
-                        className={`flex items-start gap-3 rounded-xl border p-4 text-left transition min-h-[64px] ${
-                          transferAll
-                            ? "border-purple-600 bg-white ring-2 ring-purple-600 text-purple-950 font-bold"
-                            : "border-slate-300 bg-white/70 text-slate-700 hover:border-slate-400"
-                        }`}
-                      >
-                        <div
-                          className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
-                            transferAll ? "border-purple-600 bg-purple-600 text-white" : "border-slate-400"
-                          }`}
+                  {photos.length > 0 && (
+                    <ul className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-5">
+                      {photos.map((photo, idx) => (
+                        <li
+                          key={idx}
+                          className="relative aspect-square overflow-hidden rounded-lg border border-slate-200 bg-slate-100"
                         >
-                          {transferAll && <div className="h-2 w-2 rounded-full bg-white" />}
-                        </div>
-                        <div>
-                          <div className="text-sm font-bold">Transfer ALL Prescriptions</div>
-                          <div className="text-xs text-slate-500 font-normal">
-                            We will transfer all active repeats on file directly.
-                          </div>
-                        </div>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setTransferAll(false)}
-                        className={`flex items-start gap-3 rounded-xl border p-4 text-left transition min-h-[64px] ${
-                          !transferAll
-                            ? "border-purple-600 bg-white ring-2 ring-purple-600 text-purple-950 font-bold"
-                            : "border-slate-300 bg-white/70 text-slate-700 hover:border-slate-400"
-                        }`}
-                      >
-                        <div
-                          className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
-                            !transferAll ? "border-purple-600 bg-purple-600 text-white" : "border-slate-400"
-                          }`}
-                        >
-                          {!transferAll && <div className="h-2 w-2 rounded-full bg-white" />}
-                        </div>
-                        <div>
-                          <div className="text-sm font-bold">Transfer Specific Medications</div>
-                          <div className="text-xs text-slate-500 font-normal">
-                            List individual medications you want transferred below.
-                          </div>
-                        </div>
-                      </button>
-                    </div>
-                  </div>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={photo.dataUrl}
+                            alt={`Prescription photo ${idx + 1}`}
+                            className="h-full w-full object-cover"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removePhoto(idx)}
+                            aria-label={`Remove photo ${idx + 1}`}
+                            className="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-white/95 text-slate-700 shadow hover:text-red-600"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               )}
 
-              {/* Dynamic Medication Line Items (shown for Refills, New Scripts, or Transfer Specific) */}
-              {(mode !== "transfer" || !transferAll) && (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                      Medication Details
-                    </span>
-                    <span className="text-xs text-slate-500">
-                      {items.length} item{items.length > 1 ? "s" : ""} added
-                    </span>
-                  </div>
-
+              {submissionTab === "manual" && showItems && (
+                <div className="mt-5 space-y-3">
                   {items.map((item, index) => (
-                    <div
-                      key={item.id}
-                      className="rounded-2xl border border-slate-200 bg-slate-50/60 p-4 sm:p-5 relative"
-                    >
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="inline-flex items-center gap-1.5 rounded-lg bg-blue-100 px-2.5 py-1 text-xs font-bold text-blue-800">
-                          Medication #{index + 1}
-                        </span>
+                    <div key={item.id} className="rounded-2xl border-2 border-slate-200 bg-slate-50/60 p-4 sm:p-5">
+                      <div className="mb-3 flex items-center justify-between">
+                        <span className="text-base font-bold text-slate-700">Medication {index + 1}</span>
                         {items.length > 1 && (
                           <button
                             type="button"
                             onClick={() => removeItem(item.id)}
-                            className="flex items-center gap-1 text-xs font-semibold text-red-600 hover:text-red-800 transition"
+                            className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-red-600"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
                             Remove
@@ -725,60 +677,63 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
                         )}
                       </div>
 
-                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                      <div className="grid gap-4 sm:grid-cols-2">
                         {mode === "refill" && (
                           <div>
-                            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                              Rx Number (from bottle) *
+                            <label htmlFor={`rx-${item.id}`} className={labelClass}>
+                              Rx number
                             </label>
                             <input
+                              id={`rx-${item.id}`}
                               type="text"
                               value={item.rxNumber || ""}
                               onChange={(e) => updateItem(item.id, "rxNumber", e.target.value)}
-                              placeholder="e.g. 1234567"
-                              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-base text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 min-h-[48px]"
+                              placeholder="From your bottle label"
+                              className={inputClass}
                             />
+                            <p className={hintClass}>The number printed on the pharmacy label of your bottle.</p>
                           </div>
                         )}
-
                         <div>
-                          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                            {mode === "refill" ? "Medication Name (Optional)" : "Medication Name *"}
+                          <label htmlFor={`med-${item.id}`} className={labelClass}>
+                            Medication name
+                            {mode === "refill" && <span className="font-normal text-slate-400"> (optional)</span>}
                           </label>
                           <input
+                            id={`med-${item.id}`}
                             type="text"
                             value={item.medicationName || ""}
                             onChange={(e) => updateItem(item.id, "medicationName", e.target.value)}
-                            placeholder={mode === "refill" ? "e.g. Metformin 500mg" : "e.g. Amoxicillin 500mg"}
-                            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-base text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 min-h-[48px]"
+                            placeholder={mode === "refill" ? "e.g. Metformin 500 mg" : "e.g. Amoxicillin 500 mg"}
+                            className={inputClass}
                           />
                         </div>
-
                         {mode === "new" && (
                           <div>
-                            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                              Prescribing Doctor / Clinic
+                            <label htmlFor={`doc-${item.id}`} className={labelClass}>
+                              Prescriber or clinic <span className="font-normal text-slate-400">(optional)</span>
                             </label>
                             <input
+                              id={`doc-${item.id}`}
                               type="text"
                               value={item.doctorName || ""}
                               onChange={(e) => updateItem(item.id, "doctorName", e.target.value)}
-                              placeholder="e.g. Dr. Smith / Chilliwack Clinic"
-                              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-base text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 min-h-[48px]"
+                              placeholder="e.g. Dr. Smith"
+                              className={inputClass}
                             />
                           </div>
                         )}
-
-                        <div className={mode === "transfer" ? "sm:col-span-2" : ""}>
-                          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                            Specific Instructions or Notes
+                        <div className={mode === "transfer" ? "" : "sm:col-span-2"}>
+                          <label htmlFor={`notes-${item.id}`} className={labelClass}>
+                            Notes <span className="font-normal text-slate-400">(optional)</span>
                           </label>
                           <input
+                            id={`notes-${item.id}`}
                             type="text"
                             value={item.notes || ""}
                             onChange={(e) => updateItem(item.id, "notes", e.target.value)}
-                            placeholder="e.g. 30-day supply, blister pack requested"
-                            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-base text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 min-h-[48px]"
+                            placeholder="e.g. 90-day supply"
+                            className={inputClass}
                           />
                         </div>
                       </div>
@@ -788,365 +743,293 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
                   <button
                     type="button"
                     onClick={addItem}
-                    className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-slate-300 p-3.5 text-sm font-bold text-blue-700 hover:border-blue-500 hover:bg-blue-50/40 transition min-h-[48px]"
+                    className="inline-flex min-h-12 items-center gap-2 rounded-xl border-2 border-[var(--brand)] px-4 text-base font-semibold text-[var(--brand)] transition hover:bg-[var(--brand-subtle)]"
                   >
                     <Plus className="h-4 w-4" />
-                    Add Another Prescription
+                    Add another medication
                   </button>
                 </div>
               )}
-            </div>
+            </>
           )}
-        </div>
+        </Section>
 
-        {/* Section 2: Fulfillment Method (Pick Up vs Free Delivery) */}
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-          <h2 className="text-xl font-bold text-slate-900">
-            2. Choose Pick Up or Free Delivery
-          </h2>
-          <p className="mt-1 text-sm text-slate-500">
-            Select how you would like to receive your medications.
-          </p>
-
-          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <button
-              type="button"
-              onClick={() => setFulfillmentMethod("PICKUP")}
-              className={`flex items-start gap-4 rounded-2xl border p-5 text-left transition min-h-[80px] ${
-                fulfillmentMethod === "PICKUP"
-                  ? "border-blue-600 bg-blue-50/50 ring-2 ring-blue-600 text-blue-950 font-bold"
-                  : "border-slate-300 bg-white text-slate-700 hover:border-slate-400"
-              }`}
-            >
-              <div
-                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                  fulfillmentMethod === "PICKUP" ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-600"
-                }`}
-              >
-                <MapPin className="h-5 w-5" />
-              </div>
-              <div>
-                <div className="text-base font-bold">Pick Up at Dispensary</div>
-                <div className="mt-1 text-xs text-slate-500 font-normal">
-                  #101 - 45619 Yale Rd, Chilliwack (Free parking available)
-                </div>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setFulfillmentMethod("DELIVERY")}
-              className={`flex items-start gap-4 rounded-2xl border p-5 text-left transition min-h-[80px] ${
-                fulfillmentMethod === "DELIVERY"
-                  ? "border-emerald-600 bg-emerald-50/50 ring-2 ring-emerald-600 text-emerald-950 font-bold"
-                  : "border-slate-300 bg-white text-slate-700 hover:border-slate-400"
-              }`}
-            >
-              <div
-                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                  fulfillmentMethod === "DELIVERY" ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-600"
-                }`}
-              >
-                <Truck className="h-5 w-5" />
-              </div>
-              <div>
-                <div className="text-base font-bold">Free Home Delivery</div>
-                <div className="mt-1 text-xs text-slate-500 font-normal">
-                  Delivered safely to your door anywhere in Chilliwack
-                </div>
-              </div>
-            </button>
-          </div>
-
-          {/* Delivery Address fields */}
-          {fulfillmentMethod === "DELIVERY" && (
-            <div className="mt-6 rounded-2xl border border-emerald-100 bg-emerald-50/50 p-5 space-y-4">
-              <div className="text-sm font-bold text-emerald-900">
-                Delivery Address (Chilliwack &amp; Surrounding Areas)
-              </div>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Street Address *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={deliveryStreet}
-                    onChange={(e) => setDeliveryStreet(e.target.value)}
-                    placeholder="e.g. 45619 Yale Rd"
-                    className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-base text-slate-900 placeholder-slate-400 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600 min-h-[48px]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Unit / Suite (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={deliveryUnit}
-                    onChange={(e) => setDeliveryUnit(e.target.value)}
-                    placeholder="e.g. Apt 204"
-                    className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-base text-slate-900 placeholder-slate-400 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600 min-h-[48px]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    City
-                  </label>
-                  <input
-                    type="text"
-                    value={deliveryCity}
-                    onChange={(e) => setDeliveryCity(e.target.value)}
-                    className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-base text-slate-900 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600 min-h-[48px]"
-                  />
-                </div>
-                <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Postal Code (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={deliveryPostalCode}
-                    onChange={(e) => setDeliveryPostalCode(e.target.value.toUpperCase())}
-                    placeholder="e.g. V2P 2N1"
-                    className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-base text-slate-900 placeholder-slate-400 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600 min-h-[48px]"
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Section 3: Preferred Ready Timing */}
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-          <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+        {/* 2. Patient information */}
+        <Section
+          step={2}
+          title="Patient information"
+          description="So we can match your records and reach you if we have a question."
+        >
+          <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <h2 className="text-xl font-bold text-slate-900">
-                3. Preferred Ready Time
-              </h2>
-              <p className="text-sm text-slate-500">
-                Let us know when you need your prescription ready.
-              </p>
+              <label htmlFor="firstName" className={labelClass}>
+                First name
+              </label>
+              <input
+                id="firstName"
+                type="text"
+                autoComplete="given-name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className={inputClass}
+              />
             </div>
-            <div className="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-3 py-1.5 text-xs text-slate-600 font-medium">
-              <Clock className="h-3.5 w-3.5 text-blue-600" />
-              Hours: Mon–Fri 8:30 AM – 5:00 PM, Sat 9:00 AM – 12:00 PM
+            <div>
+              <label htmlFor="lastName" className={labelClass}>
+                Last name
+              </label>
+              <input
+                id="lastName"
+                type="text"
+                autoComplete="family-name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label htmlFor="phone" className={labelClass}>
+                Phone number
+              </label>
+              <input
+                id="phone"
+                type="tel"
+                autoComplete="tel"
+                value={phone}
+                onChange={(e) => setPhone(formatPhoneNumber(e.target.value))}
+                placeholder="(604) 555-0123"
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className={labelClass}>
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="name@example.com"
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label htmlFor="dob" className={labelClass}>
+                Date of birth
+              </label>
+              <input
+                id="dob"
+                type="date"
+                autoComplete="bday"
+                value={dateOfBirth}
+                onChange={(e) => setDateOfBirth(e.target.value)}
+                aria-required="true"
+                className={inputClass}
+              />
+              <p className={hintClass}>Needed to find the right patient file.</p>
+            </div>
+            <div className="sm:col-span-2">
+              <label htmlFor="notes" className={labelClass}>
+                Notes for the pharmacist <span className="font-normal text-slate-400">(optional)</span>
+              </label>
+              <textarea
+                id="notes"
+                rows={3}
+                value={patientNotes}
+                onChange={(e) => setPatientNotes(e.target.value)}
+                placeholder="Allergies, questions, or over-the-counter items to add to this order"
+                className={inputClass}
+              />
             </div>
           </div>
+        </Section>
 
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {[
-              { id: "asap", label: "As Soon As Possible" },
-              { id: "today", label: "Today (Afternoon)" },
-              { id: "tomorrow", label: "Tomorrow" },
-              { id: "custom", label: "Custom Date" },
-            ].map((option) => (
-              <button
+        {/* 3. Preferred ready time */}
+        <Section step={3} title="Preferred ready time" description={`Store hours: ${PHARMACY_INFO.hoursSummary}`}>
+          <div role="radiogroup" aria-label="Preferred ready time" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {TIMING_OPTIONS.map((option) => (
+              <Choice
                 key={option.id}
-                type="button"
-                onClick={() => setTimingOption(option.id as TimingOption)}
-                className={`rounded-xl border p-3.5 text-center text-sm font-bold transition min-h-[48px] ${
-                  timingOption === option.id
-                    ? "border-blue-600 bg-blue-50 text-blue-900 ring-2 ring-blue-600"
-                    : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
-                }`}
-              >
-                {option.label}
-              </button>
+                compact
+                selected={timingOption === option.id}
+                onSelect={() => setTimingOption(option.id)}
+                title={option.label}
+              />
             ))}
           </div>
 
           {timingOption === "custom" && (
-            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Preferred Date
+                <label htmlFor="readyDate" className={labelClass}>
+                  Date
                 </label>
                 <input
+                  id="readyDate"
                   type="date"
                   value={customDate}
                   onChange={(e) => setCustomDate(e.target.value)}
-                  className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-base text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 min-h-[48px]"
+                  className={inputClass}
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Preferred Time Window
+                <label htmlFor="readyTime" className={labelClass}>
+                  Time of day <span className="font-normal text-slate-400">(optional)</span>
                 </label>
                 <select
+                  id="readyTime"
                   value={customTime}
                   onChange={(e) => setCustomTime(e.target.value)}
-                  className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-base text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 min-h-[48px]"
+                  className={inputClass}
                 >
-                  <option value="">Select time window</option>
-                  <option value="Morning (9:00 AM - 12:00 PM)">Morning (9:00 AM - 12:00 PM)</option>
-                  <option value="Early Afternoon (12:00 PM - 2:30 PM)">Early Afternoon (12:00 PM - 2:30 PM)</option>
-                  <option value="Late Afternoon (2:30 PM - 5:00 PM)">Late Afternoon (2:30 PM - 5:00 PM)</option>
+                  <option value="">Any time</option>
+                  {TIME_WINDOWS.map((w) => (
+                    <option key={w} value={w}>
+                      {w}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
           )}
-        </div>
+        </Section>
 
-        {/* Section 4: Patient Details */}
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-          <h2 className="text-xl font-bold text-slate-900">
-            4. Patient Information
-          </h2>
-          <p className="mt-1 text-sm text-slate-500">
-            Please provide your details so our dispensary can confirm your identity and match records in BC PharmaNet.
-          </p>
-
-          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                First Name *
-              </label>
-              <input
-                type="text"
-                required
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                placeholder="e.g. John"
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-base text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 min-h-[48px]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Last Name *
-              </label>
-              <input
-                type="text"
-                required
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                placeholder="e.g. Doe"
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-base text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 min-h-[48px]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Phone Number (for pharmacist verification) *
-              </label>
-              <input
-                type="tel"
-                required
-                value={phone}
-                onChange={handlePhoneChange}
-                placeholder="(604) 555-0123"
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-base text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 min-h-[48px]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Email Address (for order confirmation) *
-              </label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="john.doe@example.com"
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-base text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 min-h-[48px]"
-              />
-            </div>
-
-            <div className="sm:col-span-2">
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Date of Birth {mode === "transfer" ? "(Required for PharmaNet Transfer) *" : "(Optional)"}
-              </label>
-              <input
-                type="date"
-                required={mode === "transfer"}
-                value={dateOfBirth}
-                onChange={(e) => setDateOfBirth(e.target.value)}
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-base text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 min-h-[48px]"
-              />
-            </div>
-
-            <div className="sm:col-span-2">
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Questions, OTC Items, or Notes for the Pharmacist (Optional)
-              </label>
-              <textarea
-                rows={3}
-                value={patientNotes}
-                onChange={(e) => setPatientNotes(e.target.value)}
-                placeholder="Include any vitamins, over-the-counter items you need added to this order, allergies, or questions."
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-base text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600"
-              />
-            </div>
+        {/* 4. Ready notification */}
+        <Section step={4} title="How should we tell you it's ready?" description="Choose how you would like us to reach you.">
+          <div role="radiogroup" aria-label="Ready notification method" className="grid gap-3 sm:grid-cols-2">
+            <Choice
+              selected={notificationMethod === "CALL"}
+              onSelect={() => setNotificationMethod("CALL")}
+              icon={PhoneCall}
+              title="Phone call"
+              detail={phone.trim() ? `We call ${phone.trim()}` : "We call the number above"}
+            />
+            <Choice
+              selected={notificationMethod === "SMS"}
+              onSelect={() => setNotificationMethod("SMS")}
+              icon={MessageSquare}
+              title="Text message"
+              detail={phone.trim() ? `We text ${phone.trim()}` : "We text the number above"}
+            />
           </div>
-        </div>
+        </Section>
 
-        {/* Section 5: Senior-friendly Email-Only Notification Preference */}
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-          <h2 className="text-xl font-bold text-slate-900">
-            5. Ready Notification Method
-          </h2>
-          <p className="mt-1 text-sm text-slate-500">
-            How would you like to be notified when your prescription is ready?
-          </p>
-
-          <div className="mt-4 rounded-2xl border-2 border-blue-600 bg-blue-50/60 p-5">
-            <div className="flex items-center gap-3">
-              <input
-                type="radio"
-                id="notify-email"
-                name="notify-pref"
-                checked
-                readOnly
-                className="h-5 w-5 text-blue-600 border-slate-300 focus:ring-blue-600"
-              />
-              <label htmlFor="notify-email" className="font-bold text-slate-900 text-base cursor-pointer">
-                Notify me when ready by: Email
-              </label>
-            </div>
-            <p className="mt-2 text-sm text-slate-600 pl-8">
-              We will automatically dispatch a confirmation email with your reference code, preparation status, and pickup/delivery instructions to <strong className="text-slate-900">{email || "your email address"}</strong>.
-            </p>
+        {/* 5. Pickup or delivery */}
+        <Section step={5} title="Pickup or delivery">
+          <div role="radiogroup" aria-label="Pickup or delivery" className="grid gap-3 sm:grid-cols-2">
+            <Choice
+              compact
+              selected={fulfillmentMethod === "PICKUP"}
+              onSelect={() => setFulfillmentMethod("PICKUP")}
+              icon={Store}
+              title="Pick up in store"
+              detail={PHARMACY_INFO.address.street}
+            />
+            <Choice
+              compact
+              selected={fulfillmentMethod === "DELIVERY"}
+              onSelect={() => setFulfillmentMethod("DELIVERY")}
+              icon={Truck}
+              title="Free delivery"
+              detail="Anywhere in Chilliwack"
+            />
           </div>
-        </div>
 
-        {/* Action Button & Reassurance */}
-        <div className="space-y-4">
+          {fulfillmentMethod === "DELIVERY" && (
+            <div className="mt-5 grid gap-4 sm:grid-cols-6">
+              <div className="sm:col-span-4">
+                <label htmlFor="street" className={labelClass}>
+                  Street address
+                </label>
+                <input
+                  id="street"
+                  type="text"
+                  autoComplete="address-line1"
+                  value={deliveryStreet}
+                  onChange={(e) => setDeliveryStreet(e.target.value)}
+                  className={inputClass}
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label htmlFor="unit" className={labelClass}>
+                  Unit <span className="font-normal text-slate-400">(optional)</span>
+                </label>
+                <input
+                  id="unit"
+                  type="text"
+                  autoComplete="address-line2"
+                  value={deliveryUnit}
+                  onChange={(e) => setDeliveryUnit(e.target.value)}
+                  className={inputClass}
+                />
+              </div>
+              <div className="sm:col-span-3">
+                <label htmlFor="city" className={labelClass}>
+                  City
+                </label>
+                <input
+                  id="city"
+                  type="text"
+                  autoComplete="address-level2"
+                  value={deliveryCity}
+                  onChange={(e) => setDeliveryCity(e.target.value)}
+                  className={inputClass}
+                />
+              </div>
+              <div className="sm:col-span-3">
+                <label htmlFor="postal" className={labelClass}>
+                  Postal code <span className="font-normal text-slate-400">(optional)</span>
+                </label>
+                <input
+                  id="postal"
+                  type="text"
+                  autoComplete="postal-code"
+                  value={deliveryPostalCode}
+                  onChange={(e) => setDeliveryPostalCode(e.target.value.toUpperCase())}
+                  placeholder="V2P 2N1"
+                  className={inputClass}
+                />
+              </div>
+            </div>
+          )}
+        </Section>
+
+        {errorMessage && (
+          <div
+            role="alert"
+            className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          >
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
+        <div className="flex flex-col gap-4 pt-1 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-slate-500">
+            Every request is reviewed by a pharmacist.{" "}
+            <Link href="/privacy" className="underline underline-offset-2 hover:text-slate-700">
+              How we protect your information
+            </Link>
+          </p>
           <button
             type="submit"
             disabled={submitting}
-            className="flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-8 py-4 text-lg font-bold text-white shadow-xl shadow-blue-600/25 disabled:opacity-60 transition-all duration-200 min-h-[56px] cursor-pointer"
+            className="inline-flex min-h-14 shrink-0 items-center justify-center gap-2 rounded-xl bg-[var(--brand)] px-8 py-3.5 text-lg font-semibold text-white transition hover:bg-[var(--brand-hover)] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? (
               <>
-                <Loader2 className="h-6 w-6 animate-spin" />
-                Submitting Your Request...
+                <Loader2 className="h-5 w-5 animate-spin" />
+                Submitting...
               </>
             ) : (
               <>
-                Submit Prescription Request
+                Submit request
                 <ArrowRight className="h-5 w-5" />
               </>
             )}
           </button>
-
-          <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500 pt-1">
-            <PhipaBadge variant="inline" />
-            <span className="flex items-center gap-1.5">
-              <ShieldCheck className="h-4 w-4 text-emerald-600" />
-              Confidential &amp; BC PharmaNet Compliant
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Clock className="h-4 w-4 text-blue-600" />
-              Reviewed by a Licensed BC Pharmacist
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Truck className="h-4 w-4 text-emerald-600" />
-              Free Delivery Across Chilliwack
-            </span>
-          </div>
         </div>
       </form>
     </div>

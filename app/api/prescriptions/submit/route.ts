@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+import { promises as fs } from "fs";
 import type { Prisma } from "@prisma/client";
 import { prisma, withPrismaFallback } from "@/lib/prisma";
-import { sendPrescriptionConfirmationEmail } from "@/lib/resend";
+import { sendPrescriptionConfirmationEmail, sendStaffRefillNotification } from "@/lib/resend";
 import { isValidEmail } from "@/lib/validation";
+import { resolvePrescriptionPhoto } from "@/lib/uploads";
+
+const MAX_PHOTOS = 10;
 
 export interface PrescriptionSubmitPayload {
   type: "NEW_PRESCRIPTION" | "REFILL" | "TRANSFER";
@@ -30,6 +34,7 @@ export interface PrescriptionSubmitPayload {
   deliveryPostalCode?: string;
   preferredReadyDate?: string;
   preferredReadyTime?: string;
+  notificationMethod?: "CALL" | "SMS";
   patientNotes?: string;
   newsletterOptIn?: boolean;
 }
@@ -61,7 +66,7 @@ export async function POST(request: NextRequest) {
       dateOfBirth,
       submissionMode = "MANUAL",
       items = [],
-      photoUrls = [],
+      photoUrls: rawPhotoUrls = [],
       previousPharmacyName,
       previousPharmacyPhone,
       transferAll,
@@ -72,9 +77,21 @@ export async function POST(request: NextRequest) {
       deliveryPostalCode,
       preferredReadyDate,
       preferredReadyTime,
+      notificationMethod: rawNotificationMethod,
       patientNotes,
       newsletterOptIn = false,
     } = body;
+
+    // Patients are told by phone call or text message; anything other than "SMS" falls back to a call
+    const notificationMethod: "CALL" | "SMS" = rawNotificationMethod === "SMS" ? "SMS" : "CALL";
+
+    // Date of birth is required on every prescription request
+    if (!dateOfBirth?.trim() || isNaN(new Date(dateOfBirth).getTime())) {
+      return NextResponse.json(
+        { success: false, error: "Date of birth is required." },
+        { status: 400 }
+      );
+    }
 
     // Validate patient identity
     if (!firstName?.trim()) {
@@ -101,6 +118,13 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Only accept photos that went through our upload route (staff-only URLs we issued)
+    const photoFiles = (Array.isArray(rawPhotoUrls) ? rawPhotoUrls : [])
+      .slice(0, MAX_PHOTOS)
+      .map((url) => (typeof url === "string" ? resolvePrescriptionPhoto(url) : null))
+      .filter((f): f is NonNullable<typeof f> => f !== null);
+    const photoUrls = photoFiles.map((f) => `/api/prescriptions/photo/${f.filename}`);
 
     // Validate mode specifics
     if (submissionMode === "PHOTOS" && (!photoUrls || photoUrls.length === 0)) {
@@ -178,6 +202,7 @@ export async function POST(request: NextRequest) {
               deliveryPostalCode: deliveryPostalCode?.trim() || null,
               preferredReadyDate: preferredReadyDate?.trim() || null,
               preferredReadyTime: preferredReadyTime?.trim() || null,
+              notificationMethod,
               patientNotes: patientNotes?.trim() || null,
               newsletterOptIn: Boolean(newsletterOptIn),
             },
@@ -229,6 +254,7 @@ export async function POST(request: NextRequest) {
         deliveryAddress: deliveryAddressFormatted,
         preferredReadyDate: preferredReadyDate || undefined,
         preferredReadyTime: preferredReadyTime || undefined,
+        notificationMethod,
         patientNotes: patientNotes?.trim() || undefined,
         submittedAt: new Date().toLocaleDateString("en-CA", {
           year: "numeric",
@@ -238,6 +264,56 @@ export async function POST(request: NextRequest) {
       });
     } catch (emailErr) {
       console.error("[Prescription API] Resend email dispatch failed:", emailErr);
+    }
+
+    // Alert the dispensary so the request is actually picked up by staff
+    const typeLabel =
+      type === "NEW_PRESCRIPTION" ? "New Prescription" : type === "TRANSFER" ? "Prescription Transfer" : "Prescription Refill";
+    const itemSummary = items
+      .map((i) => [i.rxNumber && `Rx ${i.rxNumber}`, i.medicationName, i.doctorName && `(${i.doctorName})`, i.notes && `- ${i.notes}`]
+        .filter(Boolean)
+        .join(" "))
+      .filter(Boolean);
+    // Attach the photos so staff can see them straight from the alert email
+    const attachments = (
+      await Promise.all(
+        photoFiles.map(async (f, i) => {
+          try {
+            return { filename: `${referenceNumber}-photo-${i + 1}${f.filename.slice(f.filename.lastIndexOf("."))}`, content: await fs.readFile(f.filePath) };
+          } catch {
+            return null;
+          }
+        })
+      )
+    ).filter((a): a is NonNullable<typeof a> => a !== null);
+
+    try {
+      await sendStaffRefillNotification({
+        confirmationId: referenceNumber,
+        requestTitle: `New ${typeLabel} Request`,
+        patientName: `${firstName.trim()} ${lastName.trim()}`,
+        patientPhone: phone.trim(),
+        patientEmail: email.trim().toLowerCase(),
+        patientDob: dateOfBirth || undefined,
+        refillType: type === "TRANSFER" ? "transfer" : submissionMode === "PHOTOS" ? "photo" : "rx_numbers",
+        rxNumbers:
+          submissionMode === "PHOTOS"
+            ? `${photoUrls.length} photo${photoUrls.length === 1 ? "" : "s"} attached to this email`
+            : transferAll && type === "TRANSFER"
+            ? "Transfer all active prescriptions"
+            : itemSummary,
+        previousPharmacy: [previousPharmacyName?.trim(), previousPharmacyPhone?.trim()].filter(Boolean).join(" - ") || undefined,
+        pickupOrDelivery: fulfillmentMethod === "DELIVERY" ? "delivery" : "pickup",
+        deliveryAddress: deliveryAddressFormatted,
+        readyBy: [preferredReadyDate, preferredReadyTime].filter(Boolean).join(", ") || undefined,
+        notifyBy: notificationMethod === "SMS" ? `Text message to ${phone.trim()}` : `Phone call to ${phone.trim()}`,
+        refillNotes: patientNotes?.trim() || undefined,
+        submittedAt: new Date().toLocaleString("en-CA", { timeZone: "America/Vancouver" }),
+        adminPortalUrl: "",
+        attachments,
+      });
+    } catch (staffErr) {
+      console.error("[Prescription API] Staff alert email failed:", staffErr);
     }
 
     return NextResponse.json({

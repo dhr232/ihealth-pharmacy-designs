@@ -27,10 +27,14 @@ export const metadata: Metadata = {
 };
 
 const VACCINES = [
+  "Routine vaccinations",
   "Seasonal flu shots (Influenza)",
   "COVID-19 boosters (mRNA)",
   "Shingles (Shingrix)",
   "Pneumococcal / pneumonia",
+  "RSV (respiratory syncytial virus)",
+  "Hepatitis A, Hepatitis B and Twinrix",
+  "Typhoid and Dukoral (oral cholera)",
   "Tetanus, Diphtheria, Pertussis (Tdap)",
   "Travel vaccines & consultations",
 ];
@@ -44,9 +48,17 @@ const PERKS = [
 
 const VACCINE_BOOKING_OPTIONS = [
   {
+    name: "Routine Vaccination",
+    slug: "routine-vaccination",
+    coverage: "",
+    duration: "15 min",
+    desc: "Routine immunizations for adults and children. Tell us which vaccine you need and your pharmacist will confirm it with you.",
+    badgeBg: "bg-slate-50 text-slate-800 border-slate-200",
+  },
+  {
     name: "Annual Influenza (Flu Shot)",
     slug: "annual-influenza-immunization",
-    coverage: "100% Free under BC MSP",
+    coverage: "",
     duration: "15 min",
     desc: "Seasonal influenza immunization for adults, seniors, and children 6 months and older.",
     badgeBg: "bg-blue-50 text-blue-800 border-blue-200",
@@ -54,7 +66,7 @@ const VACCINE_BOOKING_OPTIONS = [
   {
     name: "COVID-19 Booster",
     slug: "covid-19-vaccination",
-    coverage: "100% Free under BC MSP",
+    coverage: "",
     duration: "15 min",
     desc: "Updated Health Canada approved seasonal mRNA protection for eligible BC residents.",
     badgeBg: "bg-teal-50 text-teal-800 border-teal-200",
@@ -62,7 +74,7 @@ const VACCINE_BOOKING_OPTIONS = [
   {
     name: "Shingles (Shingrix)",
     slug: "shingles-immunization-shingrix",
-    coverage: "Eligible Seniors & Private Plans",
+    coverage: "",
     duration: "15 min",
     desc: "Two-dose recombinant vaccine providing over 90% protection against shingles and nerve pain.",
     badgeBg: "bg-purple-50 text-purple-800 border-purple-200",
@@ -70,7 +82,7 @@ const VACCINE_BOOKING_OPTIONS = [
   {
     name: "Travel Vaccines & Consult",
     slug: "travel-immunizations-consult",
-    coverage: "Private Consultation",
+    coverage: "",
     duration: "20 min",
     desc: "Destination-specific immunizations including Hepatitis A/B, Typhoid, and Dukoral.",
     badgeBg: "bg-amber-50 text-amber-800 border-amber-200",
@@ -78,7 +90,7 @@ const VACCINE_BOOKING_OPTIONS = [
   {
     name: "Tetanus, Diphtheria, Pertussis (Tdap)",
     slug: "tetanus-diphtheria-pertussis-tdap",
-    coverage: "Publicly Funded Booster",
+    coverage: "",
     duration: "15 min",
     desc: "Routine 10-year booster protection for adults and individuals expecting a newborn.",
     badgeBg: "bg-emerald-50 text-emerald-800 border-emerald-200",
@@ -86,10 +98,58 @@ const VACCINE_BOOKING_OPTIONS = [
   {
     name: "Pneumococcal (Pneumonia)",
     slug: "pneumococcal-immunization",
-    coverage: "Covered for Adults 65+",
+    coverage: "",
     duration: "15 min",
     desc: "Immunization against invasive pneumococcal disease, pneumonia, and bloodstream infections.",
     badgeBg: "bg-slate-50 text-slate-800 border-slate-200",
+  },
+  {
+    name: "RSV (Respiratory Syncytial Virus)",
+    slug: "rsv-immunization",
+    coverage: "",
+    duration: "15 min",
+    desc: "RSV vaccination to help protect older adults and other eligible people from serious respiratory illness.",
+    badgeBg: "bg-sky-50 text-sky-800 border-sky-200",
+  },
+  {
+    name: "Hepatitis A",
+    slug: "hepatitis-a-vaccine",
+    coverage: "",
+    duration: "15 min",
+    desc: "Hepatitis A vaccination, commonly recommended before travel to many destinations.",
+    badgeBg: "bg-amber-50 text-amber-800 border-amber-200",
+  },
+  {
+    name: "Hepatitis B",
+    slug: "hepatitis-b-vaccine",
+    coverage: "",
+    duration: "15 min",
+    desc: "Hepatitis B vaccination for adults, including travellers and people who need protection for work or health reasons.",
+    badgeBg: "bg-orange-50 text-orange-800 border-orange-200",
+  },
+  {
+    name: "Twinrix (Hepatitis A & B)",
+    slug: "twinrix-vaccine",
+    coverage: "",
+    duration: "15 min",
+    desc: "A combined vaccine that protects against both hepatitis A and hepatitis B.",
+    badgeBg: "bg-lime-50 text-lime-800 border-lime-200",
+  },
+  {
+    name: "Typhoid",
+    slug: "typhoid-vaccine",
+    coverage: "",
+    duration: "15 min",
+    desc: "Typhoid vaccination, commonly recommended before travel to many destinations.",
+    badgeBg: "bg-rose-50 text-rose-800 border-rose-200",
+  },
+  {
+    name: "Dukoral (Oral Cholera)",
+    slug: "dukoral-vaccine",
+    coverage: "",
+    duration: "15 min",
+    desc: "An oral vaccine taken by mouth to help protect travellers against cholera.",
+    badgeBg: "bg-cyan-50 text-cyan-800 border-cyan-200",
   },
 ];
 
@@ -119,12 +179,11 @@ export default function VaccinationsPage() {
 
                 <div className="mt-6 flex flex-wrap items-center gap-3">
                   <Link
-                    href={getBookingUrl("?category=vaccines")}
-                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-6 py-3.5 text-sm font-bold text-white shadow-md shadow-blue-600/20 transition-all duration-200"
+                    href={getBookingUrl("?service=routine-vaccination")}
+                    className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] inline-flex items-center gap-2 rounded-lg px-6 py-3.5 text-sm font-bold text-white transition"
                   >
                     <Calendar size={17} />
                     <span>Book on Appointment Platform</span>
-                    <ArrowRight size={15} />
                   </Link>
                   <a
                     href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
@@ -185,7 +244,7 @@ export default function VaccinationsPage() {
                 <div className="rounded-2xl border border-blue-200/80 bg-blue-50/60 p-4 text-xs text-slate-700 flex items-start gap-3">
                   <FileText className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
                   <div>
-                    <strong className="font-bold text-slate-900">Automatic BC Provincial Health Record Sync:</strong> All publicly funded and private vaccinations given at iHealth Pharmacy are submitted electronically to the BC Provincial Immunization Registry and appear on your personal Health Gateway account.
+                    <strong className="font-bold text-slate-900">Automatic BC Provincial Health Record Sync:</strong> All vaccinations given at iHealth Pharmacy are submitted electronically to the BC Provincial Immunization Registry and appear on your personal Health Gateway account.
                   </div>
                 </div>
               </SectionReveal>
@@ -196,7 +255,7 @@ export default function VaccinationsPage() {
               <SectionReveal>
                 <div className="rounded-3xl border-2 border-blue-600 bg-white p-6 sm:p-7 shadow-xl space-y-5">
                   <div className="flex items-start gap-3.5 border-b border-slate-100 pb-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-md">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white">
                       <Syringe className="h-6 w-6" />
                     </div>
                     <div>
@@ -234,9 +293,6 @@ export default function VaccinationsPage() {
                               {v.name}
                             </div>
                             <div className="mt-0.5 flex items-center gap-2">
-                              <span className={`rounded border px-1.5 py-0.2 text-[9px] font-bold ${v.badgeBg}`}>
-                                {v.coverage}
-                              </span>
                               <span className="text-[10px] text-slate-500">
                                 {v.duration}
                               </span>
@@ -258,11 +314,10 @@ export default function VaccinationsPage() {
                   {/* Primary Button to Open Full Booking Calendar */}
                   <div className="space-y-2 pt-2 border-t border-slate-100">
                     <Link
-                      href={getBookingUrl("?category=vaccines")}
-                      className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition-all duration-200"
+                      href={getBookingUrl("?service=routine-vaccination")}
+                      className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] flex w-full items-center justify-center gap-2 rounded-lg px-6 py-3.5 text-sm font-bold text-white transition"
                     >
                       <span>Open Full Vaccination Calendar</span>
-                      <ArrowRight className="h-4 w-4" />
                     </Link>
 
                     <div className="flex items-center justify-center gap-2 text-center text-[11px] font-medium text-slate-500 pt-1">

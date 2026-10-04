@@ -24,7 +24,7 @@ const nextConfig = {
         // unhydrated page. Forcing document responses to revalidate on every
         // request keeps the HTML always in sync with whatever build is
         // currently deployed.
-        source: "/((?!_next/static|_next/image).*)",
+        source: "/((?!_next/static|_next/image|media/).*)",
         headers: [
           { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
         ],

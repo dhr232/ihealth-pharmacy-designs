@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
-import crypto from "crypto";
+import { savePrescriptionPhoto, sweepExpiredPrescriptionPhotos } from "@/lib/uploads";
 
 const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB, matches client-side check
 
@@ -45,30 +43,28 @@ export async function POST(request: Request) {
       );
     }
 
-    // Generate a collision-safe, non-guessable filename — the original
-    // filename is discarded so no patient-supplied name is persisted.
-    const extByMime: Record<string, string> = {
-      "image/png": ".png",
-      "image/jpeg": ".jpg",
-      "image/webp": ".webp",
-      "image/heic": ".heic",
-    };
-    const ext = extByMime[mimeType] || ".jpg";
-    const randomName = crypto.randomBytes(16).toString("hex");
-    const collisionSafeName = `${randomName}${ext}`;
+    // Private storage outside the app folder (survives deploys, never publicly served).
+    // The original filename is discarded so no patient-supplied name is persisted.
+    let photoUrl: string;
+    try {
+      photoUrl = await savePrescriptionPhoto(Buffer.from(await file.arrayBuffer()), mimeType);
+    } catch (storageError) {
+      console.error("[Prescription Photo Upload] Storage error:", storageError);
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Photo uploads are temporarily unavailable. Please enter the details instead, or call us.",
+        },
+        { status: 503 }
+      );
+    }
 
-    const targetDir = path.join(process.cwd(), "public", "uploads", "prescription-photos");
-    await fs.mkdir(targetDir, { recursive: true });
-
-    const filePath = path.join(targetDir, collisionSafeName);
-    const arrayBuffer = await file.arrayBuffer();
-    await fs.writeFile(filePath, Buffer.from(arrayBuffer));
-
-    const publicUrl = `/uploads/prescription-photos/${collisionSafeName}`;
+    // Opportunistic 30-day cleanup (throttled, runs in the background)
+    sweepExpiredPrescriptionPhotos();
 
     return NextResponse.json({
       success: true,
-      url: publicUrl,
+      url: photoUrl,
       size: file.size,
       mimeType: file.type,
     });

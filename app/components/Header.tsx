@@ -12,7 +12,6 @@ import {
   Syringe,
   Sparkles,
   Paperclip,
-  CheckCircle2,
   Truck,
   CreditCard,
   UserCheck,
@@ -33,7 +32,7 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
     featureCard: {
       badge: "Free Home Delivery",
       title: "Medications Delivered to Your Door",
-      description: "Prescriptions and weekly blister packs delivered free across Chilliwack and Sardis.",
+      description: "Prescriptions delivered free across Chilliwack and Sardis.",
       image: "/services/delivery-doorstep.jpg",
       ctaText: "Request home delivery",
       href: "/services/delivery",
@@ -70,13 +69,6 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
             iconClass: "border-emerald-200/80 bg-emerald-100 text-emerald-700 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600",
             href: "/services/delivery",
           },
-          {
-            label: "Blister Packaging",
-            description: "Pre-sorted weekly medication cards",
-            icon: CheckCircle2,
-            iconClass: "border-purple-200/80 bg-purple-100 text-purple-700 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600",
-            href: "/services/myhealthpack",
-          },
         ],
       },
     ],
@@ -105,7 +97,7 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
           },
           {
             label: "Vaccines & Flu Shots",
-            description: "Flu, COVID-19, Shingrix & travel",
+            description: "Flu, COVID-19, routine, Shingrix & travel",
             icon: Syringe,
             iconClass: "border-teal-200/80 bg-teal-100 text-teal-700 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600",
             href: "/vaccinations",
@@ -282,7 +274,7 @@ export default function Header({ logoHref }: HeaderProps = {}) {
           {/* High-Contrast Primary Refill Button with Fade Gradient */}
           <Link
             href="/prescription-refills"
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-400 hover:from-teal-600 hover:via-teal-500 hover:to-emerald-300 px-4 py-2 text-xs font-bold text-white shadow-md shadow-teal-700/20 transition-all duration-200 active:scale-[0.98]"
+            className="bg-[var(--brand-secondary)] hover:bg-[var(--brand-secondary-hover)] inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold text-white transition"
           >
             <RefreshCw size={13} className="stroke-[2.5]" />
             <span>Refill Prescription</span>
@@ -330,14 +322,14 @@ export default function Header({ logoHref }: HeaderProps = {}) {
                 <Link
                   href={getBookingUrl()}
                   onClick={() => setMobileOpen(false)}
-                  className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-400 hover:from-teal-600 hover:via-teal-500 hover:to-emerald-300 py-2.5 text-center text-xs font-bold text-white shadow-xs transition-all duration-200"
+                  className="bg-[var(--brand-secondary)] hover:bg-[var(--brand-secondary-hover)] inline-flex items-center justify-center rounded-lg py-2.5 text-center text-xs font-bold text-white transition"
                 >
                   Book Online
                 </Link>
                 <Link
                   href="/prescription-refills"
                   onClick={() => setMobileOpen(false)}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 hover:from-blue-600 hover:via-blue-500 hover:to-blue-300 py-2.5 text-center text-xs font-bold text-white shadow-xs transition-all duration-200"
+                  className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] inline-flex items-center justify-center gap-1.5 rounded-lg py-2.5 text-center text-xs font-bold text-white transition"
                 >
                   <RefreshCw size={12} />
                   <span>Request Refill</span>

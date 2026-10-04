@@ -392,22 +392,9 @@ During a medication review, a pharmacist will:
 
 Many seniors are surprised to learn they can stop a medication they no longer need, or switch to a safer alternative. Even small simplifications — like moving from four daily doses to two — make a big difference over months and years.
 
-## Compliance packaging: MyHealthPack
-
-If you take several medications a day, blister packaging (we call it MyHealthPack) can be a lifesaver. Here's how it works:
-
-- We sort your medications into a blister card organized by day and time
-- Each blister contains the pills you need to take at that moment
-- You can see at a glance whether you've taken your morning dose
-- We refill the card automatically each week or two weeks
-
-For seniors with arthritis, memory challenges, or vision issues, blister packaging removes most of the cognitive load of medication management. Family members and caregivers can also check at a glance whether medications have been taken.
-
-MyHealthPack is free for most BC residents. If you're on multiple chronic medications, ask us about getting set up.
-
 ## Practical organization tips
 
-Beyond blister packaging, a few habits that help:
+A few habits that help:
 
 **Keep an updated medication list.** Write down every medication you take, including the dose, the time of day, and what it's for. Include OTCs and supplements. Keep a copy in your wallet, on your fridge, and with a trusted family member. Bring it to every doctor's appointment and pharmacy visit.
 
@@ -417,7 +404,7 @@ Beyond blister packaging, a few habits that help:
 
 **Build routines around existing habits.** Pair medications with things you already do — brushing your teeth, eating breakfast, watching the evening news. The more automatic it feels, the less likely you'll forget.
 
-**Use pill organizers as a backup.** Even with blister packaging, a weekly pill organizer is useful for things like vitamins or "as needed" medications that don't fit neatly into blister cards.
+**Use pill organizers as a backup.** A weekly pill organizer is useful for keeping track of vitamins and "as needed" medications.
 
 **Keep medications visible and accessible.** If you have to dig through a drawer to find your morning pills, you're more likely to skip them. Store them somewhere you'll see them, but out of reach of children and pets.
 
@@ -448,7 +435,6 @@ Your healthcare team can only help if they know what's happening. A few things t
 If you're a senior in Chilliwack, a few local resources that can help:
 
 - **iHealth Pharmacy medication reviews.** Free, no appointment needed. We can review everything you take and suggest improvements.
-- **MyHealthPack blister packaging.** Free for most patients. We sort your pills by day and time so you never have to think about it.
 - **Free delivery in Chilliwack.** If getting to the pharmacy is a barrier, we deliver prescriptions to your door at no charge.
 - **Home visits.** For seniors with mobility challenges, our pharmacists can visit your home for medication consultations. Talk to us about arranging this.
 
@@ -586,106 +572,6 @@ Stop by the pharmacy or call to book a travel consultation. Bring your itinerary
   },
 
   {
-    id: "post-007",
-    title: "MyHealthPack: Simplifying Daily Medications for Busy Chilliwack Families",
-    slug: "myhealthpack-compliance-packaging",
-    excerpt: "If you're juggling prescriptions for multiple family members, compliance packaging takes the mental load off. Here's how it works.",
-    content: `Most of us don't think twice about taking a pill or two. But when you're managing prescriptions for yourself, your partner, and maybe an aging parent — and several of those prescriptions involve multiple daily doses — the math gets complicated fast. Did Dad take his evening dose? Is the white one in the morning or at night? Did we already give the antibiotic today?
-
-Compliance packaging, which we call MyHealthPack at iHealth Pharmacy, removes almost all of that confusion. Here's how it works and why so many Chilliwack families rely on it.
-
-## What MyHealthPack is
-
-MyHealthPack is a service where we organize your medications into a custom blister card. The card has rows and columns:
-
-- Rows are days of the week (one row per day)
-- Columns are times of day (morning, noon, evening, bedtime, as needed)
-- Each blister contains every pill you need to take at that specific time
-
-When it's Monday morning, you tear off the Monday row, pop out the morning dose, and take it. That's it. You don't have to think about which pill is which, which goes with food, or whether you took your dose already. It's all right there.
-
-## Who uses it
-
-We set up MyHealthPack for a wide range of patients:
-
-**Seniors managing multiple medications.** Probably our most common group. The cognitive load of organizing five or ten pills a day, four times a day, is overwhelming for many older adults. Blister packaging makes the whole thing visual and simple.
-
-**People with memory or cognitive challenges.** Patients with early dementia, brain injury, or other cognitive conditions benefit enormously. Family members can also check at a glance whether doses have been taken.
-
-**Busy working adults.** If you're rushing out the door at 7am and coming home at 7pm, the last thing you need is to figure out which pills go in your work bag and which go on the dinner table. Pre-packaged doses simplify the routine.
-
-**Parents of children with chronic conditions.** Some kids need multiple daily medications for asthma, ADHD, allergies, or other conditions. Compliance packaging makes it easier for parents, babysitters, and school staff to administer correctly.
-
-**Anyone who wants to simplify.** Even patients with relatively simple regimens appreciate the visual reminder and convenience.
-
-## How it works
-
-Getting started with MyHealthPack is straightforward:
-
-**Step 1: Medication review.** Before we package anything, a pharmacist reviews your full medication list. We check for interactions, duplications, and ways to simplify. If we spot anything concerning, we contact your doctor before proceeding.
-
-**Step 2: Setup.** Once everything is verified, we set up your packaging schedule. Most people use a one-week or two-week cycle. We align all your medications to the same refill date so you're not running out at different times.
-
-**Step 3: First fill.** We prepare your first blister card and walk you through how to use it. You'll know exactly what each row and column means and how to handle "as needed" medications that don't fit in the regular slots.
-
-**Step 4: Ongoing refills.** Each time you need a refill, we prepare your next card automatically. You get a text or call when it's ready, and you pick it up or we deliver it.
-
-## What goes in the pack
-
-MyHealthPack can include:
-
-- All prescription medications taken on a regular schedule
-- Vitamins and supplements taken daily (we can add these too)
-- Over-the-counter medications taken at specific times
-
-Medications that don't fit nicely in blister packaging:
-
-- "As needed" medications (we keep these as separate prescriptions)
-- Medications that need to be stored in special conditions (some liquids, certain injections)
-- Medications that change frequently (e.g., antibiotics during a short course)
-
-We work around these by keeping them as separate fills alongside your MyHealthPack card.
-
-## Free delivery in Chilliwack
-
-Picking up a blister card every week or two is straightforward, but for many families it's an inconvenience. We offer free prescription delivery anywhere in Chilliwack, with no minimum order. We'll bring your MyHealthPack card straight to your door — and if you have questions, the delivery driver can connect you with a pharmacist by phone.
-
-## Safety benefits
-
-Beyond convenience, compliance packaging has real safety advantages:
-
-**Fewer missed doses.** Studies show blister packaging improves adherence by 20-30% in patients with chronic conditions. Visual cues make it obvious when a dose has been missed.
-
-**Fewer double doses.** Without organization, it's easy to forget you already took your morning pill and take it again. With blister packaging, an empty blister is a clear signal.
-
-**Fewer errors.** Mixing up pills is more common than people admit, especially in low-light conditions or when you're tired. The pharmacist sorts everything for you.
-
-**Easier to detect problems.** If you notice medications building up in a row that should be empty, that's a signal that something's off — either the dose, the timing, or the patient's condition. Family members and caregivers can spot this at a glance.
-
-## Coverage and costs
-
-For most BC patients on multiple chronic medications, MyHealthPack is fully covered by BC Pharmacare. There may be a small dispensing fee per fill, similar to any prescription fill. We can confirm your coverage before you start.
-
-For patients not covered by Pharmacare for this service, we charge a small packaging fee on top of the usual dispensing fee. The fee is modest and saves a lot of hassle. We'll always tell you upfront what it costs.
-
-## Getting started
-
-If you think MyHealthPack might help you or someone in your family, the easiest way to start is a quick conversation. Bring your current medication list (or have it on file at our pharmacy) and we'll review the situation.
-
-For seniors and patients with complex regimens, we typically schedule a 30-minute medication review first to make sure everything is optimized before we begin packaging. For simpler cases, we can usually start packaging within a few days.
-
-Compliance packaging is one of those services that, once you start, you wonder how you ever managed without it. If you're ready to simplify your medication routine, talk to us.`,
-    author: "The iHealth Pharmacy Team",
-    publishedAt: "2026-11-20",
-    tags: ["MyHealthPack", "compliance packaging", "medication management"],
-    imageUrl: "/blog/post-7.jpg",
-    status: "published",
-    themeUsed: "default",
-    readTimeMinutes: 5,
-    category: "Services",
-  },
-
-  {
     id: "post-008",
     title: "Minor Ailments: 7 Conditions Your Chilliwack Pharmacist Can Now Prescribe For",
     slug: "minor-ailments-pharmacist-prescribing",
@@ -808,7 +694,7 @@ That's exactly why we offer free prescription delivery in Chilliwack. Same-day f
 
 ## Who qualifies for free delivery
 
-Free delivery is available to anyone in Chilliwack, with no minimum order and no delivery fee. Whether it's a single refill or a full month of blister packs, we'll bring it to your door at no charge.
+Free delivery is available to anyone in Chilliwack, with no minimum order and no delivery fee. Whether it's a single refill or a full month of medications, we'll bring it to your door at no charge.
 
 We want to make medication access easy for everyone, especially seniors, patients with mobility challenges, and families managing care for a loved one.
 
@@ -859,7 +745,6 @@ A few things to know:
 
 Delivery is one part of a broader medication management service. You can combine it with:
 
-- **MyHealthPack compliance packaging.** We deliver your pre-sorted blister card.
 - **Auto-refill.** We refill your prescriptions automatically and deliver when ready.
 - **Medication reviews.** We deliver your medications and conduct a phone or in-home medication review at the same time.
 - **Transfer from another pharmacy.** We transfer all your prescriptions, then deliver them once they're ready.
@@ -1030,22 +915,12 @@ In British Columbia, seniors aged 65 and older qualify for enhanced seasonal pro
 - Co-Administration Convenience: You can safely receive your flu shot and COVID booster during the exact same 15-minute appointment.
 - Gentle Administration: Our pharmacists specialize in calm, gentle injection techniques with zero wait times for seniors.
 
-## Simplifying Complex Regimens with MyHealthPack
-
-If you or a loved one takes four or more medications daily, keeping track of morning, noon, and bedtime pills becomes stressful. Missed doses or accidental double-dosing are among the leading causes of avoidable hospital visits in BC.
-
-At iHealth Pharmacy Chilliwack, we organize all prescriptions, vitamins, and supplements into custom compliance packaging (MyHealthPack):
-
-- Color-coded blister cards clearly organized by day of the week and exact time of day.
-- Tamper-evident seals that guarantee medication stability.
-- Free local doorstep delivery across Chilliwack so you never run out of critical treatments.
-
 ## How to Book Your Fall Consult with iHealth
 
 A comprehensive medication review is completely free for BC residents who meet PharmaCare criteria. Sit down one-on-one with Dr. Anika Sharma or any of our clinical pharmacists to review every pill, optimize dosing times, and answer all questions in English, Punjabi, or Hindi.`,
     author: "Dr. Anika Sharma, BSc Pharm, RPh",
     publishedAt: "2026-09-15",
-    tags: ["senior health", "medication safety", "flu vaccine", "chilliwack", "myhealthpack"],
+    tags: ["senior health", "medication safety", "flu vaccine", "chilliwack"],
     imageUrl: "/blog/post-3.jpg",
     status: "scheduled",
     themeUsed: "default",
@@ -1055,8 +930,7 @@ A comprehensive medication review is completely free for BC residents who meet P
     keyTakeaways: [
       "BC seniors qualify for enhanced high-dose flu shots and COVID boosters with zero out-of-pocket costs.",
       "Over-the-counter cold medicines can interact dangerously with blood pressure and blood thinner prescriptions.",
-      "Annual medication reviews are 100% covered under BC Fair PharmaCare for eligible patients.",
-      "MyHealthPack custom blister cards eliminate missed doses and double-dosing risk with free Chilliwack delivery."
+      "Annual medication reviews are 100% covered under BC Fair PharmaCare for eligible patients."
     ],
   },
 ];

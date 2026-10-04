@@ -230,7 +230,7 @@ export function UsersSection({ onToast }: UsersSectionProps) {
                 id="staff-email"
                 type="email"
                 required
-                placeholder="sjenkins@ihealthpharmacy.ca"
+                placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="text-sm"

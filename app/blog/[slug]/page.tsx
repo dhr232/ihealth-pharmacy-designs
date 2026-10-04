@@ -16,15 +16,17 @@ import {
   ShieldCheck,
   Languages,
 } from "lucide-react";
-import { MKT_01_POSTS, isPostPublished, type BlogPost } from "../../../data/blog-posts";
+import { MKT_01_POSTS } from "../../../data/blog-posts";
+import { getPostBySlug, getPublishedPosts } from "@/lib/content";
 import ScheduledGuard from "./ScheduledGuard";
 
+// Posts live in the database. Pages are cached and refreshed on save from the
+// admin panel (revalidatePath), plus every 5 minutes so scheduled posts go live.
+export const revalidate = 300;
+
+// Pre-render the known articles at build time; new slugs render on first visit.
 export function generateStaticParams() {
   return MKT_01_POSTS.map((post) => ({ slug: post.slug }));
-}
-
-function getPost(slug: string): BlogPost | undefined {
-  return MKT_01_POSTS.find((p) => p.slug === slug);
 }
 
 export async function generateMetadata({
@@ -33,7 +35,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = await getPostBySlug(slug);
   if (!post) return { title: "Post not found — iHealth Pharmacy" };
   return { title: `${post.title} — iHealth Pharmacy`, description: post.excerpt };
 }
@@ -66,7 +68,7 @@ function renderContent(content: string) {
           className="my-7 rounded-2xl border border-[#C7D2F7] bg-[#E8ECFB]/70 p-5 sm:p-6 shadow-sm"
         >
           <div className="flex items-start gap-3.5">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[var(--brand)] text-white font-bold text-sm shadow-sm">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--brand)] text-white font-bold text-sm">
               +
             </span>
             <div className="space-y-1">
@@ -116,10 +118,10 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  const others = MKT_01_POSTS.filter((p) => p.slug !== slug && isPostPublished(p)).slice(0, 3);
+  const others = (await getPublishedPosts()).filter((p) => p.slug !== slug).slice(0, 3);
   const isEditorial = post.layoutVariant === "editorial";
 
   return (
@@ -250,7 +252,7 @@ export default async function BlogPostPage({
                     {post.author}
                   </h3>
                   <p className="mt-1 text-sm text-slate-600 leading-relaxed">
-                    Have questions about medication interactions, high-dose flu shots, or blister packaging in Chilliwack? Talk to our pharmacy team directly.
+                    Have questions about medication interactions, high-dose flu shots, or medication reviews in Chilliwack? Talk to our pharmacy team directly.
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
@@ -320,6 +322,18 @@ export default async function BlogPostPage({
                   <Clock size={14} /> {post.readTimeMinutes} min read
                 </span>
               </div>
+
+              {/* Cover image (the editorial layout has its own hero banner) */}
+              {post.imageUrl && (
+                <div className="mt-8 overflow-hidden rounded-2xl border border-[var(--border)]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={post.imageUrl}
+                    alt=""
+                    className="w-full max-h-[400px] object-cover object-center"
+                  />
+                </div>
+              )}
             </SectionReveal>
 
             <div className="mt-8 border-t border-[var(--border)] pt-6 text-[15px]">

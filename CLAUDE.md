@@ -42,6 +42,7 @@ Multi-page full-stack website for **iHealth Pharmacy** (Chilliwack, BC).
 | `ADMIN_INITIAL_PASSWORD` | Override default admin password (default: `Admin2026!`) |
 | `PHARMACIST_INITIAL_PASSWORD` | Override default pharmacist password (default: `Pharmacist2026!`) |
 | `RUN_MIGRATIONS` | Set to `true` in Hostinger ONLY. Makes `npm run build` apply pending Prisma migrations. Never set locally or in CI. |
+| `UPLOAD_DIR` | Absolute folder for admin uploads (blog covers, flyer PDFs/images), OUTSIDE the app so deploys don't wipe it: `/home/u491263438/domains/ihealthpharmacy.ca/uploads`. Served at `/media/<category>/<file>`. Production refuses uploads if unset. |
 
 ## Seeded Staff Accounts
 
@@ -51,6 +52,15 @@ Multi-page full-stack website for **iHealth Pharmacy** (Chilliwack, BC).
 | Pharmacist | `pharmacist@ihealthpharmacy.ca` | `Pharmacist2026!` |
 
 2FA OTP is sent via Resend email. In dev/demo mode (no RESEND_API_KEY), the API returns `debugCode` in the response body.
+
+## Email and Notifications (one inbox rule)
+
+- **The one and only pharmacy email is `info@ihealthpharmacy.ca`** (`PHARMACY_INFO.email` in `data/pharmacy-info.ts`). Never add another contact address (no `hello@`, `pharmacy@`, Gmail, etc.) to pages, copy, schema or code. Always read it from `PHARMACY_INFO.email`.
+- **Every form submission must also email `info@ihealthpharmacy.ca`** (pharmacist notification), in addition to any confirmation sent to the patient. Today that covers: appointment booking (all services: minor ailments, vaccines, medication review, etc.) via `sendStaffBookingNotification`; new prescription, refill and transfer via `sendStaffRefillNotification`; contact form (`/api/contact`) and newsletter sign-up (`/api/newsletter/subscribe`) via `sendStaffFormAlert`. All live in `lib/resend.ts`.
+- **Any new form or alert must follow the same pattern**: submit to our own `/api/...` route and send the staff alert to `DEFAULT_DISPENSARY_ALERT_EMAIL` (which is `PHARMACY_INFO.email`). Do not use third-party form services (Web3Forms etc.).
+- `DEFAULT_DISPENSARY_ALERT_EMAIL` is intentionally NOT overridable by an env var. The old `DISPENSARY_ALERT_EMAIL` variable is no longer read and can be deleted from Hostinger.
+- The Resend *sender* (`RESEND_FROM_EMAIL`, default `notifications@notifications.ihealthpharmacy.ca`) is a sending identity on a verified Resend domain, not a mailbox; change it only after verifying the new domain in Resend.
+- Staff login accounts above (`admin@` / `pharmacist@`) are sign-in identities, not contact addresses.
 
 ## Routes
 
@@ -80,7 +90,7 @@ Start command: `npm start`
 
 ## CI
 
-`.github/workflows/ci.yml` on push/PR to `main`:
+`.github/workflows/ci.yml` on push to `main` only (it does not run on pull requests, so run lint, tests and typecheck locally before merging):
 1. Install deps (`npm ci`)
 2. Lint (`npm run lint`)
 3. Prisma generate
@@ -118,10 +128,24 @@ committed SQL migrations and are applied automatically by the Hostinger build.
 - `lib/auth.ts` -- session encryption, 2FA, seeded staff constants
 - `lib/prisma.ts` -- Prisma global singleton
 - `lib/resend.ts` -- Resend email helpers
+- `lib/content.ts` -- blog posts + announcements: DB reads/writes, one-time import of the code-file seed, code-file fallback
+- `lib/uploads.ts` + `app/media/[...path]/route.ts` -- save uploads to `UPLOAD_DIR` and serve them at `/media/...`
 - `lib/appointment-store.ts` -- shared in-memory fallback Map for appointment status (dev/demo mode)
 - `prisma/schema.prisma` -- full normalized DB schema
 - `next.config.mjs` -- Next.js config (plain JS ES module)
 - `package.json` -- build: `prisma generate && next build --webpack`
+
+## Mobile-First (applies to every change)
+
+Most patients (many of them older adults) browse on phones. Every UI change MUST be mobile friendly before it is considered done:
+
+- Design mobile first (base classes = phone), then add `sm:` / `lg:` enhancements.
+- Verify at 360-390px wide: no horizontal scroll, no clipped or overlapping text, badges and pills wrap instead of overflowing.
+- Tap targets at least 44x44px with 8px+ spacing; never rely on hover alone for information or actions.
+- Body text 16px (`text-base`) or larger for patient-facing copy; decorative text may be smaller but must stay legible.
+- Check tablet (768px) and desktop (1280px) too; grids must not leave orphan or misaligned cards.
+- Images must reserve space (`aspect-*` or explicit size) to avoid layout shift, and use `loading="lazy"` below the fold.
+- Keep motion gated on `useReducedMotion`.
 
 ## Lint House Rules
 

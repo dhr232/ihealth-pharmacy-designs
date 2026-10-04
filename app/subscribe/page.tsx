@@ -106,6 +106,10 @@ export default function SubscribePage() {
           firstName: name.trim(),
           email: email.trim(),
           source: "subscribe-page",
+          interests: Array.from(selected)
+            .map((id) => INTERESTS.find((i) => i.id === id)?.label)
+            .filter(Boolean)
+            .join(", "),
           caslConsent: true,
         }),
       });
@@ -118,36 +122,9 @@ export default function SubscribePage() {
         return;
       }
 
-      // Fallback to Web3Forms if API endpoint is unavailable
-      const formData = new FormData();
-      formData.append("access_key", "YOUR_WEB3FORMS_KEY_HERE");
-      formData.append("from_name", "iHealth Pharmacy Newsletter");
-      formData.append("subject", "New newsletter subscriber");
-      formData.append("name", name);
-      formData.append("email", email);
-      formData.append(
-        "interests",
-        Array.from(selected)
-          .map((id) => INTERESTS.find((i) => i.id === id)?.label)
-          .filter(Boolean)
-          .join(", "),
-      );
-
-      const res = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        body: formData,
-      });
-      const data = (await res.json()) as { success?: boolean; message?: string };
-
-      if (data.success) {
-        setStatus("success");
-        setName("");
-        setEmail("");
-        setSelected(new Set(["tips"]));
-      } else {
-        setStatus("error");
-        setErrorMsg(data.message ?? "Something went wrong. Please try again later.");
-      }
+      const data = (await apiRes.json().catch(() => ({}))) as { error?: string };
+      setStatus("error");
+      setErrorMsg(data.error ?? "Something went wrong. Please try again later.");
     } catch {
       setStatus("error");
       setErrorMsg("Network error. Please try again later.");

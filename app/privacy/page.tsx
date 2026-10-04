@@ -57,14 +57,14 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
           handling a delivery to you, and regulatory bodies when required by law.
         </p>
         <p>
-          Some of our online forms (refill, transfer, vaccination booking, and general contact
-          requests) are processed through Web3Forms, a third-party form delivery service, which
-          receives the information you submit solely to route it to our pharmacy inbox. If you
-          choose to contact us or send photos via WhatsApp, that conversation is carried over
-          Meta&apos;s WhatsApp platform rather than our own systems. Both of these are
-          service providers you are choosing to use, and their servers may be located outside
-          Canada; we do not authorize either service to use your information for any purpose
-          beyond delivering your message to us.
+          Our online forms (prescription requests, transfers, vaccination and appointment
+          booking, newsletter sign-up, and general contact requests) are submitted to our own
+          servers. We use Resend, a transactional email service, to send a notification to our
+          pharmacy inbox and, where applicable, a confirmation to you. If you choose to contact us
+          or send photos via WhatsApp, that conversation is carried over Meta&apos;s WhatsApp
+          platform rather than our own systems. These are service providers you are choosing to
+          use, and their servers may be located outside Canada; we do not authorize either service
+          to use your information for any purpose beyond delivering your message to us.
         </p>
         <p>
           We do not share your information with marketers or data brokers, and we do not sell
@@ -125,7 +125,7 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
         <p>
           Email:{" "}
           <a
-            href="mailto:hello@ihealthpharmacy.ca"
+            href="mailto:info@ihealthpharmacy.ca"
             className="font-medium text-[var(--brand)] underline-offset-2 hover:underline"
           >
             info@ihealthpharmacy.ca
@@ -209,10 +209,10 @@ export default function PrivacyPage() {
                 <p className="mt-1 text-sm text-[var(--muted)]">
                   Email us at{" "}
                   <a
-                    href="mailto:hello@ihealthpharmacy.ca"
+                    href="mailto:info@ihealthpharmacy.ca"
                     className="font-medium text-[var(--brand)] underline-offset-2 hover:underline"
                   >
-                    hello@ihealthpharmacy.ca
+                    info@ihealthpharmacy.ca
                   </a>{" "}
                   and we&apos;ll get back to you within two business days.
                 </p>

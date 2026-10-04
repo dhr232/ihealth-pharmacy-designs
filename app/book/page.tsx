@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import Header from "../components/Header";
@@ -15,12 +15,14 @@ import {
   ALL_BOOKING_SERVICES,
   getServiceByIdOrSlug,
 } from "@/data/booking-services";
+import { getConditionIconPath } from "@/data/condition-registry";
 import {
   Stethoscope,
   User,
   Calendar,
   CheckCircle2,
   Phone,
+  Clock,
 } from "lucide-react";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 import { getMainSiteUrl } from "@/lib/routes";
@@ -35,8 +37,31 @@ const STEPS = [
 function BookingWizard() {
   const searchParams = useSearchParams();
 
-  const [currentStep, setCurrentStep] = useState<number>(1);
-  const [selectedService, setSelectedService] = useState<BookingService | null>(null);
+  // ?service=<slug> (e.g. a condition picked on the Minor Ailments page) skips step 1
+  // and opens straight on Patient Details. ?category=<slug> just opens that section.
+  const serviceParam = searchParams.get("service") || searchParams.get("serviceId");
+  const categoryParam = searchParams.get("category");
+  const initialCategory = categoryParam
+    ? BOOKING_CATEGORIES.find((c) => c.slug === categoryParam.toLowerCase().replace(/-/g, "_"))?.slug
+    : undefined;
+
+  const [selectedService, setSelectedService] = useState<BookingService | null>(() =>
+    serviceParam ? getServiceByIdOrSlug(serviceParam) ?? null : null
+  );
+  const [currentStep, setCurrentStep] = useState<number>(() =>
+    serviceParam && getServiceByIdOrSlug(serviceParam) ? 2 : 1
+  );
+
+  // Follow later ?service= changes while the page stays mounted (adjusted during render, not in an effect)
+  const [prevServiceParam, setPrevServiceParam] = useState(serviceParam);
+  if (serviceParam !== prevServiceParam) {
+    setPrevServiceParam(serviceParam);
+    const match = serviceParam ? getServiceByIdOrSlug(serviceParam) : undefined;
+    if (match) {
+      setSelectedService(match);
+      setCurrentStep(2);
+    }
+  }
   const partySize = 1;
 
   const [patientData, setPatientData] = useState<PatientFormData>({
@@ -54,34 +79,6 @@ function BookingWizard() {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [selectedTimeLabel, setSelectedTimeLabel] = useState<string>("");
-
-  // Read URL params (e.g. ?service=uncomplicated-urinary-tract-infection or ?category=vaccines)
-  useEffect(() => {
-    const serviceParam = searchParams.get("service") || searchParams.get("serviceId");
-    const categoryParam = searchParams.get("category");
-
-    if (serviceParam) {
-      const match = getServiceByIdOrSlug(serviceParam);
-      if (match) {
-        queueMicrotask(() => {
-          setSelectedService(match);
-        });
-      }
-    } else if (categoryParam) {
-      const normalizedCat = categoryParam.toLowerCase().replace("-", "_");
-      const categoryObj = BOOKING_CATEGORIES.find(
-        (c) =>
-          c.slug.toLowerCase() === normalizedCat ||
-          c.id.toLowerCase() === normalizedCat ||
-          c.slug.toLowerCase() === categoryParam.toLowerCase()
-      );
-      if (categoryObj && categoryObj.services.length > 0) {
-        queueMicrotask(() => {
-          setSelectedService(categoryObj.services[0]);
-        });
-      }
-    }
-  }, [searchParams]);
 
   function handleReset() {
     setCurrentStep(1);
@@ -168,11 +165,11 @@ function BookingWizard() {
                           }`}
                         >
                           <div
-                            className={`flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold transition-all duration-200 shadow-xs ${
+                            className={`flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold transition ${
                               isCompleted
                                 ? "bg-[var(--brand)] text-white ring-4 ring-[#E8ECFB] group-hover:bg-[var(--brand-hover)]"
                                 : isCurrent
-                                ? "bg-[var(--brand)] text-white ring-4 ring-[#3D5FE0]/20 shadow-md shadow-[#2F4BC4]/20"
+                                ? "bg-[var(--brand)] text-white ring-4 ring-[#3D5FE0]/20"
                                 : "bg-slate-100 text-slate-400 border border-slate-200"
                             }`}
                           >
@@ -232,9 +229,14 @@ function BookingWizard() {
               {currentStep === 1 && (
                 <ServiceSelector
                   selectedService={selectedService}
+                  initialCategory={initialCategory}
                   onSelectService={(service) => setSelectedService(service)}
                   onProceed={() => setCurrentStep(2)}
                 />
+              )}
+
+              {currentStep === 2 && selectedService && (
+                <SelectedServiceSummary service={selectedService} onChange={() => setCurrentStep(1)} />
               )}
 
               {currentStep === 2 && (
@@ -281,6 +283,69 @@ function BookingWizard() {
       </div>
 
       <Footer logoHref={getMainSiteUrl("/")} />
+    </div>
+  );
+}
+
+// Compact "Booking for ..." card shown above Patient Details, with a way back to the service list
+function SelectedServiceSummary({ service, onChange }: { service: BookingService; onChange: () => void }) {
+  return (
+    <div className="mb-5 rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+      <div className="flex items-center gap-3.5">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={getConditionIconPath(service.id)}
+          alt=""
+          width={40}
+          height={40}
+          className="h-10 w-10 shrink-0 rounded-lg border border-slate-100 bg-slate-50 object-contain p-1"
+        />
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-medium text-slate-500">Booking for</p>
+          <p className="truncate text-base font-semibold text-slate-900">{service.name}</p>
+          <p className="mt-0.5 flex items-center gap-1.5 text-xs text-slate-500">
+            <Clock size={12} />
+            {service.durationMinutes} min with a pharmacist
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={onChange}
+          className="shrink-0 rounded-lg border border-slate-300 px-3.5 py-2 text-sm font-semibold text-slate-700 transition hover:border-[var(--brand)] hover:text-[var(--brand)]"
+        >
+          Change
+        </button>
+      </div>
+
+      {(service.clinicalIndications.length > 0 || service.preparationNotes.length > 0) && (
+        <details className="group mt-3 border-t border-slate-100 pt-3">
+          <summary className="cursor-pointer text-sm font-medium text-[var(--brand)] hover:underline">
+            What this covers and what to bring
+          </summary>
+          <div className="mt-3 grid gap-4 text-sm text-slate-600 sm:grid-cols-2">
+            {service.clinicalIndications.length > 0 && (
+              <div>
+                <p className="font-medium text-slate-900">Covers</p>
+                <ul className="mt-1.5 list-disc space-y-1 pl-5">
+                  {service.clinicalIndications.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {service.preparationNotes.length > 0 && (
+              <div>
+                <p className="font-medium text-slate-900">Please bring</p>
+                <ul className="mt-1.5 list-disc space-y-1 pl-5">
+                  {service.preparationNotes.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </details>
+      )}
     </div>
   );
 }

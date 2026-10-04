@@ -25,6 +25,10 @@ export interface StaffNotificationEmailProps {
   pickupOrDelivery?: "pickup" | "delivery" | string;
   deliveryAddress?: string;
   refillNotes?: string;
+  requestTitle?: string;
+  previousPharmacy?: string;
+  readyBy?: string;
+  notifyBy?: string;
 
   // Meta
   submittedAt?: string;
@@ -51,11 +55,15 @@ export function StaffNotificationEmail({
   pickupOrDelivery = "pickup",
   deliveryAddress,
   refillNotes,
+  requestTitle,
+  previousPharmacy,
+  readyBy,
+  notifyBy,
   submittedAt,
   adminPortalUrl = "https://ihealthpharmacy.ca/admin/appointments",
 }: StaffNotificationEmailProps) {
   const isAppointment = notificationType === "appointment";
-  const alertTitle = isAppointment ? "New Appointment Booking" : "New Prescription Refill Request";
+  const alertTitle = isAppointment ? "New Appointment Booking" : requestTitle || "New Prescription Refill Request";
   const badgeText = isAppointment ? "BOOKING INTAKE" : "REFILL INTAKE";
   const cleanPhone = (patientPhone || "").replace(/[^0-9]/g, "");
 
@@ -724,6 +732,93 @@ export function StaffNotificationEmail({
                               }}
                             >
                               {deliveryAddress}
+                            </td>
+                          </tr>
+                        ) : null}
+
+                        {previousPharmacy ? (
+                          <tr>
+                            <td
+                              style={{
+                                padding: "8px 0",
+                                fontSize: "13px",
+                                fontWeight: 600,
+                                color: "#64748b",
+                                borderBottom: "1px solid #f1f5f9",
+                                verticalAlign: "top",
+                              }}
+                            >
+                              Previous Pharmacy
+                            </td>
+                            <td
+                              style={{
+                                padding: "8px 0",
+                                fontSize: "14px",
+                                fontWeight: 600,
+                                color: "#0f172a",
+                                borderBottom: "1px solid #f1f5f9",
+                                verticalAlign: "top",
+                              }}
+                            >
+                              {previousPharmacy}
+                            </td>
+                          </tr>
+                        ) : null}
+
+                        {readyBy ? (
+                          <tr>
+                            <td
+                              style={{
+                                padding: "8px 0",
+                                fontSize: "13px",
+                                fontWeight: 600,
+                                color: "#64748b",
+                                borderBottom: "1px solid #f1f5f9",
+                                verticalAlign: "top",
+                              }}
+                            >
+                              Preferred Ready Time
+                            </td>
+                            <td
+                              style={{
+                                padding: "8px 0",
+                                fontSize: "14px",
+                                fontWeight: 700,
+                                color: "#0f172a",
+                                borderBottom: "1px solid #f1f5f9",
+                                verticalAlign: "top",
+                              }}
+                            >
+                              {readyBy}
+                            </td>
+                          </tr>
+                        ) : null}
+
+                        {notifyBy ? (
+                          <tr>
+                            <td
+                              style={{
+                                padding: "8px 0",
+                                fontSize: "13px",
+                                fontWeight: 600,
+                                color: "#64748b",
+                                borderBottom: "1px solid #f1f5f9",
+                                verticalAlign: "top",
+                              }}
+                            >
+                              Notify When Ready
+                            </td>
+                            <td
+                              style={{
+                                padding: "8px 0",
+                                fontSize: "14px",
+                                fontWeight: 700,
+                                color: "#0f172a",
+                                borderBottom: "1px solid #f1f5f9",
+                                verticalAlign: "top",
+                              }}
+                            >
+                              {notifyBy}
                             </td>
                           </tr>
                         ) : null}

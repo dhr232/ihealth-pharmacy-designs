@@ -8,7 +8,6 @@ import {
   Stethoscope,
   FlaskConical,
   Syringe,
-  Package,
   HeartPulse,
   Truck,
   ArrowRight,
@@ -57,25 +56,16 @@ const ALL_SERVICES = [
     title: "Vaccinations & Injections",
     slug: "vaccinations",
     href: "/services/vaccinations",
-    desc: "Publicly funded flu shots, COVID-19 boosters, shingles, pneumonia, HPV, and travel vaccines administered safely by certified pharmacists.",
+    desc: "Flu shots, COVID-19 boosters, routine vaccinations, shingles, pneumonia, HPV, and travel vaccines administered safely by certified pharmacists.",
     icon: Syringe,
     badge: "Walk-ins & Booking",
     image: "/services/vaccinations.jpg",
   },
   {
-    title: "MyHealthPack Blister Packaging",
-    slug: "myhealthpack",
-    href: "/services/myhealthpack",
-    desc: "Pre-sorted medication blister cards organized by date and time (morning, noon, evening, bedtime) to make managing daily medications effortless and safe.",
-    icon: Package,
-    badge: "Complimentary Service",
-    image: "/services/blister-packs.jpg",
-  },
-  {
     title: "Medication Review & Injections",
     slug: "med-review",
     href: "/services/med-review",
-    desc: "Comprehensive one-on-one review of all your prescription drugs, over-the-counter supplements, and chronic condition management under BC PharmaCare.",
+    desc: "Comprehensive one-on-one review of all your prescription drugs, over-the-counter supplements, and chronic condition management.",
     icon: HeartPulse,
     badge: "1-on-1 Consult",
     image: "/services/med-review.jpg",
@@ -88,6 +78,15 @@ const ALL_SERVICES = [
     icon: Truck,
     badge: "Always free",
     image: "/services/delivery-doorstep.jpg",
+  },
+  {
+    title: "Automatic Pill Dispenser",
+    slug: "auto-pack-dispenser",
+    href: "/contact",
+    desc: "A carousel automatic pill dispenser with timed audio and visual alerts and a tamper-resistant safety lock. Pharmacist pre-filled, for home medication management and caregiver peace of mind.",
+    icon: Pill,
+    badge: "Senior Friendly",
+    image: "/carousel-dispenser.jpg",
   },
 ];
 
@@ -112,7 +111,7 @@ export default function ServicesPage() {
             </BlurReveal>
             <BlurReveal className="mt-3">
               <p className="mx-auto max-w-2xl text-base text-slate-600 sm:text-lg">
-                From walk-in minor ailment prescribing and custom compounding to blister packs and free home delivery in Chilliwack.
+                From walk-in minor ailment prescribing and custom compounding to medication reviews and free home delivery in Chilliwack.
               </p>
             </BlurReveal>
           </div>

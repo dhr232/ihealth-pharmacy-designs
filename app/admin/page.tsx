@@ -9,6 +9,8 @@ import {
   ArrowUp,
   Download,
   ExternalLink,
+  Eye,
+  EyeOff,
   LogOut,
   Pill,
   Plus,
@@ -30,19 +32,15 @@ import {
 import {
   clearAuth,
   deletePharmacist,
-  deletePost,
-  deleteAnnouncement,
   exportJSON,
   getPharmacists,
   getPosts,
   getAnnouncements,
   reorderPharmacist,
-  reorderAnnouncement,
   savePharmacists,
-  seedPostsFromRemote,
+  savePosts,
+  saveAnnouncements,
   upsertPharmacist,
-  upsertPost,
-  upsertAnnouncement,
 } from "./lib/storage";
 import type {
   AnnouncementIcon,
@@ -218,15 +216,37 @@ function Dashboard({
     if (seededRef.current) return;
     seededRef.current = true;
     let cancelled = false;
-    seedPostsFromRemote()
-      .then((list) => {
-        if (cancelled) return;
-        if (list.length > 0) {
-          setPosts(list);
-        }
+    // Blog posts live in the database; the browser copy is only a fast-loading cache.
+    fetch("/api/admin/posts", { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (cancelled || !data || !Array.isArray(data.posts)) return;
+        setPosts(data.posts);
+        savePosts(data.posts);
       })
       .catch(() => {
-        // Best-effort: sync seed already populated state.
+        // Keep the cached list; saving will report any database problem.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const loadedAnnouncementsRef = useRef(false);
+  useEffect(() => {
+    if (loadedAnnouncementsRef.current) return;
+    loadedAnnouncementsRef.current = true;
+    let cancelled = false;
+    // Announcements live in the database so every visitor sees the same ticker.
+    fetch("/api/admin/announcements", { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (cancelled || !data || !Array.isArray(data.announcements)) return;
+        setAnnouncements(data.announcements);
+        saveAnnouncements(data.announcements);
+      })
+      .catch(() => {
+        // Keep the cached list; saving will report any database problem.
       });
     return () => {
       cancelled = true;
@@ -262,11 +282,6 @@ function Dashboard({
     if (pharmacists.length === 0) return 1;
     return Math.max(...pharmacists.map((p) => p.displayOrder)) + 1;
   }, [pharmacists]);
-
-  function openNewPharmacist() {
-    setEditingPharmacist(null);
-    setEditorOpen(true);
-  }
 
   function openEditPharmacist(item: Pharmacist) {
     setEditingPharmacist(item);
@@ -342,26 +357,47 @@ function Dashboard({
     setPostEditorOpen(true);
   }
 
-  function handleSavePost(next: BlogPost) {
-    const updated = upsertPost(next);
-    setPosts(updated);
-    setPostEditorOpen(false);
-    setEditingPost(null);
-    pushToast(
-      "success",
-      next.title ? `Saved "${next.title}".` : "Post saved.",
-    );
+  async function handleSavePost(next: BlogPost) {
+    try {
+      const res = await fetch("/api/admin/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(next),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.post) {
+        pushToast("error", data?.error || "Could not save the post. Please try again.");
+        return; // keep the editor open so nothing typed is lost
+      }
+      const saved: BlogPost = data.post;
+      const updated = [saved, ...posts.filter((p) => p.id !== next.id && p.id !== saved.id && p.slug !== saved.slug)];
+      setPosts(updated);
+      savePosts(updated);
+      setPostEditorOpen(false);
+      setEditingPost(null);
+      pushToast("success", `Saved "${saved.title}". The live site updates within a few seconds.`);
+    } catch {
+      pushToast("error", "Network error: the post was not saved.");
+    }
   }
 
-  function handleDeletePost(id: string) {
+  async function handleDeletePost(id: string) {
     const target = posts.find((p) => p.id === id);
-    const updated = deletePost(id);
-    setPosts(updated);
     setConfirmDeletePostId(null);
-    pushToast(
-      "success",
-      target ? `Removed "${target.title}".` : "Post removed.",
-    );
+    try {
+      const res = await fetch(`/api/admin/posts?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        pushToast("error", data?.error || "Could not delete the post.");
+        return;
+      }
+      const updated = posts.filter((p) => p.id !== id);
+      setPosts(updated);
+      savePosts(updated);
+      pushToast("success", target ? `Removed "${target.title}".` : "Post removed.");
+    } catch {
+      pushToast("error", "Network error: the post was not deleted.");
+    }
   }
 
   function handleExportPosts() {
@@ -386,35 +422,85 @@ function Dashboard({
     setAnnouncementEditorOpen(true);
   }
 
-  function handleSaveAnnouncement(next: AnnouncementItem) {
-    const updated = upsertAnnouncement(next);
-    setAnnouncements(updated);
+  /** Saves one announcement to the database; returns the saved row or null (error toasted). */
+  async function persistAnnouncement(item: AnnouncementItem): Promise<AnnouncementItem | null> {
+    try {
+      const res = await fetch("/api/admin/announcements", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(item),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.announcement) {
+        pushToast("error", data?.error || "Could not save the announcement.");
+        return null;
+      }
+      return data.announcement as AnnouncementItem;
+    } catch {
+      pushToast("error", "Network error: the announcement was not saved.");
+      return null;
+    }
+  }
+
+  function applyAnnouncements(list: AnnouncementItem[]) {
+    const sorted = [...list].sort((a, b) => a.displayOrder - b.displayOrder);
+    setAnnouncements(sorted);
+    saveAnnouncements(sorted);
+  }
+
+  async function handleSaveAnnouncement(next: AnnouncementItem) {
+    const saved = await persistAnnouncement(next);
+    if (!saved) return; // keep the editor open so nothing typed is lost
+    applyAnnouncements([...announcements.filter((a) => a.id !== next.id && a.id !== saved.id), saved]);
     setAnnouncementEditorOpen(false);
     setEditingAnnouncement(null);
-    pushToast(
-      "success",
-      editingAnnouncement ? "Announcement updated." : "Announcement added.",
-    );
+    pushToast("success", editingAnnouncement ? "Announcement updated." : "Announcement added.");
   }
 
-  function handleToggleAnnouncement(id: string, enabled: boolean) {
+  async function handleToggleAnnouncement(id: string, enabled: boolean) {
     const item = announcements.find((a) => a.id === id);
     if (!item) return;
-    const updated = upsertAnnouncement({ ...item, enabled });
-    setAnnouncements(updated);
-    pushToast("info", enabled ? "Announcement active on site." : "Announcement paused.");
+    const saved = await persistAnnouncement({ ...item, enabled });
+    if (!saved) return;
+    applyAnnouncements(announcements.map((a) => (a.id === id ? saved : a)));
+    pushToast("info", enabled ? "Announcement enabled on the site." : "Announcement disabled (hidden).");
   }
 
-  function handleMoveAnnouncement(id: string, direction: "up" | "down") {
-    const updated = reorderAnnouncement(id, direction);
-    setAnnouncements(updated);
+  async function handleMoveAnnouncement(id: string, direction: "up" | "down") {
+    const sorted = [...announcements].sort((a, b) => a.displayOrder - b.displayOrder);
+    const index = sorted.findIndex((a) => a.id === id);
+    const swap = direction === "up" ? index - 1 : index + 1;
+    if (index < 0 || swap < 0 || swap >= sorted.length) return;
+    [sorted[index], sorted[swap]] = [sorted[swap], sorted[index]];
+    const reordered = sorted.map((a, i) => ({ ...a, displayOrder: i + 1 }));
+    applyAnnouncements(reordered); // optimistic
+    try {
+      const res = await fetch("/api/admin/announcements", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: reordered.map((a) => a.id) }),
+      });
+      if (!res.ok) throw new Error();
+    } catch {
+      applyAnnouncements(announcements); // roll back
+      pushToast("error", "Could not save the new order.");
+    }
   }
 
-  function handleDeleteAnnouncement(id: string) {
-    const updated = deleteAnnouncement(id);
-    setAnnouncements(updated);
+  async function handleDeleteAnnouncement(id: string) {
     setConfirmDeleteAnnouncementId(null);
-    pushToast("success", "Announcement removed.");
+    try {
+      const res = await fetch(`/api/admin/announcements?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        pushToast("error", data?.error || "Could not delete the announcement.");
+        return;
+      }
+      applyAnnouncements(announcements.filter((a) => a.id !== id));
+      pushToast("success", "Announcement removed.");
+    } catch {
+      pushToast("error", "Network error: the announcement was not deleted.");
+    }
   }
 
   function handleExportAnnouncements() {
@@ -661,7 +747,6 @@ function Dashboard({
               onAskDelete={setConfirmDeleteId}
               onCancelDelete={() => setConfirmDeleteId(null)}
               onConfirmDelete={handleDeletePharmacist}
-              onAdd={openNewPharmacist}
               onEdit={openEditPharmacist}
               onMove={handleMovePharmacist}
               onExport={handleExportPharmacists}
@@ -755,7 +840,6 @@ function PharmacistSection({
   onAskDelete,
   onCancelDelete,
   onConfirmDelete,
-  onAdd,
   onEdit,
   onMove,
   onExport,
@@ -765,7 +849,6 @@ function PharmacistSection({
   onAskDelete: (id: string) => void;
   onCancelDelete: () => void;
   onConfirmDelete: (id: string) => void;
-  onAdd: () => void;
   onEdit: (item: Pharmacist) => void;
   onMove: (id: string, dir: "up" | "down") => void;
   onExport: () => void;
@@ -783,7 +866,7 @@ function PharmacistSection({
             Our Pharmacists Directory
           </h2>
           <p className="mt-1 text-sm text-slate-600">
-            Add new team members, edit credentials, or change portrait photos. Changes reflect on the homepage immediately.
+            Edit credentials, languages, or the portrait photo. Changes reflect on the About page immediately.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -791,21 +874,13 @@ function PharmacistSection({
             <Download size={14} />
             <span>Export JSON</span>
           </Button>
-          <Button
-            size="sm"
-            onClick={onAdd}
-            className="gap-1.5 bg-[var(--brand)] text-white hover:bg-[var(--brand-hover)]"
-          >
-            <Plus size={14} />
-            <span>Add Pharmacist</span>
-          </Button>
         </div>
       </div>
 
       {sorted.length === 0 ? (
         <EmptyState
           title="No pharmacists configured"
-          body="Click Add Pharmacist above to create the first team member."
+          body="No pharmacist profile is configured yet."
         />
       ) : (
         <ul className="grid grid-cols-1 gap-4">
@@ -1278,23 +1353,18 @@ function AnnouncementSection({
                               Urgent Notice
                             </Badge>
                           )}
-                          <button
-                            type="button"
-                            onClick={() => onToggle(a.id, !a.enabled)}
-                            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors ${
-                              a.enabled
-                                ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200"
-                                : "bg-slate-200 text-slate-600 hover:bg-slate-300"
+                          <span
+                            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                              a.enabled ? "bg-emerald-100 text-emerald-800" : "bg-slate-200 text-slate-600"
                             }`}
-                            title="Click to toggle live display status"
                           >
                             <span
                               className={`h-1.5 w-1.5 rounded-full ${
                                 a.enabled ? "bg-emerald-600" : "bg-slate-400"
                               }`}
                             />
-                            {a.enabled ? "Active on site" : "Paused (Hidden)"}
-                          </button>
+                            {a.enabled ? "Active on site" : "Disabled (hidden)"}
+                          </span>
                           {a.link && (
                             <span className="text-slate-500 font-mono text-[11px] bg-slate-100 px-2 py-0.5 rounded">
                               Link: {a.link}
@@ -1332,6 +1402,21 @@ function AnnouncementSection({
 
                       {/* Action buttons */}
                       <div className="flex items-center gap-2 border-slate-100 sm:border-l sm:pl-3">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onToggle(a.id, !a.enabled)}
+                          aria-pressed={a.enabled}
+                          className={`w-24 gap-1.5 text-xs font-medium ${
+                            a.enabled
+                              ? "text-slate-700"
+                              : "border-emerald-300 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
+                          }`}
+                        >
+                          {a.enabled ? <EyeOff size={14} /> : <Eye size={14} />}
+                          {a.enabled ? "Disable" : "Enable"}
+                        </Button>
+
                         <Button
                           variant="outline"
                           size="sm"

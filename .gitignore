@@ -27,3 +27,6 @@ next-env.d.ts
 
 # Production env for importing into Hostinger hPanel -- contains secrets, never commit
 hostinger.env
+
+# Local admin uploads (production uses UPLOAD_DIR outside the app)
+.uploads/

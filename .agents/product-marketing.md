@@ -53,7 +53,7 @@ literal coverage fact), seamless, "compliant", "accredited", "certified" (see Cl
 - Many in-stock prescription refills ready in under 30 minutes
 - Languages: English, Punjabi, Hindi (`data/pharmacy-info.ts`)
 - Store hours: Mon–Fri 8:30 am – 5 pm, Sat 9 am – 12 pm, Sun closed (`PHARMACY_INFO.hours*`)
-- Online booking: Mon–Fri 9:00 am – 2:30 pm only (`PHARMACY_INFO.onlineBooking`)
+- Online booking: Mon–Fri 10:00 am – 3:00 pm only (30-minute slots) (`PHARMACY_INFO.onlineBooking`)
 - Licensed community pharmacy regulated by the College of Pharmacists of BC
 - Pharmacists can assess and prescribe for BC minor ailments and contraception
 - Direct billing to the insurers listed in `data/pharmacy-info.ts` `accreditation.directBilling`

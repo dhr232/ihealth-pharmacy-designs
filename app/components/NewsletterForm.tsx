@@ -5,8 +5,6 @@ import { motion } from "motion/react";
 import { Mail, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { isValidEmail } from "@/lib/validation";
 
-const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "YOUR_WEB3FORMS_KEY_HERE";
-
 export default function NewsletterForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -48,29 +46,11 @@ export default function NewsletterForm() {
         return;
       }
 
-      // Fallback to Web3Forms if custom API is unavailable
-      const formData = new FormData();
-      formData.append("access_key", WEB3FORMS_KEY);
-      formData.append("subject", "iHealth Pharmacy — Newsletter Signup");
-      formData.append("from_name", "iHealth Pharmacy Website");
-      formData.append("Name", name);
-      formData.append("Email", email);
-      formData.append("botcheck", "");
-
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        body: formData,
-      });
-
-      const result = await response.json();
-      if (result.success) {
-        setSent(true);
-      } else {
-        setError(result.message || "Something went wrong. Please try again.");
-      }
+      const data = (await apiResponse.json().catch(() => ({}))) as { error?: string };
+      setError(data.error || "Something went wrong. Please try again.");
     } catch (err) {
-      console.warn("Newsletter submission fallback:", err);
-      setSent(true); // graceful fallback so user still gets confirmation
+      console.warn("Newsletter submission failed:", err);
+      setError("We could not sign you up right now. Please try again in a moment.");
     } finally {
       setSending(false);
     }
