@@ -22,7 +22,7 @@ const SERVICES: Record<
     tagline: "Walk-in care for common health conditions",
     description:
       "Under British Columbia's expanded clinical pharmacist prescribing authority, our licensed pharmacists can assess your symptoms and prescribe prescription medications directly for common minor ailments and contraception — no doctor's appointment or walk-in clinic wait times needed.",
-    image: "/services/minor-ailments.jpg",
+    image: "/services/minor-ailments.jpg?v=20261004_fresh",
     points: [
       "Uncomplicated Urinary Tract Infections (UTIs)",
       "Allergies, Hay Fever & Allergic Rhinitis",
@@ -76,7 +76,7 @@ const SERVICES: Record<
     tagline: "One-on-one pharmacist care",
     description:
       "Book a private consultation with a pharmacist to review all your medications, check for interactions, and optimize your therapy. We also provide professional injections in a comfortable, private room.",
-    image: "/services/med-review.jpg",
+    image: "/services/med-review.jpg?v=20261004b",
     points: [
       "Full medication review and interaction check",
       "Personalized dosing schedule",

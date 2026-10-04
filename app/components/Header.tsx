@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
+  ArrowLeftRight,
   Menu,
   X,
   Phone,
@@ -80,7 +81,7 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
       badge: "Walk-In Prescribing",
       title: "No Doctor Appointment Required",
       description: "Consult directly with our licensed prescribing pharmacists for common minor ailments with prescriptions on-site.",
-      image: "/services/minor-ailments.jpg",
+      image: "/services/minor-ailments.jpg?v=20261004_fresh",
       ctaText: "Explore prescribing care",
       href: "/services/minor-ailments",
     },
@@ -94,6 +95,14 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
             icon: Stethoscope,
             iconClass: "border-blue-200/80 bg-blue-100 text-[#3D5FE0] group-hover:bg-[#3D5FE0] group-hover:text-white group-hover:border-[#3D5FE0]",
             href: "/services/minor-ailments",
+            featureCard: {
+              badge: "Walk-In Prescribing",
+              title: "No Doctor Appointment Required",
+              description: "Consult directly with our licensed prescribing pharmacists for common minor ailments with prescriptions on-site.",
+              image: "/services/minor-ailments.jpg?v=20261004_fresh",
+              ctaText: "Explore prescribing care",
+              href: "/services/minor-ailments",
+            },
           },
           {
             label: "Vaccines & Flu Shots",
@@ -101,6 +110,14 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
             icon: Syringe,
             iconClass: "border-teal-200/80 bg-teal-100 text-teal-700 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600",
             href: "/vaccinations",
+            featureCard: {
+              badge: "Walk-In Vaccines",
+              title: "Vaccines & Immunizations",
+              description: "Flu, COVID-19, routine, Shingrix shingles vaccines, and travel immunizations administered on-site.",
+              image: "/services/vaccinations.jpg",
+              ctaText: "Explore vaccinations",
+              href: "/vaccinations",
+            },
           },
           {
             label: "Medication Reviews",
@@ -108,6 +125,14 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
             icon: FileText,
             iconClass: "border-amber-200/80 bg-amber-100 text-amber-700 group-hover:bg-amber-600 group-hover:text-white group-hover:border-amber-600",
             href: "/services/med-review",
+            featureCard: {
+              badge: "1-on-1 Pharmacist Care",
+              title: "Medication Review Consultation",
+              description: "Sit down privately with our pharmacist to optimize your prescriptions, check interactions, and simplify your routine.",
+              image: "/services/med-review.jpg?v=20261004b",
+              ctaText: "Book medication review",
+              href: "/services/med-review",
+            },
           },
           {
             label: "Custom Compounding",
@@ -115,6 +140,14 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
             icon: Sparkles,
             iconClass: "border-purple-200/80 bg-purple-100 text-purple-700 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600",
             href: "/services/compounding",
+            featureCard: {
+              badge: "Custom Formulations",
+              title: "Specialized Compounding Lab",
+              description: "Custom doses, tailored pediatric liquids, allergen-free medications, and specialized topical formulas.",
+              image: "/services/compounding.jpg",
+              ctaText: "Explore compounding",
+              href: "/services/compounding",
+            },
           },
         ],
       },
@@ -271,13 +304,13 @@ export default function Header({ logoHref }: HeaderProps = {}) {
             </div>
           </a>
 
-          {/* High-Contrast Primary Refill Button with Fade Gradient */}
+          {/* Primary action: transfer a prescription to iHealth */}
           <Link
-            href="/prescription-refills"
+            href="/transfer"
             className="bg-[var(--brand-secondary)] hover:bg-[var(--brand-secondary-hover)] inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold text-white transition"
           >
-            <RefreshCw size={13} className="stroke-[2.5]" />
-            <span>Refill Prescription</span>
+            <ArrowLeftRight size={13} className="stroke-[2.5]" />
+            <span>Transfer Prescription</span>
           </Link>
         </div>
 

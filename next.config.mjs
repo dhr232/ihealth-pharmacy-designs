@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  ...(process.env.STATIC_EXPORT === 'true' ? { output: 'export' } : {}),
-  trailingSlash: true,
+  // Trailing slashes only matter for the (legacy) static export. On the Node server they made the
+  // server render "/contact" while the browser rebuilt "/contact/", a hydration mismatch on every Link.
+  ...(process.env.STATIC_EXPORT === 'true' ? { output: 'export', trailingSlash: true } : {}),
   skipTrailingSlashRedirect: true,
   images: { unoptimized: true },
   async headers() {

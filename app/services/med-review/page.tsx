@@ -133,7 +133,7 @@ export default function MedicationReviewPage() {
                 <div className="overflow-hidden rounded-3xl border border-[#C9EBD8] bg-[#E5F6EC] p-3 shadow-sm">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/services/med-review.jpg"
+                    src="/services/med-review.jpg?v=20261004b"
                     alt="Pharmacist reviewing medications with a patient in a private consultation"
                     className="aspect-[4/3] w-full rounded-2xl object-cover"
                   />

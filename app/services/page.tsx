@@ -41,7 +41,7 @@ const ALL_SERVICES = [
     desc: "Direct assessment and prescription for common ailments including UTIs, shingles, cold sores, acid reflux, allergies, and conjunctivitis without needing a doctor appointment.",
     icon: Stethoscope,
     badge: "Walk-ins Welcome",
-    image: "/services/minor-ailments.jpg",
+    image: "/services/minor-ailments.jpg?v=20261004_fresh",
   },
   {
     title: "Custom Compounding",
@@ -68,7 +68,7 @@ const ALL_SERVICES = [
     desc: "Comprehensive one-on-one review of all your prescription drugs, over-the-counter supplements, and chronic condition management.",
     icon: HeartPulse,
     badge: "1-on-1 Consult",
-    image: "/services/med-review.jpg",
+    image: "/services/med-review.jpg?v=20261004b",
   },
   {
     title: "Free Prescription Delivery",

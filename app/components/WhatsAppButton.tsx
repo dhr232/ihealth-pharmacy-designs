@@ -3,7 +3,6 @@
 import { useState, useEffect, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 import {
-  MessageCircle,
   X,
   Camera,
   Pill,
@@ -16,6 +15,14 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
+
+function WhatsAppLogo({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+    </svg>
+  );
+}
 
 export default function WhatsAppButton() {
   const [open, setOpen] = useState(false);
@@ -84,7 +91,7 @@ export default function WhatsAppButton() {
   return (
     <aside
       aria-label="WhatsApp Pharmacist Assistance"
-      className="fixed bottom-4 right-4 z-40 sm:bottom-6 sm:right-6"
+      className="fixed bottom-4 right-4 z-40 flex flex-col items-end sm:bottom-6 sm:right-6"
     >
       <AnimatePresence>
         {open && (
@@ -108,10 +115,10 @@ export default function WhatsAppButton() {
                 : { opacity: 0, y: 16, scale: 0.95 }
             }
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-3 w-[calc(100vw-2rem)] max-w-sm overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-2xl"
+            className="fixed inset-x-3 bottom-[4.75rem] z-50 flex max-h-[calc(100dvh-6rem)] flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-2xl sm:static sm:inset-auto sm:mb-3 sm:max-h-[min(40rem,calc(100dvh-8rem))] sm:w-[24rem]"
           >
             {/* Header with Pharmacist Info */}
-            <div className="bg-[#128C7E] p-4 text-white">
+            <div className="shrink-0 bg-[#128C7E] p-4 text-white">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <div className="relative">
@@ -154,13 +161,13 @@ export default function WhatsAppButton() {
                 </button>
               </div>
 
-              <p className="mt-3 text-xs leading-relaxed text-white/95">
+              <p className="mt-3 hidden text-xs leading-relaxed text-white/95 sm:block">
                 Have a question or prescription? Chat with our Chilliwack pharmacy team on WhatsApp. You can also send a voice message or photo of your pill bottle if typing is difficult.
               </p>
             </div>
 
             {/* Quick Actions (Large Touch Targets for Seniors) */}
-            <div className="max-h-[60vh] overflow-y-auto p-4 space-y-2.5">
+            <div className="min-h-0 flex-1 space-y-2.5 overflow-y-auto overscroll-contain p-3 sm:p-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
                 Choose an option:
               </p>
@@ -171,14 +178,14 @@ export default function WhatsAppButton() {
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3.5 transition hover:border-[#25D366] hover:bg-green-50/50"
+                  className="group flex min-h-14 items-center justify-between gap-2 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3 transition hover:border-[#25D366] hover:bg-green-50/50 sm:p-3.5"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex min-w-0 items-center gap-3">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-[#128C7E] shadow-sm transition group-hover:bg-[#25D366] group-hover:text-white">
                       <item.icon size={20} />
                     </span>
-                    <div className="text-left">
-                      <p className="text-sm font-semibold text-[var(--foreground)]">
+                    <div className="min-w-0 text-left">
+                      <p className="text-sm font-semibold leading-snug text-[var(--foreground)]">
                         {item.title}
                       </p>
                       <p className="text-xs text-[var(--muted)]">{item.desc}</p>
@@ -207,7 +214,7 @@ export default function WhatsAppButton() {
             </div>
 
             {/* Footer Assurance */}
-            <div className="border-t border-[var(--border)] bg-gray-50 px-4 py-2.5 text-center">
+            <div className="shrink-0 border-t border-[var(--border)] bg-gray-50 px-4 py-2.5 text-center">
               <span className="inline-flex items-center gap-1.5 text-[11px] text-[var(--muted)]">
                 <ShieldCheck size={13} className="text-green-600" />
                 Licensed BC Pharmacy • Confidential Care
@@ -217,32 +224,38 @@ export default function WhatsAppButton() {
         )}
       </AnimatePresence>
 
-      {/* Floating Trigger Button: Large, Accessible, Clear Text for Seniors */}
-      <div className="flex items-center gap-2">
-        {!open && (
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            aria-label="Open WhatsApp chat with pharmacist"
-            className="hidden sm:inline-flex items-center gap-2 rounded-full border border-green-200 bg-white px-4 py-2.5 text-xs font-semibold text-[#128C7E] shadow-lg transition hover:bg-green-50"
-          >
-            <span className="h-2 w-2 rounded-full bg-[#25D366] animate-pulse" />
-            Chat with Pharmacist
-          </button>
-        )}
-
-        <motion.button
+      {/* Phones: tap outside the sheet to close it */}
+      {open && (
+        <button
           type="button"
-          whileHover={shouldReduceMotion ? {} : { scale: 1.05 }}
-          whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
-          onClick={() => setOpen((o) => !o)}
-          aria-label={open ? "Close WhatsApp chat" : "Open WhatsApp chat"}
-          aria-expanded={open}
-          className="flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl shadow-[#25D366]/35 transition hover:bg-[#1ea952] focus:outline-none focus:ring-4 focus:ring-green-300"
-        >
-          {open ? <X size={24} /> : <MessageCircle size={28} />}
-        </motion.button>
-      </div>
+          aria-label="Close WhatsApp chat"
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 z-40 bg-black/25 sm:hidden"
+        />
+      )}
+
+      {/* Floating trigger: just the WhatsApp logo, with a gentle wiggle every few seconds */}
+      <motion.button
+        type="button"
+        animate={
+          shouldReduceMotion || open
+            ? { rotate: 0 }
+            : { rotate: [0, -14, 12, -10, 8, -4, 0] }
+        }
+        transition={
+          shouldReduceMotion || open
+            ? { duration: 0 }
+            : { duration: 1, ease: "easeInOut", repeat: Infinity, repeatDelay: 3.5 }
+        }
+        whileHover={shouldReduceMotion ? {} : { scale: 1.08 }}
+        whileTap={shouldReduceMotion ? {} : { scale: 0.94 }}
+        onClick={() => setOpen((o) => !o)}
+        aria-label={open ? "Close WhatsApp chat" : "Message us on WhatsApp"}
+        aria-expanded={open}
+        className="relative z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-[#25D366]/35 transition-colors hover:bg-[#1ea952] focus:outline-none focus:ring-4 focus:ring-green-300"
+      >
+        {open ? <X size={22} /> : <WhatsAppLogo className="h-7 w-7" />}
+      </motion.button>
     </aside>
   );
 }
