@@ -22,6 +22,7 @@ import {
 import Link from "next/link";
 import { motion } from "motion/react";
 import { getMainSiteUrl } from "@/lib/routes";
+import { CARD_TONES } from "@/app/components/cardTones";
 import PhipaBadge from "@/app/components/PhipaBadge";
 
 interface BookingReviewProps {
@@ -477,7 +478,8 @@ export default function BookingReview({
       transition={{ duration: 0.35, ease: "easeOut" }}
       className="space-y-6"
     >
-      <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-xs">
+      <div className={`relative isolate overflow-hidden rounded-3xl border p-6 sm:p-8 shadow-xs ${CARD_TONES.blue.card}`}>
+        <span className={`pointer-events-none absolute -top-14 -right-12 -z-10 h-44 w-44 rounded-full opacity-70 ${CARD_TONES.blue.blob}`} aria-hidden="true" />
         <div>
           <div className="inline-flex items-center gap-1.5 rounded-full bg-[#E8ECFB] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-[#1E2A44] border border-[#C7D2F7] mb-2">
             <ShieldCheck size={12} className="text-[var(--brand)]" />
@@ -504,7 +506,7 @@ export default function BookingReview({
 
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           {/* Card 1: Service & Schedule Details */}
-          <div className="rounded-2xl border border-slate-200/80 bg-slate-50/60 p-6 space-y-4">
+          <div className="rounded-2xl border border-slate-200/80 bg-white/70 p-6 space-y-4">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
               Service & Schedule
             </h3>
@@ -544,7 +546,7 @@ export default function BookingReview({
           </div>
 
           {/* Card 2: Patient Demographics */}
-          <div className="rounded-2xl border border-slate-200/80 bg-slate-50/60 p-6 space-y-4">
+          <div className="rounded-2xl border border-slate-200/80 bg-white/70 p-6 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
                 Patient Identification
@@ -606,7 +608,7 @@ export default function BookingReview({
         </div>
 
         {/* Cancellation Notice */}
-        <div className="mt-6 rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4.5 text-xs text-slate-600">
+        <div className="mt-6 rounded-2xl border border-slate-200/80 bg-white/70 p-4.5 text-xs text-slate-600">
           <p className="font-bold text-slate-800">
             Rescheduling & Cancellation Policy:
           </p>

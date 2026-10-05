@@ -13,8 +13,11 @@ import {
   X,
   FileText,
   Pill,
-  Shield,
+  Stethoscope,
+  Syringe,
+  MessageSquareText,
 } from "lucide-react";
+import { CARD_TONES } from "@/app/components/cardTones";
 import {
   BookingService,
   ALL_BOOKING_SERVICES,
@@ -224,20 +227,17 @@ export default function ServiceSelector({
         /* The 4 Main Accordion Services (matching screenshot) */
         <div className="space-y-4">
           {/* SERVICE 1: PRESCRIPTIONS */}
-          <div className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-xs transition-all">
+          <div className={`relative isolate overflow-hidden rounded-2xl border shadow-xs transition-all ${CARD_TONES.blue.card}`}>
+            <span className={`pointer-events-none absolute -top-10 -right-8 -z-10 h-24 w-24 rounded-full opacity-80 ${CARD_TONES.blue.blob}`} aria-hidden="true" />
             <button
               type="button"
               onClick={() => toggleCategory("prescriptions")}
-              className="flex w-full items-center justify-between px-6 py-5 text-left transition-colors hover:bg-slate-50/80 cursor-pointer"
+              className="flex w-full items-center justify-between px-6 py-5 text-left transition-colors hover:bg-white/40 cursor-pointer"
             >
               <div className="flex items-center gap-4">
                 {/* Pill bottle icon with cross */}
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900 text-white shadow-xs">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="5" y="4" width="14" height="17" rx="3" fill="#0F172A" stroke="currentColor" strokeWidth="2"/>
-                    <path d="M9 1H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                    <path d="M12 9V15M9 12H15" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round"/>
-                  </svg>
+                <div className={`relative flex h-11 w-11 items-center justify-center rounded-xl ${CARD_TONES.blue.icon}`}>
+                  <Pill size={24} strokeWidth={1.6} aria-hidden="true" />
                 </div>
                 <div>
                   <h2 className="text-base sm:text-lg font-bold text-slate-900">
@@ -382,22 +382,17 @@ export default function ServiceSelector({
           </div>
 
           {/* SERVICE 2: MINOR AILMENTS AND CONDITIONS (EXACT SUB-MENU MATCHING SCREENSHOT) */}
-          <div className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-xs transition-all">
+          <div className={`relative isolate overflow-hidden rounded-2xl border shadow-xs transition-all ${CARD_TONES.purple.card}`}>
+            <span className={`pointer-events-none absolute -top-10 -right-8 -z-10 h-24 w-24 rounded-full opacity-80 ${CARD_TONES.purple.blob}`} aria-hidden="true" />
             <button
               type="button"
               onClick={() => toggleCategory("minor_ailments")}
-              className="flex w-full items-center justify-between px-6 py-5 text-left transition-colors hover:bg-slate-50/80 cursor-pointer"
+              className="flex w-full items-center justify-between px-6 py-5 text-left transition-colors hover:bg-white/40 cursor-pointer"
             >
               <div className="flex items-center gap-4">
                 {/* Face unwell icon (matching BookMyPharmacy icon) */}
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900 text-white shadow-xs">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="#0F172A"/>
-                    <path d="M7 10L10 8" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
-                    <path d="M17 10L14 8" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
-                    <path d="M9 16C10 14.5 14 14.5 15 16" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
-                    <circle cx="6.5" cy="5.5" r="1.5" fill="#38BDF8"/>
-                  </svg>
+                <div className={`relative flex h-11 w-11 items-center justify-center rounded-xl ${CARD_TONES.purple.icon}`}>
+                  <Stethoscope size={24} strokeWidth={1.6} aria-hidden="true" />
                 </div>
                 <div>
                   <h2 className="text-base sm:text-lg font-bold text-slate-900">
@@ -465,19 +460,16 @@ export default function ServiceSelector({
           </div>
 
           {/* SERVICE 3: VACCINES / INJECTIONS */}
-          <div className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-xs transition-all">
+          <div className={`relative isolate overflow-hidden rounded-2xl border shadow-xs transition-all ${CARD_TONES.peach.card}`}>
+            <span className={`pointer-events-none absolute -top-10 -right-8 -z-10 h-24 w-24 rounded-full opacity-80 ${CARD_TONES.peach.blob}`} aria-hidden="true" />
             <button
               type="button"
               onClick={() => toggleCategory("vaccines")}
-              className="flex w-full items-center justify-between px-6 py-5 text-left transition-colors hover:bg-slate-50/80 cursor-pointer"
+              className="flex w-full items-center justify-between px-6 py-5 text-left transition-colors hover:bg-white/40 cursor-pointer"
             >
               <div className="flex items-center gap-4">
-                {/* Shield with medical cross (matching screenshot) */}
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900 text-white shadow-xs">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L4 5V11C4 16.5 7.5 21.5 12 23C16.5 21.5 20 16.5 20 11V5L12 2Z" fill="#0F172A" stroke="currentColor" strokeWidth="2"/>
-                    <path d="M12 7V17M7 12H17" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round"/>
-                  </svg>
+                <div className={`relative flex h-11 w-11 items-center justify-center rounded-xl ${CARD_TONES.peach.icon}`}>
+                  <Syringe size={24} strokeWidth={1.6} aria-hidden="true" />
                 </div>
                 <div>
                   <h2 className="text-base sm:text-lg font-bold text-slate-900">
@@ -537,19 +529,17 @@ export default function ServiceSelector({
           </div>
 
           {/* SERVICE 4: CONSULTATIONS */}
-          <div className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-xs transition-all">
+          <div className={`relative isolate overflow-hidden rounded-2xl border shadow-xs transition-all ${CARD_TONES.teal.card}`}>
+            <span className={`pointer-events-none absolute -top-10 -right-8 -z-10 h-24 w-24 rounded-full opacity-80 ${CARD_TONES.teal.blob}`} aria-hidden="true" />
             <button
               type="button"
               onClick={() => toggleCategory("consultations")}
-              className="flex w-full items-center justify-between px-6 py-5 text-left transition-colors hover:bg-slate-50/80 cursor-pointer"
+              className="flex w-full items-center justify-between px-6 py-5 text-left transition-colors hover:bg-white/40 cursor-pointer"
             >
               <div className="flex items-center gap-4">
                 {/* Speech/Chat bubble (matching screenshot) */}
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900 text-white shadow-xs">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 4H20C21.1 4 22 4.9 22 6V16C22 17.1 21.1 18 20 18H7L2 22V6C2 4.9 2.9 4 4 4Z" fill="#0F172A" stroke="currentColor" strokeWidth="2"/>
-                    <path d="M7 10H17M7 14H13" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round"/>
-                  </svg>
+                <div className={`relative flex h-11 w-11 items-center justify-center rounded-xl ${CARD_TONES.teal.icon}`}>
+                  <MessageSquareText size={24} strokeWidth={1.6} aria-hidden="true" />
                 </div>
                 <div>
                   <h2 className="text-base sm:text-lg font-bold text-slate-900">

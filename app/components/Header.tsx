@@ -249,7 +249,7 @@ export default function Header({ logoHref }: HeaderProps = {}) {
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
-      <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-3 px-4 lg:px-8">
+      <div className="mx-auto flex h-[72px] max-w-[90rem] items-center justify-between gap-3 px-4 xl:px-8">
         {/* Brand Logo */}
         <Link
           href={resolvedLogoHref}
@@ -283,21 +283,21 @@ export default function Header({ logoHref }: HeaderProps = {}) {
         </Link>
 
         {/* Desktop MegaMenu */}
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <MegaMenu items={IHEALTH_NAV_ITEMS} theme="light" />
         </div>
 
         {/* Language switcher: one instance, visible at every width */}
-        <div className="ml-auto lg:ml-0">
+        <div className="ml-auto xl:ml-0">
           <LanguageSwitcher />
         </div>
 
         {/* Desktop Senior-Optimized Action Bar */}
-        <div className="hidden items-center gap-3 lg:flex shrink-0">
+        <div className="hidden items-center gap-3 xl:flex shrink-0">
           {/* Direct Phone Call Badge - High Priority for Seniors */}
           <a
             href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
-            className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-50 hover:bg-teal-50 text-slate-800 hover:text-teal-800 transition border border-slate-200/90 shadow-2xs group"
+            className="flex shrink-0 items-center whitespace-nowrap gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-50 hover:bg-teal-50 text-slate-800 hover:text-teal-800 transition border border-slate-200/90 shadow-2xs group"
             title={`Call Pharmacy: ${PHARMACY_INFO.phoneDisplay}`}
           >
             <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-white shadow-2xs group-hover:scale-105 transition-transform">
@@ -312,15 +312,15 @@ export default function Header({ logoHref }: HeaderProps = {}) {
           {/* Primary action: transfer a prescription to iHealth */}
           <Link
             href="/transfer"
-            className="bg-[var(--brand-secondary)] hover:bg-[var(--brand-secondary-hover)] inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold text-white transition"
+            className="bg-[var(--brand-secondary)] hover:bg-[var(--brand-secondary-hover)] inline-flex shrink-0 items-center whitespace-nowrap gap-2 rounded-full px-4 py-2 text-xs font-bold text-white transition"
           >
             <ArrowLeftRight size={13} className="stroke-[2.5]" />
-            <span>Transfer to iHealth Pharmacy</span>
+            <span>Transfer to iHealth<span className="hidden 2xl:inline"> Pharmacy</span></span>
           </Link>
         </div>
 
         {/* Mobile Menu Trigger */}
-        <div className="flex items-center gap-2 lg:hidden">
+        <div className="flex items-center gap-2 xl:hidden">
           {/* Quick Call icon for mobile header */}
           <a
             href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
@@ -351,7 +351,7 @@ export default function Header({ logoHref }: HeaderProps = {}) {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="overflow-hidden border-t border-slate-200 bg-white px-5 lg:hidden max-h-[85vh] overflow-y-auto"
+            className="overflow-hidden border-t border-slate-200 bg-white px-5 xl:hidden max-h-[85vh] overflow-y-auto"
             aria-label="Mobile Navigation"
           >
             <div className="flex flex-col gap-3 py-4">

@@ -19,6 +19,7 @@ import {
   formatPhoneNumber,
   isValidOptionalPhn,
 } from "@/lib/validation";
+import { CARD_TONES } from "@/app/components/cardTones";
 import PhipaBadge from "@/app/components/PhipaBadge";
 
 export interface PatientFormData {
@@ -113,7 +114,8 @@ export default function PatientForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 animate-in fade-in duration-300">
-      <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-xs">
+      <div className={`relative isolate overflow-hidden rounded-3xl border p-6 sm:p-8 shadow-xs ${CARD_TONES.green.card}`}>
+        <span className={`pointer-events-none absolute -top-14 -right-12 -z-10 h-44 w-44 rounded-full opacity-70 ${CARD_TONES.green.blob}`} aria-hidden="true" />
         <div>
           <div className="inline-flex items-center gap-1.5 rounded-full bg-teal-50 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-teal-900 border border-teal-200 mb-2">
             <ShieldCheck size={12} className="text-teal-700" />
@@ -157,7 +159,7 @@ export default function PatientForm({
                       if (errors.firstName) setErrors({ ...errors, firstName: undefined });
                     }}
                     placeholder="e.g. Gurpreet"
-                    className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
+                    className={`w-full rounded-2xl border bg-white py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                       errors.firstName
                         ? "border-red-400 focus:border-red-500 focus:ring-red-100"
                         : "border-slate-200 focus:border-[var(--brand)] focus:ring-[var(--brand)]/10"
@@ -193,7 +195,7 @@ export default function PatientForm({
                       if (errors.lastName) setErrors({ ...errors, lastName: undefined });
                     }}
                     placeholder="e.g. Gill"
-                    className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
+                    className={`w-full rounded-2xl border bg-white py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                       errors.lastName
                         ? "border-red-400 focus:border-red-500 focus:ring-red-100"
                         : "border-slate-200 focus:border-[var(--brand)] focus:ring-[var(--brand)]/10"
@@ -232,7 +234,7 @@ export default function PatientForm({
                       if (errors.email) setErrors({ ...errors, email: undefined });
                     }}
                     placeholder="patient@example.com"
-                    className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
+                    className={`w-full rounded-2xl border bg-white py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                       errors.email
                         ? "border-red-400 focus:border-red-500 focus:ring-red-100"
                         : "border-slate-200 focus:border-[var(--brand)] focus:ring-[var(--brand)]/10"
@@ -268,7 +270,7 @@ export default function PatientForm({
                     value={formData.phone}
                     onChange={(e) => handlePhoneChange(e.target.value)}
                     placeholder="(604) 392-8393"
-                    className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
+                    className={`w-full rounded-2xl border bg-white py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                       errors.phone
                         ? "border-red-400 focus:border-red-500 focus:ring-red-100"
                         : "border-slate-200 focus:border-[var(--brand)] focus:ring-[var(--brand)]/10"
@@ -311,7 +313,7 @@ export default function PatientForm({
                       if (errors.dateOfBirth)
                         setErrors({ ...errors, dateOfBirth: undefined });
                     }}
-                    className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
+                    className={`w-full rounded-2xl border bg-white py-3 pl-10.5 pr-4 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                       errors.dateOfBirth
                         ? "border-red-400 focus:border-red-500 focus:ring-red-100"
                         : "border-slate-200 focus:border-[var(--brand)] focus:ring-[var(--brand)]/10"
@@ -340,7 +342,7 @@ export default function PatientForm({
                     setFormData({ ...formData, gender: e.target.value });
                     if (errors.gender) setErrors({ ...errors, gender: undefined });
                   }}
-                  className={`mt-1.5 w-full rounded-2xl border bg-slate-50/50 py-3 px-4 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
+                  className={`mt-1.5 w-full rounded-2xl border bg-white py-3 px-4 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                     errors.gender
                       ? "border-red-400 focus:border-red-500 focus:ring-red-100"
                       : "border-slate-200 focus:border-[var(--brand)] focus:ring-[var(--brand)]/10"
@@ -393,7 +395,7 @@ export default function PatientForm({
                   onChange={(e) => handlePhnChange(e.target.value)}
                   placeholder="10-digit number (e.g. 9123456789)"
                   maxLength={10}
-                  className={`w-full rounded-2xl border bg-slate-50/50 py-3 pl-10.5 pr-4 font-mono text-sm tracking-widest text-slate-900 placeholder:font-sans placeholder:tracking-normal placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
+                  className={`w-full rounded-2xl border bg-white py-3 pl-10.5 pr-4 font-mono text-sm tracking-widest text-slate-900 placeholder:font-sans placeholder:tracking-normal placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-4 transition-all ${
                     errors.phn
                       ? "border-red-400 focus:border-red-500 focus:ring-red-100"
                       : "border-slate-200 focus:border-[var(--brand)] focus:ring-[var(--brand)]/10"
@@ -437,7 +439,7 @@ export default function PatientForm({
                     setFormData({ ...formData, reasonForVisit: e.target.value })
                   }
                   placeholder="Briefly describe your symptoms, how long you have had them, or any specific questions for the pharmacist..."
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[var(--brand)] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[var(--brand)]/10 transition-all"
+                  className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-10.5 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[var(--brand)] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[var(--brand)]/10 transition-all"
                 />
               </div>
             </div>

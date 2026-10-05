@@ -68,15 +68,20 @@ export default function Footer({ logoHref = "/" }: FooterProps = {}) {
                   {PHARMACY_INFO.name}
                 </span>
                 <span className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">
-                  Community Dispensary
+                  Chilliwack Dispensary
                 </span>
               </div>
             </Link>
 
-            <p className="text-xs leading-relaxed text-slate-400">
-              Independent, community pharmacy in Chilliwack, BC. Personalized
-              medication reviews, minor ailments prescribing,
-              and free local delivery across Chilliwack and Sardis.
+            <p className="text-sm leading-relaxed text-slate-400">
+              At iHealth Pharmacy, we believe healthcare should be personal,
+              accessible, and centered around you. As a locally owned and
+              operated pharmacy, we take the time to understand your individual
+              needs and provide personalized care you can trust. Our dedicated
+              team is committed to delivering exceptional pharmacy services,
+              supporting your health goals, and being a trusted partner for you
+              and your family. We look forward to welcoming you to the iHealth
+              Pharmacy family and caring for you every step of the way.
             </p>
 
             {/* Multilingual Support Card */}

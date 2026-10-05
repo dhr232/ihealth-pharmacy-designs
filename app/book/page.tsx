@@ -99,7 +99,7 @@ function BookingWizard() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/50 text-slate-900 antialiased flex flex-col justify-between">
+    <div className="min-h-screen bg-[var(--surface)] text-slate-900 antialiased flex flex-col justify-between">
       <div>
         <Header logoHref={getMainSiteUrl("/")} />
 
