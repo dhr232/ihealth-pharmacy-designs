@@ -4,18 +4,13 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Globe, Check, ChevronDown, Loader2 } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 
-// Languages spoken in British Columbia (per census data).
+// Languages offered to patients; each is shown in its own script.
 const LANGUAGES = [
   { code: "en", label: "English", native: "English" },
   { code: "pa", label: "Punjabi", native: "ਪੰਜਾਬੀ" },
-  { code: "zh-CN", label: "Mandarin", native: "中文 (简体)" },
-  { code: "zh-TW", label: "Cantonese", native: "中文 (繁體)" },
   { code: "hi", label: "Hindi", native: "हिन्दी" },
+  { code: "zh-CN", label: "Mandarin", native: "中文 (简体)" },
   { code: "fr", label: "French", native: "Français" },
-  { code: "tl", label: "Tagalog", native: "Tagalog" },
-  { code: "ko", label: "Korean", native: "한국어" },
-  { code: "fa", label: "Persian", native: "فارسی" },
-  { code: "es", label: "Spanish", native: "Español" },
 ] as const;
 
 type LangCode = (typeof LANGUAGES)[number]["code"];
@@ -107,13 +102,34 @@ function setGoogleTranslateCookie(code: LangCode) {
   }
 }
 
+// How long to wait for Google's widget to load and finish translating before giving up.
+const TRANSLATE_TIMEOUT_MS = 30000;
+// Google's <select> appears before the widget is wired up. A language change fired in that gap
+// leaves the widget wedged (it claims to be translated but never translates) until the page is
+// reloaded, so the first apply waits until the page is at least this old.
+const WIDGET_READY_MS = 4000;
+const RELOAD_FLAG_KEY = "ihealth_lang_reload";
+/** Google wraps every translated text node in <font style="vertical-align: inherit">. */
+function isPageTranslated() {
+  return document.querySelector('font[style*="vertical-align"]') !== null;
+}
+
+/** Visible page text, used to confirm a language switch actually changed the content. */
+function pageTextSnapshot() {
+  const root = document.querySelector("main") ?? document.body;
+  return (root as HTMLElement).innerText.slice(0, 2000);
+}
+
 export default function LanguageSwitcher() {
   const shouldReduceMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<LangCode>("en");
   const [translating, setTranslating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+  // Incremented per attempt so a newer choice cancels an older, still-polling one.
+  const attemptRef = useRef(0);
 
   /* ------------------------------------------------------------------ */
   /* Direct Google Translate driver                                     */
@@ -141,16 +157,114 @@ export default function LanguageSwitcher() {
     }
   }, []);
 
+  /** Drop back to English without a reload (used when translation cannot complete). */
+  const revertToEnglish = useCallback(() => {
+    clearAllGoogleTranslateCookies();
+    try {
+      window.localStorage.setItem(STORAGE_KEY, "en");
+    } catch {
+      /* ignore */
+    }
+    applyGTranslate("en");
+    document.documentElement.lang = "en";
+    setActive("en");
+    window.dispatchEvent(new CustomEvent<LangCode>(LANG_CHANGE_EVENT, { detail: "en" }));
+  }, [applyGTranslate]);
+
+  /**
+   * Drive Google's hidden <select> and confirm the page really translated.
+   * `force` = a user choice: always apply, and require the page text to change.
+   * Otherwise (page load) Google usually translates from the cookie by itself.
+   */
+  const translateTo = useCallback(
+    (code: LangCode, force: boolean, onDone: (ok: boolean) => void) => {
+      const attempt = ++attemptRef.current;
+      const startedAt = Date.now();
+      let applied = false;
+      let applyCount = 0;
+      let nextApplyAt = 0;
+      let before = "";
+
+      const tick = () => {
+        if (attempt !== attemptRef.current) return;
+        const elapsed = Date.now() - startedAt;
+        const combo = document.querySelector(".goog-te-combo");
+
+        // Apply once the widget is ready, and retry once if Google has not responded.
+        if (
+          combo &&
+          window.performance.now() >= WIDGET_READY_MS &&
+          applyCount < 2 &&
+          elapsed >= nextApplyAt &&
+          (force || !isPageTranslated())
+        ) {
+          if (!applied) before = pageTextSnapshot();
+          applied = true;
+          applyCount++;
+          nextApplyAt = elapsed + 5000;
+          applyGTranslate(code);
+        }
+
+        const translated = isPageTranslated();
+        const done = force ? applied && translated && pageTextSnapshot() !== before : translated;
+        if (done) {
+          // Google does not always update the page language; keep it correct for screen readers.
+          document.documentElement.lang = code;
+          onDone(true);
+          return;
+        }
+        if (elapsed > TRANSLATE_TIMEOUT_MS) {
+          onDone(false);
+          return;
+        }
+        window.setTimeout(tick, 250);
+      };
+      window.setTimeout(tick, 0);
+    },
+    [applyGTranslate]
+  );
+
   /* ------------------------------------------------------------------ */
   /* Sync state across all instances (desktop & mobile) via events      */
   /* ------------------------------------------------------------------ */
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    // Google's widget mishandles a language cookie that already exists when it starts: it flags the
+    // page as translated without translating it, then ignores a repeat of the same language. So the
+    // cookie is always cleared before the widget loads, and the saved language is applied through
+    // the select afterwards, exactly like a fresh choice.
+    clearAllGoogleTranslateCookies();
+
     const initialLang = getStoredLang();
     if (initialLang !== "en") {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setActive(initialLang);
+      // Returning visitor: make sure their saved language is really applied to this page.
+      // If Google is slow or unreachable, show the truthful English state but KEEP the saved
+      // choice, so the next page the visitor opens tries again.
+      translateTo(initialLang, false, (ok) => {
+        let alreadyRetried = false;
+        try {
+          alreadyRetried = window.sessionStorage.getItem(RELOAD_FLAG_KEY) === initialLang;
+          if (ok) window.sessionStorage.removeItem(RELOAD_FLAG_KEY);
+        } catch {
+          /* sessionStorage unavailable */
+        }
+        if (ok) return;
+        if (!alreadyRetried) {
+          // A wedged widget only recovers on a fresh page load. Try that once per language.
+          try {
+            window.sessionStorage.setItem(RELOAD_FLAG_KEY, initialLang);
+            window.location.reload();
+            return;
+          } catch {
+            /* fall through to the English state */
+          }
+        }
+        document.documentElement.lang = "en";
+        setActive("en");
+      });
     } else {
       clearAllGoogleTranslateCookies();
     }
@@ -174,7 +288,7 @@ export default function LanguageSwitcher() {
       window.removeEventListener(LANG_CHANGE_EVENT, handleLangChange);
       window.removeEventListener("storage", handleStorage);
     };
-  }, []);
+  }, [translateTo, revertToEnglish]);
 
   /* ------------------------------------------------------------------ */
   /* Load Google Translate script once                                  */
@@ -182,13 +296,7 @@ export default function LanguageSwitcher() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    if (window.__iHealthGTEInitialized) {
-      const stored = getStoredLang();
-      if (stored !== "en") {
-        applyGTranslate(stored);
-      }
-      return;
-    }
+    if (window.__iHealthGTEInitialized) return;
 
     window.googleTranslateElementInit = () => {
       if (!window.google?.translate?.TranslateElement) return;
@@ -196,17 +304,14 @@ export default function LanguageSwitcher() {
         {
           pageLanguage: "en",
           includedLanguages: LANGUAGES.map((l) => l.code).join(","),
-          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+          // HORIZONTAL renders the hidden <select class="goog-te-combo"> that applyGTranslate
+          // drives. SIMPLE renders only a link + iframe menu and never creates the select.
+          layout: window.google.translate.TranslateElement.InlineLayout.HORIZONTAL,
           autoDisplay: false,
         },
         "google_translate_element"
       );
       window.__iHealthGTEInitialized = true;
-
-      const stored = getStoredLang();
-      if (stored !== "en") {
-        applyGTranslate(stored);
-      }
     };
 
     if (document.querySelector('script[data-ihealth-gtranslate="1"]')) return;
@@ -218,7 +323,7 @@ export default function LanguageSwitcher() {
     script.defer = true;
     script.setAttribute("data-ihealth-gtranslate", "1");
     document.head.appendChild(script);
-  }, [applyGTranslate]);
+  }, []);
 
   /* ------------------------------------------------------------------ */
   /* User selects a language from the menu                              */
@@ -226,6 +331,7 @@ export default function LanguageSwitcher() {
   const applyLanguage = useCallback(
     (code: LangCode) => {
       setOpen(false);
+      setError(null);
       setTranslating(true);
       setActive(code);
 
@@ -235,6 +341,7 @@ export default function LanguageSwitcher() {
       );
 
       if (code === "en") {
+        attemptRef.current++; // cancel any translation still in flight
         clearAllGoogleTranslateCookies();
         try {
           window.localStorage.removeItem(STORAGE_KEY);
@@ -259,10 +366,18 @@ export default function LanguageSwitcher() {
         /* ignore */
       }
 
-      applyGTranslate(code);
-      window.setTimeout(() => setTranslating(false), 1200);
+      translateTo(code, true, (ok) => {
+        setTranslating(false);
+        if (!ok) {
+          // Google did not respond (blocked, offline, or rate limited): be honest and
+          // leave the page in English instead of claiming a language that is not applied.
+          revertToEnglish();
+          setError("Translation is unavailable right now. Please try again, or call us.");
+          setOpen(true);
+        }
+      });
     },
-    [applyGTranslate]
+    [applyGTranslate, translateTo, revertToEnglish]
   );
 
   /* ------------------------------------------------------------------ */
@@ -294,7 +409,7 @@ export default function LanguageSwitcher() {
     LANGUAGES.find((l) => l.code === active) ?? LANGUAGES[0];
 
   return (
-    <div ref={containerRef} className="relative notranslate" translate="no">
+    <div ref={containerRef} className="notranslate sm:relative" translate="no">
       <button
         ref={buttonRef}
         type="button"
@@ -302,18 +417,18 @@ export default function LanguageSwitcher() {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={`Change language. Current: ${activeLanguage.label}`}
-        className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--border)] bg-slate-50/70 px-2.5 text-xs font-medium text-slate-700 shadow-xs transition hover:border-[var(--brand)] hover:bg-white hover:text-[var(--brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-1"
+        className="inline-flex h-11 w-11 items-center justify-center gap-1.5 rounded-full border border-[var(--border)] bg-slate-50/70 text-sm font-medium text-slate-700 shadow-xs transition hover:border-[var(--brand)] hover:bg-white hover:text-[var(--brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-1 sm:w-auto sm:px-3"
       >
         {translating ? (
-          <Loader2 size={14} aria-hidden="true" className="animate-spin text-[var(--brand)]" />
+          <Loader2 size={18} aria-hidden="true" className="animate-spin text-[var(--brand)]" />
         ) : (
-          <Globe size={14} aria-hidden="true" className="text-slate-500" />
+          <Globe size={18} aria-hidden="true" className="text-slate-500" />
         )}
         <span className="hidden sm:inline">{activeLanguage.label}</span>
         <ChevronDown
           size={12}
           aria-hidden="true"
-          className={`transition-transform ${open ? "rotate-180" : ""}`}
+          className={`hidden transition-transform sm:block ${open ? "rotate-180" : ""}`}
         />
       </button>
 
@@ -341,15 +456,21 @@ export default function LanguageSwitcher() {
               duration: shouldReduceMotion ? 0 : 0.18,
               ease: [0.16, 1, 0.3, 1],
             }}
-            className="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-xl border border-[var(--border)] bg-white shadow-xl ring-1 ring-black/5"
+            className="absolute left-4 right-4 top-full z-50 mt-2 overflow-hidden sm:left-auto sm:right-0 sm:w-72 rounded-xl border border-[var(--border)] bg-white shadow-xl ring-1 ring-black/5"
           >
             <div className="border-b border-[var(--border)] bg-[var(--surface)] px-4 py-2.5">
               <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
                 Choose language
               </p>
-              <p className="mt-0.5 text-[11px] text-[var(--muted)]">
-                Page translates automatically.
-              </p>
+              {error ? (
+                <p role="alert" className="mt-0.5 text-xs font-medium text-[#B45309]">
+                  {error}
+                </p>
+              ) : (
+                <p className="mt-0.5 text-xs text-[var(--muted)]">
+                  Automatic translation. Please confirm medication details with your pharmacist.
+                </p>
+              )}
             </div>
             <ul className="max-h-80 overflow-y-auto py-1">
               {LANGUAGES.map((lang) => {
@@ -361,7 +482,7 @@ export default function LanguageSwitcher() {
                       role="menuitemradio"
                       aria-checked={isActive}
                       onClick={() => applyLanguage(lang.code)}
-                      className={`flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left text-sm transition ${
+                      className={`flex min-h-11 w-full items-center justify-between gap-3 px-4 py-2.5 text-left text-base transition ${
                         isActive
                           ? "bg-[var(--brand-subtle)] text-[var(--brand)]"
                           : "text-[var(--foreground)] hover:bg-[var(--surface)]"
