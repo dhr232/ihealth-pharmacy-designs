@@ -155,6 +155,12 @@ const ABOUT_STATS = [
   { value: "Free", label: "Same-Day Delivery", star: false },
 ];
 
+const ABOUT_STATS = [
+  { value: PHARMACY_INFO.address.googleRating, label: "Google Rating", star: true },
+  { value: String(PHARMACY_INFO.languages.length), label: "Languages Spoken", star: false },
+  { value: "Free", label: "Same-Day Delivery", star: false },
+];
+
 const TESTIMONIALS = [
   {
     quote:

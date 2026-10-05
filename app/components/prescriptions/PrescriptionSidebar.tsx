@@ -30,7 +30,7 @@ const TRANSFER_FAQS = [
   },
   {
     q: "Will my PharmaCare and insurance still work?",
-    a: "Yes. We bill BC PharmaCare and many other plans directly. See the full list on our About page.",
+    a: "Yes. We bill BC Fair PharmaCare and most major insurers directly.",
   },
   {
     q: "How long does a transfer take?",
@@ -65,7 +65,7 @@ export default function PrescriptionSidebar({ mode }: { mode: PrescriptionWorkfl
         <ul className="mt-5 space-y-1.5 border-t border-slate-100 pt-4 text-sm text-slate-600">
           {mode === "refill" && <li>Many in-stock refills are ready in under 30 minutes.</li>}
           <li>Free delivery anywhere in Chilliwack.</li>
-          <li>Direct billing to BC PharmaCare and many other plans.</li>
+          <li>Direct billing to PharmaCare and most major insurers.</li>
         </ul>
       </Card>
 
