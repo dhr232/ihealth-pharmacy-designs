@@ -75,11 +75,11 @@ function OpenTodayCard() {
     >
       <p
         className={`inline-flex items-center gap-2 text-sm font-semibold ${
-          isOpen ? "text-[var(--brand-secondary-hover)]" : "text-slate-500"
+          isOpen ? "text-[var(--brand-secondary-hover)]" : snapshot === null ? "text-slate-500" : "text-[#B45309]"
         }`}
       >
         <span
-          className={`h-2 w-2 shrink-0 rounded-full ${isOpen ? "bg-[var(--brand-secondary)]" : "bg-slate-400"}`}
+          className={`h-2 w-2 shrink-0 rounded-full ${isOpen ? "bg-[var(--brand-secondary)]" : snapshot === null ? "bg-slate-400" : "bg-[#F59E0B]"}`}
           aria-hidden="true"
         />
         {snapshot === null ? "Walk-ins Welcome" : isOpen ? "Open Today • Walk-ins Welcome" : "Closed Now"}
