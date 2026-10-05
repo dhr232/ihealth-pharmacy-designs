@@ -303,7 +303,7 @@ export function WelcomeNewsletterEmail({
                     color: "#047857",
                   }}
                 >
-                  45619 Yale Rd #101, Chilliwack, BC V2P 2N1
+                  Unit #101, 45619 Yale Road, Chilliwack, BC V2P 2N1
                   <br />
                   Open Monday to Friday 8:30 AM - 5:00 PM | Saturday 9:00 AM - 12:00 PM | Sunday Closed
                   <br />
@@ -372,7 +372,7 @@ export function WelcomeNewsletterEmail({
                 iHealth Pharmacy Chilliwack
               </p>
               <p style={{ margin: "0 0 6px 0" }}>
-                45619 Yale Rd #101, Chilliwack, BC V2P 0B1, Canada
+                Unit #101, 45619 Yale Road, Chilliwack, BC V2P 2N1, Canada
                 <br />
                 Telephone: 604-392-8393 | Email: info@ihealthpharmacy.ca
               </p>

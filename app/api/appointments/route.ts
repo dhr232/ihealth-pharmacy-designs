@@ -389,7 +389,7 @@ export async function POST(request: NextRequest) {
           duration: `${durationMinutes} minutes`,
           partySize: resolvedPartySize,
           pharmacyName: "iHealth Pharmacy Chilliwack",
-          pharmacyAddress: "45619 Yale Rd #101, Chilliwack, BC V2P 0B1",
+          pharmacyAddress: "Unit #101, 45619 Yale Road, Chilliwack, BC V2P 2N1",
           pharmacyPhone: "604-392-8393",
           preparationNotes,
         });
@@ -436,7 +436,7 @@ export async function POST(request: NextRequest) {
           email: email.trim().toLowerCase(),
           phone: cleanPhone,
           phnMasked,
-          pharmacyAddress: "45619 Yale Rd #101, Chilliwack, BC V2P 0B1",
+          pharmacyAddress: "Unit #101, 45619 Yale Road, Chilliwack, BC V2P 2N1",
         },
       });
     } finally {

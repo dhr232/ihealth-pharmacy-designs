@@ -54,7 +54,7 @@ export function PrescriptionConfirmationEmail({
   patientNotes,
   submittedAt,
   pharmacyName = "iHealth Pharmacy Chilliwack",
-  pharmacyAddress = "#101 - 45619 Yale Rd, Chilliwack, BC V2P 2N1",
+  pharmacyAddress = "Unit #101, 45619 Yale Road, Chilliwack, BC V2P 2N1",
   pharmacyPhone = "(604) 392-8393",
 }: PrescriptionConfirmationEmailProps) {
   const greeting = patientName ? `Hello ${patientName},` : "Hello,";

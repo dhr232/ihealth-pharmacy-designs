@@ -78,12 +78,12 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
     id: 2,
     label: "Clinical Services",
     featureCard: {
-      badge: "Walk-In Prescribing",
-      title: "No Doctor Appointment Required",
-      description: "Consult directly with our licensed prescribing pharmacists for common minor ailments with prescriptions on-site.",
-      image: "/services/minor-ailments.jpg?v=20261004_fresh",
-      ctaText: "Explore prescribing care",
-      href: "/services/minor-ailments",
+      badge: "1-on-1 Pharmacist Care",
+      title: "Medication Review Consultation",
+      description: "Sit down privately with our pharmacist to optimize your prescriptions, check interactions, and simplify your routine.",
+      image: "/services/med-review.jpg?v=20261004b",
+      ctaText: "Book medication review",
+      href: "/services/med-review",
     },
     subMenus: [
       {
@@ -120,7 +120,7 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
             },
           },
           {
-            label: "Medication Reviews",
+            label: "Medication Review Consultation",
             description: "1-on-1 pharmacist checkup",
             icon: FileText,
             iconClass: "border-amber-200/80 bg-amber-100 text-amber-700 group-hover:bg-amber-600 group-hover:text-white group-hover:border-amber-600",
@@ -196,7 +196,7 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
         items: [
           {
             label: "Direct Billing & Plans",
-            description: "Fair PharmaCare, Blue Cross, Sun Life & more",
+            description: "BC PharmaCare, Blue Cross & many more plans",
             icon: CreditCard,
             iconClass: "border-blue-200/80 bg-blue-100 text-[#3D5FE0] group-hover:bg-[#3D5FE0] group-hover:text-white group-hover:border-[#3D5FE0]",
             href: "/about#billing",
@@ -249,7 +249,7 @@ export default function Header({ logoHref }: HeaderProps = {}) {
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 lg:px-8">
+      <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-3 px-4 lg:px-8">
         {/* Brand Logo */}
         <Link
           href={resolvedLogoHref}
@@ -262,21 +262,21 @@ export default function Header({ logoHref }: HeaderProps = {}) {
             alt="iHealth Pharmacy logo"
             width={38}
             height={38}
-            className="h-9 w-9 rounded-full object-contain ring-1 ring-black/5 group-hover:scale-105 transition-transform"
+            className="h-9 w-9 min-[400px]:h-10 min-[400px]:w-10 sm:h-11 sm:w-11 rounded-full object-contain ring-1 ring-black/5 group-hover:scale-105 transition-transform"
           />
           <div className="flex flex-col leading-tight">
             <div className="flex items-baseline gap-1.5">
-              <span className="text-base font-extrabold tracking-tight text-slate-900">
+              <span className="text-base min-[380px]:text-lg min-[420px]:text-xl sm:text-2xl font-black tracking-tight text-[var(--brand)]">
                 iHealth
               </span>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              <span className="text-base min-[380px]:text-lg min-[420px]:text-xl sm:text-2xl font-black tracking-tight text-[var(--brand-secondary)]">
                 Pharmacy
               </span>
             </div>
             <div className="flex items-center gap-1 mt-0.5">
               <span className="h-1.5 w-1.5 rounded-full bg-teal-500 animate-pulse" />
-              <span className="text-[10px] text-teal-700 font-semibold tracking-tight">
-                Chilliwack Dispensary
+              <span className="text-[11px] text-teal-700 font-semibold tracking-tight">
+                Chilliwack, BC
               </span>
             </div>
           </div>
@@ -287,19 +287,24 @@ export default function Header({ logoHref }: HeaderProps = {}) {
           <MegaMenu items={IHEALTH_NAV_ITEMS} theme="light" />
         </div>
 
+        {/* Language switcher: one instance, visible at every width */}
+        <div className="ml-auto lg:ml-0">
+          <LanguageSwitcher />
+        </div>
+
         {/* Desktop Senior-Optimized Action Bar */}
         <div className="hidden items-center gap-3 lg:flex shrink-0">
           {/* Direct Phone Call Badge - High Priority for Seniors */}
           <a
             href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
             className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-50 hover:bg-teal-50 text-slate-800 hover:text-teal-800 transition border border-slate-200/90 shadow-2xs group"
-            title={`Call Dispensary: ${PHARMACY_INFO.phoneDisplay}`}
+            title={`Call Pharmacy: ${PHARMACY_INFO.phoneDisplay}`}
           >
             <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-white shadow-2xs group-hover:scale-105 transition-transform">
               <Phone size={13} className="stroke-[2.5]" />
             </div>
             <div className="text-left leading-none pr-1">
-              <span className="text-[9px] uppercase font-bold text-slate-400 block">Call Dispensary</span>
+              <span className="text-[9px] uppercase font-bold text-slate-400 block">Call Pharmacy</span>
               <span className="text-xs font-extrabold text-slate-900 tracking-tight">{PHARMACY_INFO.phoneDisplay}</span>
             </div>
           </a>
@@ -310,7 +315,7 @@ export default function Header({ logoHref }: HeaderProps = {}) {
             className="bg-[var(--brand-secondary)] hover:bg-[var(--brand-secondary-hover)] inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold text-white transition"
           >
             <ArrowLeftRight size={13} className="stroke-[2.5]" />
-            <span>Transfer Prescription</span>
+            <span>Transfer to iHealth Pharmacy</span>
           </Link>
         </div>
 
@@ -319,7 +324,7 @@ export default function Header({ logoHref }: HeaderProps = {}) {
           {/* Quick Call icon for mobile header */}
           <a
             href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-700 hover:border-teal-400"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-700 hover:border-teal-400 max-[339px]:hidden"
             aria-label={`Call ${PHARMACY_INFO.phoneDisplay}`}
           >
             <Phone size={14} />
@@ -450,21 +455,13 @@ export default function Header({ logoHref }: HeaderProps = {}) {
                 </div>
               ))}
 
-              {/* Language Switcher */}
-              <div className="pt-2">
-                <p className="mb-1 text-xs font-bold uppercase tracking-wider text-slate-400">
-                  Language
-                </p>
-                <LanguageSwitcher />
-              </div>
-
               {/* Direct Phone Call Button */}
               <a
                 href={`tel:+1${PHARMACY_INFO.phoneRaw}`}
                 className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 py-2.5 text-center text-xs font-bold text-slate-800 hover:bg-slate-50"
               >
                 <Phone size={14} />
-                <span>Call Dispensary: {PHARMACY_INFO.phoneDisplay}</span>
+                <span>Call Pharmacy: {PHARMACY_INFO.phoneDisplay}</span>
               </a>
             </div>
           </motion.nav>

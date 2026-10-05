@@ -59,7 +59,7 @@ export default function BookingReview({
   const [successResult, setSuccessResult] = useState<BookingSuccessResult | null>(null);
   const [copiedCode, setCopiedCode] = useState(false);
 
-  const pharmacyAddress = "45619 Yale Rd #101, Chilliwack, BC V2P 0B1";
+  const pharmacyAddress = "Unit #101, 45619 Yale Road, Chilliwack, BC V2P 2N1";
   const pharmacyPhone = "604-392-8393";
 
   // Human date formatting

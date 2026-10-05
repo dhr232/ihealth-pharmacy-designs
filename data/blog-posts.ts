@@ -20,9 +20,13 @@ export type BlogPost = {
 
 export function isPostPublished(post: BlogPost, now = new Date()): boolean {
   if (post.status === "draft") return false;
+  // Any post dated in the future stays hidden until its date, whatever its status.
+  const publishDate = new Date(post.publishedAt);
   if (post.status === "scheduled") {
-    const publishDate = new Date(post.publishedAt);
     if (isNaN(publishDate.getTime())) return false;
+    return publishDate.getTime() <= now.getTime();
+  }
+  if (post.status === "published" && !isNaN(publishDate.getTime())) {
     return publishDate.getTime() <= now.getTime();
   }
   return post.status === "published";
@@ -219,7 +223,7 @@ Fair PharmaCare is designed to be the payer of last resort. That means if you ha
 
 **Extended health benefits through work.** Most BC employers offer extended health plans that include prescription drug coverage. These usually pay 80% to 100% of eligible costs up to a yearly maximum. Submit claims through your insurer or use a pay-direct card at the pharmacy.
 
-**Pacific Blue Cross or other private plans.** If you're retired, self-employed, or covered through a spouse's plan, you may have private coverage with similar reimbursement rates.
+**Blue Cross or other private plans.** If you're retired, self-employed, or covered through a spouse's plan, you may have private coverage with similar reimbursement rates.
 
 **First Nations Health Authority (FNHA).** Status First Nations and Inuit patients have prescription drug coverage through the federal Non-Insured Health Benefits program, with no deductible and no co-pay.
 
@@ -349,7 +353,7 @@ Most compounded medications are partially or fully covered by BC Pharmacare and 
 
 Compounding isn't right for every patient or every medication, but when it's needed, it can make a real difference. We prepare medications that fit your life, not the other way around.`,
     author: "The iHealth Pharmacy Team",
-    publishedAt: "2026-10-16",
+    publishedAt: "2026-10-05",
     tags: ["compounding", "custom medication", "pediatric", "seniors"],
     imageUrl: "/blog/post-4.jpg",
     status: "published",
@@ -440,7 +444,7 @@ If you're a senior in Chilliwack, a few local resources that can help:
 
 Managing multiple medications doesn't have to be overwhelming. With the right support and a few simple systems, you can take your medications safely and confidently, and spend less time worrying about them.`,
     author: "The iHealth Pharmacy Team",
-    publishedAt: "2026-10-30",
+    publishedAt: "2026-10-09",
     tags: ["seniors", "medication management", "compliance packaging"],
     imageUrl: "/blog/post-5.jpg",
     status: "published",

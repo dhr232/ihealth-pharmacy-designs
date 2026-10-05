@@ -1006,17 +1006,11 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
           </div>
         )}
 
-        <div className="flex flex-col gap-4 pt-1 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-slate-500">
-            Every request is reviewed by a pharmacist.{" "}
-            <Link href="/privacy" className="underline underline-offset-2 hover:text-slate-700">
-              How we protect your information
-            </Link>
-          </p>
+        <div className="flex flex-col gap-4 pt-1">
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex min-h-14 shrink-0 items-center justify-center gap-2 rounded-xl bg-[var(--brand)] px-8 py-3.5 text-lg font-semibold text-white transition hover:bg-[var(--brand-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex min-h-14 w-full shrink-0 sm:w-auto sm:self-start items-center justify-center gap-2 rounded-xl bg-[var(--brand)] px-8 py-3.5 text-lg font-semibold text-white transition hover:bg-[var(--brand-hover)] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? (
               <>
@@ -1030,6 +1024,12 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
               </>
             )}
           </button>
+          <p className="text-sm text-slate-500">
+            Every request is reviewed by a pharmacist.{" "}
+            <Link href="/privacy" className="underline underline-offset-2 hover:text-slate-700">
+              How we protect your information
+            </Link>
+          </p>
         </div>
       </form>
     </div>

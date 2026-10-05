@@ -190,7 +190,7 @@ export default function VaccinationsPage() {
                     className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 hover:bg-slate-50 transition"
                   >
                     <Phone size={15} className="text-blue-600" />
-                    <span>Call Dispensary: {PHARMACY_INFO.phoneDisplay}</span>
+                    <span>Call Pharmacy: {PHARMACY_INFO.phoneDisplay}</span>
                   </a>
                 </div>
 

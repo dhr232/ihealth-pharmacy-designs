@@ -48,12 +48,12 @@ export const PHARMACY_INFO = {
 
   // Address and location
   address: {
-    street: "45619 Yale Rd #101",
+    street: "Unit #101, 45619 Yale Road",
     city: "Chilliwack",
     province: "BC",
     postalCode: "V2P 2N1",
     country: "Canada",
-    full: "45619 Yale Rd #101, Chilliwack, BC V2P 2N1",
+    full: "Unit #101, 45619 Yale Road, Chilliwack, BC V2P 2N1",
     mapUrl:
       "https://www.google.com/maps/place/IHealth+Pharmacy/@49.1543464,-121.96252,15z/data=!4m15!1m8!3m7!1s0x54843f277357382f:0x450b007856108ecd!2sIHealth+Pharmacy!8m2!3d49.1543712!4d-121.9625737!10e5!16s%2Fg%2F11lf4ld660!3m5!1s0x54843f277357382f:0x450b007856108ecd!8m2!3d49.1543712!4d-121.9625737!16s%2Fg%2F11lf4ld660?entry=ttu&g_ep=EgoyMDI2MDkyMC4wIKXMDSoASAFQAw%3D%3D",
     googleListingUrl:
@@ -105,12 +105,22 @@ export const PHARMACY_INFO = {
     association: "British Columbia Pharmacy Association (BCPhA)",
     licenseNotice: "Licensed Community Pharmacy under the Health Professions Act of BC",
     directBilling: [
-      "Pacific Blue Cross",
-      "BC Fair PharmaCare",
-      "GreenShield Canada",
-      "Sun Life",
-      "Manulife",
-      "Canada Life",
+      "BC PharmaCare",
+      "Medavie Blue Cross",
+      "Alberta Blue Cross",
+      "Saskatchewan Blue Cross",
+      "Canadian Benefit Providers",
+      "Nexgen Rx",
+      "RCMP",
+      "Assure",
+      "Non-Insured Health Benefits (NIHB)",
+      "MDM",
+      "Claim Secure",
+      "ESI Canada",
+      "Public Service Health Care Plan",
+      "Interim Federal Health Plan",
+      "Veterans Affairs Canada",
+      "SSQ Financial Group",
     ],
   },
 
