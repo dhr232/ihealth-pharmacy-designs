@@ -391,7 +391,7 @@ export default function AboutPage() {
 
                   <div className="mt-6 rounded-2xl bg-[var(--brand-subtle)] p-5">
                     <p className="text-base text-slate-700 leading-relaxed">
-                      <strong>Don&apos;t see your plan?</strong> We work with most Canadian insurers.
+                      <strong>Don&apos;t see your plan?</strong> We work with many Canadian plans.
                       Give us a call and we&apos;ll check your coverage for you.
                     </p>
                     <a

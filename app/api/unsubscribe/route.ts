@@ -231,7 +231,7 @@ export async function GET(request: NextRequest) {
 
     <div class="card-footer">
       <strong>iHealth Pharmacy Chilliwack</strong><br />
-      45619 Yale Rd #101, Chilliwack, BC V2P 0B1<br />
+      Unit #101, 45619 Yale Road, Chilliwack, BC V2P 2N1<br />
       Questions? Contact our dispensary at 604-392-8393 or visit our <a href="/privacy">Privacy Policy</a>.
     </div>
   </div>

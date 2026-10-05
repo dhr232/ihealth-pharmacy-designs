@@ -276,7 +276,7 @@ export default function PharmacistTeamSection({ variant = "grid" }: { variant?: 
                       title={
                         p.directPhone
                           ? `Call ${p.name} (${p.directPhone})`
-                          : `Call Dispensary (${PHARMACY_INFO.phoneDisplay})`
+                          : `Call Pharmacy (${PHARMACY_INFO.phoneDisplay})`
                       }
                     >
                       <PhoneCall size={13} />

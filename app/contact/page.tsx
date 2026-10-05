@@ -48,7 +48,7 @@ const FAQ = [
   {
     icon: ShieldCheck,
     q: "Do you accept my insurance?",
-    a: "We bill most Canadian insurance plans directly, including Pacific Blue Cross, Sun Life, Manulife, Canada Life, GreenShield, and more. Bring your card and we'll set it up on your first visit.",
+    a: `We bill many Canadian insurance plans directly, including ${PHARMACY_INFO.accreditation.directBilling.join(", ")}. Bring your card and we'll set it up on your first visit.`,
   },
   {
     icon: Syringe,

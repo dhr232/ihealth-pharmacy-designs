@@ -27,7 +27,7 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     question: "How does BC Fair PharmaCare and direct insurance billing work?",
     answer:
-      "We bill directly to BC Fair PharmaCare and most major private insurers (Pacific Blue Cross, Sun Life, Manulife, Canada Life, and GreenShield). You only pay your eligible plan co-pay (if any), eliminating paperwork and out-of-pocket delays.",
+      `We bill directly to ${PHARMACY_INFO.accreditation.directBilling.join(", ")}. You only pay your eligible plan co-pay (if any), eliminating paperwork and out-of-pocket delays.`,
     category: "Coverage & Billing",
   },
   {

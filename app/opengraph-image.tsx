@@ -152,7 +152,7 @@ export default async function Image() {
           }}
         >
           <div style={{ display: "flex", gap: "24px", color: "#cbd5e1", fontSize: "16px", fontWeight: "600" }}>
-            <span>45619 Yale Rd #101, Chilliwack, BC</span>
+            <span>Unit #101, 45619 Yale Road, Chilliwack, BC</span>
             <span>·</span>
             <span>604-392-8393</span>
           </div>

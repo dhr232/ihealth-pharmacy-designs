@@ -139,7 +139,7 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
             604-392-8393
           </a>
           <br />
-          In person: 45619 Yale Rd #101, Chilliwack, BC V2P 0B1
+          In person: Unit #101, 45619 Yale Road, Chilliwack, BC V2P 2N1
         </p>
       </>
     ),

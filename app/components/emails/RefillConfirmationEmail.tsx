@@ -29,7 +29,7 @@ export function RefillConfirmationEmail({
   notes,
   submittedAt,
   pharmacyName = "iHealth Pharmacy Chilliwack",
-  pharmacyAddress = "45619 Yale Rd #101, Chilliwack, BC V2P 0B1",
+  pharmacyAddress = "Unit #101, 45619 Yale Road, Chilliwack, BC V2P 2N1",
   pharmacyPhone = "604-392-8393",
   whatsappUrl = "https://wa.me/16043928393?text=Hi%20iHealth%20Pharmacy%2C%20I%20have%20a%20question%20about%20my%20prescription%20refill.",
   contactUrl = "https://ihealthpharmacy.ca/contact",
@@ -660,7 +660,7 @@ export function RefillConfirmationEmail({
                             textAlign: "center",
                           }}
                         >
-                          Call Dispensary: {pharmacyPhone}
+                          Call Pharmacy: {pharmacyPhone}
                         </a>
                       </td>
                       <td style={{ padding: "0 6px 12px 6px" }}>

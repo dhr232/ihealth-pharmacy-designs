@@ -133,6 +133,26 @@ const SERVICE_PAIRS: {
     icon: Pill,
     tone: "rose",
   },
+  {
+    title: "Blister Packaging",
+    badge: "Compliance Packaging",
+    badgeIcon: Clock,
+    status: "Senior Friendly",
+    desc: "Pharmacist-prepared blister packs that sort your medications by day and time, so nothing gets missed. Free delivery in Chilliwack.",
+    highlights: ["Sorted by Day & Time", "Pharmacist Prepared", "Free Local Delivery"],
+    href: "/contact",
+    cta: "Ask About Blister Packs",
+    image: "/services/blister-packs.jpg",
+    imageAlt: "Pharmacist-prepared blister packs of medication sorted by day and time",
+    icon: Pill,
+    tone: "blue",
+  },
+];
+
+const ABOUT_STATS = [
+  { value: PHARMACY_INFO.address.googleRating, label: "Google Rating", star: true },
+  { value: String(PHARMACY_INFO.languages.length), label: "Languages Spoken", star: false },
+  { value: "Free", label: "Same-Day Delivery", star: false },
 ];
 
 const ABOUT_STATS = [
@@ -674,7 +694,7 @@ export default function HomePage() {
               <div className="h-full min-h-[360px] lg:min-h-[440px] flex flex-col overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
                 <iframe
                   title="iHealth Pharmacy Chilliwack location"
-                  src="https://maps.google.com/maps?q=45619%20Yale%20Rd%20%23101%2C%20Chilliwack%2C%20BC%20V2P%200B1&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                  src="https://maps.google.com/maps?q=45619%20Yale%20Rd%20%23101%2C%20Chilliwack%2C%20BC%20V2P%202N1&t=&z=15&ie=UTF8&iwloc=&output=embed"
                   width="100%"
                   height="100%"
                   className="min-h-[300px] flex-1 border-0"
