@@ -510,9 +510,6 @@ export default function HomePage() {
                   <HoverCard className="h-full">
                     <figure className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
                       <div>
-                        <p className="mb-3 text-[11px] font-bold uppercase tracking-wider text-[var(--brand)]">
-                          Google review
-                        </p>
                         <blockquote className="text-sm leading-relaxed text-slate-700">
                           &ldquo;{t.quote}&rdquo;
                         </blockquote>
