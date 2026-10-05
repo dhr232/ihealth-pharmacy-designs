@@ -35,6 +35,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 import { getBookingUrl } from "@/lib/routes";
+import { CARD_TONES, type CardTone } from "@/app/components/cardTones";
 import { getConditionIconPath } from "@/data/condition-registry";
 
 interface ConditionItem {
@@ -715,16 +716,16 @@ export default function MinorAilmentsPage() {
   };
 
   // Group conditions by category
-  const categories = [
-    { key: "digestive", title: "Digestive Conditions" },
-    { key: "ent", title: "Eyes, Ears, Nose, or Mouth" },
-    { key: "skin", title: "Skin Conditions" },
-    { key: "urinary", title: "Urinary and Reproductive Conditions" },
-    { key: "other", title: "Other Conditions" },
+  const categories: { key: string; title: string; tone: CardTone }[] = [
+    { key: "digestive", title: "Digestive Conditions", tone: "peach" },
+    { key: "ent", title: "Eyes, Ears, Nose, or Mouth", tone: "blue" },
+    { key: "skin", title: "Skin Conditions", tone: "green" },
+    { key: "urinary", title: "Urinary and Reproductive Conditions", tone: "purple" },
+    { key: "other", title: "Other Conditions", tone: "teal" },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 antialiased">
+    <div className="min-h-screen bg-[var(--surface)] text-slate-900 antialiased">
       <Header />
 
       <main className="py-10 lg:py-16">
@@ -744,7 +745,8 @@ export default function MinorAilmentsPage() {
           </nav>
 
           {/* Hero Header Section */}
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-10 shadow-sm mb-8">
+          <div className={`relative isolate overflow-hidden rounded-3xl border p-6 sm:p-10 shadow-sm mb-8 ${CARD_TONES.blue.card}`}>
+            <span className={`pointer-events-none absolute -top-16 -right-14 -z-10 h-56 w-56 rounded-full opacity-70 ${CARD_TONES.blue.blob}`} aria-hidden="true" />
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-center">
               
               <div className="lg:col-span-7 space-y-4">
@@ -855,10 +857,12 @@ export default function MinorAilmentsPage() {
                 return (
                   <div
                     key={cat.key}
-                    className={`rounded-2xl border bg-white shadow-xs transition-colors ${
-                      isOpen ? "border-slate-300" : "border-slate-200 hover:border-slate-300"
-                    }`}
+                    className={`relative isolate overflow-hidden rounded-2xl border shadow-xs ${CARD_TONES[cat.tone].card}`}
                   >
+                    <span
+                      className={`pointer-events-none absolute -top-10 -right-8 -z-10 h-24 w-24 rounded-full opacity-80 ${CARD_TONES[cat.tone].blob}`}
+                      aria-hidden="true"
+                    />
                     <h3>
                       <button
                         type="button"
@@ -948,7 +952,7 @@ export default function MinorAilmentsPage() {
 
             {/* Right Column: how booking works + contact */}
             <div className="lg:col-span-5 space-y-4 lg:sticky lg:top-24">
-              <div className="rounded-2xl border border-slate-200 bg-white p-6">
+              <div className={`rounded-2xl border p-6 ${CARD_TONES.green.card}`}>
                 <h2 className="text-base font-semibold text-slate-900">How booking works</h2>
                 <ol className="mt-4 space-y-4">
                   {[
@@ -969,7 +973,7 @@ export default function MinorAilmentsPage() {
                 </ol>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-white p-6">
+              <div className={`rounded-2xl border p-6 ${CARD_TONES.peach.card}`}>
                 <p className="text-sm font-semibold text-slate-900">Prefer to talk first?</p>
                 <p className="mt-1 text-sm text-slate-600">
                   {PHARMACY_INFO.address.full}

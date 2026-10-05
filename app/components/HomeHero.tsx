@@ -21,7 +21,14 @@ const glideFromLeft: Variants = {
 };
 
 // Rotating hero headlines: a different one on each page load (never the same twice in a row).
-const HEADLINES = [
+const HEADLINES: { lead: string; accent: string; sub?: string }[] = [
+  { lead: "Expert Care. Personal Attention.", accent: "Every Time." },
+  { lead: "Your Pharmacy. Your Care.", accent: "Your Community." },
+  {
+    lead: "Your Health.",
+    accent: "Our Priority.",
+    sub: "Personalized pharmacy care, trusted advice, and a team that's here for you.",
+  },
   { lead: "A Pharmacist Who Knows You", accent: "By Name." },
   { lead: "Care That Knows Your Name,", accent: "Today And Tomorrow." },
   { lead: "Real Pharmacists. Real Answers.", accent: "Right Here In Chilliwack." },
@@ -141,8 +148,8 @@ export default function HomeHero() {
           </motion.h1>
 
           <motion.p variants={glideFromLeft} className="mt-5 text-lg leading-relaxed text-slate-600">
-            Prescriptions, minor-ailment care, vaccines, medication reviews and free same-day
-            delivery across Chilliwack, from a family-run team that takes the time to explain.
+            {headline.sub ??
+              "Prescriptions, minor-ailment care, vaccines, medication reviews and free same-day delivery across Chilliwack, from a family-run team that takes the time to explain."}
           </motion.p>
 
           <motion.div variants={glideFromLeft} className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">

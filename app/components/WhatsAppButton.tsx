@@ -91,7 +91,7 @@ export default function WhatsAppButton() {
   return (
     <aside
       aria-label="WhatsApp Pharmacist Assistance"
-      className="fixed bottom-4 right-4 z-40 flex flex-col items-end sm:bottom-6 sm:right-6"
+      className="fixed bottom-4 right-4 z-[60] flex flex-col items-end sm:bottom-6 sm:right-6"
     >
       <AnimatePresence>
         {open && (
@@ -230,7 +230,7 @@ export default function WhatsAppButton() {
           type="button"
           aria-label="Close WhatsApp chat"
           onClick={() => setOpen(false)}
-          className="fixed inset-0 z-40 bg-black/25 sm:hidden"
+          className="fixed inset-0 z-[55] bg-black/25 sm:hidden"
         />
       )}
 

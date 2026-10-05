@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import {
   Calendar as CalendarIcon,
   ChevronLeft,
@@ -12,6 +12,8 @@ import {
   CalendarDays,
   CheckCircle2,
 } from "lucide-react";
+import { CARD_TONES } from "@/app/components/cardTones";
+import { useReducedMotion } from "motion/react";
 import { TimeSlotItem } from "@/app/api/appointments/slots/route";
 
 interface AppointmentCalendarProps {
@@ -46,6 +48,13 @@ export default function AppointmentCalendar({
     }
     return new Date();
   });
+
+  // Picking a day jumps to its time slots, so patients land on the times instead of hunting for them
+  const timesRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+  const scrollToTimes = () => {
+    timesRef.current?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  };
 
   // Slots fetching state
   const [slots, setSlots] = useState<TimeSlotItem[]>([]);
@@ -239,7 +248,8 @@ export default function AppointmentCalendar({
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Calendar Card */}
-      <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-xs">
+      <div className={`relative isolate overflow-hidden rounded-3xl border p-6 sm:p-8 shadow-xs ${CARD_TONES.purple.card}`}>
+        <span className={`pointer-events-none absolute -top-14 -right-12 -z-10 h-44 w-44 rounded-full opacity-70 ${CARD_TONES.purple.blob}`} aria-hidden="true" />
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="inline-flex items-center gap-1.5 rounded-full bg-[#E8ECFB] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-[#1E2A44] border border-[#C7D2F7] mb-2">
@@ -332,7 +342,10 @@ export default function AppointmentCalendar({
                   <button
                     key={d.dateStr}
                     type="button"
-                    onClick={() => onSelectDateTime(d.dateStr, "", "")}
+                    onClick={() => {
+                      onSelectDateTime(d.dateStr, "", "");
+                      scrollToTimes();
+                    }}
                     className={`flex flex-col items-center justify-center rounded-lg sm:rounded-lg p-1.5 sm:p-3.5 transition cursor-pointer ${
                       isSelected
                         ? "border-2 border-[var(--brand)] bg-[var(--brand)] text-white"
@@ -369,7 +382,7 @@ export default function AppointmentCalendar({
 
         {/* MODE B: Full Interactive Month Calendar Popover / Grid */}
         {calendarMode === "month" && (
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/50 p-5">
+          <div className="mt-6 rounded-2xl border border-slate-200 bg-white/70 p-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-bold text-slate-900">
                 {viewMonthDate.toLocaleDateString("en-CA", {
@@ -438,6 +451,7 @@ export default function AppointmentCalendar({
                     onClick={() => {
                       onSelectDateTime(item.dateStr, "", "");
                       setCalendarMode("strip");
+                      scrollToTimes();
                     }}
                     className={`flex h-10 flex-col items-center justify-center rounded-lg text-xs font-bold transition-all ${
                       isSelected
@@ -465,7 +479,7 @@ export default function AppointmentCalendar({
         )}
 
         {/* Selected Date Header */}
-        <div className="mt-8 border-t border-slate-100 pt-6">
+        <div ref={timesRef} className="mt-8 scroll-mt-20 border-t border-slate-100 pt-6">
           <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
@@ -485,7 +499,7 @@ export default function AppointmentCalendar({
 
           {/* Slots Loading Indicator */}
           {isLoadingSlots && (
-            <div className="mt-8 flex flex-col items-center justify-center py-12 text-slate-500">
+            <div className="mt-8 flex min-h-[16rem] flex-col items-center justify-center py-12 text-slate-500">
               <Loader2 size={24} className="animate-spin text-[var(--brand)]" />
               <p className="mt-2 text-xs font-semibold">
                 Checking real-time dispensary calendar availability...

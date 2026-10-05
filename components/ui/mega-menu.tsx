@@ -115,7 +115,7 @@ const MegaMenu = React.forwardRef<HTMLUListElement, MegaMenuProps>(
                 <Link
                   href={navItem.link}
                   {...(navItem.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  className={`relative flex cursor-pointer items-center justify-center gap-1.5 py-2 px-4 text-sm font-semibold transition-colors duration-150 rounded-full select-none ${
+                  className={`relative flex cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap py-2 px-3 2xl:px-4 text-sm font-semibold transition-colors duration-150 rounded-full select-none ${
                     isLight
                       ? isItemActive
                         ? "text-slate-950 font-bold"
@@ -140,7 +140,7 @@ const MegaMenu = React.forwardRef<HTMLUListElement, MegaMenuProps>(
                 <button
                   type="button"
                   onClick={() => setOpenMenu(openMenu === navItem.label ? null : navItem.label)}
-                  className={`relative flex cursor-pointer items-center justify-center gap-1.5 py-2 px-4 text-sm font-semibold transition-colors duration-150 rounded-full select-none ${
+                  className={`relative flex cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap py-2 px-3 2xl:px-4 text-sm font-semibold transition-colors duration-150 rounded-full select-none ${
                     isLight
                       ? isItemActive
                         ? "text-slate-950 font-bold"

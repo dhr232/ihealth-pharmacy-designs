@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import NewsletterForm from "./components/NewsletterForm";
 import HomeBlogSection from "./components/HomeBlogSection";
 import HomeHero from "./components/HomeHero";
 import HowCanWeHelp from "./components/HowCanWeHelp";
@@ -155,27 +154,23 @@ const ABOUT_STATS = [
   { value: "Free", label: "Same-Day Delivery", star: false },
 ];
 
+// Verbatim Google reviews, shown with the reviewers' Google names.
+// Sherri's review is shortened to the part about the service; the rest is about her moving away.
 const TESTIMONIALS = [
   {
     quote:
-      "They texted me before I even got home — my refill was ready for pickup. The staff is always so courteous and genuinely knows our family.",
-    name: "Jasmin P.",
-    location: "Chilliwack, BC",
-    rating: 5,
+      "Love my Pharmacy, Dev and staff are on top of their game. It's nice to walk into a pharmacy and they know who you are and why you are there without even having to tell them.",
+    name: "Karen G.",
   },
   {
     quote:
-      "The pharmacist remembered my mother's allergy without having to look it up. That level of personal attention is rare today.",
-    name: "Daniel O.",
-    location: "Yale Rd, Chilliwack",
-    rating: 5,
+      "I can't recommend Dev and his team highly enough. Kind, courteous and above and beyond service. Delivery service and super quick in house service filling prescriptions.",
+    name: "Sherri Martin",
   },
   {
     quote:
-      "Transferring my prescription took one quick message. They handled everything with my old clinic and delivered my prescriptions the next day.",
-    name: "Margaret L.",
-    location: "Sardis / Chilliwack",
-    rating: 5,
+      "Pharmacist Dev is super nice and cares about his customers, he alaways rembers who I am as well as my husband, highly recommend.",
+    name: "Sebrina Joseph",
   },
 ];
 
@@ -505,7 +500,7 @@ export default function HomePage() {
                 Healing Stories, Shared Honestly
               </h2>
               <p className="mt-3 text-base text-slate-600">
-                What Chilliwack families, seniors, and caregivers say about their care at iHealth Pharmacy.
+                Real reviews from our patients on Google.
               </p>
             </SectionReveal>
 
@@ -515,11 +510,6 @@ export default function HomePage() {
                   <HoverCard className="h-full">
                     <figure className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
                       <div>
-                        <div className="flex items-center gap-1 text-amber-400 mb-3">
-                          {[...Array(t.rating)].map((_, i) => (
-                            <Star key={i} size={15} fill="currentColor" />
-                          ))}
-                        </div>
                         <blockquote className="text-sm leading-relaxed text-slate-700">
                           &ldquo;{t.quote}&rdquo;
                         </blockquote>
@@ -531,7 +521,7 @@ export default function HomePage() {
                         </span>
                         <div>
                           <p className="text-xs font-bold text-slate-900">{t.name}</p>
-                          <p className="text-[11px] text-slate-500">{t.location}</p>
+                          
                         </div>
                       </figcaption>
                     </figure>
@@ -539,6 +529,18 @@ export default function HomePage() {
                 </StaggerItem>
               ))}
             </StaggerContainer>
+
+            <p className="mt-8 text-center">
+              <a
+                href={PHARMACY_INFO.address.googleReviewsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center gap-2 text-base font-semibold text-[var(--brand)] underline-offset-4 hover:underline"
+              >
+                Read more reviews on Google
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            </p>
           </div>
         </section>
 
@@ -551,44 +553,6 @@ export default function HomePage() {
 
         {/* 9. FAQ Section */}
         <FAQSection />
-
-        {/* Wave 8: Transitioning from FAQ (white) to Newsletter (slate-100) */}
-        <SectionWaveDivider
-          fillColor="text-slate-100/80"
-          backgroundColor="bg-white"
-          className="h-10 sm:h-14 lg:h-18"
-          flipX={true}
-        />
-
-        {/* 10. Newsletter */}
-        <section id="newsletter" className="bg-slate-100/80 pt-12 pb-16 lg:pt-16 lg:pb-20">
-          <div className="mx-auto max-w-3xl px-5 text-center lg:px-8">
-            <SectionReveal>
-              <div className="inline-flex items-center rounded-full bg-white/95 border border-slate-200 px-3.5 py-1 mb-4 shadow-2xs">
-                <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--brand)]">
-                  Wellness Newsletter
-                </span>
-              </div>
-              <Mail className="mx-auto h-8 w-8 text-[var(--brand)]" />
-              <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900">
-                Subscribe for Wellness & Care Insights
-              </h2>
-              <p className="mt-2 text-base text-slate-600">
-                Get seasonal health advisories, BC Fair PharmaCare updates, and vaccination alerts directly to your inbox.
-              </p>
-              <div className="mt-8">
-                <NewsletterForm />
-              </div>
-            </SectionReveal>
-          </div>
-        </section>
-
-        {/* Wave 9: Transitioning from Newsletter (slate-100) to Contact (white) */}
-        <SectionWaveDivider
-          fillColor="text-white"
-          backgroundColor="bg-slate-100/80"
-          className="h-10 sm:h-14 lg:h-18"
-        />
 
         {/* 11. Contact Hub & Map */}
         <section id="contact" className="bg-white pt-10 pb-20 lg:pt-14 lg:pb-28">
