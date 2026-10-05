@@ -78,12 +78,12 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
     id: 2,
     label: "Clinical Services",
     featureCard: {
-      badge: "Walk-In Prescribing",
-      title: "No Doctor Appointment Required",
-      description: "Consult directly with our licensed prescribing pharmacists for common minor ailments with prescriptions on-site.",
-      image: "/services/minor-ailments.jpg?v=20261004_fresh",
-      ctaText: "Explore prescribing care",
-      href: "/services/minor-ailments",
+      badge: "1-on-1 Pharmacist Care",
+      title: "Medication Review Consultation",
+      description: "Sit down privately with our pharmacist to optimize your prescriptions, check interactions, and simplify your routine.",
+      image: "/services/med-review.jpg?v=20261004b",
+      ctaText: "Book medication review",
+      href: "/services/med-review",
     },
     subMenus: [
       {
@@ -315,7 +315,7 @@ export default function Header({ logoHref }: HeaderProps = {}) {
             className="bg-[var(--brand-secondary)] hover:bg-[var(--brand-secondary-hover)] inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold text-white transition"
           >
             <ArrowLeftRight size={13} className="stroke-[2.5]" />
-            <span>Transfer Prescription</span>
+            <span>Transfer to iHealth Pharmacy</span>
           </Link>
         </div>
 

@@ -62,7 +62,7 @@ const ALL_SERVICES = [
     image: "/services/vaccinations.jpg",
   },
   {
-    title: "Medication Review & Injections",
+    title: "Medication Review Consultation",
     slug: "med-review",
     href: "/services/med-review",
     desc: "Comprehensive one-on-one review of all your prescription drugs, over-the-counter supplements, and chronic condition management.",
@@ -87,6 +87,15 @@ const ALL_SERVICES = [
     icon: Pill,
     badge: "Senior Friendly",
     image: "/carousel-dispenser.jpg",
+  },
+  {
+    title: "Blister Packaging",
+    slug: "blister-packaging",
+    href: "/contact",
+    desc: "Pharmacist-prepared blister packs that sort your medications by day and time, so nothing gets missed. Free delivery in Chilliwack.",
+    icon: Pill,
+    badge: "Senior Friendly",
+    image: "/services/blister-packs.jpg",
   },
 ];
 
