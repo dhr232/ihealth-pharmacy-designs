@@ -443,23 +443,6 @@ export default function PatientForm({
                 />
               </div>
             </div>
-
-            {/* CASL Compliance Checkbox */}
-            <div className="mt-5 rounded-2xl border border-slate-200/90 bg-slate-50/80 p-4.5 hover:bg-slate-50 transition-colors">
-              <label className="flex items-start gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.caslConsent}
-                  onChange={(e) =>
-                    setFormData({ ...formData, caslConsent: e.target.checked })
-                  }
-                  className="mt-1 h-4.5 w-4.5 rounded-md border-slate-300 text-[var(--brand)] focus:ring-[var(--brand)] transition-colors"
-                />
-                <span className="text-xs text-slate-600 leading-relaxed">
-                  Keep me informed with seasonal clinic updates, health tips, and pharmacy announcements (CASL express consent). You may withdraw consent at any time.
-                </span>
-              </label>
-            </div>
           </div>
         </div>
       </div>

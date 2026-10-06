@@ -5,6 +5,14 @@ const nextConfig = {
   ...(process.env.STATIC_EXPORT === 'true' ? { output: 'export', trailingSlash: true } : {}),
   skipTrailingSlashRedirect: true,
   images: { unoptimized: true },
+  // Dev Patel's photo moved. The live pharmacist record in the database may still point at the
+  // old files, so keep these paths working until it is re-saved in /admin.
+  async redirects() {
+    return [
+      { source: "/pharmacists/dev-patel.png", destination: "/pharmacist-dev-patel-ihealth.jpg", permanent: false },
+      { source: "/pharmacists/dev-patel.jpg", destination: "/pharmacist-dev-patel-ihealth.jpg", permanent: false },
+    ];
+  },
   async headers() {
     if (process.env.NODE_ENV === 'development') {
       return [

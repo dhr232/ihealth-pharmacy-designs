@@ -178,7 +178,7 @@ export function PrescriptionConfirmationEmail({
                                   marginTop: "2px",
                                 }}
                               >
-                                Community Dispensary &amp; Clinical Care
+                                Community Pharmacy &amp; Clinical Care
                               </div>
                             </td>
                           </tr>

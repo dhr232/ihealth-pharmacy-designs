@@ -41,7 +41,7 @@ export const PHARMACY_INFO = {
   // Primary Pharmacist Dev Patel direct mobile contact
   devPatel: {
     name: "Dev Patel",
-    title: "Primary Pharmacist & Pharmacy Manager",
+    title: "Licensed Pharmacist",
     phoneDisplay: "+1 (778) 714-2307",
     phoneRaw: "+17787142307",
   },

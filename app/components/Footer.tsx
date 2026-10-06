@@ -25,14 +25,14 @@ export default function Footer({ logoHref = "/" }: FooterProps = {}) {
     return isOpen
       ? {
           isOpen: true,
-          label: "Dispensary Open Now",
+          label: "Pharmacy Open Now",
           detail,
           badgeColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
           dotColor: "bg-emerald-400",
         }
       : {
           isOpen: false,
-          label: "Dispensary Closed",
+          label: "Pharmacy Closed",
           detail,
           badgeColor: "bg-slate-800 text-slate-400 border-slate-700/80",
           dotColor: "bg-slate-500",
@@ -68,7 +68,7 @@ export default function Footer({ logoHref = "/" }: FooterProps = {}) {
                   {PHARMACY_INFO.name}
                 </span>
                 <span className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">
-                  Chilliwack Dispensary
+                  Chilliwack Pharmacy
                 </span>
               </div>
             </Link>
