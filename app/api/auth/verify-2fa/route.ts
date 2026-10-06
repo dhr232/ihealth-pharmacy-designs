@@ -1,27 +1,23 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { prisma, withPrismaFallback } from "@/lib/prisma";
 import {
+  ADMIN_EMAIL,
   encryptSessionToken,
-  SEEDED_ADMIN,
-  SEEDED_PHARMACIST,
+  ensureAdminUser,
   SESSION_COOKIE_NAME,
   SESSION_MAX_AGE_SECONDS,
-  StaffRole,
   verifyTwoFactorToken,
 } from "@/lib/auth";
 
+// Step 2 of sign-in: check the emailed code and start a 12-hour admin session.
 export async function POST(request: Request) {
   try {
     const body = await request.json().catch(() => null);
     if (!body || typeof body !== "object") {
-      return NextResponse.json(
-        { success: false, error: "Invalid request payload." },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, error: "Invalid request payload." }, { status: 400 });
     }
 
     const { email, code } = body as { email?: string; code?: string };
-
     if (!email || !code) {
       return NextResponse.json(
         { success: false, error: "Email and verification code are required." },
@@ -30,14 +26,14 @@ export async function POST(request: Request) {
     }
 
     const normalizedEmail = email.trim().toLowerCase();
-    const cleanCode = code.trim();
+    if (normalizedEmail !== ADMIN_EMAIL) {
+      return NextResponse.json(
+        { success: false, error: "Invalid verification code." },
+        { status: 400 }
+      );
+    }
 
-    // Verify OTP code
-    const verification = await verifyTwoFactorToken({
-      email: normalizedEmail,
-      code: cleanCode,
-    });
-
+    const verification = await verifyTwoFactorToken({ email: normalizedEmail, code: code.trim() });
     if (!verification.success) {
       return NextResponse.json(
         { success: false, error: verification.error || "Invalid verification code." },
@@ -45,89 +41,34 @@ export async function POST(request: Request) {
       );
     }
 
-    // Lookup user details
-    let userDetails: {
-      id: string;
-      email: string;
-      name: string;
-      role: StaffRole;
-    } | null = null;
+    const user = await withPrismaFallback(
+      () => ensureAdminUser(),
+      () => ({ id: verification.userId || "admin-fallback", email: ADMIN_EMAIL, name: "iHealth Pharmacy", role: "ADMIN" as const })
+    );
 
-    try {
-      const user = await prisma.user.findUnique({
-        where: { email: normalizedEmail },
-      });
-      if (user) {
-        userDetails = {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role as StaffRole,
-        };
-      }
-    } catch (dbError) {
-      console.warn("Database lookup error during session creation:", dbError);
-    }
-
-    if (!userDetails) {
-      // Fallback seeded accounts
-      if (normalizedEmail === SEEDED_ADMIN.email.toLowerCase()) {
-        userDetails = {
-          id: SEEDED_ADMIN.id,
-          email: SEEDED_ADMIN.email,
-          name: SEEDED_ADMIN.name,
-          role: SEEDED_ADMIN.role,
-        };
-      } else if (normalizedEmail === SEEDED_PHARMACIST.email.toLowerCase()) {
-        userDetails = {
-          id: SEEDED_PHARMACIST.id,
-          email: SEEDED_PHARMACIST.email,
-          name: SEEDED_PHARMACIST.name,
-          role: SEEDED_PHARMACIST.role,
-        };
-      } else {
-        userDetails = {
-          id: verification.userId || `staff-${Date.now()}`,
-          email: normalizedEmail,
-          name: "Staff Member",
-          role: "PHARMACIST",
-        };
-      }
-    }
-
-    // Generate encrypted session token
     const exp = Date.now() + SESSION_MAX_AGE_SECONDS * 1000;
     const sessionToken = encryptSessionToken({
-      userId: userDetails.id,
-      email: userDetails.email,
-      name: userDetails.name,
-      role: userDetails.role,
+      userId: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
       exp,
     });
 
-    // Optionally store session record in database
+    // Best-effort record; the encrypted cookie works on its own.
     try {
       await prisma.session.create({
-        data: {
-          sessionToken,
-          userId: userDetails.id,
-          expiresAt: new Date(exp),
-        },
+        data: { sessionToken, userId: user.id, expiresAt: new Date(exp) },
       });
     } catch {
-      // Best-effort: stateless encrypted token can also be decoded directly
+      /* ignore */
     }
 
     const response = NextResponse.json({
       success: true,
-      user: {
-        name: userDetails.name,
-        email: userDetails.email,
-        role: userDetails.role,
-      },
+      user: { name: user.name, email: user.email, role: user.role },
     });
 
-    // Set HTTP-only secure cookie
     response.cookies.set({
       name: SESSION_COOKIE_NAME,
       value: sessionToken,
@@ -140,10 +81,9 @@ export async function POST(request: Request) {
 
     return response;
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Internal server error";
     console.error("verify-2fa route error:", error);
     return NextResponse.json(
-      { success: false, error: message },
+      { success: false, error: "Something went wrong. Please try again." },
       { status: 500 }
     );
   }

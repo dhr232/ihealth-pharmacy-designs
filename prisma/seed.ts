@@ -1,5 +1,4 @@
-import { PrismaClient, Role } from "@prisma/client";
-import bcrypt from "bcryptjs";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -529,43 +528,8 @@ export async function main() {
     }
   }
 
-  // Seed Staff Users
-  const adminPasswordHash = await bcrypt.hash(process.env.ADMIN_INITIAL_PASSWORD || "Admin2026!", 10);
-  const pharmacistPasswordHash = await bcrypt.hash(process.env.PHARMACIST_INITIAL_PASSWORD || "Pharmacist2026!", 10);
-
-  await prisma.user.upsert({
-    where: { email: "admin@ihealthpharmacy.ca" },
-    update: {
-      name: "System Administrator",
-      role: Role.ADMIN,
-      isActive: true,
-      hashedPassword: adminPasswordHash,
-    },
-    create: {
-      name: "System Administrator",
-      email: "admin@ihealthpharmacy.ca",
-      role: Role.ADMIN,
-      isActive: true,
-      hashedPassword: adminPasswordHash,
-    },
-  });
-
-  await prisma.user.upsert({
-    where: { email: "pharmacist@ihealthpharmacy.ca" },
-    update: {
-      name: "Staff Pharmacist",
-      role: Role.PHARMACIST,
-      isActive: true,
-      hashedPassword: pharmacistPasswordHash,
-    },
-    create: {
-      name: "Staff Pharmacist",
-      email: "pharmacist@ihealthpharmacy.ca",
-      role: Role.PHARMACIST,
-      isActive: true,
-      hashedPassword: pharmacistPasswordHash,
-    },
-  });
+  // Staff sign-in: no seeded users. The only admin is info@ihealthpharmacy.ca, created on first
+  // email-code sign-in (see ensureAdminUser in lib/auth.ts).
 }
 
 if (process.env.NODE_ENV !== "test") {

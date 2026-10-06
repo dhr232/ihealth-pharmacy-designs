@@ -2,9 +2,16 @@ import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import { prisma, withPrismaFallback } from "./prisma";
+import { PHARMACY_INFO } from "../data/pharmacy-info";
 
 export const SESSION_COOKIE_NAME = "ihealth_staff_session";
-export const SESSION_MAX_AGE_SECONDS = 7 * 24 * 60 * 60; // 7 days
+export const SESSION_MAX_AGE_SECONDS = 12 * 60 * 60; // 12 hours
+
+// How long an emailed sign-in code stays valid
+export const OTP_TTL_MINUTES = 2;
+
+// The only identity allowed to sign in: the pharmacy inbox. The code is emailed there.
+export const ADMIN_EMAIL = PHARMACY_INFO.email.toLowerCase();
 
 export type StaffRole = "ADMIN" | "PHARMACIST";
 
@@ -15,22 +22,6 @@ export interface SessionPayload {
   role: StaffRole;
   exp: number;
 }
-
-export const SEEDED_ADMIN = {
-  id: "seeded-admin-id",
-  email: "admin@ihealthpharmacy.ca",
-  name: "System Administrator",
-  role: "ADMIN" as StaffRole,
-  defaultPassword: process.env.ADMIN_INITIAL_PASSWORD || "Admin2026!",
-};
-
-export const SEEDED_PHARMACIST = {
-  id: "seeded-pharmacist-id",
-  email: "pharmacist@ihealthpharmacy.ca",
-  name: "Clinical Pharmacist",
-  role: "PHARMACIST" as StaffRole,
-  defaultPassword: process.env.PHARMACIST_INITIAL_PASSWORD || "Pharmacist2026!",
-};
 
 // In-memory fallback token store for OTPs when database is unavailable or seeded user is used
 interface MemoryOtpToken {
@@ -43,7 +34,14 @@ interface MemoryOtpToken {
 const memoryOtpStore = new Map<string, MemoryOtpToken>();
 
 function getEncryptionKey(): Buffer {
-  const secret = process.env.SESSION_SECRET || "ihealth-pharmacy-staff-session-secret-salt-2026-key-32";
+  const secret =
+    process.env.SESSION_SECRET ||
+    (process.env.NODE_ENV === "production"
+      ? ""
+      : "ihealth-pharmacy-staff-session-secret-salt-2026-key-32");
+  if (!secret) {
+    throw new Error("SESSION_SECRET must be set in production.");
+  }
   return crypto.createHash("sha256").update(secret).digest();
 }
 
@@ -158,7 +156,7 @@ export async function comparePassword(password: string, hash: string): Promise<b
  * Generate a secure 6-digit OTP code string.
  */
 export function generateOtpCode(): string {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  return crypto.randomInt(100000, 1000000).toString();
 }
 
 /**
@@ -294,5 +292,22 @@ export async function getCurrentStaffSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   if (!token) return null;
-  return decryptSessionToken(token);
+  const session = decryptSessionToken(token);
+  // Only the pharmacy inbox may be signed in; this also ends any session left over from removed accounts.
+  if (!session || session.email.toLowerCase() !== ADMIN_EMAIL) return null;
+  return session;
+}
+
+/**
+ * Make sure the admin User row exists (Session and TwoFactorToken point at it).
+ * The password is random and never used: sign-in is by emailed code only.
+ */
+export async function ensureAdminUser(): Promise<{ id: string; email: string; name: string; role: StaffRole }> {
+  const hashedPassword = await bcrypt.hash(crypto.randomBytes(32).toString("hex"), 10);
+  const user = await prisma.user.upsert({
+    where: { email: ADMIN_EMAIL },
+    update: { isActive: true, role: "ADMIN" },
+    create: { email: ADMIN_EMAIL, name: "iHealth Pharmacy", role: "ADMIN", hashedPassword, isActive: true },
+  });
+  return { id: user.id, email: user.email, name: user.name, role: "ADMIN" };
 }
