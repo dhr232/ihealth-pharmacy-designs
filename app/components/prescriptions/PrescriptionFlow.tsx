@@ -20,6 +20,7 @@ import {
   PhoneCall,
 } from "lucide-react";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
+import { CARD_TONES, PRESCRIPTION_MODE_TONES as MODE_TONES, type CardTone } from "@/app/components/cardTones";
 import { isValidEmail, isValidPhone, formatPhoneNumber } from "@/lib/validation";
 
 type TimingOption = "asap" | "today" | "tomorrow" | "custom";
@@ -62,15 +63,21 @@ function Section({
   step,
   title,
   description,
+  tone,
   children,
 }: {
   step: number;
+  tone: CardTone;
   title: string;
   description?: string;
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs sm:p-7">
+    <section className={`relative isolate overflow-hidden rounded-2xl border p-5 shadow-xs sm:p-7 ${CARD_TONES[tone].card}`}>
+      <span
+        className={`pointer-events-none absolute -top-12 -right-10 -z-10 h-32 w-32 rounded-full opacity-70 ${CARD_TONES[tone].blob}`}
+        aria-hidden="true"
+      />
       <div className="flex items-start gap-3.5">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--brand)] text-lg font-bold text-white">
           {step}
@@ -533,7 +540,7 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
 
       <form onSubmit={handleSubmit} noValidate className="space-y-5">
         {/* 1. Prescription */}
-        <Section
+        <Section tone={MODE_TONES[mode]}
           step={1}
           title={mode === "transfer" ? "Your previous pharmacy" : "Your prescription"}
           description={
@@ -614,7 +621,7 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex min-h-40 w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-8 text-center transition hover:border-[var(--brand)] hover:bg-[var(--brand-subtle)]/40"
+                    className="flex min-h-40 w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-white/70 px-6 py-8 text-center transition hover:border-[var(--brand)] hover:bg-[var(--brand-subtle)]/40"
                   >
                     <Upload className="h-8 w-8 text-[var(--brand)]" />
                     <span className="mt-2 text-lg font-semibold text-slate-900">Tap here to choose photos</span>
@@ -662,7 +669,7 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
               {submissionTab === "manual" && showItems && (
                 <div className="mt-5 space-y-3">
                   {items.map((item, index) => (
-                    <div key={item.id} className="rounded-2xl border-2 border-slate-200 bg-slate-50/60 p-4 sm:p-5">
+                    <div key={item.id} className="rounded-2xl border-2 border-slate-200 bg-white/70 p-4 sm:p-5">
                       <div className="mb-3 flex items-center justify-between">
                         <span className="text-base font-bold text-slate-700">Medication {index + 1}</span>
                         {items.length > 1 && (
@@ -755,7 +762,7 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
         </Section>
 
         {/* 2. Patient information */}
-        <Section
+        <Section tone={MODE_TONES[mode]}
           step={2}
           title="Patient information"
           description="So we can match your records and reach you if we have a question."
@@ -847,7 +854,7 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
         </Section>
 
         {/* 3. Preferred ready time */}
-        <Section step={3} title="Preferred ready time" description={`Store hours: ${PHARMACY_INFO.hoursSummary}`}>
+        <Section tone={MODE_TONES[mode]} step={3} title="Preferred ready time" description={`Store hours: ${PHARMACY_INFO.hoursSummary}`}>
           <div role="radiogroup" aria-label="Preferred ready time" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {TIMING_OPTIONS.map((option) => (
               <Choice
@@ -897,7 +904,7 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
         </Section>
 
         {/* 4. Ready notification */}
-        <Section step={4} title="How should we tell you it's ready?" description="Choose how you would like us to reach you.">
+        <Section tone={MODE_TONES[mode]} step={4} title="How should we tell you it's ready?" description="Choose how you would like us to reach you.">
           <div role="radiogroup" aria-label="Ready notification method" className="grid gap-3 sm:grid-cols-2">
             <Choice
               selected={notificationMethod === "CALL"}
@@ -917,7 +924,7 @@ export default function PrescriptionFlow({ mode }: PrescriptionFlowProps) {
         </Section>
 
         {/* 5. Pickup or delivery */}
-        <Section step={5} title="Pickup or delivery">
+        <Section tone={MODE_TONES[mode]} step={5} title="Pickup or delivery">
           <div role="radiogroup" aria-label="Pickup or delivery" className="grid gap-3 sm:grid-cols-2">
             <Choice
               compact

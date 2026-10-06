@@ -1,5 +1,6 @@
 import { Phone, MessageCircle, Info } from "lucide-react";
 import { PHARMACY_INFO, getWhatsAppUrl } from "@/data/pharmacy-info";
+import { CARD_TONES, PRESCRIPTION_MODE_TONES as MODE_TONES } from "@/app/components/cardTones";
 import type { PrescriptionWorkflowMode } from "./PrescriptionFlow";
 
 // Shared sidebar for /prescription-refills, /transfer and /new-prescription.
@@ -38,8 +39,8 @@ const TRANSFER_FAQS = [
   },
 ];
 
-function Card({ children }: { children: React.ReactNode }) {
-  return <div className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6">{children}</div>;
+function Card({ mode, children }: { mode: PrescriptionWorkflowMode; children: React.ReactNode }) {
+  return <div className={`rounded-xl border p-5 sm:p-6 ${CARD_TONES[MODE_TONES[mode]].card}`}>{children}</div>;
 }
 
 export default function PrescriptionSidebar({ mode }: { mode: PrescriptionWorkflowMode }) {
@@ -47,7 +48,7 @@ export default function PrescriptionSidebar({ mode }: { mode: PrescriptionWorkfl
 
   return (
     <aside className="space-y-5">
-      <Card>
+      <Card mode={mode}>
         <h2 className="text-base font-semibold text-slate-900">How it works</h2>
         <ol className="mt-4 space-y-4">
           {STEPS[mode].map((step, i) => (
@@ -80,7 +81,7 @@ export default function PrescriptionSidebar({ mode }: { mode: PrescriptionWorkfl
       )}
 
       {mode === "transfer" && (
-        <Card>
+        <Card mode={mode}>
           <h2 className="text-base font-semibold text-slate-900">Common questions</h2>
           <dl className="mt-3 divide-y divide-slate-100">
             {TRANSFER_FAQS.map((faq) => (
@@ -93,7 +94,7 @@ export default function PrescriptionSidebar({ mode }: { mode: PrescriptionWorkfl
         </Card>
       )}
 
-      <Card>
+      <Card mode={mode}>
         <div className="flex items-center gap-3.5">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

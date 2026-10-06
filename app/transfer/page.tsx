@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function TransferPage() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 antialiased">
+    <div className="min-h-screen bg-[var(--surface)] text-slate-900 antialiased">
       <Header />
 
       <main className="py-10 lg:py-16">

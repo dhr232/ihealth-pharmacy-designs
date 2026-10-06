@@ -62,3 +62,10 @@ export const CARD_TONES: Record<
     badge: "text-[#1F7A7A]",
   },
 };
+
+// Pastel tone for each prescription form, matching its tile on the home page
+export const PRESCRIPTION_MODE_TONES: Record<"new" | "refill" | "transfer", CardTone> = {
+  refill: "blue",
+  transfer: "green",
+  new: "purple",
+};
