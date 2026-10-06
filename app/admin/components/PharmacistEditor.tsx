@@ -371,7 +371,7 @@ export function PharmacistEditor({
                 id="pharm-role"
                 value={draft.role}
                 onChange={(e) => update("role", e.target.value)}
-                placeholder="Pharmacy Manager & Owner"
+                placeholder="Licensed Pharmacist"
               />
             </div>
 

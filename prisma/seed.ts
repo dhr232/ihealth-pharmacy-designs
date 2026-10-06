@@ -319,7 +319,7 @@ export const OTHER_CANONICAL_SERVICES = [
 export const PHARMACISTS = [
   {
     name: "Dev Patel",
-    title: "Primary Pharmacist & Pharmacy Manager",
+    title: "Licensed Pharmacist",
     licenseNumber: "BC-PHARM-20184",
     bio: "Dev became a Pharmacist because of his love and passion for medicine paired with the opportunity to make a direct impact in patient care. His mission is to improve an individual's quality of life by giving excellent personal care using the best of his knowledge and skills.",
     avatarUrl: "/pharmacist-dev-patel-ihealth.jpg",
