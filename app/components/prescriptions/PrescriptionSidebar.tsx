@@ -96,12 +96,15 @@ export default function PrescriptionSidebar({ mode }: { mode: PrescriptionWorkfl
 
       <Card mode={mode}>
         <div className="flex items-center gap-3.5">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/pharmacist-dev-patel-ihealth.jpg"
-            alt={pharmacist.name}
-            className="h-12 w-12 shrink-0 rounded-full border border-slate-200 bg-slate-100 object-cover"
-          />
+          {/* The photo is a tall half-body shot: zoom in on the face so it reads at avatar size */}
+          <span className="h-16 w-16 shrink-0 overflow-hidden rounded-full border border-slate-200 bg-slate-100">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/pharmacist-dev-patel-ihealth.jpg"
+              alt={pharmacist.name}
+              className="h-full w-full origin-[53%_24%] scale-[2.2] object-cover object-top"
+            />
+          </span>
           <div>
             <p className="text-sm font-semibold text-slate-900">Questions? Talk to a pharmacist</p>
             <p className="text-sm text-slate-500">{PHARMACY_INFO.languagesSummary}</p>

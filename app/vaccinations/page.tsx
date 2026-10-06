@@ -220,12 +220,14 @@ export default function VaccinationsPage() {
 
                 {/* Pharmacist Profile */}
                 <div className="mt-8 flex items-center gap-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/pharmacist-dev-patel-ihealth.jpg"
-                    alt="Dev Patel, RPh - Injection Certified Pharmacist"
-                    className="h-20 w-20 rounded-xl border border-slate-200 object-cover bg-slate-100 shadow-2xs"
-                  />
+                  <span className="h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-2xs">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/pharmacist-dev-patel-ihealth.jpg"
+                      alt="Dev Patel, RPh - Injection Certified Pharmacist"
+                      className="h-full w-full origin-[53%_24%] scale-[2.2] object-cover object-top"
+                    />
+                  </span>
                   <div>
                     <div className="flex items-center gap-2">
                       <h3 className="font-extrabold text-slate-900 text-sm sm:text-base">Dev Patel, RPh</h3>
