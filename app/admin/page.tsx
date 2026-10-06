@@ -26,7 +26,6 @@ import {
   Calendar,
   LayoutDashboard,
   Upload,
-  Users as UsersIcon,
   Lock,
 } from "lucide-react";
 import {
@@ -55,7 +54,6 @@ import { PostEditor } from "./components/PostEditor";
 import { AnnouncementEditor } from "./components/AnnouncementEditor";
 import { AppointmentsSection } from "./components/AppointmentsSection";
 import { FlyersSection } from "./components/FlyersSection";
-import { UsersSection } from "./components/UsersSection";
 import { OverviewSection } from "./components/OverviewSection";
 import { DataExportSection } from "./components/DataExportSection";
 import { Button } from "@/app/components/ui/button";
@@ -72,7 +70,6 @@ export type Tab =
   | "announcements"
   | "flyers"
   | "pharmacists"
-  | "users"
   | "export";
 
 type PostFilter = "all" | PostStatus;
@@ -654,20 +651,6 @@ function Dashboard({
                 </Badge>
               </TabsTrigger>
 
-              {/* Admin-only: Staff User Management */}
-              {isAdmin && (
-                <TabsTrigger
-                  value="users"
-                  className="gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
-                >
-                  <UsersIcon size={15} />
-                  <span>Staff Users</span>
-                  <Badge className="ml-0.5 bg-indigo-100 text-indigo-800 border-none px-1 py-0 text-[9px]">
-                    Admin
-                  </Badge>
-                </TabsTrigger>
-              )}
-
               {/* Admin-only: Data Export */}
               {isAdmin && (
                 <TabsTrigger
@@ -751,21 +734,6 @@ function Dashboard({
               onMove={handleMovePharmacist}
               onExport={handleExportPharmacists}
             />
-          </TabsContent>
-
-          {/* Staff User Management Tab Content (Admin Only) */}
-          <TabsContent value="users" className="m-0 focus-visible:outline-none">
-            {isAdmin ? (
-              <UsersSection onToast={pushToast} />
-            ) : (
-              <Card className="border-slate-200 p-8 text-center">
-                <Lock size={32} className="mx-auto text-slate-400 mb-2" />
-                <h3 className="font-semibold text-slate-800 text-sm">Administrator Access Required</h3>
-                <p className="text-xs text-slate-500 mt-1">
-                  Managing staff credentials and role permissions is restricted to System Administrators.
-                </p>
-              </Card>
-            )}
           </TabsContent>
 
           {/* Data Export Tab Content (Admin Only) */}

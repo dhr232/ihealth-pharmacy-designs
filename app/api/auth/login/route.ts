@@ -1,151 +1,113 @@
-﻿import { NextResponse } from "next/server";
-import { prisma, withPrismaFallback } from "@/lib/prisma";
+import { NextResponse } from "next/server";
+import { withPrismaFallback } from "@/lib/prisma";
 import {
-  comparePassword,
-  encryptSessionToken,
-  SEEDED_ADMIN,
-  SEEDED_PHARMACIST,
-  SESSION_COOKIE_NAME,
-  SESSION_MAX_AGE_SECONDS,
-  StaffRole,
+  ADMIN_EMAIL,
+  ensureAdminUser,
+  generateOtpCode,
+  OTP_TTL_MINUTES,
+  saveTwoFactorToken,
 } from "@/lib/auth";
+import { sendTwoFactorCodeEmail } from "@/lib/resend";
 
-// NOTE: 2FA (OTP email step) is temporarily disabled.
-// To re-enable: restore OTP generation, saveTwoFactorToken, sendTwoFactorCodeEmail,
-// return { step: "2FA_REQUIRED" } here, and restore the OTP step in the login page.
+// Step 1 of sign-in: ask for a code. Only the pharmacy inbox (ADMIN_EMAIL) can sign in; the code is
+// emailed there. Any other address gets the same reply and nothing is sent, so the endpoint does not
+// reveal which address is valid. Step 2 is /api/auth/verify-2fa.
+
+const RESEND_COOLDOWN_MS = 60_000;
+const MAX_REQUESTS_PER_HOUR = 6;
+
+// In-memory limiter (resets on restart). The hashed code, its 2-minute expiry and the 3-attempt
+// limit in lib/auth.ts are the real protection; this just stops inbox flooding.
+const recentRequests = new Map<string, number[]>();
+
+function tooSoon(key: string): "cooldown" | "hourly" | null {
+  const now = Date.now();
+  const hits = (recentRequests.get(key) ?? []).filter((t) => now - t < 60 * 60 * 1000);
+  recentRequests.set(key, hits);
+  if (hits.length >= MAX_REQUESTS_PER_HOUR) return "hourly";
+  if (hits.length > 0 && now - hits[hits.length - 1] < RESEND_COOLDOWN_MS) return "cooldown";
+  hits.push(now);
+  return null;
+}
+
+const GENERIC_REPLY = {
+  success: true,
+  message: "If that address can sign in, a verification code has been sent to it.",
+};
 
 export async function POST(request: Request) {
   try {
     const body = await request.json().catch(() => null);
-    if (!body || typeof body !== "object") {
+    const email =
+      body && typeof body === "object" && typeof (body as { email?: unknown }).email === "string"
+        ? (body as { email: string }).email.trim().toLowerCase()
+        : "";
+
+    if (!email) {
+      return NextResponse.json({ success: false, error: "Email is required." }, { status: 400 });
+    }
+
+    if (email !== ADMIN_EMAIL) {
+      return NextResponse.json(GENERIC_REPLY);
+    }
+
+    const limited = tooSoon(email);
+    if (limited) {
       return NextResponse.json(
-        { success: false, error: "Invalid request payload." },
-        { status: 400 }
+        {
+          success: false,
+          error:
+            limited === "cooldown"
+              ? "A code was just sent. Please wait a minute before asking for another."
+              : "Too many code requests. Please try again later.",
+        },
+        { status: 429 }
       );
     }
 
-    const { email, password } = body as { email?: string; password?: string };
-
-    if (!email || !password) {
-      return NextResponse.json(
-        { success: false, error: "Email and password are required." },
-        { status: 400 }
-      );
-    }
-
-    const normalizedEmail = email.trim().toLowerCase();
-
-    // 1. Check database for user with fallback
-    const userRecord = await withPrismaFallback(
-      () => prisma.user.findUnique({ where: { email: normalizedEmail } }),
-      () => null
+    const user = await withPrismaFallback(
+      () => ensureAdminUser(),
+      () => ({ id: "admin-fallback", email: ADMIN_EMAIL, name: "iHealth Pharmacy", role: "ADMIN" as const })
     );
 
-    let isValid = false;
-    let userDetails: {
-      id: string;
-      email: string;
-      name: string;
-      role: StaffRole;
-    } | null = null;
+    const code = generateOtpCode();
+    await saveTwoFactorToken({
+      userId: user.id,
+      email: ADMIN_EMAIL,
+      code,
+      expiresAt: new Date(Date.now() + OTP_TTL_MINUTES * 60 * 1000),
+    });
 
-    if (userRecord) {
-      if (!userRecord.isActive) {
-        return NextResponse.json(
-          { success: false, error: "This staff account has been deactivated. Please contact the administrator." },
-          { status: 403 }
-        );
-      }
-      isValid = await comparePassword(password, userRecord.hashedPassword);
-      if (isValid) {
-        userDetails = {
-          id: userRecord.id,
-          email: userRecord.email,
-          name: userRecord.name,
-          role: userRecord.role as StaffRole,
-        };
-      }
-    } else {
-      // Fallback seeded accounts
-      if (normalizedEmail === SEEDED_ADMIN.email.toLowerCase()) {
-        isValid = password === SEEDED_ADMIN.defaultPassword;
-        if (isValid) {
-          userDetails = {
-            id: SEEDED_ADMIN.id,
-            email: SEEDED_ADMIN.email,
-            name: SEEDED_ADMIN.name,
-            role: SEEDED_ADMIN.role,
-          };
-        }
-      } else if (normalizedEmail === SEEDED_PHARMACIST.email.toLowerCase()) {
-        isValid = password === SEEDED_PHARMACIST.defaultPassword;
-        if (isValid) {
-          userDetails = {
-            id: SEEDED_PHARMACIST.id,
-            email: SEEDED_PHARMACIST.email,
-            name: SEEDED_PHARMACIST.name,
-            role: SEEDED_PHARMACIST.role,
-          };
-        }
-      }
-    }
+    const sent = await sendTwoFactorCodeEmail({
+      email: ADMIN_EMAIL,
+      code,
+      expiresMinutes: OTP_TTL_MINUTES,
+    });
 
-    if (!isValid || !userDetails) {
+    if (!sent.success) {
       return NextResponse.json(
-        { success: false, error: "Invalid staff email or password." },
-        { status: 401 }
+        { success: false, error: "We could not send the code. Please try again in a moment." },
+        { status: 502 }
       );
     }
 
-    // 2. Create session directly (2FA step skipped)
-    const exp = Date.now() + SESSION_MAX_AGE_SECONDS * 1000;
-    const sessionToken = encryptSessionToken({
-      userId: userDetails.id,
-      email: userDetails.email,
-      name: userDetails.name,
-      role: userDetails.role,
-      exp,
-    });
-
-    // 3. Optionally persist session record in database
-    try {
-      await prisma.session.create({
-        data: {
-          sessionToken,
-          userId: userDetails.id,
-          expiresAt: new Date(exp),
-        },
-      });
-    } catch {
-      // Best-effort: stateless encrypted token works without DB record
+    if (sent.mock) {
+      // No RESEND_API_KEY. Locally, hand the code back so sign-in can be tested; in production
+      // no email went out, so say so instead of leaving staff waiting for a code.
+      if (process.env.NODE_ENV === "production") {
+        return NextResponse.json(
+          { success: false, error: "Email is not configured, so no code could be sent." },
+          { status: 503 }
+        );
+      }
+      return NextResponse.json({ ...GENERIC_REPLY, debugCode: code });
     }
 
-    const response = NextResponse.json({
-      success: true,
-      user: {
-        name: userDetails.name,
-        email: userDetails.email,
-        role: userDetails.role,
-      },
-    });
-
-    // 4. Set HTTP-only secure cookie
-    response.cookies.set({
-      name: SESSION_COOKIE_NAME,
-      value: sessionToken,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: SESSION_MAX_AGE_SECONDS,
-    });
-
-    return response;
+    return NextResponse.json(GENERIC_REPLY);
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Internal server error";
     console.error("Login route error:", error);
     return NextResponse.json(
-      { success: false, error: message },
+      { success: false, error: "Something went wrong. Please try again." },
       { status: 500 }
     );
   }

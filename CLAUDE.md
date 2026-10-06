@@ -16,7 +16,7 @@ Multi-page full-stack website for **iHealth Pharmacy** (Chilliwack, BC).
 - **Runtime:** Node.js 22.x server -- NOT static export. `output: "export"` is removed.
 - **Bundler:** Webpack for production builds (`next build --webpack`) -- Hostinger Linux has GLIBC < 2.29, incompatible with Turbopack native binaries. Turbopack is fine for local `npm run dev`.
 - **ORM:** Prisma v6 with PostgreSQL (Neon). Schema at `prisma/schema.prisma`.
-- **Auth:** Custom 2FA session auth via `lib/auth.ts` -- bcrypt password + 6-digit TOTP stored in DB or in-memory fallback.
+- **Auth:** Email-code sign-in for the single admin `info@ihealthpharmacy.ca` via `lib/auth.ts` -- 6-digit code (hashed, 2-minute expiry) stored in DB or in-memory fallback, encrypted 12-hour session cookie.
 - **Email:** Resend via `lib/resend.ts`. Audience sync to `RESEND_AUDIENCE_ID`.
 - **motion/react** (NOT framer-motion), easing `[0.16, 1, 0.3, 1]`, all motion gated on `useReducedMotion`
 - **lucide-react** icons -- emojis are banned everywhere in code, commits, and responses
@@ -39,19 +39,16 @@ Multi-page full-stack website for **iHealth Pharmacy** (Chilliwack, BC).
 | `RESEND_API_KEY` | Resend transactional email |
 | `RESEND_AUDIENCE_ID` | Resend newsletter audience |
 | `SESSION_SECRET` | AES-256-GCM session token encryption key |
-| `ADMIN_INITIAL_PASSWORD` | Override default admin password (default: `Admin2026!`) |
-| `PHARMACIST_INITIAL_PASSWORD` | Override default pharmacist password (default: `Pharmacist2026!`) |
 | `RUN_MIGRATIONS` | Set to `true` in Hostinger ONLY. Makes `npm run build` apply pending Prisma migrations. Never set locally or in CI. |
 | `UPLOAD_DIR` | Absolute folder for admin uploads (blog covers, flyer PDFs/images), OUTSIDE the app so deploys don't wipe it: `/home/u491263438/domains/ihealthpharmacy.ca/uploads`. Served at `/media/<category>/<file>`. Production refuses uploads if unset. |
 
-## Seeded Staff Accounts
+## Admin Sign-in
 
-| Role | Email | Default Password |
-| --- | --- | --- |
-| Admin | `admin@ihealthpharmacy.ca` | `Admin2026!` |
-| Pharmacist | `pharmacist@ihealthpharmacy.ca` | `Pharmacist2026!` |
-
-2FA OTP is sent via Resend email. In dev/demo mode (no RESEND_API_KEY), the API returns `debugCode` in the response body.
+- One admin only: `info@ihealthpharmacy.ca` (`ADMIN_EMAIL` in `lib/auth.ts`, = `PHARMACY_INFO.email`). No passwords and no other staff accounts.
+- Flow: enter the email on `/admin/login`, a 6-digit code is emailed to that inbox (valid 2 minutes, 3 attempts, 60s resend cooldown), enter it to start a 12-hour session.
+- `getCurrentStaffSession` rejects any session that is not for `ADMIN_EMAIL`. `SESSION_SECRET` must be set in production (the app refuses to start sessions without it).
+- In dev/demo mode (no RESEND_API_KEY) `/api/auth/login` returns `debugCode`; in production with no key it returns an error instead.
+- The admin `User` row is created at runtime on first sign-in (`ensureAdminUser`). Do not seed other users.
 
 ## Email and Notifications (one inbox rule)
 
@@ -60,7 +57,7 @@ Multi-page full-stack website for **iHealth Pharmacy** (Chilliwack, BC).
 - **Any new form or alert must follow the same pattern**: submit to our own `/api/...` route and send the staff alert to `DEFAULT_DISPENSARY_ALERT_EMAIL` (which is `PHARMACY_INFO.email`). Do not use third-party form services (Web3Forms etc.).
 - `DEFAULT_DISPENSARY_ALERT_EMAIL` is intentionally NOT overridable by an env var. The old `DISPENSARY_ALERT_EMAIL` variable is no longer read and can be deleted from Hostinger.
 - The Resend *sender* (`RESEND_FROM_EMAIL`, default `notifications@notifications.ihealthpharmacy.ca`) is a sending identity on a verified Resend domain, not a mailbox; change it only after verifying the new domain in Resend.
-- Staff login accounts above (`admin@` / `pharmacist@`) are sign-in identities, not contact addresses.
+- The admin sign-in code is emailed to `info@`, the same inbox as all form alerts.
 
 ## Routes
 
