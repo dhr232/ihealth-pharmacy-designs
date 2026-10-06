@@ -128,7 +128,7 @@ export const SEED_PHARMACISTS: Pharmacist[] = [
     name: "Dev Patel",
     role: "Licensed Pharmacist",
     bio: "Dev became a Pharmacist because of his love and passion for medicine paired with the opportunity to make a direct impact in patient care. His mission is to improve an individual's quality of life by giving excellent personal care using the best of his knowledge and skills.",
-    photoUrl: "/pharmacists/dev-patel.png",
+    photoUrl: "/pharmacist-dev-patel-ihealth.jpg",
     credentials: ["BSc Pharm", "RPh"],
     languages: ["English", "Gujarati", "Hindi"],
     yearsExperience: 10,

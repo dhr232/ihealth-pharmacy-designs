@@ -98,7 +98,7 @@ export default function PrescriptionSidebar({ mode }: { mode: PrescriptionWorkfl
         <div className="flex items-center gap-3.5">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/pharmacists/dev-patel.jpg"
+            src="/pharmacist-dev-patel-ihealth.jpg"
             alt={pharmacist.name}
             className="h-12 w-12 shrink-0 rounded-full border border-slate-200 bg-slate-100 object-cover"
           />

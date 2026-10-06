@@ -222,7 +222,7 @@ export default function VaccinationsPage() {
                 <div className="mt-8 flex items-center gap-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/pharmacists/dev-patel.jpg"
+                    src="/pharmacist-dev-patel-ihealth.jpg"
                     alt="Dev Patel, RPh - Injection Certified Pharmacist"
                     className="h-20 w-20 rounded-xl border border-slate-200 object-cover bg-slate-100 shadow-2xs"
                   />
