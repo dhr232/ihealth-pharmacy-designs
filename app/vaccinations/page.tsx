@@ -233,7 +233,7 @@ export default function VaccinationsPage() {
                         Certified Immunizer
                       </span>
                     </div>
-                    <p className="mt-0.5 text-xs text-slate-500">Pharmacy Manager & Clinical Pharmacist</p>
+                    <p className="mt-0.5 text-xs text-slate-500">Licensed Pharmacist</p>
                     <p className="mt-2 text-xs text-slate-600 leading-relaxed">
                       Administered safely in a private clinical consultation suite. You will be observed for 15 minutes post-vaccination with full vital checks available.
                     </p>

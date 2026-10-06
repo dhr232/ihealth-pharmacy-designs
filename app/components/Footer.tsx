@@ -68,7 +68,7 @@ export default function Footer({ logoHref = "/" }: FooterProps = {}) {
                   {PHARMACY_INFO.name}
                 </span>
                 <span className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">
-                  Chilliwack Dispensary
+                  Chilliwack Pharmacy
                 </span>
               </div>
             </Link>

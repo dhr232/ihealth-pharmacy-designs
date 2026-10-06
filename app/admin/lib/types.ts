@@ -101,7 +101,7 @@ export const SEED_ANNOUNCEMENTS: AnnouncementItem[] = [
   },
   {
     id: "ann-003",
-    text: "Open Mon–Fri 8:30am–5pm and Sat 9am–12pm",
+    text: "Store hours: Mon–Fri 8:30am–5pm, Sat 9am–12pm",
     icon: "clock",
     enabled: true,
     urgent: false,
@@ -126,7 +126,7 @@ export const SEED_PHARMACISTS: Pharmacist[] = [
   {
     id: "seed-pharm-001",
     name: "Dev Patel",
-    role: "Primary Pharmacist & Pharmacy Manager",
+    role: "Licensed Pharmacist",
     bio: "Dev became a Pharmacist because of his love and passion for medicine paired with the opportunity to make a direct impact in patient care. His mission is to improve an individual's quality of life by giving excellent personal care using the best of his knowledge and skills.",
     photoUrl: "/pharmacists/dev-patel.png",
     credentials: ["BSc Pharm", "RPh"],
