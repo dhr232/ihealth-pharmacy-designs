@@ -7,7 +7,7 @@ import {
   DEFAULT_DISPENSARY_ALERT_EMAIL,
   syncResendSubscriber,
 } from "@/lib/resend";
-import { getServiceByIdOrSlug } from "@/data/booking-services";
+import { getServiceByIdOrSlug, isProvincialBookingOnly, GET_VACCINATED_URL } from "@/data/booking-services";
 import { PHARMACY_INFO, isBookableSlot } from "@/data/pharmacy-info";
 import {
   isValidEmail,
@@ -85,6 +85,17 @@ export async function POST(request: NextRequest) {
     if (!serviceId || typeof serviceId !== "string") {
       return NextResponse.json(
         { success: false, error: "Please select a service for your appointment." },
+        { status: 400 }
+      );
+    }
+
+    // Flu and COVID-19 vaccines are booked on the BC Government site, not here
+    if (isProvincialBookingOnly(serviceId)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Flu and COVID-19 vaccines must be booked through the BC Government site: ${GET_VACCINATED_URL}`,
+        },
         { status: 400 }
       );
     }
