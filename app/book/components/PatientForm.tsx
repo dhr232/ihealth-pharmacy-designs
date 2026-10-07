@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   User,
   Mail,
@@ -37,15 +37,22 @@ export interface PatientFormData {
 interface PatientFormProps {
   initialData: PatientFormData;
   onSubmit: (data: PatientFormData) => void;
+  /** Called on every change so the parent can keep a draft (survives a refresh) */
+  onDraftChange?: (data: PatientFormData) => void;
   onBack: () => void;
 }
 
 export default function PatientForm({
   initialData,
   onSubmit,
+  onDraftChange,
   onBack,
 }: PatientFormProps) {
   const [formData, setFormData] = useState<PatientFormData>(initialData);
+
+  useEffect(() => {
+    onDraftChange?.(formData);
+  }, [formData, onDraftChange]);
   const [errors, setErrors] = useState<Partial<Record<keyof PatientFormData, string>>>({});
 
   // Helper for formatting PHN: 10 digits formatted as 9XXX-XXX-XXX

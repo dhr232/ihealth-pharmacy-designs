@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import Header from "../components/Header";
@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 import { getMainSiteUrl } from "@/lib/routes";
+import { loadBookingDraft, saveBookingDraft, clearBookingDraft } from "@/lib/booking-draft";
 
 const STEPS = [
   { id: 1, title: "Select Service", icon: Stethoscope },
@@ -46,12 +47,33 @@ function BookingWizard() {
     ? BOOKING_CATEGORIES.find((c) => c.slug === categoryParam.toLowerCase().replace(/-/g, "_"))?.slug
     : undefined;
 
+  // Restore an unfinished booking after a refresh or lost connection. This component only renders
+  // in the browser (it sits behind useSearchParams), so reading sessionStorage here is safe.
+  // A ?service= link wins over the saved booking unless it names the same service.
+  const [draft] = useState(() => {
+    const saved = loadBookingDraft();
+    if (!saved) return null;
+    const linked = serviceParam ? getServiceByIdOrSlug(serviceParam) : undefined;
+    if (linked && linked.id !== saved.serviceId) return null;
+    const service = getServiceByIdOrSlug(saved.serviceId);
+    if (!service || isProvincialBookingOnly(service.id)) return null;
+    return { ...saved, service };
+  });
+
   const [selectedService, setSelectedService] = useState<BookingService | null>(() =>
-    serviceParam ? getServiceByIdOrSlug(serviceParam) ?? null : null
+    serviceParam ? getServiceByIdOrSlug(serviceParam) ?? null : draft?.service ?? null
   );
   // Flu and COVID-19 vaccines are booked on the BC Government site, so they stay on step 1 where
   // the service list shows that link instead of our form.
   const [currentStep, setCurrentStep] = useState<number>(() => {
+    if (draft) {
+      // Never land on a step whose earlier steps are incomplete
+      const hasPatient = Boolean(draft.patient.firstName && draft.patient.email);
+      const hasSlot = Boolean(draft.date && draft.time);
+      if (draft.step >= 4 && hasPatient && hasSlot) return 4;
+      if (draft.step >= 3 && hasPatient) return 3;
+      return 2;
+    }
     const match = serviceParam ? getServiceByIdOrSlug(serviceParam) : undefined;
     return match && !isProvincialBookingOnly(match.id) ? 2 : 1;
   });
@@ -78,13 +100,44 @@ function BookingWizard() {
     phn: "",
     reasonForVisit: "",
     caslConsent: false,
+    ...(draft?.patient ?? {}),
   });
 
-  const [selectedDate, setSelectedDate] = useState<string>("");
-  const [selectedTime, setSelectedTime] = useState<string>("");
-  const [selectedTimeLabel, setSelectedTimeLabel] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<string>(draft?.date ?? "");
+  const [selectedTime, setSelectedTime] = useState<string>(draft?.time ?? "");
+  const [selectedTimeLabel, setSelectedTimeLabel] = useState<string>(draft?.timeLabel ?? "");
+
+  // Save progress as the patient goes. Stops once the booking is confirmed so a finished
+  // booking is never offered again.
+  const bookedRef = useRef(false);
+  useEffect(() => {
+    if (bookedRef.current || !selectedService) return;
+    saveBookingDraft({
+      serviceId: selectedService.id,
+      step: currentStep,
+      patient: {
+        firstName: patientData.firstName,
+        lastName: patientData.lastName,
+        email: patientData.email,
+        phone: patientData.phone,
+        dateOfBirth: patientData.dateOfBirth,
+        gender: patientData.gender,
+        reasonForVisit: patientData.reasonForVisit,
+      },
+      date: selectedDate,
+      time: selectedTime,
+      timeLabel: selectedTimeLabel,
+    });
+  }, [selectedService, currentStep, patientData, selectedDate, selectedTime, selectedTimeLabel]);
+
+  function handleBooked() {
+    bookedRef.current = true;
+    clearBookingDraft();
+  }
 
   function handleReset() {
+    bookedRef.current = false;
+    clearBookingDraft();
     setCurrentStep(1);
     setSelectedDate("");
     setSelectedTime("");
@@ -250,6 +303,7 @@ function BookingWizard() {
                     setPatientData(data);
                     setCurrentStep(3);
                   }}
+                  onDraftChange={setPatientData}
                   onBack={() => setCurrentStep(1)}
                 />
               )}
@@ -278,6 +332,7 @@ function BookingWizard() {
                   selectedDate={selectedDate}
                   selectedTime={selectedTime}
                   onBack={() => setCurrentStep(3)}
+                  onBooked={handleBooked}
                   onReset={handleReset}
                 />
               )}

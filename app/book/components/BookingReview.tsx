@@ -33,6 +33,8 @@ interface BookingReviewProps {
   selectedTime: string;
   onBack: () => void;
   onReset: () => void;
+  /** Called once the booking is confirmed, so the saved draft can be cleared */
+  onBooked?: () => void;
 }
 
 interface BookingSuccessResult {
@@ -54,6 +56,7 @@ export default function BookingReview({
   selectedTime,
   onBack,
   onReset,
+  onBooked,
 }: BookingReviewProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -113,6 +116,7 @@ export default function BookingReview({
             ? `***-***-${phnDigits.slice(-4)}`
             : "Not provided (optional)");
 
+        onBooked?.();
         setSuccessResult({
           confirmationCode: data.confirmationCode,
           serviceName: service.name,
