@@ -1,0 +1,37 @@
+name: dependency-audit
+
+# Fails when a dependency used in production has a known HIGH or CRITICAL vulnerability.
+# Runs on every pull request, every push to main, and weekly, so a newly published advisory
+# is caught even when nobody is pushing code. A failed scheduled run emails the repo owner.
+# Dev-only tools are ignored (--omit=dev): they never ship to the server.
+#
+# When it fails: run `npm audit fix` locally, then lint, tsc, test and build, and commit package-lock.json.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 15 * * 1" # Mondays 15:00 UTC (08:00 Pacific)
+  workflow_dispatch:
+
+concurrency:
+  group: audit-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: npm audit (production dependencies, high and above)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - run: npm audit --omit=dev --audit-level=high
