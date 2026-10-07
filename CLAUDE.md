@@ -94,6 +94,8 @@ Start command: `npm start`
 4. Typecheck (`npx tsc --noEmit`)
 5. Build (`npm run build`)
 
+`.github/workflows/audit.yml` runs `npm audit --omit=dev --audit-level=high` on every pull request, every push to `main` and weekly (Mondays). A failure means a production dependency has a known high/critical vulnerability: run `npm audit fix`, then lint, `npx tsc --noEmit`, tests and build, and commit `package-lock.json`. Do not merge with it red and do not add `--force` fixes without testing. Dependabot (`.github/dependabot.yml`) opens routine grouped updates monthly; merge or close them so they do not pile up.
+
 There is no separate deploy workflow -- Hostinger handles that natively.
 
 ## Prisma

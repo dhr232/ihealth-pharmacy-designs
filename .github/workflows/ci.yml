@@ -1,8 +1,8 @@
 name: ci
 
 # One job, same checks as the local pre-commit rule: lint, tests, typecheck, build.
-# Secret scanning and vulnerable-dependency alerts come from GitHub's built-in
-# repo features (Settings > Code security), so they are not duplicated here.
+# Secret scanning comes from GitHub's built-in repo feature (Settings > Code security).
+# Vulnerable dependencies are checked by audit.yml (every PR, every push, and weekly).
 
 # Runs after merge (push to main) only; it does not run on pull requests.
 on:
