@@ -22,7 +22,9 @@ import {
   BookingService,
   ALL_BOOKING_SERVICES,
   getServiceByIdOrSlug,
+  hasGetVaccinatedLink,
 } from "@/data/booking-services";
+import GetVaccinatedLink from "./GetVaccinatedLink";
 import {
   MINOR_AILMENTS_MENU_CATEGORIES,
   VACCINES_MENU_ITEMS,
@@ -642,6 +644,8 @@ export default function ServiceSelector({
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
             {selectedService.description}
           </p>
+
+          {hasGetVaccinatedLink(selectedService.id) && <GetVaccinatedLink />}
 
           <div className="grid gap-5 sm:grid-cols-2 pt-2 border-t border-slate-100">
             {/* Clinical Indications / Symptoms */}

@@ -9,10 +9,12 @@ import ServiceSelector from "./components/ServiceSelector";
 import PatientForm, { PatientFormData } from "./components/PatientForm";
 import AppointmentCalendar from "./components/AppointmentCalendar";
 import BookingReview from "./components/BookingReview";
+import GetVaccinatedLink from "./components/GetVaccinatedLink";
 import {
   BookingService,
   BOOKING_CATEGORIES,
   ALL_BOOKING_SERVICES,
+  hasGetVaccinatedLink,
   getServiceByIdOrSlug,
 } from "@/data/booking-services";
 import { getConditionIconPath } from "@/data/condition-registry";
@@ -316,6 +318,8 @@ function SelectedServiceSummary({ service, onChange }: { service: BookingService
           Change
         </button>
       </div>
+
+      {hasGetVaccinatedLink(service.id) && <GetVaccinatedLink />}
 
       {(service.clinicalIndications.length > 0 || service.preparationNotes.length > 0) && (
         <details className="group mt-3 border-t border-slate-100 pt-3">

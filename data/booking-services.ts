@@ -1203,3 +1203,12 @@ export function getServiceByIdOrSlug(idOrSlug: string): BookingService | undefin
   );
 }
 
+
+// Flu and COVID-19 vaccines can also be booked through the BC Government's Get Vaccinated site.
+// Only these two services show the link.
+export const GET_VACCINATED_URL = "https://www.getvaccinated.gov.bc.ca/s/";
+const GET_VACCINATED_SERVICE_IDS = new Set(["annual-influenza-immunization", "covid-19-vaccination"]);
+
+export function hasGetVaccinatedLink(serviceId: string): boolean {
+  return GET_VACCINATED_SERVICE_IDS.has(serviceId);
+}
