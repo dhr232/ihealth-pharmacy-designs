@@ -60,7 +60,7 @@ export function StaffNotificationEmail({
   readyBy,
   notifyBy,
   submittedAt,
-  adminPortalUrl = "https://ihealthpharmacy.ca/admin/appointments",
+  adminPortalUrl = "https://ihealthpharmacy.ca/admin",
 }: StaffNotificationEmailProps) {
   const isAppointment = notificationType === "appointment";
   const alertTitle = isAppointment ? "New Appointment Booking" : requestTitle || "New Prescription Refill Request";

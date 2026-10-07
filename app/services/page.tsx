@@ -80,10 +80,10 @@ const ALL_SERVICES = [
     image: "/services/delivery-doorstep.jpg",
   },
   {
-    title: "Automatic Pill Dispenser",
+    title: "Automated Pill Dispenser",
     slug: "auto-pack-dispenser",
     href: "/contact",
-    desc: "A carousel automatic pill dispenser with timed audio and visual alerts and a tamper-resistant safety lock. Pharmacist pre-filled, for home medication management and caregiver peace of mind.",
+    desc: "A carousel automated pill dispenser with timed audio and visual alerts and a tamper-resistant safety lock. Pharmacist pre-filled, for home medication management and caregiver peace of mind.",
     icon: Pill,
     badge: "Senior Friendly",
     image: "/carousel-dispenser.jpg",

@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { PHARMACY_INFO } from "@/data/pharmacy-info";
 import { getBookingUrl } from "@/lib/routes";
+import { isProvincialBookingOnly, GET_VACCINATED_URL } from "@/data/booking-services";
 
 export const metadata: Metadata = {
   title: "Vaccinations & Immunizations — iHealth Pharmacy Chilliwack",
@@ -301,13 +302,26 @@ export default function VaccinationsPage() {
                             </div>
                           </div>
 
-                          <Link
-                            href={getBookingUrl(`?service=${v.slug}`)}
-                            className="inline-flex items-center gap-1 rounded-lg bg-blue-600 hover:bg-blue-700 px-3 py-1.5 text-xs font-bold text-white transition shrink-0 shadow-2xs"
-                          >
-                            <span>Book</span>
-                            <ArrowRight className="h-3 w-3" />
-                          </Link>
+                          {isProvincialBookingOnly(v.slug) ? (
+                            <a
+                              href={GET_VACCINATED_URL}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 rounded-lg bg-blue-600 hover:bg-blue-700 px-3 py-1.5 text-xs font-bold text-white transition shrink-0 shadow-2xs"
+                            >
+                              <span>Book on BC site</span>
+                              <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                              <span className="sr-only">(opens in a new tab)</span>
+                            </a>
+                          ) : (
+                            <Link
+                              href={getBookingUrl(`?service=${v.slug}`)}
+                              className="inline-flex items-center gap-1 rounded-lg bg-blue-600 hover:bg-blue-700 px-3 py-1.5 text-xs font-bold text-white transition shrink-0 shadow-2xs"
+                            >
+                              <span>Book</span>
+                              <ArrowRight className="h-3 w-3" />
+                            </Link>
+                          )}
                         </div>
                       ))}
                     </div>

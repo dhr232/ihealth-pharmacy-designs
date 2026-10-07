@@ -13,6 +13,7 @@ import {
   BookingService,
   BOOKING_CATEGORIES,
   ALL_BOOKING_SERVICES,
+  isProvincialBookingOnly,
   getServiceByIdOrSlug,
 } from "@/data/booking-services";
 import { getConditionIconPath } from "@/data/condition-registry";
@@ -48,9 +49,12 @@ function BookingWizard() {
   const [selectedService, setSelectedService] = useState<BookingService | null>(() =>
     serviceParam ? getServiceByIdOrSlug(serviceParam) ?? null : null
   );
-  const [currentStep, setCurrentStep] = useState<number>(() =>
-    serviceParam && getServiceByIdOrSlug(serviceParam) ? 2 : 1
-  );
+  // Flu and COVID-19 vaccines are booked on the BC Government site, so they stay on step 1 where
+  // the service list shows that link instead of our form.
+  const [currentStep, setCurrentStep] = useState<number>(() => {
+    const match = serviceParam ? getServiceByIdOrSlug(serviceParam) : undefined;
+    return match && !isProvincialBookingOnly(match.id) ? 2 : 1;
+  });
 
   // Follow later ?service= changes while the page stays mounted (adjusted during render, not in an effect)
   const [prevServiceParam, setPrevServiceParam] = useState(serviceParam);
@@ -59,7 +63,7 @@ function BookingWizard() {
     const match = serviceParam ? getServiceByIdOrSlug(serviceParam) : undefined;
     if (match) {
       setSelectedService(match);
-      setCurrentStep(2);
+      setCurrentStep(isProvincialBookingOnly(match.id) ? 1 : 2);
     }
   }
   const partySize = 1;

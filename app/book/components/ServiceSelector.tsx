@@ -22,7 +22,10 @@ import {
   BookingService,
   ALL_BOOKING_SERVICES,
   getServiceByIdOrSlug,
+  isProvincialBookingOnly,
+  GET_VACCINATED_URL,
 } from "@/data/booking-services";
+import ProvincialBookingNotice from "./ProvincialBookingNotice";
 import {
   MINOR_AILMENTS_MENU_CATEGORIES,
   VACCINES_MENU_ITEMS,
@@ -111,9 +114,10 @@ export default function ServiceSelector({
   }, [searchQuery]);
 
   // One click: choosing a condition/service goes straight on to Patient Details
+  // Flu and COVID-19 vaccines are booked on the BC Government site: show them here, never continue to our form
   const chooseService = (service: BookingService) => {
     onSelectService(service);
-    onProceed();
+    if (!isProvincialBookingOnly(service.id)) onProceed();
   };
 
   const handleItemClick = (serviceId: string) => {
@@ -629,7 +633,8 @@ export default function ServiceSelector({
               </div>
             </div>
 
-            {/* Quick forward button */}
+            {/* Quick forward button (not for flu / COVID-19: those are booked on the BC Government site) */}
+            {!isProvincialBookingOnly(selectedService.id) && (
             <button
               type="button"
               onClick={onProceed}
@@ -637,11 +642,14 @@ export default function ServiceSelector({
             >
               <span>Continue with this Service</span>
             </button>
+            )}
           </div>
 
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
             {selectedService.description}
           </p>
+
+          {isProvincialBookingOnly(selectedService.id) && <ProvincialBookingNotice />}
 
           <div className="grid gap-5 sm:grid-cols-2 pt-2 border-t border-slate-100">
             {/* Clinical Indications / Symptoms */}
@@ -708,15 +716,28 @@ export default function ServiceSelector({
           </p>
         </div>
 
-        <button
-          type="button"
-          disabled={!selectedService}
-          onClick={onProceed}
-          className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] shrink-0 inline-flex items-center justify-center gap-1.5 rounded-lg px-5 py-2.5 text-xs sm:text-sm font-bold text-white transition-all disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          <span>Continue</span>
-          <ChevronRight size={15} />
-        </button>
+        {selectedService && isProvincialBookingOnly(selectedService.id) ? (
+          <a
+            href={GET_VACCINATED_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] shrink-0 inline-flex items-center justify-center gap-1.5 rounded-lg px-5 py-2.5 text-xs sm:text-sm font-bold text-white transition-all"
+          >
+            <span>Book on BC site</span>
+            <ExternalLink size={15} aria-hidden="true" />
+            <span className="sr-only">(opens in a new tab)</span>
+          </a>
+        ) : (
+          <button
+            type="button"
+            disabled={!selectedService}
+            onClick={onProceed}
+            className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] shrink-0 inline-flex items-center justify-center gap-1.5 rounded-lg px-5 py-2.5 text-xs sm:text-sm font-bold text-white transition-all disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <span>Continue</span>
+            <ChevronRight size={15} />
+          </button>
+        )}
       </div>
     </div>
   );
