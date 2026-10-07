@@ -19,6 +19,14 @@ import { getCurrentStaffSession, encryptPhn } from "@/lib/auth";
 // Active in-memory lock to prevent race conditions for concurrent bookings at the exact same timeslot
 const activeBookingLocks = new Set<string>();
 
+class BookingUnavailableError extends Error {
+  code = "DB_UNAVAILABLE";
+  constructor() {
+    super("Online booking is temporarily unavailable.");
+    this.name = "BookingUnavailableError";
+  }
+}
+
 class SlotConflictError extends Error {
   code = "SLOT_CONFLICT";
   isSlotConflict = true;
@@ -236,10 +244,18 @@ export async function POST(request: NextRequest) {
         await withPrismaFallback(
           async () => {
             await prisma.$transaction(async (tx) => {
-              // Concurrency guard 2: Check if an existing appointment already exists at startTime with status not CANCELLED
+              // Concurrency guard 2: serialize all bookings for the same day inside the database, so two
+              // people picking the same time at once cannot both pass the check below (the in-memory
+              // lock above only covers a single server process). The lock is released automatically
+              // when this transaction ends.
+              await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${date}::text))`;
+
+              // Reject if ANY active appointment overlaps this one (not only the same start time), so a
+              // longer visit cannot run into a neighbouring slot.
               const existingAppointment = await tx.appointment.findFirst({
                 where: {
-                  startTime: startDateTime,
+                  startTime: { lt: endDateTime },
+                  endTime: { gt: startDateTime },
                   status: {
                     not: "CANCELLED",
                   },
@@ -340,11 +356,24 @@ export async function POST(request: NextRequest) {
             dbSuccess = true;
           },
           () => {
-            // Graceful in-memory fallback
+            // Demo/dev only. In production a booking that is not saved to the database cannot be
+            // checked against other bookings, so refuse it instead of confirming a slot we cannot hold.
+            if (process.env.NODE_ENV === "production") {
+              throw new BookingUnavailableError();
+            }
           }
         );
       } catch (txError: unknown) {
         const err = txError as { isSlotConflict?: boolean; code?: string };
+        if (err?.code === "DB_UNAVAILABLE") {
+          return NextResponse.json(
+            {
+              success: false,
+              error: `We could not save your appointment just now. Please try again in a moment or call us at ${PHARMACY_INFO.phoneDisplay}.`,
+            },
+            { status: 503 }
+          );
+        }
         if (err?.isSlotConflict || err?.code === "SLOT_CONFLICT") {
           return NextResponse.json(
             {
