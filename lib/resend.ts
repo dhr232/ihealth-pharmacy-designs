@@ -271,7 +271,7 @@ export async function sendStaffBookingNotification(
     adminPortalUrl,
   } = staffData;
 
-  const subject = `[DISPENSARY ALERT] New Appointment: ${patientName} - ${serviceName} [${confirmationId}]`;
+  const subject = `[APPOINTMENT] New Appointment: ${patientName} - ${serviceName} [${confirmationId}]`;
   const client = getResendClient();
 
   if (!client) {
@@ -369,7 +369,7 @@ export async function sendStaffRefillNotification(
     attachments,
   } = refillData;
 
-  const subject = `[DISPENSARY ALERT] ${requestTitle || "New Refill Request"}: ${patientName} [${confirmationId}]`;
+  const subject = `[PRESCRIPTION] ${requestTitle || "New Refill Request"}: ${patientName} [${confirmationId}]`;
   const client = getResendClient();
 
   if (!client) {
