@@ -164,6 +164,28 @@ export function isBookableSlot(date: string, time24: string): boolean {
 }
 
 /**
+ * Current calendar date (YYYY-MM-DD) and minutes since midnight in the pharmacy's time zone
+ * (America/Vancouver). The Hostinger server runs in UTC, so never use the server's own
+ * getHours()/getDate()/toISOString() to decide what "today" or "now" is for patients.
+ */
+export function getPacificNow(now: Date = new Date()): { dateStr: string; minutes: number } {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Vancouver",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "numeric",
+    minute: "numeric",
+    hourCycle: "h23",
+  }).formatToParts(now);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "0";
+  return {
+    dateStr: `${get("year")}-${get("month")}-${get("day")}`,
+    minutes: Number(get("hour")) * 60 + Number(get("minute")),
+  };
+}
+
+/**
  * Live open/closed status in Pacific time, derived from PHARMACY_INFO.schedule.
  * Does not account for statutory holidays.
  */

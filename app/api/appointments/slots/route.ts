@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma, withPrismaFallback } from "@/lib/prisma";
-import { PHARMACY_INFO, formatHour } from "@/data/pharmacy-info";
+import { PHARMACY_INFO, formatHour, getPacificNow } from "@/data/pharmacy-info";
 
 export interface TimeSlotItem {
   time: string; // "09:00"
@@ -62,10 +62,10 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Check if date is in the past
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    if (targetDate < today) {
+    // "Today" and "now" are pharmacy time (Pacific). The server runs in UTC, so using its own
+    // clock marks every slot as past hours before the pharmacy has actually closed.
+    const { dateStr: pacificToday, minutes: currentMinutes } = getPacificNow();
+    if (dateParam < pacificToday) {
       return NextResponse.json({
         success: true,
         date: dateParam,
@@ -74,8 +74,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const isToday = targetDate.getTime() === today.getTime();
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const isToday = dateParam === pacificToday;
 
     // Query booked appointments from Prisma
     const bookedTimes = new Set<string>();
