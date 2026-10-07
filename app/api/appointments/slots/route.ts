@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma, withPrismaFallback } from "@/lib/prisma";
-import { PHARMACY_INFO, formatHour } from "@/data/pharmacy-info";
+import { PHARMACY_INFO, formatHour, getPacificNow } from "@/data/pharmacy-info";
 
 export interface TimeSlotItem {
   time: string; // "09:00"
@@ -31,24 +31,6 @@ function generateClinicSlots(): Omit<TimeSlotItem, "available">[] {
   }
 
   return slots;
-}
-
-// Current calendar date (YYYY-MM-DD) and minutes since midnight in the pharmacy's time zone
-function getPacificNow(now: Date = new Date()): { dateStr: string; minutes: number } {
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Vancouver",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "numeric",
-    minute: "numeric",
-    hourCycle: "h23",
-  }).formatToParts(now);
-  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "0";
-  return {
-    dateStr: `${get("year")}-${get("month")}-${get("day")}`,
-    minutes: Number(get("hour")) * 60 + Number(get("minute")),
-  };
 }
 
 export async function GET(request: NextRequest) {

@@ -144,6 +144,15 @@ Most patients (many of them older adults) browse on phones. Every UI change MUST
 - Images must reserve space (`aspect-*` or explicit size) to avoid layout shift, and use `loading="lazy"` below the fold.
 - Keep motion gated on `useReducedMotion`.
 
+## Time Zone (applies to every date or time decision)
+
+The Hostinger server runs in **UTC**; the pharmacy and its patients are in **America/Vancouver (Pacific)**. A bug from ignoring this made every same-day booking slot show as unavailable on the live site (the server thought it was already evening).
+
+- **Never** use the server's clock (`new Date().getHours()`, `getDate()`, `getDay()` on "now", `toISOString().slice(0, 10)`, `toLocaleString()` without a time zone) to decide what "today", "now", "open", "past" or "bookable" means.
+- Use `getPacificNow()` (date string + minutes since midnight) and `getOpenStatus()` from `data/pharmacy-info.ts`, or `Intl.DateTimeFormat` with `timeZone: "America/Vancouver"`. Add new shared time helpers there, not inline in routes.
+- Calendar dates passed around as `YYYY-MM-DD` strings are compared as strings or built from their own parts; do not round-trip them through `new Date("YYYY-MM-DD")` (that is UTC midnight).
+- Anything that depends on the current time must be checked against the live server's behaviour, not only on a Pacific-time dev machine, where UTC bugs stay hidden. Test by faking a UTC clock, e.g. run a check with `TZ=UTC`.
+
 ## Lint House Rules
 
 **`npm run lint` and `npx tsc --noEmit` must BOTH exit 0 before any commit.**
