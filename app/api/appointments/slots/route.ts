@@ -33,6 +33,24 @@ function generateClinicSlots(): Omit<TimeSlotItem, "available">[] {
   return slots;
 }
 
+// Current calendar date (YYYY-MM-DD) and minutes since midnight in the pharmacy's time zone
+function getPacificNow(now: Date = new Date()): { dateStr: string; minutes: number } {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Vancouver",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "numeric",
+    minute: "numeric",
+    hourCycle: "h23",
+  }).formatToParts(now);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "0";
+  return {
+    dateStr: `${get("year")}-${get("month")}-${get("day")}`,
+    minutes: Number(get("hour")) * 60 + Number(get("minute")),
+  };
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -62,10 +80,10 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Check if date is in the past
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    if (targetDate < today) {
+    // "Today" and "now" are pharmacy time (Pacific). The server runs in UTC, so using its own
+    // clock marks every slot as past hours before the pharmacy has actually closed.
+    const { dateStr: pacificToday, minutes: currentMinutes } = getPacificNow();
+    if (dateParam < pacificToday) {
       return NextResponse.json({
         success: true,
         date: dateParam,
@@ -74,8 +92,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const isToday = targetDate.getTime() === today.getTime();
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const isToday = dateParam === pacificToday;
 
     // Query booked appointments from Prisma
     const bookedTimes = new Set<string>();
