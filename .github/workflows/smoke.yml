@@ -1,6 +1,6 @@
 name: live-smoke-test
 
-# Checks the LIVE site (ihealthpharmacy.ca): server settings and upload storage, key pages, booking
+# Checks the LIVE sites (ihealthpharmacy.ca and booking.ihealthpharmacy.ca): server settings and upload storage, key pages, booking
 # slots, the flu/COVID booking rule and admin sign-in. Read-only: no booking, email or file is kept.
 #
 # - after every push to main: waits for Hostinger to finish deploying, then runs
@@ -40,7 +40,15 @@ jobs:
         if: github.event_name == 'push'
         run: sleep 600
 
-      - name: Run smoke test
+      # booking.ihealthpharmacy.ca is a separate Hostinger site with its own environment variables,
+      # so it needs its own check (a setting missing there breaks patients who book from that link).
+      - name: Smoke test, main site
         run: node .github/smoke/smoke.mjs
         env:
           SMOKE_URL: https://ihealthpharmacy.ca
+
+      - name: Smoke test, booking site
+        if: always()
+        run: node .github/smoke/smoke.mjs
+        env:
+          SMOKE_URL: https://booking.ihealthpharmacy.ca
