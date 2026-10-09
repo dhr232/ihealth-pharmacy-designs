@@ -1,0 +1,46 @@
+name: live-smoke-test
+
+# Checks the LIVE site (ihealthpharmacy.ca): server settings and upload storage, key pages, booking
+# slots, the flu/COVID booking rule and admin sign-in. Read-only: no booking, email or file is kept.
+#
+# - after every push to main: waits for Hostinger to finish deploying, then runs
+# - every morning (about 10:30 Pacific, a weekday booking window)
+# - manually from the Actions tab
+# A failed run emails the repo owner. To run it yourself:
+#   SMOKE_URL=https://ihealthpharmacy.ca node .github/smoke/smoke.mjs
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "30 17 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: smoke
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Live site checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      # Hostinger deploys on its own after the push; give the build time to finish
+      - name: Wait for deploy
+        if: github.event_name == 'push'
+        run: sleep 600
+
+      - name: Run smoke test
+        run: node .github/smoke/smoke.mjs
+        env:
+          SMOKE_URL: https://ihealthpharmacy.ca
