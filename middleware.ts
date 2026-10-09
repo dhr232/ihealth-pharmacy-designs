@@ -1,20 +1,17 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { bookingSubdomainRedirect } from "./lib/routes";
 
 export function middleware(request: NextRequest) {
   const hostname = request.headers.get("host") || "";
   const url = request.nextUrl;
 
-  // Check if request matches booking.ihealthpharmacy.ca or booking.localhost (with any port)
-  const isBookingSubdomain =
-    hostname.startsWith("booking.ihealthpharmacy.ca") ||
-    hostname.startsWith("booking.localhost");
-
-  if (isBookingSubdomain) {
-    // Rewrite root / to /book
-    if (url.pathname === "/") {
-      return NextResponse.rewrite(new URL("/book", request.url));
-    }
+  // The booking.ihealthpharmacy.ca subdomain is retired: send every page request to the same page
+  // on the main site ("/" was the wizard, so it goes to /book). Permanent, so search engines and
+  // browsers update. API calls are not matched (see config below) so open tabs can still submit.
+  const redirectTo = bookingSubdomainRedirect(hostname, url.pathname, url.search, url.protocol);
+  if (redirectTo) {
+    return NextResponse.redirect(redirectTo, 308);
   }
 
   // Server-side guard for /admin

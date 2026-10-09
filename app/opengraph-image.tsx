@@ -158,7 +158,7 @@ export default async function Image() {
           </div>
 
           <div style={{ color: "#2dd4bf", fontSize: "15px", fontWeight: "700" }}>
-            booking.ihealthpharmacy.ca
+            ihealthpharmacy.ca/book
           </div>
         </div>
       </div>
