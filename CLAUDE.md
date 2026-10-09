@@ -63,6 +63,8 @@ Multi-page full-stack website for **iHealth Pharmacy** (Chilliwack, BC).
 
 Public: `/` `/about` `/contact` `/health-tips` `/blog/[slug]` `/services` `/services/[slug]` `/book` `/vaccinations` `/prescription-refills` `/transfer` `/care-program` `/subscribe` `/privacy` `/terms` `/cookies`
 
+**Booking is `ihealthpharmacy.ca/book` only.** The old `booking.ihealthpharmacy.ca` subdomain is retired: it ran as a second copy of the site with its own Hostinger environment variables, and a variable missing there broke photo uploads. `middleware.ts` (via `bookingSubdomainRedirect` in `lib/routes.ts`) sends any page request on it to the same page on the main site with a 308, `/` -> `/book`. Always link with `getBookingUrl()`; never hard-code the subdomain. Once traffic to it has stopped, the subdomain can be deleted in hPanel (Domains > Subdomains).
+
 Admin (protected, 2FA): `/admin` `/admin/login`
 
 API routes under `/api/` -- all dynamic server-rendered.
@@ -96,7 +98,7 @@ Start command: `npm start`
 
 `.github/workflows/audit.yml` runs `npm audit --omit=dev --audit-level=high` on every pull request, every push to `main` and weekly (Mondays). A failure means a production dependency has a known high/critical vulnerability: run `npm audit fix`, then lint, `npx tsc --noEmit`, tests and build, and commit `package-lock.json`. Do not merge with it red and do not add `--force` fixes without testing. Dependabot (`.github/dependabot.yml`) opens routine grouped updates monthly; merge or close them so they do not pile up.
 
-`.github/workflows/smoke.yml` runs `.github/smoke/smoke.mjs` against the LIVE site after every push to `main` (it waits 10 minutes for Hostinger to deploy), every morning, and on demand. It calls `/api/health` (database, writable `UPLOAD_DIR`, `SESSION_SECRET`, `RESEND_API_KEY`; reports pass/fail only, never values), loads the key pages, checks that booking slots are open, that flu/COVID booking is refused, and that admin sign-in answers. A red run means something is wrong on production: fix it before anything else. Run it yourself with `SMOKE_URL=https://ihealthpharmacy.ca node .github/smoke/smoke.mjs`. When you add a server setting the site cannot work without, add it to `app/api/health/route.ts` so a missing value is caught on the next deploy.
+`.github/workflows/smoke.yml` runs `.github/smoke/smoke.mjs` against the LIVE site after every push to `main` (it waits 10 minutes for Hostinger to deploy), every morning, and on demand. It calls `/api/health` (database, writable `UPLOAD_DIR`, `SESSION_SECRET`, `RESEND_API_KEY`; reports pass/fail only, never values), loads the key pages, checks that booking slots are open, that flu/COVID booking is refused, that the retired booking subdomain redirects to the main site, and that admin sign-in answers. A red run means something is wrong on production: fix it before anything else. Run it yourself with `SMOKE_URL=https://ihealthpharmacy.ca node .github/smoke/smoke.mjs`. When you add a server setting the site cannot work without, add it to `app/api/health/route.ts` so a missing value is caught on the next deploy.
 
 There is no separate deploy workflow -- Hostinger handles that natively.
 
@@ -164,7 +166,7 @@ The Hostinger server runs in **UTC**; the pharmacy and its patients are in **Ame
 - No `setState` synchronously in `useEffect`
 - No impure functions in render (`Math.random()`)
 - Route handler files (`app/api/**/route.ts`) may ONLY export HTTP handlers (`GET`, `POST`, `PATCH`, `DELETE`) and Next.js config (`generateStaticParams`). Never export plain variables or stores from route files.
-- `middleware.ts` is deprecated in Next.js 16 -- do not rename to `proxy.ts` without thorough testing (affects subdomain routing logic)
+- `middleware.ts` is deprecated in Next.js 16 -- do not rename to `proxy.ts` without thorough testing (it holds the `/admin` guard and the retired booking-subdomain redirect)
 
 ## Do NOT
 

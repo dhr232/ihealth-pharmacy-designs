@@ -119,7 +119,27 @@ for (const serviceId of ["annual-influenza-immunization", "covid-19-vaccination"
   });
 }
 
-// 5. Admin sign-in endpoint answers (an address that cannot sign in gets a generic reply, no email sent)
+// 5. The retired booking.ihealthpharmacy.ca subdomain redirects to the main site (one site, one set
+//    of server settings). Only checked when SMOKE_BOOKING_HOST is set.
+const BOOKING_HOST = process.env.SMOKE_BOOKING_HOST;
+if (BOOKING_HOST) {
+  for (const [from, to] of [
+    ["/", "/book"],
+    ["/prescription-refills", "/prescription-refills"],
+  ]) {
+    await check(`${BOOKING_HOST}${from} redirects to ${BASE}${to}`, async () => {
+      const res = await fetch(`https://${BOOKING_HOST}${from}`, {
+        redirect: "manual",
+        signal: AbortSignal.timeout(30000),
+      });
+      const location = res.headers.get("location") ?? "";
+      if (![301, 302, 307, 308].includes(res.status)) return `HTTP ${res.status}, no redirect`;
+      return location === `${BASE}${to}` ? null : `redirects to ${location || "(none)"}`;
+    });
+  }
+}
+
+// 6. Admin sign-in endpoint answers (an address that cannot sign in gets a generic reply, no email sent)
 await check("admin sign-in endpoint responds", async () => {
   const res = await get("/api/auth/login", {
     method: "POST",
