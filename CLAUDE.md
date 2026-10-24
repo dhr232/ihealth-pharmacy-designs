@@ -12,7 +12,7 @@ Multi-page full-stack website for **iHealth Pharmacy** (Chilliwack, BC).
 
 ## Stack
 
-- **Next.js 16.3.3** App Router + TypeScript + Tailwind CSS + Webpack (production)
+- **Next.js 16.4.3** App Router + TypeScript + Tailwind CSS + Webpack (production)
 - **Runtime:** Node.js 22.x server -- NOT static export. `output: "export"` is removed.
 - **Bundler:** Webpack for production builds (`next build --webpack`) -- Hostinger Linux has GLIBC < 2.29, incompatible with Turbopack native binaries. Turbopack is fine for local `npm run dev`.
 - **ORM:** Prisma v6 with PostgreSQL (Neon). Schema at `prisma/schema.prisma`.
