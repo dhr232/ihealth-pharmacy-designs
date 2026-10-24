@@ -26,7 +26,7 @@ const ACTIONS: {
   { label: "Minor Ailment Visit", href: "/book?category=minor_ailments", icon: Stethoscope, tone: "purple" },
   { label: "Book a Vaccine", href: "/book?service=routine-vaccination", icon: Syringe, tone: "peach" },
   // Off-site doctor booking (avee.health), same destination as the header nav
-  { label: "Book a Doctor", href: "https://booking.avee.health/MQX39", icon: UserRoundCheck, tone: "rose", external: true },
+  { label: "Book a Doctor", href: "https://booking.avee.health/ATZ41", icon: UserRoundCheck, tone: "rose", external: true },
 ];
 
 export default function HowCanWeHelp() {
