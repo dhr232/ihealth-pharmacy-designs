@@ -220,7 +220,7 @@ const IHEALTH_NAV_ITEMS: MegaMenuItem[] = [
     ],
   },
   // Off-site doctor booking (avee.health); opens in a new tab
-  { id: 5, label: "Book a Doctor", link: "https://booking.avee.health/MQX39", external: true },
+  { id: 5, label: "Book a Doctor", link: "https://booking.avee.health/ATZ41", external: true },
   { id: 4, label: "Hours & Location", link: "/contact" },
 ];
 
